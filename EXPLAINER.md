@@ -12,12 +12,15 @@ Whenever a site writes to a file, the browser should notify the user.
 ## Browser UI
 No additional browser permission will be required. There will be browser UI that allows the user to open a file and to “save as…” a file. There will be a non modal warning shown by the browser whenever a site writes a file:
 
-<img src="img/write-warning.png" alt="Warning text when writing a file" width="400px"></img>
-![Warning text when writing a file](img/write-warning.png?raw=true)
+<div align="center">
+    <img src="img/write-warning.png" alt="Warning text when writing a file" width="300px"></img>
+</div>
 
 There will also be a non modal warning shown by the browser whenever a site reads from a file that has changed since the last time the site read the file:
 
-![Warning text when reading a file](img/read-warning.png?raw=true)
+<div align="center">
+    <img src="img/read-warning.png" alt="Warning text when reading a file" width="300px"></img>
+</div>
 
 The browser should also display all files a domain has access to in the domain's settings. Users will be allowed to revoke access to any of these files.
 
