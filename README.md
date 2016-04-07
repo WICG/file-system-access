@@ -15,11 +15,12 @@ Today, if a web site wants to create experiences involving local files (document
 ## Workarounds
 - [FileSaver.js] polyfills `saveAs()` from the [W3C File API], but files open in a new window instead of downloading on Safari 6.1+ and iOS.
 - In Edge, Firefox, and Chrome developers can:
-	- Create a fake anchor element
-	- Set the `download` attribute to the desired filename
-	- Set `href:` to a data URI
-	- Faking a click on the anchor element
+	- Create a fake anchor element (`var a = document.createElement('a')`)
+	- Set `download` to the desired filename (`a.download = 'file.txt'`)
+	- Set `href` to a data URI or Blob URL (`a.href = URL.createObjectURL(blob)`)
+	- Fake a click on the anchor element (`a.click()`)
+	- Clean up if necessary (`URL.revokeObjectURL(a.href)`)
 - Setting `window.location` to `'data:application/octet-stream' + data_stream`
 - Hidden Flash controls to display a “save as” dialog
 
-These methods are clunky and only support “save as”. They do not support most recently used lists, auto save, save, or deleting a file. 
+These methods are clunky and only support “save as” (and depending on the UA may automatically appear in Downloads without prompting the user for location). They do not support most recently used lists, auto save, save, or deleting a file.
