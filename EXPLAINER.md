@@ -61,6 +61,10 @@ dictionary FileOpenOptions {
     boolean writable = false;
     boolean multiple = false;
 }
+
+dictionary FileSaveOptions {
+    boolean force = false;
+}
 ```
 
 `File.open()` returns a promise that resolves to a `FileHandle`: 
@@ -71,7 +75,7 @@ interface FileHandle {
     readonly attribute boolean writable;
     attribute File file;
     
-    Promise<boolean> save(); 
+    Promise<boolean> save( FileSaveOptions options ); 
 }
 
 interface FileReference {
