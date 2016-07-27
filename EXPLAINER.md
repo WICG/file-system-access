@@ -128,6 +128,9 @@ Sites can save the `ref` attribute of a `FileHandle` and use it to reopen the fi
 ## Save
 The `save` method will write the current data in the `FileHandle`'s `data` attribute back to the local file. If `writable` is false, the promise will reject. If the file has been modified since the file was opened, `save()` will return a `FileModified` error. Calling `save( { "force": true } )` will suppress the `FileModified` error and overwrite the file.
 
+## Backing file system
+While this proposal is generally geared towards accessing native device files, it could theoretically provide access to files hosted in different mediums. Using the [ballista](https://github.com/chromium/ballista) API, writable-files could be used to interact with files housed in cloud based file systems.
+
 # Edge Cases
 ## File changes before save
 There are a few models for native apps:
