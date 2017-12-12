@@ -13,7 +13,7 @@ Today, if a web site wants to create experiences involving local files (document
 - Read meta data about files
 
 ## Workarounds
-- [FileSaver.js] polyfills `saveAs()` from the [W3C File API], but files open in a new window instead of downloading on Safari 6.1+ and iOS.
+- [FileSaver.js](https://github.com/eligrey/FileSaver.js/) polyfills `saveAs()` from the [W3C File API](https://www.w3.org/TR/FileAPI/), but files open in a new window instead of downloading on Safari 6.1+ and iOS.
 - In Edge, Firefox, and Chrome developers can:
 	- Create a fake anchor element (`var a = document.createElement('a')`)
 	- Set `download` to the desired filename (`a.download = 'file.txt'`)
