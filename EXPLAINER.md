@@ -111,7 +111,7 @@ const file_ref = await dir_ref.getFile('foo.js');
 // Get a subdirectory.
 const subdir = await dir_ref.getDirectory('bla', {createIfNotExists: true});
 
-// And you can possibly do stuff like move and/or copy files arount.
+// And you can possibly do stuff like move and/or copy files around.
 await file_ref.copyTo(dir_ref, 'new_name', {overwrite: true});
 
 // You can also navigate the file system:
