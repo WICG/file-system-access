@@ -22,6 +22,7 @@ what we're providing is several bits:
 // Show a file picker to open a file.
 const file_ref = await FileSystemFileHandle.choose({
     type: 'open',
+    multiple: false, // If true, returns an array rather than a single handle.
     accepts: [{description: 'Images', extensions: ['jpg', 'gif', 'png']}],
     suggestedStartLocation: 'pictures-library'
 });
@@ -117,6 +118,9 @@ await file_ref.copyTo(dir_ref, 'new_name', {overwrite: true});
 // You can also navigate the file system:
 const dir2 = await file_ref.getParent();
 // dir2.fullPath == dir_ref.fullPath.
+
+// But you can't escape from the directory you've been given access to.
+// await dir_ref.getParent() == null
 ```
 
 And perhaps even possible to get access to certain "well-known" directories,
@@ -124,7 +128,7 @@ without showing a file picker, i.e. to get access to all fonts, all photos, or
 similar. Could still include some kind of permission prompt if needed.
 
 ```javascript
-const font_dir = await FileSystemDirectoryHandle.getSystemPath({type: 'fonts'});
+const font_dir = await FileSystemDirectoryHandle.getSystemDirectory({type: 'fonts'});
 for await (const entry of font_dir.entries()) {
     // Use font entry.
 };
