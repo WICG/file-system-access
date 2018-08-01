@@ -108,6 +108,24 @@ request.onsuccess = function(e) {
 }
 ```
 
+The fact that handles are serializable also means you can `postMessage` them around:
+
+```javascript
+// In a service worker:
+self.addEventListener('some-hypothetical-launch-event', e => {
+  // e.file is a FileSystemFileHandle representing the file this SW was launched with.
+  let win = await clients.openWindow('bla.html');
+  if (win)
+    win.postMessage({openFile: e.file});
+});
+
+// In bla.html
+navigator.serviceWorker.addEventListener('message', e => {
+  let file_ref = e.openFile;
+  // Do something useful with the file reference.
+});
+```
+
 Also possible to get access to an entire directory.
 
 ```javascript
