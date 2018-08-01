@@ -47,6 +47,10 @@ const file_writer = await file_ref.createWriter();
 await file_writer.write(new Blob(['foobar']));
 file_writer.seek(1024);
 await file_writer.write(new Blob(['bla']));
+
+// Can also write contents of a ReadableStream.
+let response = await fetch('foo');
+await file_writer.write(response.body);
 ```
 
 Also possible to store file references in IDB to re-read and write to them later.
