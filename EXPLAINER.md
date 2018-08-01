@@ -23,6 +23,14 @@ what we're providing is several bits:
 const file_ref = await FileSystemFileHandle.choose({
     type: 'open',
     multiple: false, // If true, returns an array rather than a single handle.
+    
+    // If true, the resulting file reference won't be writable. Note that there
+    // is no guarantee that the resulting file reference will be writable when
+    // readOnly is set to false. Both filesystem level permissions as well as
+    // browser UI/user intent might result in a file reference that isn't usable
+    // for writing, even if the website asked for a writable reference.
+    readOnly: false,
+    
     accepts: [{description: 'Images', extensions: ['jpg', 'gif', 'png']}],
     suggestedStartLocation: 'pictures-library'
 });
@@ -42,7 +50,11 @@ file_reader.readAsArrayBuffer(await file_ref.file());
 // ...
 
 // Write changed contents back to the file. Rejects if file reference is not
-// writable.
+// writable. Note that it is not generally possible to know if a file reference
+// is going to be writable without actually trying to write to it. For example
+// both the underlying filesystem level permissions for the file might have
+// changed, or the user/user agent might have revoked write access for this
+// website to this file after it acquired the file reference.
 const file_writer = await file_ref.createWriter();
 await file_writer.write(new Blob(['foobar']));
 file_writer.seek(1024);
