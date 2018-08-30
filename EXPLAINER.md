@@ -41,11 +41,21 @@ if (!file_ref) {
 
 // Read the contents of the file.
 const file_reader = new FileReader();
-file_reader.onload = () => {
-  // ...
+file_reader.onload = (event) => {
+    // File contents will appear in event.target.result.  See
+    // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/onload for
+    // more info.
+
+    // ...
 };
-// file() method can reject if site (no longer) has access to the file.
-file_reader.readAsArrayBuffer(await file_ref.file());
+
+// file_ref.file() method will reject if site (no longer) has access to the
+// file.
+let file = await file_ref.file();
+
+// readAsArrayBuffer() is async and returns immediately.  |file_reader|'s onload
+// handler will be called with the result of the file read.
+file_reader.readAsArrayBuffer(file);
 
 // ...
 
