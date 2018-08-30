@@ -47,6 +47,22 @@ file_reader.onload = (event) => {
     // more info.
 
     // ...
+
+    // Write changed contents back to the file. Rejects if file reference is not
+    // writable. Note that it is not generally possible to know if a file
+    // reference is going to be writable without actually trying to write to it.
+    // For example, both the underlying filesystem level permissions for the
+    // file might have changed, or the user/user agent might have revoked write
+    // access for this website to this file after it acquired the file
+    // reference.
+    const file_writer = await file_ref.createWriter();
+    await file_writer.write(new Blob(['foobar']));
+    file_writer.seek(1024);
+    await file_writer.write(new Blob(['bla']));
+
+    // Can also write contents of a ReadableStream.
+    let response = await fetch('foo');
+    await file_writer.write(response.body);
 };
 
 // file_ref.file() method will reject if site (no longer) has access to the
@@ -56,23 +72,6 @@ let file = await file_ref.file();
 // readAsArrayBuffer() is async and returns immediately.  |file_reader|'s onload
 // handler will be called with the result of the file read.
 file_reader.readAsArrayBuffer(file);
-
-// ...
-
-// Write changed contents back to the file. Rejects if file reference is not
-// writable. Note that it is not generally possible to know if a file reference
-// is going to be writable without actually trying to write to it. For example
-// both the underlying filesystem level permissions for the file might have
-// changed, or the user/user agent might have revoked write access for this
-// website to this file after it acquired the file reference.
-const file_writer = await file_ref.createWriter();
-await file_writer.write(new Blob(['foobar']));
-file_writer.seek(1024);
-await file_writer.write(new Blob(['bla']));
-
-// Can also write contents of a ReadableStream.
-let response = await fetch('foo');
-await file_writer.write(response.body);
 ```
 
 Also possible to store file references in IDB to re-read and write to them later.
