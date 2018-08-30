@@ -69,8 +69,8 @@ Also possible to store file references in IDB to re-read and write to them later
 
 ```javascript
 // Open a db instance to save file references for later sessions
-var db;
-var request = indexedDB.open("WritableFilesDemo");
+let db;
+let request = indexedDB.open("WritableFilesDemo");
 request.onerror = function(e) { console.log(e); }
 request.onsuccess = function(e) { db = e.target.result; }
 
@@ -79,8 +79,8 @@ const file_ref = await FileSystemFileHandle.choose();
 
 if (file_ref) {
     // Save the reference to open the file later.
-    var transaction = db.transaction(["filerefs"], "readwrite");
-    var request = transaction.objectStore("filerefs").add( file_ref );
+    let transaction = db.transaction(["filerefs"], "readwrite");
+    let request = transaction.objectStore("filerefs").add( file_ref );
     request.onsuccess = function(e) { console.log(e); }
 
     // Do other useful things with the opened file.
@@ -90,20 +90,20 @@ if (file_ref) {
 
 // Retrieve a file you've opened before. Show's no filepicker UI.
 // The browser can choose when to allow or not allow this open.
-var file_id = "123"; // Some logic to determine which file you'd like to open
-var transaction = db.transaction(["filerefs"], "readonly");
-var request = transaction.objectStore("filerefs").get(file_id);
+let file_id = "123"; // Some logic to determine which file you'd like to open
+let transaction = db.transaction(["filerefs"], "readonly");
+let request = transaction.objectStore("filerefs").get(file_id);
 request.onsuccess = function(e) {
-    var ref = e.result;
+    let ref = e.result;
 
     // Rejects if file is no longer readable, either because it doesn't exist
     // anymore or because the website no longer has permission to read it.
-    var file = await ref.file();
+    let file = await ref.file();
     // ... read from file
 
     // Rejects if file is no longer writable, because the website no longer has
     // permission to write to it.
-    var file_writer = await ref.createWriter({createIfNotExists: true});
+    let file_writer = await ref.createWriter({createIfNotExists: true});
     // ... write to file_writer
 }
 ```
