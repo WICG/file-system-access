@@ -41,36 +41,45 @@ if (!file_ref) {
 
 // Read the contents of the file.
 const file_reader = new FileReader();
-file_reader.onload = () => {
-  // ...
+file_reader.onload = (event) => {
+    // File contents will appear in event.target.result.  See
+    // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/onload for
+    // more info.
+
+    // ...
+
+    // Write changed contents back to the file. Rejects if file reference is not
+    // writable. Note that it is not generally possible to know if a file
+    // reference is going to be writable without actually trying to write to it.
+    // For example, both the underlying filesystem level permissions for the
+    // file might have changed, or the user/user agent might have revoked write
+    // access for this website to this file after it acquired the file
+    // reference.
+    const file_writer = await file_ref.createWriter();
+    await file_writer.write(new Blob(['foobar']));
+    file_writer.seek(1024);
+    await file_writer.write(new Blob(['bla']));
+
+    // Can also write contents of a ReadableStream.
+    let response = await fetch('foo');
+    await file_writer.write(response.body);
 };
-// file() method can reject if site (no longer) has access to the file.
-file_reader.readAsArrayBuffer(await file_ref.file());
 
-// ...
+// file_ref.file() method will reject if site (no longer) has access to the
+// file.
+let file = await file_ref.file();
 
-// Write changed contents back to the file. Rejects if file reference is not
-// writable. Note that it is not generally possible to know if a file reference
-// is going to be writable without actually trying to write to it. For example
-// both the underlying filesystem level permissions for the file might have
-// changed, or the user/user agent might have revoked write access for this
-// website to this file after it acquired the file reference.
-const file_writer = await file_ref.createWriter();
-await file_writer.write(new Blob(['foobar']));
-file_writer.seek(1024);
-await file_writer.write(new Blob(['bla']));
-
-// Can also write contents of a ReadableStream.
-let response = await fetch('foo');
-await file_writer.write(response.body);
+// readAsArrayBuffer() is async and returns immediately.  |file_reader|'s onload
+// handler will be called with the result of the file read.
+file_reader.readAsArrayBuffer(file);
 ```
 
 Also possible to store file references in IDB to re-read and write to them later.
 
 ```javascript
 // Open a db instance to save file references for later sessions
-var db;
-var request = indexedDB.open("WritableFilesDemo");
+let db;
+let request = indexedDB.open("WritableFilesDemo");
 request.onerror = function(e) { console.log(e); }
 request.onsuccess = function(e) { db = e.target.result; }
 
@@ -79,8 +88,8 @@ const file_ref = await FileSystemFileHandle.choose();
 
 if (file_ref) {
     // Save the reference to open the file later.
-    var transaction = db.transaction(["filerefs"], "readwrite");
-    var request = transaction.objectStore("filerefs").add( file_ref );
+    let transaction = db.transaction(["filerefs"], "readwrite");
+    let request = transaction.objectStore("filerefs").add( file_ref );
     request.onsuccess = function(e) { console.log(e); }
 
     // Do other useful things with the opened file.
@@ -90,20 +99,20 @@ if (file_ref) {
 
 // Retrieve a file you've opened before. Show's no filepicker UI.
 // The browser can choose when to allow or not allow this open.
-var file_id = "123"; // Some logic to determine which file you'd like to open
-var transaction = db.transaction(["filerefs"], "readonly");
-var request = transaction.objectStore("filerefs").get(file_id);
+let file_id = "123"; // Some logic to determine which file you'd like to open
+let transaction = db.transaction(["filerefs"], "readonly");
+let request = transaction.objectStore("filerefs").get(file_id);
 request.onsuccess = function(e) {
-    var ref = e.result;
+    let ref = e.result;
 
     // Rejects if file is no longer readable, either because it doesn't exist
     // anymore or because the website no longer has permission to read it.
-    var file = await ref.file();
+    let file = await ref.file();
     // ... read from file
 
     // Rejects if file is no longer writable, because the website no longer has
     // permission to write to it.
-    var file_writer = await ref.createWriter({createIfNotExists: true});
+    let file_writer = await ref.createWriter({createIfNotExists: true});
     // ... write to file_writer
 }
 ```
