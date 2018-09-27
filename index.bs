@@ -16,23 +16,22 @@ Markup Shorthands: css no, markdown yes
 
 <pre class=link-defaults>
 spec:fetch; type:interface; text:ReadableStream
-spec:infra; type:dfn; for:/; text:set
 </pre>
 
 <pre class=anchors>
 </pre>
 
 <style>
-dl.domintro dt {
+.domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
 
     padding-top: 0.5em;
     padding-bottom: 1em;
 }
-dl.domintro dt a {
+.domintro dt a {
     color: inherit; border-bottom-style: none;
 }
-dl.domintro dt code {
+.domintro dt code {
     font-size: inherit;
 }
 </style>
@@ -57,7 +56,7 @@ Each [=/entry=] has an associated <dfn for=entry>name</dfn>.
 A <dfn lt="file|file entry">file entry</dfn> additionally consists of <dfn for="file entry">binary
 data</dfn> and a <dfn for="file entry">modification timestamp</dfn>.
 
-A <dfn lt="directory|directory entry">directory entry</dfn> additionally consists of a [=set=] of
+A <dfn lt="directory|directory entry">directory entry</dfn> additionally consists of a [=/set=] of
 <dfn for="directory entry">entries</dfn>. Each member is either a [=file=] or a [=directory=].
 
 The <dfn lt="parent|parent directory">parent directory</dfn> of a [=/entry=] |child| is the
@@ -98,7 +97,7 @@ A {{FileSystemHandle}} object represents a [=/entry=]. Each {{FileSystemHandle}}
 with a <dfn for=FileSystemHandle>entry</dfn> (a [=/entry=]). Multiple separate objects implementing
 the {{FileSystemHandle}} interface can all be associated with the same [=/entry=] simultaneously.
 
-<div class=note><dl class=domintro>
+<div class="note domintro">
   : |handle| . {{FileSystemHandle/isFile}}
   :: Returns true iff |handle| is a {{FileSystemFileHandle}}.
 
@@ -107,7 +106,7 @@ the {{FileSystemHandle}} interface can all be associated with the same [=/entry=
 
   : |handle| . {{FileSystemHandle/name}}
   :: Returns the [=entry/name=] of the entry represented by |handle|.
-</dl></div>
+</div>
 
 The <dfn attribute for=FileSystemHandle>isFile</dfn> attribute must return true if the associated
 [=FileSystemHandle/entry=] is a [=file entry=], and false otherwise.
@@ -120,7 +119,7 @@ associated [=FileSystemHandle/entry=].
 
 ### The {{FileSystemHandle/getParent()}} method ### {#api-filesystemhandle-getparent}
 
-<div class=note><dl class=domintro>
+<div class="note domintro">
   : |parent| = await |handle| . {{FileSystemHandle/getParent()}}
   :: Returns a promise resolved to the [=parent directory=] of |handle|.
      If |handle| is the [=root directory=] of its file system the promise
@@ -128,7 +127,7 @@ associated [=FileSystemHandle/entry=].
 
      Can reject if the entry no longer exists in the underlying file system, or
      if some error prevents reading the entry or its parent.
-</dl></div>
+</div>
 
 <div algorithm>
 The <dfn method for=FileSystemHandle>getParent()</dfn> method, when invoked, must run these steps:
@@ -139,7 +138,7 @@ The <dfn method for=FileSystemHandle>getParent()</dfn> method, when invoked, mus
 
 ### The {{FileSystemHandle/moveTo()}} method ### {#api-filesystemhandle-moveto}
 
-<div class=note><dl class=domintro>
+<div class="note domintro">
   : |newHandle| = await |handle| . {{FileSystemHandle/moveTo()|moveTo}}(await
         |handle|.{{FileSystemHandle/getParent()}}, |newName|)
   :: Renames the entry represented by |handle| to |newName|.
@@ -155,7 +154,7 @@ The <dfn method for=FileSystemHandle>getParent()</dfn> method, when invoked, mus
 
      Attempting to move an entry to the directory it already exists in, without renaming it is
      an error. In all other cases if the target entry already exists, it is overwritten.
-</div></dl>
+</div>
 
 <div algorithm>
 The <dfn method for=FileSystemHandle>moveTo(|parent|, |name|)</dfn> method, when invoked, must run
@@ -167,16 +166,16 @@ these steps:
 
 ### The {{FileSystemHandle/copyTo()}} method ### {#api-filesystemhandle-copyto}
 
-<div class=note><dl class=domintro>
-  : |newHandle| = await |handle| . {{FileSystemHandle/moveTo()|copyTo}}(await
+<div class="note domintro">
+  : |newHandle| = await |handle| . {{FileSystemHandle/copyTo()|copyTo}}(await
         |handle|.{{FileSystemHandle/getParent()}}, |newName|)
   :: Creates a copy of the entry represented by |handle| with name |newName|.
 
-  : |newHandle| = await |handle| . {{FileSystemHandle/moveTo()|moveTo}}(|otherDir|)
+  : |newHandle| = await |handle| . {{FileSystemHandle/copyTo()|copyTo}}(|otherDir|)
   :: Creates a copy of the entry represented by |handle| in |otherDir|, while keeping its existing
      name.
 
-  : |newHandle| = await |handle| . {{FileSystemHandle/moveTo()|moveTo}}(|otherDir|, |newName|)
+  : |newHandle| = await |handle| . {{FileSystemHandle/copyTo()|copyTo}}(|otherDir|, |newName|)
   :: Creates a copy of the entry represented by |handle| in |otherDir|, using |newName| for the
      name of the new entry.
 
@@ -185,7 +184,7 @@ these steps:
 
      Attempting to copy an entry on top of itself will fail. In all other cases if the target entry
      already exists, it is overwritten.
-</div></dl>
+</div>
 
 <div algorithm>
 The <dfn method for=FileSystemHandle>copyTo(|parent|, |name|)</dfn> method, when invoked, must run
@@ -197,10 +196,10 @@ these steps:
 
 ### The {{FileSystemHandle/remove()}} method ### {#api-filesystemhandle-remove}
 
-<div class=note><dl class=domintro>
+<div class="note domintro">
   : await |handle| . {{FileSystemHandle/remove()}}
   :: Attempts to remove the entry represented by |handle| from the underlying file system.
-</div></dl>
+</div>
 
 <div algorithm>
 The <dfn method for=FileSystemHandle>remove()</dfn> method, when invoked, must run these steps:
@@ -221,10 +220,10 @@ interface FileSystemFileHandle : FileSystemHandle {
 
 ### The {{FileSystemFileHandle/getFile()}} method ### {#api-filesystemfilehandle-getfile}
 
-<div class=note><dl class=domintro>
+<div class="note domintro">
   : |file| = await |fileHandle| . {{FileSystemFileHandle/getFile()}}
   :: Returns a {{File}} representing the state on disk of the entry represented by |handle|.
-</div></dl>
+</div>
 
 <div algorithm>
 The <dfn method for=FileSystemFileHandle>getFile()</dfn> method, when invoked, must run these steps:
@@ -235,10 +234,10 @@ The <dfn method for=FileSystemFileHandle>getFile()</dfn> method, when invoked, m
 
 ### The {{FileSystemFileHandle/createWriter()}} method ### {#api-filesystemfilehandle-createwriter}
 
-<div class=note><dl class=domintro>
+<div class="note domintro">
   : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()}}
   :: Returns a {{FileSystemWriter}} that can be used to write to the file.
-</div></dl>
+</div>
 
 <div algorithm>
 The <dfn method for=FileSystemFileHandle>createWriter()</dfn> method, when invoked, must run these steps:
@@ -281,7 +280,7 @@ iterable itself?
 
 ### The {{FileSystemDirectoryHandle/getFile()}} method ### {#api-filesystemdirectoryhandle-getfile}
 
-<div class=note><dl class=domintro>
+<div class="note domintro">
   : |fileHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getFile()|getFile}}(|name|)
   :: Returns a handle for a file named |name| in the directory represented by |directoryHandle|. If
      no such file exists, this rejects.
@@ -294,7 +293,7 @@ iterable itself?
      because the user agent for security reasons decided not to allow creation of the file.
 
      See TODO section for possible security reasons.
-</div></dl>
+</div>
 
 <div algorithm>
 The <dfn method for=FileSystemDirectoryHandle>getFile(|name|, |options|)</dfn> method, when invoked,
@@ -306,7 +305,7 @@ must run these steps:
 
 ### The {{FileSystemDirectoryHandle/getDirectory()}} method ### {#api-filesystemdirectoryhandle-getdirectory}
 
-<div class=note><dl class=domintro>
+<div class="note domintro">
   : |subdirHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getDirectory()|getDirectory}}(|name|)
   :: Returns a handle for a directory named |name| in the directory represented by
     |directoryHandle|. If no such directory exists, this rejects.
@@ -317,7 +316,7 @@ must run these steps:
      directory failed, this rejects. Creation can fail because there already is a file with the same
      name, or because the name uses characters that aren't supported in file names on the underlying
      file system.
-</div></dl>
+</div>
 
 <div algorithm>
 The <dfn method for=FileSystemDirectoryHandle>getDirectory(|name|, |options|)</dfn> method, when
@@ -329,10 +328,10 @@ invoked, must run these steps:
 
 ### The {{FileSystemDirectoryHandle/getEntries()}} method ### {#api-filesystemdirectoryhandle-getentries}
 
-<div class=note><dl class=domintro>
+<div class="note domintro">
   : for await (const |handle| of |directoryHandle| . {{FileSystemDirectoryHandle/getEntries()}}) {}
   :: Iterates over all entries whose parent is the entry represented by |directoryHandle|.
-</dl></div>
+</div>
 
 <div algorithm>
 The <dfn method for=FileSystemDirectoryHandle>getEntries()</dfn> method, when invoked, must run
@@ -344,11 +343,11 @@ these steps:
 
 ### The {{FileSystemDirectoryHandle/removeRecursively()}} method ### {#api-filesystemdirectoryhandle-removerecursively}
 
-<div class=note><dl class=domintro>
+<div class="note domintro">
   : await |directoryHandle| . {{FileSystemDirectoryHandle/removeRecursively()}}
   :: Removes the entry represented by |directoryHandle|, and all entries contained within it,
      recursively.
-</dl></div>
+</div>
 
 ## The {{FileSystemWriter}} interface ## {#api-filesystemwriter}
 
@@ -362,11 +361,11 @@ interface FileSystemWriter {
 
 ### The {{FileSystemWriter/write()}} method ### {#api-filesystemwriter-write}
 
-<div class=note><dl class=domintro>
+<div class="note domintro">
   : await |writer| . {{FileSystemWriter/write()|write}}(|position|, |data|)
   :: Writes the content of |data| into the file associated with |writer| at position |position|.
      If |position| is past the end of the file writing will fail and this method rejects.
-</dl></div>
+</div>
 
 <div algorithm>
 The <dfn method for=FileSystemWriter>write(|position|, |data|)</dfn> method, when invoked, must run
@@ -378,11 +377,11 @@ these steps:
 
 ### The {{FileSystemWriter/truncate()}} method ### {#api-filesystemwriter-truncate}
 
-<div class=note><dl class=domintro>
+<div class="note domintro">
   : await |writer| . {{FileSystemWriter/truncate()|truncate}}(|size|)
   :: Resizes the file associated with |writer| to be |size| bytes long. If |size| is larger than
      the current file size this pads the file with zero bytes, otherwise it truncates the file.
-</dl></div>
+</div>
 
 <div algorithm>
 The <dfn method for=FileSystemWriter>truncate(|size|)</dfn> method, when invoked, must run these
@@ -400,9 +399,9 @@ steps:
 enum ChooseFileSystemEntriesType { "openFile", "saveFile", "openDirectory" };
 
 dictionary ChooseFileSystemEntriesOptionsAccepts {
-  DOMString description;
-  sequence<DOMString> mimeTypes;
-  sequence<DOMString> extensions;
+  USVString description;
+  sequence<USVString> mimeTypes;
+  sequence<USVString> extensions;
 };
 
 dictionary ChooseFileSystemEntriesOptions {
@@ -419,7 +418,7 @@ partial interface Window {
 };
 </xmp>
 
-<div class=note><dl class=domintro>
+<div class="note domintro">
   : |result| = await window . {{Window/chooseFileSystemEntries()|chooseFileSystemEntries}}(|options|)
   :: Shows a file picker dialog to the user and returns handles for the selected files or
      directories.
@@ -455,7 +454,7 @@ partial interface Window {
      If |options|.{{ChooseFileSystemEntriesOptions/excludeAcceptAllOption}} is true, or if no valid
      entries exist in |options|.{{ChooseFileSystemEntriesOptions/accepts}}, a option matching all
      files will be included in the file types the dialog lets the user select.
-</dl></div>
+</div>
 
 <div algorithm>
 The <dfn method for=Window>chooseFileSystemEntries(|options|)</dfn> method, when invoked, must run
@@ -483,12 +482,15 @@ partial interface FileSystemDirectoryHandle {
 };
 </xmp>
 
-<div class=note><dl class=domintro>
+<div class="note domintro">
   : |directoryHandle| = {{FileSystemDirectoryHandle}} .
     {{FileSystemDirectoryHandle/getSystemDirectory()|getSystemDirectory}}({
        {{GetSystemDirectoryOptions/type}}: {{SystemDirectoryType/"sandbox"}} })
   :: Returns the sandboxed filesystem.
-</div></dl>
+</div>
+
+Issue(27): getSystemDirectory might not be the best name. Also perhaps should be on Window rather
+than on FileSystemDirectoryHandle.
 
 <div algorithm>
 The <dfn method for=FileSystemDirectoryHandle>getSystemDirectory(|options|)</dfn> method, when
