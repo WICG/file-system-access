@@ -41,6 +41,10 @@ Some example use cases we would like to address:
   managers, music managers/media players, or even drawing/publishing apps that
   want access to the raw font files for all fonts on the system.
 
+But even though we'd like to design the API to eventually enable all these use
+cases, initially we'd almost certainly be shipping a very limited API surface
+with limited capabilities.
+
 ## Non-goals
 
 At least for now out of scope is access to the full file system, subscribing to
@@ -210,31 +214,40 @@ for await (const entry of font_dir.entries()) {
 ```
 
 # Proposed security models
-The spec has hooks for the browser to customize the security model:
 
-- When to allow files to be opened as `writable`
-- When to allow files to be re opened
-- When to allow files to be saved
+By far the hardest part for this API is of course going to be the security model
+to use. The API provides a lot of scary power to websites that could be abused
+in many terrible ways. There are both major privacy risks (websites getting
+access to private data they weren't supposed to have access to) as well as
+security risks (websites modifying executables, installing viruses, encrypting
+the users data and demanding ransoms, etc). So great care will have to be taken
+to limit how much damage a website can do, and make sure a user understands what
+they are giving a website access to. Persistent access to a file could also be
+used as some form of super-cookie (but of course all access to files should be
+revoked when cookies/storage are cleared, so this shouldn't be too bad).
 
-__Native app like__<br>
-One proposed security model is to allow sites to always open files as `writable`. Files could be reopened on later visits to the site. If the file had been modified since the last time the site opened it, the browser could show non blocking UI notifying the user:
+The primary entry point for this API is a file picker (i.e. a chooser). As such
+the user always is in full control over what files and directories a website has
+access to. Furthermore every access to the file (either reading or writing)
+after a website has somehow gotten a handle is done through an asynchronous API,
+so browser could include more prompting and/or permission checking at those
+points. This last bit is particularly important when it comes to persisting
+handles in IndexedDB. When a handle is retrieved later a user agent might want
+to re-prompt to allow access to the file or directory.
 
-<div align="center">
-    <img src="img/read-warning.png" alt="Warning text when reading a file" width="300px"></img>
-</div>
+Other parts that can contribute to making this API as safe as possible for users
+include:
 
-When the file is written, the browser could show another non blocking UI notifying the user:
+## Limiting access to certain directories
 
-<div align="center">
-    <img src="img/write-warning.png" alt="Warning text when writing a file" width="300px"></img>
-</div>
+For example it is probably a good idea for a user agent to not allow the user
+to select things like the root of a filesystem, certain system directories,
+the users entire home directory, or even their entire downloads directory.
 
-Alternatively, the browser could choose not to show any UI. This would match the model that users expect from native apps, while restricting the site's actual access only to files that the user has explicitly granted access for.
+## Limiting write access to certain file types
 
-__More restictive__<br>
-Alternatively, the site could choose to only allow files to be `writable` if the user accepts some additional permission (such as a "Allow modifications" checkbox on the filepicker). The non blocking UI mentioned above could be a blocking UI that the user has to accept. The UI could be shown for *any* read, rather than just reads on modified files.
+Not allowing websites to write to certain file types such as executables will
+limit the possible attack surface.
 
-# Known weirdness
-- Sites could communicate with each other via a shared file
-- Could write a super cookie. __open issue__ Should we clear file access when CBD?
-- Sites could bill “save as…” like “download…” but then be able to retain access to it *Could exacerbate super cookie issue from above*
+## Other things user agents come up with
+
