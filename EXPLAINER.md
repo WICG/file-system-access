@@ -1,20 +1,52 @@
-# Interface
+# What is all this?
+
 The exact interfaces involved here are yet to be decided. But at a high level
 what we're providing is several bits:
 
 1. A modernized version of the existing (but not really standardized)
    [`Entry`](https://www.w3.org/TR/2012/WD-file-system-api-20120417/#idl-def-Entry)
    API in the form of new (names TBD) `FileSystemFileHandle` and
-   `FileSystemDirectoryHandle` interfaces.
+   `FileSystemDirectoryHandle` interfaces (see also the [wich entries-api](https://wicg.github.io/entries-api/),
+   a read-only and slightly more standardized subset of this same API).
 2. A modernized version of the existing (and also not really standardized)
    [`FileWriter`](https://dev.w3.org/2009/dap/file-system/file-writer.html#the-filewriter-interface)
    interface.
 3. Various entry points to get a handle representing a limited view of the
    native file system. I.e. either via a file picker, or to get access to
    certain well known directories, or even to get access to the whole native
-   file system. Mimicing things such as chrome's
+   file system. Mimicking things such as chrome's
    [`chrome.fileSystem.chooseEntry`](https://developer.chrome.com/apps/fileSystem#method-chooseEntry) API.
 
+## Goals
+
+The main overarching goal here is to increase interoperability of web applications
+with native applications, specifically where it comes to being able to operate on
+the native file system.
+
+Traditionally the file system is how different apps collaborate and share data on
+desktop platforms, but also on mobile there is generally at least some sort of
+concept of a file system, although it is less prevalent there.
+
+Some example use cases we would like to address:
+
+* A simple "single file" editor. Open a file, edit it, save the changes back to
+  the same file or other files. Also possible integration with a "file-type
+  handler" kind of API. Things like (rich) text editors, photo editors, etc.
+
+* Multi-File editors. Things like IDEs, CAD style applications, the kind of apps
+  where you work on a project consisting of multiple files, usually together in
+  the same directory.
+
+* Apps that want to work with "libraries" of certain types of files. I.e. photo
+  managers, music managers/media players, or even drawing/publishing apps that
+  want access to the raw font files for all fonts on the system.
+
+## Non-goals
+
+At least for now out of scope is access to the full file system, subscribing to
+file change notifications, probably many things related to file metadata (i.e.
+marking files as executable/hidden, etc). Also not yet planning to address how
+this new API might integrate with drag&drop and `<input type=file>`.
 
 # Example code
 
