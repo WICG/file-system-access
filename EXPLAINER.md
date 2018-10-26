@@ -56,8 +56,8 @@ this new API might integrate with drag&drop and `<input type=file>`.
 
 ```javascript
 // Show a file picker to open a file.
-const file_ref = await FileSystemFileHandle.choose({
-    type: 'open',
+const file_ref = await self.chooseFileSystemEntries({
+    type: 'openFile',
     multiple: false, // If true, returns an array rather than a single handle.
     
     // If true, the resulting file reference won't be writable. Note that there
@@ -92,9 +92,8 @@ file_reader.onload = (event) => {
     // access for this website to this file after it acquired the file
     // reference.
     const file_writer = await file_ref.createWriter();
-    await file_writer.write(new Blob(['foobar']));
-    file_writer.seek(1024);
-    await file_writer.write(new Blob(['bla']));
+    await file_writer.write(0, new Blob(['foobar']));
+    await file_writer.write(1024, new Blob(['bla']));
 
     // Can also write contents of a ReadableStream.
     let response = await fetch('foo');
@@ -133,7 +132,8 @@ if (file_ref) {
 
 // ...
 
-// Retrieve a file you've opened before. Show's no filepicker UI.
+// Retrieve a file you've opened before. Show's no filepicker UI, but can show
+// some other permission prompt if the browser so desires.
 // The browser can choose when to allow or not allow this open.
 let file_id = "123"; // Some logic to determine which file you'd like to open
 let transaction = db.transaction(["filerefs"], "readonly");
@@ -174,7 +174,7 @@ navigator.serviceWorker.addEventListener('message', e => {
 Also possible to get access to an entire directory.
 
 ```javascript
-const dir_ref = await FileSystemDirectoryHandle.choose();
+const dir_ref = await self.chooseFileSystemEntries({type: 'openDirectory'});
 if (!dir_ref) {
     // User cancelled, or otherwise failed to open a directory.
     return;
@@ -251,3 +251,13 @@ limit the possible attack surface.
 
 ## Other things user agents come up with
 
+# Staged implementation
+
+At least in chrome we're not planning on implementing and shipping all this at
+once. Quite likely an initial implementation will for example not include any of
+the transferability/serializability and thus retainability of references. We do
+want to add those feature in later iterations, so we're designing the API to
+support them and hope to come up with a security model that can be adapted to
+support them, but explicitly not supporting everything initially should make
+things slightly less scary/dangerous and give more time to figure out how to
+expose the really powerful bits.
