@@ -6,7 +6,7 @@ what we're providing is several bits:
 1. A modernized version of the existing (but not really standardized)
    [`Entry`](https://www.w3.org/TR/2012/WD-file-system-api-20120417/#idl-def-Entry)
    API in the form of new (names TBD) `FileSystemFileHandle` and
-   `FileSystemDirectoryHandle` interfaces (see also the [wich entries-api](https://wicg.github.io/entries-api/),
+   `FileSystemDirectoryHandle` interfaces (see also the [wicg entries-api](https://wicg.github.io/entries-api/),
    a read-only and slightly more standardized subset of this same API).
 2. A modernized version of the existing (and also not really standardized)
    [`FileWriter`](https://dev.w3.org/2009/dap/file-system/file-writer.html#the-filewriter-interface)
