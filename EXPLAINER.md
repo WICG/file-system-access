@@ -213,11 +213,11 @@ file or saving to a new file.
 
 ```javascript
 // Assume we at some point got a valid directory handle.
-const dir_ref = await FileSystemDirectoryHandle.choose();
+const dir_ref = await self.chooseFileSystemEntries({type: 'openDirectory'});
 if (!dir_ref) return;
 
 // Now get a file reference by showing another file picker:
-const file_ref = await FileSystemFileHandle.choose();
+const file_ref = await self.chooseFileSystemEntries({type: 'openFile'});
 if (!file_ref) {
     // User cancelled, or otherwise failed to open a file.
     return;
