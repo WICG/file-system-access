@@ -59,14 +59,14 @@ this new API might integrate with drag&drop and `<input type=file>`.
 const file_ref = await self.chooseFileSystemEntries({
     type: 'openFile',
     multiple: false, // If true, returns an array rather than a single handle.
-    
+
     // If true, the resulting file reference won't be writable. Note that there
     // is no guarantee that the resulting file reference will be writable when
     // readOnly is set to false. Both filesystem level permissions as well as
     // browser UI/user intent might result in a file reference that isn't usable
     // for writing, even if the website asked for a writable reference.
     readOnly: false,
-    
+
     accepts: [{description: 'Images', extensions: ['jpg', 'gif', 'png']}],
     suggestedStartLocation: 'pictures-library'
 });
@@ -196,10 +196,48 @@ await file_ref.copyTo(dir_ref, 'new_name', {overwrite: true});
 
 // You can also navigate the file system:
 const dir2 = await file_ref.getParent();
-// dir2.fullPath == dir_ref.fullPath.
+dir2.isSameEntry(dir_ref) == true;
 
 // But you can't escape from the directory you've been given access to.
 // await dir_ref.getParent() == null
+```
+
+You can also check if two references reference the same file or directory (or at
+least reference the same path), as well as lookup the relative path of an entry
+inside another directory you have access to.
+
+If for example an IDE has access to a directory, and uses that to display a tree
+view of said directory, this can be useful to be able to highlight a file in that
+tree, even if the file is opened through a new file picker by opening an existing
+file or saving to a new file.
+
+```javascript
+// Assume we at some point got a valid directory handle.
+const dir_ref = await FileSystemDirectoryHandle.choose();
+if (!dir_ref) return;
+
+// Now get a file reference by showing another file picker:
+const file_ref = await FileSystemFileHandle.choose();
+if (!file_ref) {
+    // User cancelled, or otherwise failed to open a file.
+    return;
+}
+
+// Check if file_ref exists inside dir_ref:
+const relative_path = await dir_ref.resolve(file_ref);
+if (relative_path === null) {
+    // Not inside dir_ref
+} else {
+    // relative_path is an array of names, giving the relative path
+    // from dir_ref to the file that is represented by file_ref:
+    let entry = dir_ref;
+    for (const name of relative_path) {
+        entry = await entry.getChild(name);
+    }
+
+    // Now |entry| will represent the same file on disk as |file_ref|.
+    assert entry.isSameEntry(file_ref) == true;
+}
 ```
 
 And perhaps even possible to get access to certain "well-known" directories,
