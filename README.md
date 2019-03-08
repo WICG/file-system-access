@@ -1,4 +1,4 @@
-# Writable files
+# Native File System API
 View proposals in the [EXPLAINER](EXPLAINER.md) and the (very early draft) [spec](https://wicg.github.io/writable-files/).
 
 ## Problem
