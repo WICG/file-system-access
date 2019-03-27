@@ -1,5 +1,5 @@
 # Native File System API
-View proposals in the [EXPLAINER](EXPLAINER.md) and the (very early draft) [spec](https://wicg.github.io/writable-files/).
+View proposals in the [EXPLAINER](EXPLAINER.md) and the (very early draft) [spec](https://wicg.github.io/native-file-system/).
 
 ## Problem
 Today, if a web site wants to create experiences involving local files (document editor, image compressor, etc.) they are at a disadvantage to native apps. A web site must ask the user to reopen a file every time they want to edit it. After opening, the site can only save changes by re downloading the file to the Downloads folder. A native app, by comparison, can maintain a most recently used list, auto save, and save files anywhere the user wants.
