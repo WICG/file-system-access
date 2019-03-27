@@ -1,14 +1,14 @@
 <pre class=metadata>
-Title: Writable Files
-Shortname: WritableFiles
+Title: Native File System
+Shortname: native-file-system
 Abstract: This document defines a web platform API that lets websites gain write access to the
   native file system. It builds on [[FILE-API]], but adds lots of new functionality on top.
 Status: ED
-ED: https://wicg.github.io/writable-files/
+ED: https://wicg.github.io/native-file-system/
 Level: 1
 Editor: Marijn Kruisselbrink, Google, mek@chromium.org, w3cid 72440
 Group: WICG
-Repository: wicg/writable-files
+Repository: wicg/native-file-system
 Indent: 2
 Complain About: accidental-2119 yes, missing-example-ids yes
 Markup Shorthands: css no, markdown yes
