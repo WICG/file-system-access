@@ -59,21 +59,8 @@ data</dfn> and a <dfn for="file entry">modification timestamp</dfn>.
 A <dfn lt="directory|directory entry">directory entry</dfn> additionally consists of a [=/set=] of
 <dfn for="directory entry">entries</dfn>. Each member is either a [=file=] or a [=directory=].
 
-The <dfn lt="parent|parent directory">parent directory</dfn> of a [=/entry=] |child| is the
-[=directory=] |parent| for which |parent|'s [=entries=] [=list/contains=] |child|, if such a
-[=directory=] exist. Each [=directory entry=] must be [=list/contained=] by the [=entries=] of at
-most one [=directory entry=], while each [=file entry=] must be [=list/contained=] by the entries
-of exactly one [=directory entry=].
-
-If a [=directory=] does not have a [=parent directory=], it is called a <dfn>root directory</dfn>.
-
-Each [=/entry=] |entry| has an associated <dfn>file system</dfn>, which is either |entry| itself if
-|entry| is a [=root directory=], or otherwise is equal to the [=file system=] of |entry|'s [=parent
-directory=].
-
 Issue: TODO: Explain how entries map to files on disk (multiple entries can map to the same file or
-directory on disk but doesn't have to map to any file on disk). Root directories typically don't map
-to files on disk at all. Same file represented by different entries can have different parents etc.
+directory on disk but doesn't have to map to any file on disk).
 
 ## The {{FileSystemHandle}} interface ## {#api-filesystemhandle}
 
