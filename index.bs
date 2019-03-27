@@ -83,8 +83,7 @@ interface FileSystemHandle {
   readonly attribute boolean isDirectory;
   readonly attribute USVString name;
 
-  Promise<FileSystemDirectoryHandle> getParent();
-
+  Promise<FileSystemHandle> moveTo(USVString name);
   Promise<FileSystemHandle> moveTo(
       FileSystemDirectoryHandle parent, optional USVString name);
   Promise<FileSystemHandle> copyTo(
@@ -117,30 +116,10 @@ associated [=FileSystemHandle/entry=] is a [=directory entry=], and false otherw
 The <dfn attribute for=FileSystemHandle>name</dfn> attribute must return the [=entry/name=] of the
 associated [=FileSystemHandle/entry=].
 
-### The {{FileSystemHandle/getParent()}} method ### {#api-filesystemhandle-getparent}
-
-<div class="note domintro">
-  : |parent| = await |handle| . {{FileSystemHandle/getParent()}}
-  :: Returns a promise resolved to the [=parent directory=] of |handle|.
-     If |handle| is the [=root directory=] of its file system the promise
-     resolves to `null`.
-
-     Can reject if the entry no longer exists in the underlying file system, or
-     if some error prevents reading the entry or its parent.
-</div>
-
-<div algorithm>
-The <dfn method for=FileSystemHandle>getParent()</dfn> method, when invoked, must run these steps:
-
-1. TODO
-
-</div>
-
 ### The {{FileSystemHandle/moveTo()}} method ### {#api-filesystemhandle-moveto}
 
 <div class="note domintro">
-  : |newHandle| = await |handle| . {{FileSystemHandle/moveTo()|moveTo}}(await
-        |handle|.{{FileSystemHandle/getParent()}}, |newName|)
+  : |newHandle| = await |handle| . {{FileSystemHandle/moveTo()|moveTo}}(|newName|)
   :: Renames the entry represented by |handle| to |newName|.
 
   : |newHandle| = await |handle| . {{FileSystemHandle/moveTo()|moveTo}}(|otherDir|)
@@ -167,10 +146,6 @@ these steps:
 ### The {{FileSystemHandle/copyTo()}} method ### {#api-filesystemhandle-copyto}
 
 <div class="note domintro">
-  : |newHandle| = await |handle| . {{FileSystemHandle/copyTo()|copyTo}}(await
-        |handle|.{{FileSystemHandle/getParent()}}, |newName|)
-  :: Creates a copy of the entry represented by |handle| with name |newName|.
-
   : |newHandle| = await |handle| . {{FileSystemHandle/copyTo()|copyTo}}(|otherDir|)
   :: Creates a copy of the entry represented by |handle| in |otherDir|, while keeping its existing
      name.
