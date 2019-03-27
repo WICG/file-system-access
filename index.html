@@ -1,7 +1,7 @@
 <!doctype html><html lang="en">
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-  <title>Writable Files</title>
+  <title>Native File System</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 <style data-fill-with="stylesheet">/******************************************************************************
  *                   Style sheet for the W3C specifications                   *
@@ -1212,9 +1212,9 @@ Possible extra rowspan handling
 		}
 	}
 </style>
-  <meta content="Bikeshed version 8ac92da89bb2253e0da87e20a9b9caa745f5f5b6" name="generator">
-  <link href="https://wicg.github.io/writable-files/" rel="canonical">
-  <meta content="3a8b5563e152723824037843490bbee1804c62cd" name="document-revision">
+  <meta content="Bikeshed version 26f19cfb647ccdfdcf6a1f81893cb428836da342" name="generator">
+  <link href="https://wicg.github.io/native-file-system/" rel="canonical">
+  <meta content="dc64db87714357ad101b92c5631a14e4d4da7f35" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1485,21 +1485,21 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"></p>
-   <h1 class="p-name no-ref" id="title">Writable Files</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2019-03-26">26 March 2019</time></span></h2>
+   <h1 class="p-name no-ref" id="title">Native File System</h1>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2019-03-27">27 March 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
-     <dd><a class="u-url" href="https://wicg.github.io/writable-files/">https://wicg.github.io/writable-files/</a>
+     <dd><a class="u-url" href="https://wicg.github.io/native-file-system/">https://wicg.github.io/native-file-system/</a>
      <dt>Issue Tracking:
-     <dd><a href="https://github.com/wicg/writable-files/issues/">GitHub</a>
+     <dd><a href="https://github.com/wicg/native-file-system/issues/">GitHub</a>
      <dd><a href="#issues-index">Inline In Spec</a>
      <dt class="editor">Editor:
      <dd class="editor p-author h-card vcard" data-editor-id="72440"><a class="p-name fn u-email email" href="mailto:mek@chromium.org">Marijn Kruisselbrink</a> (<span class="p-org org">Google</span>)
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2019 the Contributors to the Writable Files Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2019 the Contributors to the Native File System Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
 A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available. </p>
    <hr title="Separator for header">
   </div>
@@ -1989,7 +1989,7 @@ these steps:
     </dl>
    </div>
    <p class="issue" id="issue-2a3d989a"><a class="self-link" href="#issue-2a3d989a"></a> getSystemDirectory might not be the best name. Also perhaps should be on Window rather
-than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/writable-files/issues/27">&lt;https://github.com/wicg/writable-files/issues/27></a></p>
+than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-system/issues/27">&lt;https://github.com/wicg/native-file-system/issues/27></a></p>
    <div class="algorithm" data-algorithm="getSystemDirectory(options)">
      The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export id="dom-filesystemdirectoryhandle-getsystemdirectory"><code>getSystemDirectory(<var>options</var>)</code></dfn> method, when
 invoked, must run these steps: 
@@ -2447,7 +2447,7 @@ previous issue).<a href="#issue-6152e539"> ↵ </a></div>
    <div class="issue"> Should getEntries be its own method, or should FileSystemDirectoryHandle just be an async
 iterable itself?<a href="#issue-bd7b13a2"> ↵ </a></div>
    <div class="issue"> getSystemDirectory might not be the best name. Also perhaps should be on Window rather
-than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/writable-files/issues/27">&lt;https://github.com/wicg/writable-files/issues/27></a><a href="#issue-2a3d989a"> ↵ </a></div>
+than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-system/issues/27">&lt;https://github.com/wicg/native-file-system/issues/27></a><a href="#issue-2a3d989a"> ↵ </a></div>
   </div>
   <aside class="dfn-panel" data-for="entry">
    <b><a href="#entry">#entry</a></b><b>Referenced in:</b>
