@@ -226,6 +226,8 @@ interface FileSystemDirectoryHandle : FileSystemHandle {
   // This really returns an async iterable, but that is not yet expressable in WebIDL.
   object getEntries();
 
+  Promise<sequence<USVString>?> resolve(FileSystemHandle handle);
+
   Promise<void> removeRecursively();
 };
 </xmp>
@@ -297,6 +299,32 @@ invoked, must run these steps:
 
 <div algorithm>
 The <dfn method for=FileSystemDirectoryHandle>getEntries()</dfn> method, when invoked, must run
+these steps:
+
+1. TODO
+
+</div>
+
+### The {{FileSystemDirectoryHandle/resolve()}} method ### {#api-filesystemdirectoryhandle-resolve}
+
+<div class="note domintro">
+  : |relativePath| = await |directoryHandle| . {{FileSystemDirectoryHandle/resolve()|FileSystemDirectoryHandle/resolve}}(|otherHandle|)
+  :: If |otherHandle| is a descendant of |directoryHandle|, returns an array representing the path
+     you can take to get from |directoryHandle| to |otherHandle|.
+
+     For example if |otherHandle| is a direct child of |directoryHandle|,
+     |relativePath| will be equal to an array containing just |otherHandle|.name.
+
+     If |otherHandle| isn't a descendant of |directoryHandle|, resolves with `null`.
+
+     If |otherHandle| represents the same entry as |directoryHandle|, resolves with an empty array.
+
+     If for whatever reason |directoryHandle| or |otherHandle| isn't readable, rejects with some
+     exception.
+</div>
+
+<div algorithm>
+The <dfn method for=FileSystemDirectoryHandle>resolve(|handle|)</dfn> method, when invoked, must run
 these steps:
 
 1. TODO
