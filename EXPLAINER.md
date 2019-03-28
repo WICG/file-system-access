@@ -13,8 +13,7 @@ what we're providing is several bits:
    interface.
 3. Various entry points to get a handle representing a limited view of the
    native file system. I.e. either via a file picker, or to get access to
-   certain well known directories, or even to get access to the whole native
-   file system. Mimicking things such as chrome's
+   certain well known directories. Mimicking things such as chrome's
    [`chrome.fileSystem.chooseEntry`](https://developer.chrome.com/apps/fileSystem#method-chooseEntry) API.
 
 ## Goals
