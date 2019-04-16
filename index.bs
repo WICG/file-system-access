@@ -343,7 +343,8 @@ these steps:
 
 <xmp class=idl>
 interface FileSystemWriter {
-  Promise<void> write(unsigned long long position, (Blob or ReadableStream) data);
+  Promise<void> write(unsigned long long position, (BufferSource or Blob or USVString) data);
+  WritableStream asWritableStream();
   Promise<void> truncate(unsigned long long size);
   Promise<void> close();
 };
@@ -360,6 +361,22 @@ interface FileSystemWriter {
 <div algorithm>
 The <dfn method for=FileSystemWriter>write(|position|, |data|)</dfn> method, when invoked, must run
 these steps:
+
+1. TODO
+
+</div>
+
+### The {{FileSystemWriter/asWritableStream()}} method ### {#api-filesystemwriter-aswritablestream}
+
+<div class="note domintro">
+  : let |stream| = |writer| . {{FileSystemWriter/asWritableStream()}}
+  :: Returns a {{WritableStream}} that can be used to write data into the file, starting
+     at the beginning of the file.
+</div>
+
+<div algorithm>
+The <dfn method for=FileSystemWriter>asWritableStream()</dfn> method, when invoked,
+must run these steps:
 
 1. TODO
 
