@@ -94,9 +94,11 @@ file_reader.onload = (event) => {
     await file_writer.write(0, new Blob(['foobar']));
     await file_writer.write(1024, new Blob(['bla']));
 
+    // Can also write using a WritableStream
+    let stream = file_writer.asWritableStream();
     // Can also write contents of a ReadableStream.
     let response = await fetch('foo');
-    await file_writer.write(response.body);
+    await response.body.pipeTo(stream);
 };
 
 // file_ref.file() method will reject if site (no longer) has access to the
