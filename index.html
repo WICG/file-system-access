@@ -1212,9 +1212,9 @@ Possible extra rowspan handling
 		}
 	}
 </style>
-  <meta content="Bikeshed version 90d8208675530570e2845a328f5a44d1ddd26fec" name="generator">
+  <meta content="Bikeshed version 4d208866a95a1121fceca549a36bfb09c5bf1705" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="58f305350b351ff384dbc2e2013a245a05756242" name="document-revision">
+  <meta content="0fb09c14a1a98658f6483dc168b74ad36a38f6f3" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1486,7 +1486,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2019-03-28">28 March 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2019-04-16">16 April 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1532,10 +1532,9 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       <li>
        <a href="#api-filesystemhandle"><span class="secno">2.2</span> <span class="content">The <code class="idl"><span>FileSystemHandle</span></code> interface</span></a>
        <ol class="toc">
-        <li><a href="#api-filesystemhandle-getparent"><span class="secno">2.2.1</span> <span class="content">The <code class="idl"><span>getParent()</span></code> method</span></a>
-        <li><a href="#api-filesystemhandle-moveto"><span class="secno">2.2.2</span> <span class="content">The <code class="idl"><span>moveTo()</span></code> method</span></a>
-        <li><a href="#api-filesystemhandle-copyto"><span class="secno">2.2.3</span> <span class="content">The <code class="idl"><span>copyTo()</span></code> method</span></a>
-        <li><a href="#api-filesystemhandle-remove"><span class="secno">2.2.4</span> <span class="content">The <code class="idl"><span>remove()</span></code> method</span></a>
+        <li><a href="#api-filesystemhandle-moveto"><span class="secno">2.2.1</span> <span class="content">The <code class="idl"><span>moveTo()</span></code> method</span></a>
+        <li><a href="#api-filesystemhandle-copyto"><span class="secno">2.2.2</span> <span class="content">The <code class="idl"><span>copyTo()</span></code> method</span></a>
+        <li><a href="#api-filesystemhandle-remove"><span class="secno">2.2.3</span> <span class="content">The <code class="idl"><span>remove()</span></code> method</span></a>
        </ol>
       <li>
        <a href="#api-filesystemfilehandle"><span class="secno">2.3</span> <span class="content">The <code class="idl"><span>FileSystemFileHandle</span></code> interface</span></a>
@@ -1549,13 +1548,15 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
         <li><a href="#api-filesystemdirectoryhandle-getfile"><span class="secno">2.4.1</span> <span class="content">The <code class="idl"><span>getFile()</span></code> method</span></a>
         <li><a href="#api-filesystemdirectoryhandle-getdirectory"><span class="secno">2.4.2</span> <span class="content">The <code class="idl"><span>getDirectory()</span></code> method</span></a>
         <li><a href="#api-filesystemdirectoryhandle-getentries"><span class="secno">2.4.3</span> <span class="content">The <code class="idl"><span>getEntries()</span></code> method</span></a>
-        <li><a href="#api-filesystemdirectoryhandle-removerecursively"><span class="secno">2.4.4</span> <span class="content">The <code class="idl"><span>removeRecursively()</span></code> method</span></a>
+        <li><a href="#api-filesystemdirectoryhandle-resolve"><span class="secno">2.4.4</span> <span class="content">The <code class="idl"><span>resolve()</span></code> method</span></a>
+        <li><a href="#api-filesystemdirectoryhandle-removerecursively"><span class="secno">2.4.5</span> <span class="content">The <code class="idl"><span>removeRecursively()</span></code> method</span></a>
        </ol>
       <li>
        <a href="#api-filesystemwriter"><span class="secno">2.5</span> <span class="content">The <code class="idl"><span>FileSystemWriter</span></code> interface</span></a>
        <ol class="toc">
         <li><a href="#api-filesystemwriter-write"><span class="secno">2.5.1</span> <span class="content">The <code class="idl"><span>write()</span></code> method</span></a>
-        <li><a href="#api-filesystemwriter-truncate"><span class="secno">2.5.2</span> <span class="content">The <code class="idl"><span>truncate()</span></code> method</span></a>
+        <li><a href="#api-filesystemwriter-aswritablestream"><span class="secno">2.5.2</span> <span class="content">The <code class="idl"><span>asWritableStream()</span></code> method</span></a>
+        <li><a href="#api-filesystemwriter-truncate"><span class="secno">2.5.3</span> <span class="content">The <code class="idl"><span>truncate()</span></code> method</span></a>
        </ol>
      </ol>
     <li>
@@ -1602,34 +1603,26 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
    <p>Each <a data-link-type="dfn" href="#entry" id="ref-for-entry">entry</a> has an associated <dfn class="dfn-paneled" data-dfn-for="entry" data-dfn-type="dfn" data-noexport id="entry-name">name</dfn>.</p>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="file|file entry" data-noexport id="file">file entry</dfn> additionally consists of <dfn data-dfn-for="file entry" data-dfn-type="dfn" data-lt="binary data" data-noexport id="file-entry-binary-data">binary
 data<a class="self-link" href="#file-entry-binary-data"></a></dfn> and a <dfn data-dfn-for="file entry" data-dfn-type="dfn" data-noexport id="file-entry-modification-timestamp">modification timestamp<a class="self-link" href="#file-entry-modification-timestamp"></a></dfn>.</p>
-   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="directory|directory entry" data-noexport id="directory">directory entry</dfn> additionally consists of a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-set" id="ref-for-ordered-set">set</a> of <dfn class="dfn-paneled" data-dfn-for="directory entry" data-dfn-type="dfn" data-noexport id="directory-entry-entries">entries</dfn>. Each member is either a <a data-link-type="dfn" href="#file" id="ref-for-file①">file</a> or a <a data-link-type="dfn" href="#directory" id="ref-for-directory①">directory</a>.</p>
-   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="parent|parent directory" data-noexport id="parent">parent directory</dfn> of a <a data-link-type="dfn" href="#entry" id="ref-for-entry①">entry</a> <var>child</var> is the <a data-link-type="dfn" href="#directory" id="ref-for-directory②">directory</a> <var>parent</var> for which <var>parent</var>’s <a data-link-type="dfn" href="#directory-entry-entries" id="ref-for-directory-entry-entries">entries</a> <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-contain" id="ref-for-list-contain">contains</a> <var>child</var>, if such a <a data-link-type="dfn" href="#directory" id="ref-for-directory③">directory</a> exist. Each <a data-link-type="dfn" href="#directory" id="ref-for-directory④">directory entry</a> must be <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-contain" id="ref-for-list-contain①">contained</a> by the <a data-link-type="dfn" href="#directory-entry-entries" id="ref-for-directory-entry-entries①">entries</a> of at
-most one <a data-link-type="dfn" href="#directory" id="ref-for-directory⑤">directory entry</a>, while each <a data-link-type="dfn" href="#file" id="ref-for-file②">file entry</a> must be <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-contain" id="ref-for-list-contain②">contained</a> by the entries
-of exactly one <a data-link-type="dfn" href="#directory" id="ref-for-directory⑥">directory entry</a>.</p>
-   <p>If a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑦">directory</a> does not have a <a data-link-type="dfn" href="#parent" id="ref-for-parent">parent directory</a>, it is called a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="root-directory">root directory</dfn>.</p>
-   <p>Each <a data-link-type="dfn" href="#entry" id="ref-for-entry②">entry</a> <var>entry</var> has an associated <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="file-system">file system</dfn>, which is either <var>entry</var> itself if <var>entry</var> is a <a data-link-type="dfn" href="#root-directory" id="ref-for-root-directory">root directory</a>, or otherwise is equal to the <a data-link-type="dfn" href="#file-system" id="ref-for-file-system">file system</a> of <var>entry</var>’s <a data-link-type="dfn" href="#parent" id="ref-for-parent①">parent
-directory</a>.</p>
-   <p class="issue" id="issue-16e5c623"><a class="self-link" href="#issue-16e5c623"></a> TODO: Explain how entries map to files on disk (multiple entries can map to the same file or
-directory on disk but doesn’t have to map to any file on disk). Root directories typically don’t map
-to files on disk at all. Same file represented by different entries can have different parents etc.</p>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="directory|directory entry" data-noexport id="directory">directory entry</dfn> additionally consists of a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-set" id="ref-for-ordered-set">set</a> of <dfn data-dfn-for="directory entry" data-dfn-type="dfn" data-noexport id="directory-entry-entries">entries<a class="self-link" href="#directory-entry-entries"></a></dfn>. Each member is either a <a data-link-type="dfn" href="#file" id="ref-for-file①">file</a> or a <a data-link-type="dfn" href="#directory" id="ref-for-directory①">directory</a>.</p>
+   <p class="issue" id="issue-7a61bf3c"><a class="self-link" href="#issue-7a61bf3c"></a> TODO: Explain how entries map to files on disk (multiple entries can map to the same file or
+directory on disk but doesn’t have to map to any file on disk).</p>
    <h3 class="heading settled" data-level="2.2" id="api-filesystemhandle"><span class="secno">2.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle">FileSystemHandle</a></code> interface</span><a class="self-link" href="#api-filesystemhandle"></a></h3>
 <pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemhandle"><code><c- g>FileSystemHandle</c-></code></dfn> {
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isfile" id="ref-for-dom-filesystemhandle-isfile"><c- g>isFile</c-></a>;
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean①"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isdirectory" id="ref-for-dom-filesystemhandle-isdirectory"><c- g>isDirectory</c-></a>;
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString"><c- b>USVString</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="USVString" href="#dom-filesystemhandle-name" id="ref-for-dom-filesystemhandle-name"><c- g>name</c-></a>;
 
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-getparent" id="ref-for-dom-filesystemhandle-getparent"><c- g>getParent</c-></a>();
-
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①"><c- n>FileSystemHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-moveto" id="ref-for-dom-filesystemhandle-moveto"><c- g>moveTo</c-></a>(
-      <a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①"><c- n>FileSystemDirectoryHandle</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/moveTo(parent, name), FileSystemHandle/moveTo(parent)" data-dfn-type="argument" data-export id="dom-filesystemhandle-moveto-parent-name-parent"><code><c- g>parent</c-></code><a class="self-link" href="#dom-filesystemhandle-moveto-parent-name-parent"></a></dfn>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/moveTo(parent, name), FileSystemHandle/moveTo(parent)" data-dfn-type="argument" data-export id="dom-filesystemhandle-moveto-parent-name-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemhandle-moveto-parent-name-name"></a></dfn>);
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle②"><c- n>FileSystemHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-copyto" id="ref-for-dom-filesystemhandle-copyto"><c- g>copyTo</c-></a>(
-      <a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle②"><c- n>FileSystemDirectoryHandle</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/copyTo(parent, name), FileSystemHandle/copyTo(parent)" data-dfn-type="argument" data-export id="dom-filesystemhandle-copyto-parent-name-parent"><code><c- g>parent</c-></code><a class="self-link" href="#dom-filesystemhandle-copyto-parent-name-parent"></a></dfn>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString②"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/copyTo(parent, name), FileSystemHandle/copyTo(parent)" data-dfn-type="argument" data-export id="dom-filesystemhandle-copyto-parent-name-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemhandle-copyto-parent-name-name"></a></dfn>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①"><c- n>FileSystemHandle</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="method" data-export data-lt="moveTo(name)" id="dom-filesystemhandle-moveto"><code><c- g>moveTo</c-></code></dfn>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/moveTo(name)" data-dfn-type="argument" data-export id="dom-filesystemhandle-moveto-name-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemhandle-moveto-name-name"></a></dfn>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle②"><c- n>FileSystemHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-moveto" id="ref-for-dom-filesystemhandle-moveto"><c- g>moveTo</c-></a>(
+      <a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle"><c- n>FileSystemDirectoryHandle</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/moveTo(parent, name), FileSystemHandle/moveTo(parent)" data-dfn-type="argument" data-export id="dom-filesystemhandle-moveto-parent-name-parent"><code><c- g>parent</c-></code><a class="self-link" href="#dom-filesystemhandle-moveto-parent-name-parent"></a></dfn>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString②"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/moveTo(parent, name), FileSystemHandle/moveTo(parent)" data-dfn-type="argument" data-export id="dom-filesystemhandle-moveto-parent-name-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemhandle-moveto-parent-name-name"></a></dfn>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle③"><c- n>FileSystemHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-copyto" id="ref-for-dom-filesystemhandle-copyto"><c- g>copyTo</c-></a>(
+      <a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①"><c- n>FileSystemDirectoryHandle</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/copyTo(parent, name), FileSystemHandle/copyTo(parent)" data-dfn-type="argument" data-export id="dom-filesystemhandle-copyto-parent-name-parent"><code><c- g>parent</c-></code><a class="self-link" href="#dom-filesystemhandle-copyto-parent-name-parent"></a></dfn>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString③"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/copyTo(parent, name), FileSystemHandle/copyTo(parent)" data-dfn-type="argument" data-export id="dom-filesystemhandle-copyto-parent-name-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemhandle-copyto-parent-name-name"></a></dfn>);
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-remove" id="ref-for-dom-filesystemhandle-remove"><c- g>remove</c-></a>();
 };
 </pre>
-   <p>A <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle③">FileSystemHandle</a></code> object represents a <a data-link-type="dfn" href="#entry" id="ref-for-entry③">entry</a>. Each <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle④">FileSystemHandle</a></code> object is assocaited
-with a <dfn class="dfn-paneled" data-dfn-for="FileSystemHandle" data-dfn-type="dfn" data-noexport id="filesystemhandle-entry">entry</dfn> (a <a data-link-type="dfn" href="#entry" id="ref-for-entry④">entry</a>). Multiple separate objects implementing
-the <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle⑤">FileSystemHandle</a></code> interface can all be associated with the same <a data-link-type="dfn" href="#entry" id="ref-for-entry⑤">entry</a> simultaneously.</p>
+   <p>A <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle④">FileSystemHandle</a></code> object represents a <a data-link-type="dfn" href="#entry" id="ref-for-entry①">entry</a>. Each <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle⑤">FileSystemHandle</a></code> object is assocaited
+with a <dfn class="dfn-paneled" data-dfn-for="FileSystemHandle" data-dfn-type="dfn" data-noexport id="filesystemhandle-entry">entry</dfn> (a <a data-link-type="dfn" href="#entry" id="ref-for-entry②">entry</a>). Multiple separate objects implementing
+the <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle⑥">FileSystemHandle</a></code> interface can all be associated with the same <a data-link-type="dfn" href="#entry" id="ref-for-entry③">entry</a> simultaneously.</p>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-isfile" id="ref-for-dom-filesystemhandle-isfile①">isFile</a></code>
@@ -1637,40 +1630,21 @@ the <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-f
       <p>Returns true iff <var>handle</var> is a <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle">FileSystemFileHandle</a></code>.</p>
      <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-isdirectory" id="ref-for-dom-filesystemhandle-isdirectory①">isDirectory</a></code>
      <dd data-md>
-      <p>Returns true iff <var>handle</var> is a <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle③">FileSystemDirectoryHandle</a></code>.</p>
+      <p>Returns true iff <var>handle</var> is a <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle②">FileSystemDirectoryHandle</a></code>.</p>
      <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-name" id="ref-for-dom-filesystemhandle-name①">name</a></code>
      <dd data-md>
       <p>Returns the <a data-link-type="dfn" href="#entry-name" id="ref-for-entry-name">name</a> of the entry represented by <var>handle</var>.</p>
     </dl>
    </div>
-   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="attribute" data-export id="dom-filesystemhandle-isfile"><code>isFile</code></dfn> attribute must return true if the associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry">entry</a> is a <a data-link-type="dfn" href="#file" id="ref-for-file③">file entry</a>, and false otherwise.</p>
+   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="attribute" data-export id="dom-filesystemhandle-isfile"><code>isFile</code></dfn> attribute must return true if the associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry">entry</a> is a <a data-link-type="dfn" href="#file" id="ref-for-file②">file entry</a>, and false otherwise.</p>
    <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="attribute" data-export id="dom-filesystemhandle-isdirectory"><code>isDirectory</code></dfn> attribute must return true if the
-associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①">entry</a> is a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑧">directory entry</a>, and false otherwise.</p>
+associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①">entry</a> is a <a data-link-type="dfn" href="#directory" id="ref-for-directory②">directory entry</a>, and false otherwise.</p>
    <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="attribute" data-export id="dom-filesystemhandle-name"><code>name</code></dfn> attribute must return the <a data-link-type="dfn" href="#entry-name" id="ref-for-entry-name①">name</a> of the
 associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②">entry</a>.</p>
-   <h4 class="heading settled" data-level="2.2.1" id="api-filesystemhandle-getparent"><span class="secno">2.2.1. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-getparent" id="ref-for-dom-filesystemhandle-getparent①">getParent()</a></code> method</span><a class="self-link" href="#api-filesystemhandle-getparent"></a></h4>
+   <h4 class="heading settled" data-level="2.2.1" id="api-filesystemhandle-moveto"><span class="secno">2.2.1. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-moveto" id="ref-for-dom-filesystemhandle-moveto①">moveTo()</a></code> method</span><a class="self-link" href="#api-filesystemhandle-moveto"></a></h4>
    <div class="note domintro" role="note">
     <dl>
-     <dt data-md><var>parent</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-getparent" id="ref-for-dom-filesystemhandle-getparent②">getParent()</a></code>
-     <dd data-md>
-      <p>Returns a promise resolved to the <a data-link-type="dfn" href="#parent" id="ref-for-parent②">parent directory</a> of <var>handle</var>.
- If <var>handle</var> is the <a data-link-type="dfn" href="#root-directory" id="ref-for-root-directory①">root directory</a> of its file system the promise
- resolves to <code>null</code>.</p>
-      <p>Can reject if the entry no longer exists in the underlying file system, or
- if some error prevents reading the entry or its parent.</p>
-    </dl>
-   </div>
-   <div class="algorithm" data-algorithm="getParent()">
-     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="method" data-export id="dom-filesystemhandle-getparent"><code>getParent()</code></dfn> method, when invoked, must run these steps: 
-    <ol>
-     <li data-md>
-      <p>TODO</p>
-    </ol>
-   </div>
-   <h4 class="heading settled" data-level="2.2.2" id="api-filesystemhandle-moveto"><span class="secno">2.2.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-moveto" id="ref-for-dom-filesystemhandle-moveto①">moveTo()</a></code> method</span><a class="self-link" href="#api-filesystemhandle-moveto"></a></h4>
-   <div class="note domintro" role="note">
-    <dl>
-     <dt data-md><var>newHandle</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-moveto" id="ref-for-dom-filesystemhandle-moveto②">moveTo</a></code>(await <var>handle</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-getparent" id="ref-for-dom-filesystemhandle-getparent③">getParent()</a></code>, <var>newName</var>)
+     <dt data-md><var>newHandle</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-moveto" id="ref-for-dom-filesystemhandle-moveto②">moveTo</a></code>(<var>newName</var>)
      <dd data-md>
       <p>Renames the entry represented by <var>handle</var> to <var>newName</var>.</p>
      <dt data-md><var>newHandle</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-moveto" id="ref-for-dom-filesystemhandle-moveto③">moveTo</a></code>(<var>otherDir</var>)
@@ -1686,24 +1660,21 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
     </dl>
    </div>
    <div class="algorithm" data-algorithm="moveTo(parent, name)">
-     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="method" data-export data-lt="moveTo(parent, name)|moveTo(parent)" id="dom-filesystemhandle-moveto"><code>moveTo(<var>parent</var>, <var>name</var>)</code></dfn> method, when invoked, must run
+     The <dfn class="idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="method" data-export data-lt="moveTo(parent, name)|moveTo(parent)" id="dom-filesystemhandle-moveto-parent-name"><code>moveTo(<var>parent</var>, <var>name</var>)</code><a class="self-link" href="#dom-filesystemhandle-moveto-parent-name"></a></dfn> method, when invoked, must run
 these steps: 
     <ol>
      <li data-md>
       <p>TODO</p>
     </ol>
    </div>
-   <h4 class="heading settled" data-level="2.2.3" id="api-filesystemhandle-copyto"><span class="secno">2.2.3. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-copyto" id="ref-for-dom-filesystemhandle-copyto①">copyTo()</a></code> method</span><a class="self-link" href="#api-filesystemhandle-copyto"></a></h4>
+   <h4 class="heading settled" data-level="2.2.2" id="api-filesystemhandle-copyto"><span class="secno">2.2.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-copyto" id="ref-for-dom-filesystemhandle-copyto①">copyTo()</a></code> method</span><a class="self-link" href="#api-filesystemhandle-copyto"></a></h4>
    <div class="note domintro" role="note">
     <dl>
-     <dt data-md><var>newHandle</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-copyto" id="ref-for-dom-filesystemhandle-copyto②">copyTo</a></code>(await <var>handle</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-getparent" id="ref-for-dom-filesystemhandle-getparent④">getParent()</a></code>, <var>newName</var>)
-     <dd data-md>
-      <p>Creates a copy of the entry represented by <var>handle</var> with name <var>newName</var>.</p>
-     <dt data-md><var>newHandle</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-copyto" id="ref-for-dom-filesystemhandle-copyto③">copyTo</a></code>(<var>otherDir</var>)
+     <dt data-md><var>newHandle</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-copyto" id="ref-for-dom-filesystemhandle-copyto②">copyTo</a></code>(<var>otherDir</var>)
      <dd data-md>
       <p>Creates a copy of the entry represented by <var>handle</var> in <var>otherDir</var>, while keeping its existing
  name.</p>
-     <dt data-md><var>newHandle</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-copyto" id="ref-for-dom-filesystemhandle-copyto④">copyTo</a></code>(<var>otherDir</var>, <var>newName</var>)
+     <dt data-md><var>newHandle</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-copyto" id="ref-for-dom-filesystemhandle-copyto③">copyTo</a></code>(<var>otherDir</var>, <var>newName</var>)
      <dd data-md>
       <p>Creates a copy of the entry represented by <var>handle</var> in <var>otherDir</var>, using <var>newName</var> for the
  name of the new entry.</p>
@@ -1721,7 +1692,7 @@ these steps:
       <p>TODO</p>
     </ol>
    </div>
-   <h4 class="heading settled" data-level="2.2.4" id="api-filesystemhandle-remove"><span class="secno">2.2.4. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-remove" id="ref-for-dom-filesystemhandle-remove①">remove()</a></code> method</span><a class="self-link" href="#api-filesystemhandle-remove"></a></h4>
+   <h4 class="heading settled" data-level="2.2.3" id="api-filesystemhandle-remove"><span class="secno">2.2.3. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-remove" id="ref-for-dom-filesystemhandle-remove①">remove()</a></code> method</span><a class="self-link" href="#api-filesystemhandle-remove"></a></h4>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md>await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-remove" id="ref-for-dom-filesystemhandle-remove②">remove()</a></code>
@@ -1737,7 +1708,7 @@ these steps:
     </ol>
    </div>
    <h3 class="heading settled" data-level="2.3" id="api-filesystemfilehandle"><span class="secno">2.3. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle①">FileSystemFileHandle</a></code> interface</span><a class="self-link" href="#api-filesystemfilehandle"></a></h3>
-<pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemfilehandle"><code><c- g>FileSystemFileHandle</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑥"><c- n>FileSystemHandle</c-></a> {
+<pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemfilehandle"><code><c- g>FileSystemFileHandle</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑦"><c- n>FileSystemHandle</c-></a> {
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-file" id="ref-for-dfn-file"><c- n>File</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-getfile" id="ref-for-dom-filesystemfilehandle-getfile"><c- g>getFile</c-></a>();
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemwriter" id="ref-for-filesystemwriter"><c- n>FileSystemWriter</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-createwriter" id="ref-for-dom-filesystemfilehandle-createwriter"><c- g>createWriter</c-></a>();
 };
@@ -1772,7 +1743,7 @@ these steps:
       <p>TODO</p>
     </ol>
    </div>
-   <h3 class="heading settled" data-level="2.4" id="api-filesystemdirectoryhandle"><span class="secno">2.4. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle④">FileSystemDirectoryHandle</a></code> interface</span><a class="self-link" href="#api-filesystemdirectoryhandle"></a></h3>
+   <h3 class="heading settled" data-level="2.4" id="api-filesystemdirectoryhandle"><span class="secno">2.4. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle③">FileSystemDirectoryHandle</a></code> interface</span><a class="self-link" href="#api-filesystemdirectoryhandle"></a></h3>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystemgetfileoptions"><code><c- g>FileSystemGetFileOptions</c-></code></dfn> {
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean②"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemGetFileOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemgetfileoptions-create"><code><c- g>create</c-></code></dfn> = <c- b>false</c->;
 };
@@ -1781,12 +1752,14 @@ these steps:
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean③"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemGetDirectoryOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemgetdirectoryoptions-create"><code><c- g>create</c-></code></dfn> = <c- b>false</c->;
 };
 
-<c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemdirectoryhandle"><code><c- g>FileSystemDirectoryHandle</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑦"><c- n>FileSystemHandle</c-></a> {
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle②"><c- n>FileSystemFileHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile"><c- g>getFile</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString③"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getFile(name, options), FileSystemDirectoryHandle/getFile(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getfile-name-options-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getfile-name-options-name"></a></dfn>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetfileoptions" id="ref-for-dictdef-filesystemgetfileoptions"><c- n>FileSystemGetFileOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getFile(name, options), FileSystemDirectoryHandle/getFile(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getfile-name-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getfile-name-options-options"></a></dfn>);
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑤"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory"><c- g>getDirectory</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString④"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getDirectory(name, options), FileSystemDirectoryHandle/getDirectory(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getdirectory-name-options-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getdirectory-name-options-name"></a></dfn>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetdirectoryoptions" id="ref-for-dictdef-filesystemgetdirectoryoptions"><c- n>FileSystemGetDirectoryOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getDirectory(name, options), FileSystemDirectoryHandle/getDirectory(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getdirectory-name-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getdirectory-name-options-options"></a></dfn>);
+<c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemdirectoryhandle"><code><c- g>FileSystemDirectoryHandle</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑧"><c- n>FileSystemHandle</c-></a> {
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle②"><c- n>FileSystemFileHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile"><c- g>getFile</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString④"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getFile(name, options), FileSystemDirectoryHandle/getFile(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getfile-name-options-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getfile-name-options-name"></a></dfn>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetfileoptions" id="ref-for-dictdef-filesystemgetfileoptions"><c- n>FileSystemGetFileOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getFile(name, options), FileSystemDirectoryHandle/getFile(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getfile-name-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getfile-name-options-options"></a></dfn>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle④"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory"><c- g>getDirectory</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑤"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getDirectory(name, options), FileSystemDirectoryHandle/getDirectory(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getdirectory-name-options-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getdirectory-name-options-name"></a></dfn>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetdirectoryoptions" id="ref-for-dictdef-filesystemgetdirectoryoptions"><c- n>FileSystemGetDirectoryOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getDirectory(name, options), FileSystemDirectoryHandle/getDirectory(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getdirectory-name-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getdirectory-name-options-options"></a></dfn>);
 
   // This really returns an async iterable, but that is not yet expressable in WebIDL.
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-object" id="ref-for-idl-object"><c- b>object</c-></a> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getentries" id="ref-for-dom-filesystemdirectoryhandle-getentries"><c- g>getEntries</c-></a>();
+
+  <c- b>Promise</c->&lt;<c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑥"><c- b>USVString</c-></a>>?> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-resolve" id="ref-for-dom-filesystemdirectoryhandle-resolve"><c- g>resolve</c-></a>(<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑨"><c- n>FileSystemHandle</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/resolve(handle)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-resolve-handle-handle"><code><c- g>handle</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-resolve-handle-handle"></a></dfn>);
 
   <c- b>Promise</c->&lt;<c- b>void</c->> <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export data-lt="removeRecursively()" id="dom-filesystemdirectoryhandle-removerecursively"><code><c- g>removeRecursively</c-></code></dfn>();
 };
@@ -1861,7 +1834,29 @@ these steps:
       <p>TODO</p>
     </ol>
    </div>
-   <h4 class="heading settled" data-level="2.4.4" id="api-filesystemdirectoryhandle-removerecursively"><span class="secno">2.4.4. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-removerecursively" id="ref-for-dom-filesystemdirectoryhandle-removerecursively">removeRecursively()</a></code> method</span><a class="self-link" href="#api-filesystemdirectoryhandle-removerecursively"></a></h4>
+   <h4 class="heading settled" data-level="2.4.4" id="api-filesystemdirectoryhandle-resolve"><span class="secno">2.4.4. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-resolve" id="ref-for-dom-filesystemdirectoryhandle-resolve①">resolve()</a></code> method</span><a class="self-link" href="#api-filesystemdirectoryhandle-resolve"></a></h4>
+   <div class="note domintro" role="note">
+    <dl>
+     <dt data-md><var>relativePath</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-resolve" id="ref-for-dom-filesystemdirectoryhandle-resolve②">FileSystemDirectoryHandle/resolve</a></code>(<var>otherHandle</var>)
+     <dd data-md>
+      <p>If <var>otherHandle</var> is a descendant of <var>directoryHandle</var>, returns an array representing the path
+ you can take to get from <var>directoryHandle</var> to <var>otherHandle</var>.</p>
+      <p>For example if <var>otherHandle</var> is a direct child of <var>directoryHandle</var>, <var>relativePath</var> will be equal to an array containing just <var>otherHandle</var>.name.</p>
+      <p>If <var>otherHandle</var> isn’t a descendant of <var>directoryHandle</var>, resolves with <code>null</code>.</p>
+      <p>If <var>otherHandle</var> represents the same entry as <var>directoryHandle</var>, resolves with an empty array.</p>
+      <p>If for whatever reason <var>directoryHandle</var> or <var>otherHandle</var> isn’t readable, rejects with some
+ exception.</p>
+    </dl>
+   </div>
+   <div class="algorithm" data-algorithm="resolve(handle)">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export id="dom-filesystemdirectoryhandle-resolve"><code>resolve(<var>handle</var>)</code></dfn> method, when invoked, must run
+these steps: 
+    <ol>
+     <li data-md>
+      <p>TODO</p>
+    </ol>
+   </div>
+   <h4 class="heading settled" data-level="2.4.5" id="api-filesystemdirectoryhandle-removerecursively"><span class="secno">2.4.5. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-removerecursively" id="ref-for-dom-filesystemdirectoryhandle-removerecursively">removeRecursively()</a></code> method</span><a class="self-link" href="#api-filesystemdirectoryhandle-removerecursively"></a></h4>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md>await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-removerecursively" id="ref-for-dom-filesystemdirectoryhandle-removerecursively①">removeRecursively()</a></code>
@@ -1872,7 +1867,8 @@ these steps:
    </div>
    <h3 class="heading settled" data-level="2.5" id="api-filesystemwriter"><span class="secno">2.5. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemwriter" id="ref-for-filesystemwriter②">FileSystemWriter</a></code> interface</span><a class="self-link" href="#api-filesystemwriter"></a></h3>
 <pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemwriter"><code><c- g>FileSystemWriter</c-></code></dfn> {
-  <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwriter-write" id="ref-for-dom-filesystemwriter-write"><c- g>write</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemWriter/write(position, data)" data-dfn-type="argument" data-export id="dom-filesystemwriter-write-position-data-position"><code><c- g>position</c-></code><a class="self-link" href="#dom-filesystemwriter-write-position-data-position"></a></dfn>, (<a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-Blob" id="ref-for-dfn-Blob"><c- n>Blob</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="https://fetch.spec.whatwg.org/#concept-readablestream" id="ref-for-concept-readablestream"><c- n>ReadableStream</c-></a>) <dfn class="idl-code" data-dfn-for="FileSystemWriter/write(position, data)" data-dfn-type="argument" data-export id="dom-filesystemwriter-write-position-data-data"><code><c- g>data</c-></code><a class="self-link" href="#dom-filesystemwriter-write-position-data-data"></a></dfn>);
+  <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwriter-write" id="ref-for-dom-filesystemwriter-write"><c- g>write</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemWriter/write(position, data)" data-dfn-type="argument" data-export id="dom-filesystemwriter-write-position-data-position"><code><c- g>position</c-></code><a class="self-link" href="#dom-filesystemwriter-write-position-data-position"></a></dfn>, (<a class="n" data-link-type="idl-name" href="https://heycam.github.io/webidl/#BufferSource" id="ref-for-BufferSource"><c- n>BufferSource</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-Blob" id="ref-for-dfn-Blob"><c- n>Blob</c-></a> <c- b>or</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑦"><c- b>USVString</c-></a>) <dfn class="idl-code" data-dfn-for="FileSystemWriter/write(position, data)" data-dfn-type="argument" data-export id="dom-filesystemwriter-write-position-data-data"><code><c- g>data</c-></code><a class="self-link" href="#dom-filesystemwriter-write-position-data-data"></a></dfn>);
+  <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#ws-class" id="ref-for-ws-class"><c- n>WritableStream</c-></a> <a class="idl-code" data-link-type="method" href="#dom-filesystemwriter-aswritablestream" id="ref-for-dom-filesystemwriter-aswritablestream"><c- g>asWritableStream</c-></a>();
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwriter-truncate" id="ref-for-dom-filesystemwriter-truncate"><c- g>truncate</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long①"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemWriter/truncate(size)" data-dfn-type="argument" data-export id="dom-filesystemwriter-truncate-size-size"><code><c- g>size</c-></code><a class="self-link" href="#dom-filesystemwriter-truncate-size-size"></a></dfn>);
   <c- b>Promise</c->&lt;<c- b>void</c->> <dfn class="idl-code" data-dfn-for="FileSystemWriter" data-dfn-type="method" data-export data-lt="close()" id="dom-filesystemwriter-close"><code><c- g>close</c-></code><a class="self-link" href="#dom-filesystemwriter-close"></a></dfn>();
 };
@@ -1894,7 +1890,24 @@ these steps:
       <p>TODO</p>
     </ol>
    </div>
-   <h4 class="heading settled" data-level="2.5.2" id="api-filesystemwriter-truncate"><span class="secno">2.5.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemwriter-truncate" id="ref-for-dom-filesystemwriter-truncate①">truncate()</a></code> method</span><a class="self-link" href="#api-filesystemwriter-truncate"></a></h4>
+   <h4 class="heading settled" data-level="2.5.2" id="api-filesystemwriter-aswritablestream"><span class="secno">2.5.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemwriter-aswritablestream" id="ref-for-dom-filesystemwriter-aswritablestream①">asWritableStream()</a></code> method</span><a class="self-link" href="#api-filesystemwriter-aswritablestream"></a></h4>
+   <div class="note domintro" role="note">
+    <dl>
+     <dt data-md>let <var>stream</var> = <var>writer</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemwriter-aswritablestream" id="ref-for-dom-filesystemwriter-aswritablestream②">asWritableStream()</a></code>
+     <dd data-md>
+      <p>Returns a <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#ws-class" id="ref-for-ws-class①">WritableStream</a></code> that can be used to write data into the file, starting
+ at the beginning of the file.</p>
+    </dl>
+   </div>
+   <div class="algorithm" data-algorithm="asWritableStream()">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemWriter" data-dfn-type="method" data-export id="dom-filesystemwriter-aswritablestream"><code>asWritableStream()</code></dfn> method, when invoked,
+must run these steps: 
+    <ol>
+     <li data-md>
+      <p>TODO</p>
+    </ol>
+   </div>
+   <h4 class="heading settled" data-level="2.5.3" id="api-filesystemwriter-truncate"><span class="secno">2.5.3. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemwriter-truncate" id="ref-for-dom-filesystemwriter-truncate①">truncate()</a></code> method</span><a class="self-link" href="#api-filesystemwriter-truncate"></a></h4>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md>await <var>writer</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemwriter-truncate" id="ref-for-dom-filesystemwriter-truncate②">truncate</a></code>(<var>size</var>)
@@ -1916,9 +1929,9 @@ steps:
 <pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-choosefilesystementriestype"><code><c- g>ChooseFileSystemEntriesType</c-></code></dfn> { <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-openfile"><code><c- s>"openFile"</c-></code></dfn>, <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-savefile"><code><c- s>"saveFile"</c-></code></dfn>, <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-opendirectory"><code><c- s>"openDirectory"</c-></code></dfn> };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-choosefilesystementriesoptionsaccepts"><code><c- g>ChooseFileSystemEntriesOptionsAccepts</c-></code></dfn> {
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑤"><c- b>USVString</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="USVString " id="dom-choosefilesystementriesoptionsaccepts-description"><code><c- g>description</c-></code></dfn>;
-  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑥"><c- b>USVString</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="sequence<USVString> " id="dom-choosefilesystementriesoptionsaccepts-mimetypes"><code><c- g>mimeTypes</c-></code></dfn>;
-  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑦"><c- b>USVString</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="sequence<USVString> " id="dom-choosefilesystementriesoptionsaccepts-extensions"><code><c- g>extensions</c-></code></dfn>;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑧"><c- b>USVString</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="USVString " id="dom-choosefilesystementriesoptionsaccepts-description"><code><c- g>description</c-></code></dfn>;
+  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑨"><c- b>USVString</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="sequence<USVString> " id="dom-choosefilesystementriesoptionsaccepts-mimetypes"><code><c- g>mimeTypes</c-></code></dfn>;
+  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①⓪"><c- b>USVString</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="sequence<USVString> " id="dom-choosefilesystementriesoptionsaccepts-extensions"><code><c- g>extensions</c-></code></dfn>;
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-choosefilesystementriesoptions"><code><c- g>ChooseFileSystemEntriesOptions</c-></code></dfn> {
@@ -1930,7 +1943,7 @@ steps:
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/window-object.html#window" id="ref-for-window"><c- g>Window</c-></a> {
     [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext"><c- g>SecureContext</c-></a>]
-    <c- b>Promise</c->&lt;(<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑧"><c- n>FileSystemHandle</c-></a> <c- b>or</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑨"><c- n>FileSystemHandle</c-></a>>)>
+    <c- b>Promise</c->&lt;(<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①⓪"><c- n>FileSystemHandle</c-></a> <c- b>or</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①①"><c- n>FileSystemHandle</c-></a>>)>
         <a class="idl-code" data-link-type="method" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries①"><c- g>chooseFileSystemEntries</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptions" id="ref-for-dictdef-choosefilesystementriesoptions"><c- n>ChooseFileSystemEntriesOptions</c-></a> <dfn class="idl-code" data-dfn-for="Window/chooseFileSystemEntries(options), Window/chooseFileSystemEntries()" data-dfn-type="argument" data-export id="dom-window-choosefilesystementries-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-window-choosefilesystementries-options-options"></a></dfn>);
 };
 </pre>
@@ -1947,9 +1960,9 @@ steps:
  to <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-opendirectory" id="ref-for-dom-choosefilesystementriestype-opendirectory">"openDirectory"</a></code>, the dialog will let the user select
  directories instead of files.</p>
       <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-multiple" id="ref-for-dom-choosefilesystementriesoptions-multiple">multiple</a></code> is false (or absent) the user can
- only select a single file, and the <var>result</var> will be a single <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle①⓪">FileSystemHandle</a></code>. If on the
+ only select a single file, and the <var>result</var> will be a single <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle①②">FileSystemHandle</a></code>. If on the
  other hand <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-multiple" id="ref-for-dom-choosefilesystementriesoptions-multiple①">multiple</a></code> is true, the dialog can let
- the user select more than one file, and <var>result</var> will be an array of <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle①①">FileSystemHandle</a></code> instances (even if the user did select a single file, if <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-multiple" id="ref-for-dom-choosefilesystementriesoptions-multiple②">multiple</a></code> is true this will be returned as a single-element
+ the user select more than one file, and <var>result</var> will be an array of <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle①③">FileSystemHandle</a></code> instances (even if the user did select a single file, if <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-multiple" id="ref-for-dom-choosefilesystementriesoptions-multiple②">multiple</a></code> is true this will be returned as a single-element
  array).</p>
       <p>Finally <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-accepts" id="ref-for-dom-choosefilesystementriesoptions-accepts">accepts</a></code> and <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-excludeacceptalloption" id="ref-for-dom-choosefilesystementriesoptions-excludeacceptalloption">excludeAcceptAllOption</a></code> specify the types of files
  the dialog will let the user select. Each entry in <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-accepts" id="ref-for-dom-choosefilesystementriesoptions-accepts①">accepts</a></code> describes a single type of file,
@@ -1977,13 +1990,13 @@ these steps:
   <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#enumdef-systemdirectorytype" id="ref-for-enumdef-systemdirectorytype"><c- n>SystemDirectoryType</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="GetSystemDirectoryOptions" data-dfn-type="dict-member" data-export data-type="SystemDirectoryType " id="dom-getsystemdirectoryoptions-type"><code><c- g>type</c-></code></dfn>;
 };
 
-<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑥"><c- g>FileSystemDirectoryHandle</c-></a> {
-  <c- b>static</c-> <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑦"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getsystemdirectory" id="ref-for-dom-filesystemdirectoryhandle-getsystemdirectory①"><c- g>getSystemDirectory</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-getsystemdirectoryoptions" id="ref-for-dictdef-getsystemdirectoryoptions"><c- n>GetSystemDirectoryOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getSystemDirectory(options)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getsystemdirectory-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getsystemdirectory-options-options"></a></dfn>);
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑤"><c- g>FileSystemDirectoryHandle</c-></a> {
+  <c- b>static</c-> <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑥"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getsystemdirectory" id="ref-for-dom-filesystemdirectoryhandle-getsystemdirectory①"><c- g>getSystemDirectory</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-getsystemdirectoryoptions" id="ref-for-dictdef-getsystemdirectoryoptions"><c- n>GetSystemDirectoryOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getSystemDirectory(options)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getsystemdirectory-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getsystemdirectory-options-options"></a></dfn>);
 };
 </pre>
    <div class="note domintro" role="note">
     <dl>
-     <dt data-md><var>directoryHandle</var> = <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑧">FileSystemDirectoryHandle</a></code> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getsystemdirectory" id="ref-for-dom-filesystemdirectoryhandle-getsystemdirectory②">getSystemDirectory</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-getsystemdirectoryoptions-type" id="ref-for-dom-getsystemdirectoryoptions-type">type</a></code>: <code class="idl"><a data-link-type="idl" href="#dom-systemdirectorytype-sandbox" id="ref-for-dom-systemdirectorytype-sandbox">"sandbox"</a></code> })
+     <dt data-md><var>directoryHandle</var> = <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑦">FileSystemDirectoryHandle</a></code> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getsystemdirectory" id="ref-for-dom-filesystemdirectoryhandle-getsystemdirectory②">getSystemDirectory</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-getsystemdirectoryoptions-type" id="ref-for-dom-getsystemdirectoryoptions-type">type</a></code>: <code class="idl"><a data-link-type="idl" href="#dom-systemdirectorytype-sandbox" id="ref-for-dom-systemdirectorytype-sandbox">"sandbox"</a></code> })
      <dd data-md>
       <p>Returns the sandboxed filesystem.</p>
     </dl>
@@ -2152,6 +2165,7 @@ invoked, must run these steps:
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
    <li><a href="#dom-choosefilesystementriesoptions-accepts">accepts</a><span>, in §3.1</span>
+   <li><a href="#dom-filesystemwriter-aswritablestream">asWritableStream()</a><span>, in §2.5.2</span>
    <li><a href="#file-entry-binary-data">binary data</a><span>, in §2.1</span>
    <li><a href="#dom-window-choosefilesystementries">chooseFileSystemEntries()</a><span>, in §3.1</span>
    <li><a href="#dom-window-choosefilesystementries">chooseFileSystemEntries(options)</a><span>, in §3.1</span>
@@ -2159,8 +2173,8 @@ invoked, must run these steps:
    <li><a href="#dictdef-choosefilesystementriesoptionsaccepts">ChooseFileSystemEntriesOptionsAccepts</a><span>, in §3.1</span>
    <li><a href="#enumdef-choosefilesystementriestype">ChooseFileSystemEntriesType</a><span>, in §3.1</span>
    <li><a href="#dom-filesystemwriter-close">close()</a><span>, in §2.5</span>
-   <li><a href="#dom-filesystemhandle-copyto">copyTo(parent)</a><span>, in §2.2.3</span>
-   <li><a href="#dom-filesystemhandle-copyto">copyTo(parent, name)</a><span>, in §2.2.3</span>
+   <li><a href="#dom-filesystemhandle-copyto">copyTo(parent)</a><span>, in §2.2.2</span>
+   <li><a href="#dom-filesystemhandle-copyto">copyTo(parent, name)</a><span>, in §2.2.2</span>
    <li>
     create
     <ul>
@@ -2182,7 +2196,6 @@ invoked, must run these steps:
    <li><a href="#dom-choosefilesystementriesoptionsaccepts-extensions">extensions</a><span>, in §3.1</span>
    <li><a href="#file">file</a><span>, in §2.1</span>
    <li><a href="#file">file entry</a><span>, in §2.1</span>
-   <li><a href="#file-system">file system</a><span>, in §2.1</span>
    <li><a href="#filesystemdirectoryhandle">FileSystemDirectoryHandle</a><span>, in §2.4</span>
    <li><a href="#filesystemfilehandle">FileSystemFileHandle</a><span>, in §2.3</span>
    <li><a href="#dictdef-filesystemgetdirectoryoptions">FileSystemGetDirectoryOptions</a><span>, in §2.4</span>
@@ -2193,15 +2206,15 @@ invoked, must run these steps:
    <li><a href="#dom-filesystemdirectoryhandle-getentries">getEntries()</a><span>, in §2.4.3</span>
    <li><a href="#dom-filesystemfilehandle-getfile">getFile()</a><span>, in §2.3.1</span>
    <li><a href="#dom-filesystemdirectoryhandle-getfile">getFile(name, options)</a><span>, in §2.4.1</span>
-   <li><a href="#dom-filesystemhandle-getparent">getParent()</a><span>, in §2.2.1</span>
-   <li><a href="#dom-filesystemdirectoryhandle-getsystemdirectory">getSystemDirectory(options)</a><span>, in §4.1</span>
    <li><a href="#dictdef-getsystemdirectoryoptions">GetSystemDirectoryOptions</a><span>, in §4.1</span>
+   <li><a href="#dom-filesystemdirectoryhandle-getsystemdirectory">getSystemDirectory(options)</a><span>, in §4.1</span>
    <li><a href="#dom-filesystemhandle-isdirectory">isDirectory</a><span>, in §2.2</span>
    <li><a href="#dom-filesystemhandle-isfile">isFile</a><span>, in §2.2</span>
    <li><a href="#dom-choosefilesystementriesoptionsaccepts-mimetypes">mimeTypes</a><span>, in §3.1</span>
    <li><a href="#file-entry-modification-timestamp">modification timestamp</a><span>, in §2.1</span>
-   <li><a href="#dom-filesystemhandle-moveto">moveTo(parent)</a><span>, in §2.2.2</span>
-   <li><a href="#dom-filesystemhandle-moveto">moveTo(parent, name)</a><span>, in §2.2.2</span>
+   <li><a href="#dom-filesystemhandle-moveto">moveTo(name)</a><span>, in §2.2</span>
+   <li><a href="#dom-filesystemhandle-moveto-parent-name">moveTo(parent)</a><span>, in §2.2.1</span>
+   <li><a href="#dom-filesystemhandle-moveto-parent-name">moveTo(parent, name)</a><span>, in §2.2.1</span>
    <li><a href="#dom-choosefilesystementriesoptions-multiple">multiple</a><span>, in §3.1</span>
    <li>
     name
@@ -2211,15 +2224,13 @@ invoked, must run these steps:
     </ul>
    <li><a href="#dom-choosefilesystementriestype-opendirectory">"openDirectory"</a><span>, in §3.1</span>
    <li><a href="#dom-choosefilesystementriestype-openfile">"openFile"</a><span>, in §3.1</span>
-   <li><a href="#parent">parent</a><span>, in §2.1</span>
-   <li><a href="#parent">parent directory</a><span>, in §2.1</span>
-   <li><a href="#dom-filesystemhandle-remove">remove()</a><span>, in §2.2.4</span>
+   <li><a href="#dom-filesystemhandle-remove">remove()</a><span>, in §2.2.3</span>
    <li><a href="#dom-filesystemdirectoryhandle-removerecursively">removeRecursively()</a><span>, in §2.4</span>
-   <li><a href="#root-directory">root directory</a><span>, in §2.1</span>
+   <li><a href="#dom-filesystemdirectoryhandle-resolve">resolve(handle)</a><span>, in §2.4.4</span>
    <li><a href="#dom-systemdirectorytype-sandbox">"sandbox"</a><span>, in §4.1</span>
    <li><a href="#dom-choosefilesystementriestype-savefile">"saveFile"</a><span>, in §3.1</span>
    <li><a href="#enumdef-systemdirectorytype">SystemDirectoryType</a><span>, in §4.1</span>
-   <li><a href="#dom-filesystemwriter-truncate">truncate(size)</a><span>, in §2.5.2</span>
+   <li><a href="#dom-filesystemwriter-truncate">truncate(size)</a><span>, in §2.5.3</span>
    <li>
     type
     <ul>
@@ -2228,12 +2239,6 @@ invoked, must run these steps:
     </ul>
    <li><a href="#dom-filesystemwriter-write">write(position, data)</a><span>, in §2.5.1</span>
   </ul>
-  <aside class="dfn-panel" data-for="term-for-concept-readablestream">
-   <a href="https://fetch.spec.whatwg.org/#concept-readablestream">https://fetch.spec.whatwg.org/#concept-readablestream</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-readablestream">2.5. The FileSystemWriter interface</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-dfn-Blob">
    <a href="https://w3c.github.io/FileAPI/#dfn-Blob">https://w3c.github.io/FileAPI/#dfn-Blob</a><b>Referenced in:</b>
    <ul>
@@ -2253,16 +2258,23 @@ invoked, must run these steps:
     <li><a href="#ref-for-window">3.1. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-list-contain">
-   <a href="https://infra.spec.whatwg.org/#list-contain">https://infra.spec.whatwg.org/#list-contain</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-list-contain">2.1. Concepts</a> <a href="#ref-for-list-contain①">(2)</a> <a href="#ref-for-list-contain②">(3)</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-ordered-set">
    <a href="https://infra.spec.whatwg.org/#ordered-set">https://infra.spec.whatwg.org/#ordered-set</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-ordered-set">2.1. Concepts</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-ws-class">
+   <a href="https://streams.spec.whatwg.org/#ws-class">https://streams.spec.whatwg.org/#ws-class</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-ws-class">2.5. The FileSystemWriter interface</a>
+    <li><a href="#ref-for-ws-class①">2.5.2. The asWritableStream() method</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-BufferSource">
+   <a href="https://heycam.github.io/webidl/#BufferSource">https://heycam.github.io/webidl/#BufferSource</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-BufferSource">2.5. The FileSystemWriter interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-SecureContext">
@@ -2274,9 +2286,10 @@ invoked, must run these steps:
   <aside class="dfn-panel" data-for="term-for-idl-USVString">
    <a href="https://heycam.github.io/webidl/#idl-USVString">https://heycam.github.io/webidl/#idl-USVString</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-idl-USVString">2.2. The FileSystemHandle interface</a> <a href="#ref-for-idl-USVString①">(2)</a> <a href="#ref-for-idl-USVString②">(3)</a>
-    <li><a href="#ref-for-idl-USVString③">2.4. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-idl-USVString④">(2)</a>
-    <li><a href="#ref-for-idl-USVString⑤">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-idl-USVString⑥">(2)</a> <a href="#ref-for-idl-USVString⑦">(3)</a>
+    <li><a href="#ref-for-idl-USVString">2.2. The FileSystemHandle interface</a> <a href="#ref-for-idl-USVString①">(2)</a> <a href="#ref-for-idl-USVString②">(3)</a> <a href="#ref-for-idl-USVString③">(4)</a>
+    <li><a href="#ref-for-idl-USVString④">2.4. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-idl-USVString⑤">(2)</a> <a href="#ref-for-idl-USVString⑥">(3)</a>
+    <li><a href="#ref-for-idl-USVString⑦">2.5. The FileSystemWriter interface</a>
+    <li><a href="#ref-for-idl-USVString⑧">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-idl-USVString⑨">(2)</a> <a href="#ref-for-idl-USVString①⓪">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-boolean">
@@ -2302,11 +2315,6 @@ invoked, must run these steps:
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
    <li>
-    <a data-link-type="biblio">[FETCH]</a> defines the following terms:
-    <ul>
-     <li><span class="dfn-paneled" id="term-for-concept-readablestream" style="color:initial">ReadableStream</span>
-    </ul>
-   <li>
     <a data-link-type="biblio">[FILE-API]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-dfn-Blob" style="color:initial">Blob</span>
@@ -2320,12 +2328,17 @@ invoked, must run these steps:
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-list-contain" style="color:initial">contain</span>
      <li><span class="dfn-paneled" id="term-for-ordered-set" style="color:initial">set</span>
+    </ul>
+   <li>
+    <a data-link-type="biblio">[STREAMS]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-ws-class" style="color:initial">WritableStream</span>
     </ul>
    <li>
     <a data-link-type="biblio">[WebIDL]</a> defines the following terms:
     <ul>
+     <li><span class="dfn-paneled" id="term-for-BufferSource" style="color:initial">BufferSource</span>
      <li><span class="dfn-paneled" id="term-for-SecureContext" style="color:initial">SecureContext</span>
      <li><span class="dfn-paneled" id="term-for-idl-USVString" style="color:initial">USVString</span>
      <li><span class="dfn-paneled" id="term-for-idl-boolean" style="color:initial">boolean</span>
@@ -2336,8 +2349,6 @@ invoked, must run these steps:
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
-   <dt id="biblio-fetch">[FETCH]
-   <dd>Anne van Kesteren. <a href="https://fetch.spec.whatwg.org/">Fetch Standard</a>. Living Standard. URL: <a href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>
    <dt id="biblio-file-api">[FILE-API]
    <dd>Marijn Kruisselbrink; Arun Ranganathan. <a href="https://www.w3.org/TR/FileAPI/">File API</a>. 6 November 2018. WD. URL: <a href="https://www.w3.org/TR/FileAPI/">https://www.w3.org/TR/FileAPI/</a>
    <dt id="biblio-html">[HTML]
@@ -2346,6 +2357,8 @@ invoked, must run these steps:
    <dd>Anne van Kesteren; Domenic Denicola. <a href="https://infra.spec.whatwg.org/">Infra Standard</a>. Living Standard. URL: <a href="https://infra.spec.whatwg.org/">https://infra.spec.whatwg.org/</a>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
+   <dt id="biblio-streams">[STREAMS]
+   <dd>Adam Rice; Domenic Denicola; 吉野剛史 (Takeshi Yoshino). <a href="https://streams.spec.whatwg.org/">Streams Standard</a>. Living Standard. URL: <a href="https://streams.spec.whatwg.org/">https://streams.spec.whatwg.org/</a>
    <dt id="biblio-webidl">[WebIDL]
    <dd>Boris Zbarsky. <a href="https://heycam.github.io/webidl/">Web IDL</a>. 15 December 2016. ED. URL: <a href="https://heycam.github.io/webidl/">https://heycam.github.io/webidl/</a>
   </dl>
@@ -2360,18 +2373,17 @@ invoked, must run these steps:
 <pre class="idl highlight def"><c- b>interface</c-> <a href="#filesystemhandle"><code><c- g>FileSystemHandle</c-></code></a> {
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑥"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isfile" id="ref-for-dom-filesystemhandle-isfile②"><c- g>isFile</c-></a>;
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean①①"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isdirectory" id="ref-for-dom-filesystemhandle-isdirectory②"><c- g>isDirectory</c-></a>;
-  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑧"><c- b>USVString</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="USVString" href="#dom-filesystemhandle-name" id="ref-for-dom-filesystemhandle-name②"><c- g>name</c-></a>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①②"><c- b>USVString</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="USVString" href="#dom-filesystemhandle-name" id="ref-for-dom-filesystemhandle-name②"><c- g>name</c-></a>;
 
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑨"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-getparent" id="ref-for-dom-filesystemhandle-getparent⑤"><c- g>getParent</c-></a>();
-
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①②"><c- n>FileSystemHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-moveto" id="ref-for-dom-filesystemhandle-moveto⑤"><c- g>moveTo</c-></a>(
-      <a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①①"><c- n>FileSystemDirectoryHandle</c-></a> <a href="#dom-filesystemhandle-moveto-parent-name-parent"><code><c- g>parent</c-></code></a>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①①"><c- b>USVString</c-></a> <a href="#dom-filesystemhandle-moveto-parent-name-name"><code><c- g>name</c-></code></a>);
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle②①"><c- n>FileSystemHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-copyto" id="ref-for-dom-filesystemhandle-copyto⑤"><c- g>copyTo</c-></a>(
-      <a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle②①"><c- n>FileSystemDirectoryHandle</c-></a> <a href="#dom-filesystemhandle-copyto-parent-name-parent"><code><c- g>parent</c-></code></a>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString②①"><c- b>USVString</c-></a> <a href="#dom-filesystemhandle-copyto-parent-name-name"><code><c- g>name</c-></code></a>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①④"><c- n>FileSystemHandle</c-></a>> <a href="#dom-filesystemhandle-moveto"><code><c- g>moveTo</c-></code></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①①"><c- b>USVString</c-></a> <a href="#dom-filesystemhandle-moveto-name-name"><code><c- g>name</c-></code></a>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle②①"><c- n>FileSystemHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-moveto" id="ref-for-dom-filesystemhandle-moveto⑤"><c- g>moveTo</c-></a>(
+      <a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑧"><c- n>FileSystemDirectoryHandle</c-></a> <a href="#dom-filesystemhandle-moveto-parent-name-parent"><code><c- g>parent</c-></code></a>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString②①"><c- b>USVString</c-></a> <a href="#dom-filesystemhandle-moveto-parent-name-name"><code><c- g>name</c-></code></a>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle③①"><c- n>FileSystemHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-copyto" id="ref-for-dom-filesystemhandle-copyto④"><c- g>copyTo</c-></a>(
+      <a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①①"><c- n>FileSystemDirectoryHandle</c-></a> <a href="#dom-filesystemhandle-copyto-parent-name-parent"><code><c- g>parent</c-></code></a>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString③①"><c- b>USVString</c-></a> <a href="#dom-filesystemhandle-copyto-parent-name-name"><code><c- g>name</c-></code></a>);
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-remove" id="ref-for-dom-filesystemhandle-remove③"><c- g>remove</c-></a>();
 };
 
-<c- b>interface</c-> <a href="#filesystemfilehandle"><code><c- g>FileSystemFileHandle</c-></code></a> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑥①"><c- n>FileSystemHandle</c-></a> {
+<c- b>interface</c-> <a href="#filesystemfilehandle"><code><c- g>FileSystemFileHandle</c-></code></a> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑦①"><c- n>FileSystemHandle</c-></a> {
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-file" id="ref-for-dfn-file②"><c- n>File</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-getfile" id="ref-for-dom-filesystemfilehandle-getfile③"><c- g>getFile</c-></a>();
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemwriter" id="ref-for-filesystemwriter③"><c- n>FileSystemWriter</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-createwriter" id="ref-for-dom-filesystemfilehandle-createwriter③"><c- g>createWriter</c-></a>();
 };
@@ -2384,18 +2396,21 @@ invoked, must run these steps:
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean③①"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-filesystemgetdirectoryoptions-create"><code><c- g>create</c-></code></a> = <c- b>false</c->;
 };
 
-<c- b>interface</c-> <a href="#filesystemdirectoryhandle"><code><c- g>FileSystemDirectoryHandle</c-></code></a> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑦①"><c- n>FileSystemHandle</c-></a> {
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle②①"><c- n>FileSystemFileHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile④"><c- g>getFile</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString③①"><c- b>USVString</c-></a> <a href="#dom-filesystemdirectoryhandle-getfile-name-options-name"><code><c- g>name</c-></code></a>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetfileoptions" id="ref-for-dictdef-filesystemgetfileoptions①"><c- n>FileSystemGetFileOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getfile-name-options-options"><code><c- g>options</c-></code></a>);
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑤①"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory④"><c- g>getDirectory</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString④①"><c- b>USVString</c-></a> <a href="#dom-filesystemdirectoryhandle-getdirectory-name-options-name"><code><c- g>name</c-></code></a>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetdirectoryoptions" id="ref-for-dictdef-filesystemgetdirectoryoptions①"><c- n>FileSystemGetDirectoryOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getdirectory-name-options-options"><code><c- g>options</c-></code></a>);
+<c- b>interface</c-> <a href="#filesystemdirectoryhandle"><code><c- g>FileSystemDirectoryHandle</c-></code></a> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑧①"><c- n>FileSystemHandle</c-></a> {
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle②①"><c- n>FileSystemFileHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile④"><c- g>getFile</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString④①"><c- b>USVString</c-></a> <a href="#dom-filesystemdirectoryhandle-getfile-name-options-name"><code><c- g>name</c-></code></a>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetfileoptions" id="ref-for-dictdef-filesystemgetfileoptions①"><c- n>FileSystemGetFileOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getfile-name-options-options"><code><c- g>options</c-></code></a>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle④①"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory④"><c- g>getDirectory</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑤①"><c- b>USVString</c-></a> <a href="#dom-filesystemdirectoryhandle-getdirectory-name-options-name"><code><c- g>name</c-></code></a>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetdirectoryoptions" id="ref-for-dictdef-filesystemgetdirectoryoptions①"><c- n>FileSystemGetDirectoryOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getdirectory-name-options-options"><code><c- g>options</c-></code></a>);
 
   // This really returns an async iterable, but that is not yet expressable in WebIDL.
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-object" id="ref-for-idl-object①"><c- b>object</c-></a> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getentries" id="ref-for-dom-filesystemdirectoryhandle-getentries③"><c- g>getEntries</c-></a>();
+
+  <c- b>Promise</c->&lt;<c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑥①"><c- b>USVString</c-></a>>?> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-resolve" id="ref-for-dom-filesystemdirectoryhandle-resolve③"><c- g>resolve</c-></a>(<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑨①"><c- n>FileSystemHandle</c-></a> <a href="#dom-filesystemdirectoryhandle-resolve-handle-handle"><code><c- g>handle</c-></code></a>);
 
   <c- b>Promise</c->&lt;<c- b>void</c->> <a href="#dom-filesystemdirectoryhandle-removerecursively"><code><c- g>removeRecursively</c-></code></a>();
 };
 
 <c- b>interface</c-> <a href="#filesystemwriter"><code><c- g>FileSystemWriter</c-></code></a> {
-  <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwriter-write" id="ref-for-dom-filesystemwriter-write③"><c- g>write</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long②"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a href="#dom-filesystemwriter-write-position-data-position"><code><c- g>position</c-></code></a>, (<a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-Blob" id="ref-for-dfn-Blob①"><c- n>Blob</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="https://fetch.spec.whatwg.org/#concept-readablestream" id="ref-for-concept-readablestream①"><c- n>ReadableStream</c-></a>) <a href="#dom-filesystemwriter-write-position-data-data"><code><c- g>data</c-></code></a>);
+  <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwriter-write" id="ref-for-dom-filesystemwriter-write③"><c- g>write</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long②"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a href="#dom-filesystemwriter-write-position-data-position"><code><c- g>position</c-></code></a>, (<a class="n" data-link-type="idl-name" href="https://heycam.github.io/webidl/#BufferSource" id="ref-for-BufferSource①"><c- n>BufferSource</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-Blob" id="ref-for-dfn-Blob①"><c- n>Blob</c-></a> <c- b>or</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑦①"><c- b>USVString</c-></a>) <a href="#dom-filesystemwriter-write-position-data-data"><code><c- g>data</c-></code></a>);
+  <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#ws-class" id="ref-for-ws-class②"><c- n>WritableStream</c-></a> <a class="idl-code" data-link-type="method" href="#dom-filesystemwriter-aswritablestream" id="ref-for-dom-filesystemwriter-aswritablestream③"><c- g>asWritableStream</c-></a>();
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwriter-truncate" id="ref-for-dom-filesystemwriter-truncate③"><c- g>truncate</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long①①"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a href="#dom-filesystemwriter-truncate-size-size"><code><c- g>size</c-></code></a>);
   <c- b>Promise</c->&lt;<c- b>void</c->> <a href="#dom-filesystemwriter-close"><code><c- g>close</c-></code></a>();
 };
@@ -2403,9 +2418,9 @@ invoked, must run these steps:
 <c- b>enum</c-> <a href="#enumdef-choosefilesystementriestype"><code><c- g>ChooseFileSystemEntriesType</c-></code></a> { <a href="#dom-choosefilesystementriestype-openfile"><code><c- s>"openFile"</c-></code></a>, <a href="#dom-choosefilesystementriestype-savefile"><code><c- s>"saveFile"</c-></code></a>, <a href="#dom-choosefilesystementriestype-opendirectory"><code><c- s>"openDirectory"</c-></code></a> };
 
 <c- b>dictionary</c-> <a href="#dictdef-choosefilesystementriesoptionsaccepts"><code><c- g>ChooseFileSystemEntriesOptionsAccepts</c-></code></a> {
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑤①"><c- b>USVString</c-></a> <a data-type="USVString " href="#dom-choosefilesystementriesoptionsaccepts-description"><code><c- g>description</c-></code></a>;
-  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑥①"><c- b>USVString</c-></a>> <a data-type="sequence<USVString> " href="#dom-choosefilesystementriesoptionsaccepts-mimetypes"><code><c- g>mimeTypes</c-></code></a>;
-  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑦①"><c- b>USVString</c-></a>> <a data-type="sequence<USVString> " href="#dom-choosefilesystementriesoptionsaccepts-extensions"><code><c- g>extensions</c-></code></a>;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑧①"><c- b>USVString</c-></a> <a data-type="USVString " href="#dom-choosefilesystementriesoptionsaccepts-description"><code><c- g>description</c-></code></a>;
+  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑨①"><c- b>USVString</c-></a>> <a data-type="sequence<USVString> " href="#dom-choosefilesystementriesoptionsaccepts-mimetypes"><code><c- g>mimeTypes</c-></code></a>;
+  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①⓪①"><c- b>USVString</c-></a>> <a data-type="sequence<USVString> " href="#dom-choosefilesystementriesoptionsaccepts-extensions"><code><c- g>extensions</c-></code></a>;
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-choosefilesystementriesoptions"><code><c- g>ChooseFileSystemEntriesOptions</c-></code></a> {
@@ -2417,7 +2432,7 @@ invoked, must run these steps:
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/window-object.html#window" id="ref-for-window①"><c- g>Window</c-></a> {
     [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext①"><c- g>SecureContext</c-></a>]
-    <c- b>Promise</c->&lt;(<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑧①"><c- n>FileSystemHandle</c-></a> <c- b>or</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑨①"><c- n>FileSystemHandle</c-></a>>)>
+    <c- b>Promise</c->&lt;(<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①⓪①"><c- n>FileSystemHandle</c-></a> <c- b>or</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①①①"><c- n>FileSystemHandle</c-></a>>)>
         <a class="idl-code" data-link-type="method" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries①①"><c- g>chooseFileSystemEntries</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptions" id="ref-for-dictdef-choosefilesystementriesoptions①"><c- n>ChooseFileSystemEntriesOptions</c-></a> <a href="#dom-window-choosefilesystementries-options-options"><code><c- g>options</c-></code></a>);
 };
 
@@ -2429,16 +2444,15 @@ invoked, must run these steps:
   <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#enumdef-systemdirectorytype" id="ref-for-enumdef-systemdirectorytype①"><c- n>SystemDirectoryType</c-></a> <a data-type="SystemDirectoryType " href="#dom-getsystemdirectoryoptions-type"><code><c- g>type</c-></code></a>;
 };
 
-<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑥①"><c- g>FileSystemDirectoryHandle</c-></a> {
-  <c- b>static</c-> <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑦①"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getsystemdirectory" id="ref-for-dom-filesystemdirectoryhandle-getsystemdirectory①①"><c- g>getSystemDirectory</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-getsystemdirectoryoptions" id="ref-for-dictdef-getsystemdirectoryoptions①"><c- n>GetSystemDirectoryOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getsystemdirectory-options-options"><code><c- g>options</c-></code></a>);
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑤①"><c- g>FileSystemDirectoryHandle</c-></a> {
+  <c- b>static</c-> <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑥①"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getsystemdirectory" id="ref-for-dom-filesystemdirectoryhandle-getsystemdirectory①①"><c- g>getSystemDirectory</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-getsystemdirectoryoptions" id="ref-for-dictdef-getsystemdirectoryoptions①"><c- n>GetSystemDirectoryOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getsystemdirectory-options-options"><code><c- g>options</c-></code></a>);
 };
 
 </pre>
   <h2 class="no-num no-ref heading settled" id="issues-index"><span class="content">Issues Index</span><a class="self-link" href="#issues-index"></a></h2>
   <div style="counter-reset:issue">
    <div class="issue"> TODO: Explain how entries map to files on disk (multiple entries can map to the same file or
-directory on disk but doesn’t have to map to any file on disk). Root directories typically don’t map
-to files on disk at all. Same file represented by different entries can have different parents etc.<a href="#issue-16e5c623"> ↵ </a></div>
+directory on disk but doesn’t have to map to any file on disk).<a href="#issue-7a61bf3c"> ↵ </a></div>
    <div class="issue"> Should we have separate getFile and getDirectory methods, or just a single getChild/getEntry
 method?<a href="#issue-a4e7d3b2"> ↵ </a></div>
    <div class="issue"> Having getFile methods in both FileSystemDirectoryHandle and FileSystemFileHandle, but with
@@ -2452,8 +2466,8 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
   <aside class="dfn-panel" data-for="entry">
    <b><a href="#entry">#entry</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-entry">2.1. Concepts</a> <a href="#ref-for-entry①">(2)</a> <a href="#ref-for-entry②">(3)</a>
-    <li><a href="#ref-for-entry③">2.2. The FileSystemHandle interface</a> <a href="#ref-for-entry④">(2)</a> <a href="#ref-for-entry⑤">(3)</a>
+    <li><a href="#ref-for-entry">2.1. Concepts</a>
+    <li><a href="#ref-for-entry①">2.2. The FileSystemHandle interface</a> <a href="#ref-for-entry②">(2)</a> <a href="#ref-for-entry③">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="entry-name">
@@ -2465,50 +2479,31 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
   <aside class="dfn-panel" data-for="file">
    <b><a href="#file">#file</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-file">2.1. Concepts</a> <a href="#ref-for-file①">(2)</a> <a href="#ref-for-file②">(3)</a>
-    <li><a href="#ref-for-file③">2.2. The FileSystemHandle interface</a>
+    <li><a href="#ref-for-file">2.1. Concepts</a> <a href="#ref-for-file①">(2)</a>
+    <li><a href="#ref-for-file②">2.2. The FileSystemHandle interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="directory">
    <b><a href="#directory">#directory</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-directory">2.1. Concepts</a> <a href="#ref-for-directory①">(2)</a> <a href="#ref-for-directory②">(3)</a> <a href="#ref-for-directory③">(4)</a> <a href="#ref-for-directory④">(5)</a> <a href="#ref-for-directory⑤">(6)</a> <a href="#ref-for-directory⑥">(7)</a> <a href="#ref-for-directory⑦">(8)</a>
-    <li><a href="#ref-for-directory⑧">2.2. The FileSystemHandle interface</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="directory-entry-entries">
-   <b><a href="#directory-entry-entries">#directory-entry-entries</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-directory-entry-entries">2.1. Concepts</a> <a href="#ref-for-directory-entry-entries①">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="parent">
-   <b><a href="#parent">#parent</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-parent">2.1. Concepts</a> <a href="#ref-for-parent①">(2)</a>
-    <li><a href="#ref-for-parent②">2.2.1. The getParent() method</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="root-directory">
-   <b><a href="#root-directory">#root-directory</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-root-directory">2.1. Concepts</a>
-    <li><a href="#ref-for-root-directory①">2.2.1. The getParent() method</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="file-system">
-   <b><a href="#file-system">#file-system</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-file-system">2.1. Concepts</a>
+    <li><a href="#ref-for-directory">2.1. Concepts</a> <a href="#ref-for-directory①">(2)</a>
+    <li><a href="#ref-for-directory②">2.2. The FileSystemHandle interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="filesystemhandle">
    <b><a href="#filesystemhandle">#filesystemhandle</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-filesystemhandle">2.2. The FileSystemHandle interface</a> <a href="#ref-for-filesystemhandle①">(2)</a> <a href="#ref-for-filesystemhandle②">(3)</a> <a href="#ref-for-filesystemhandle③">(4)</a> <a href="#ref-for-filesystemhandle④">(5)</a> <a href="#ref-for-filesystemhandle⑤">(6)</a>
-    <li><a href="#ref-for-filesystemhandle⑥">2.3. The FileSystemFileHandle interface</a>
-    <li><a href="#ref-for-filesystemhandle⑦">2.4. The FileSystemDirectoryHandle interface</a>
-    <li><a href="#ref-for-filesystemhandle⑧">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-filesystemhandle⑨">(2)</a> <a href="#ref-for-filesystemhandle①⓪">(3)</a> <a href="#ref-for-filesystemhandle①①">(4)</a>
+    <li><a href="#ref-for-filesystemhandle">2.2. The FileSystemHandle interface</a> <a href="#ref-for-filesystemhandle①">(2)</a> <a href="#ref-for-filesystemhandle②">(3)</a> <a href="#ref-for-filesystemhandle③">(4)</a> <a href="#ref-for-filesystemhandle④">(5)</a> <a href="#ref-for-filesystemhandle⑤">(6)</a> <a href="#ref-for-filesystemhandle⑥">(7)</a>
+    <li><a href="#ref-for-filesystemhandle⑦">2.3. The FileSystemFileHandle interface</a>
+    <li><a href="#ref-for-filesystemhandle⑧">2.4. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-filesystemhandle⑨">(2)</a>
+    <li><a href="#ref-for-filesystemhandle①⓪">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-filesystemhandle①①">(2)</a> <a href="#ref-for-filesystemhandle①②">(3)</a> <a href="#ref-for-filesystemhandle①③">(4)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-filesystemhandle-moveto">
+   <b><a href="#dom-filesystemhandle-moveto">#dom-filesystemhandle-moveto</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-filesystemhandle-moveto">2.2. The FileSystemHandle interface</a>
+    <li><a href="#ref-for-dom-filesystemhandle-moveto①">2.2.1. The moveTo() method</a> <a href="#ref-for-dom-filesystemhandle-moveto②">(2)</a> <a href="#ref-for-dom-filesystemhandle-moveto③">(3)</a> <a href="#ref-for-dom-filesystemhandle-moveto④">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="filesystemhandle-entry">
@@ -2535,34 +2530,18 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
     <li><a href="#ref-for-dom-filesystemhandle-name">2.2. The FileSystemHandle interface</a> <a href="#ref-for-dom-filesystemhandle-name①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-filesystemhandle-getparent">
-   <b><a href="#dom-filesystemhandle-getparent">#dom-filesystemhandle-getparent</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-filesystemhandle-getparent">2.2. The FileSystemHandle interface</a>
-    <li><a href="#ref-for-dom-filesystemhandle-getparent①">2.2.1. The getParent() method</a> <a href="#ref-for-dom-filesystemhandle-getparent②">(2)</a>
-    <li><a href="#ref-for-dom-filesystemhandle-getparent③">2.2.2. The moveTo() method</a>
-    <li><a href="#ref-for-dom-filesystemhandle-getparent④">2.2.3. The copyTo() method</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-filesystemhandle-moveto">
-   <b><a href="#dom-filesystemhandle-moveto">#dom-filesystemhandle-moveto</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-filesystemhandle-moveto">2.2. The FileSystemHandle interface</a>
-    <li><a href="#ref-for-dom-filesystemhandle-moveto①">2.2.2. The moveTo() method</a> <a href="#ref-for-dom-filesystemhandle-moveto②">(2)</a> <a href="#ref-for-dom-filesystemhandle-moveto③">(3)</a> <a href="#ref-for-dom-filesystemhandle-moveto④">(4)</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="dom-filesystemhandle-copyto">
    <b><a href="#dom-filesystemhandle-copyto">#dom-filesystemhandle-copyto</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-filesystemhandle-copyto">2.2. The FileSystemHandle interface</a>
-    <li><a href="#ref-for-dom-filesystemhandle-copyto①">2.2.3. The copyTo() method</a> <a href="#ref-for-dom-filesystemhandle-copyto②">(2)</a> <a href="#ref-for-dom-filesystemhandle-copyto③">(3)</a> <a href="#ref-for-dom-filesystemhandle-copyto④">(4)</a>
+    <li><a href="#ref-for-dom-filesystemhandle-copyto①">2.2.2. The copyTo() method</a> <a href="#ref-for-dom-filesystemhandle-copyto②">(2)</a> <a href="#ref-for-dom-filesystemhandle-copyto③">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemhandle-remove">
    <b><a href="#dom-filesystemhandle-remove">#dom-filesystemhandle-remove</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-filesystemhandle-remove">2.2. The FileSystemHandle interface</a>
-    <li><a href="#ref-for-dom-filesystemhandle-remove①">2.2.4. The remove() method</a> <a href="#ref-for-dom-filesystemhandle-remove②">(2)</a>
+    <li><a href="#ref-for-dom-filesystemhandle-remove①">2.2.3. The remove() method</a> <a href="#ref-for-dom-filesystemhandle-remove②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="filesystemfilehandle">
@@ -2614,15 +2593,15 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
   <aside class="dfn-panel" data-for="filesystemdirectoryhandle">
    <b><a href="#filesystemdirectoryhandle">#filesystemdirectoryhandle</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-filesystemdirectoryhandle">2.2. The FileSystemHandle interface</a> <a href="#ref-for-filesystemdirectoryhandle①">(2)</a> <a href="#ref-for-filesystemdirectoryhandle②">(3)</a> <a href="#ref-for-filesystemdirectoryhandle③">(4)</a>
-    <li><a href="#ref-for-filesystemdirectoryhandle④">2.4. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-filesystemdirectoryhandle⑤">(2)</a>
-    <li><a href="#ref-for-filesystemdirectoryhandle⑥">4.1. The getSystemDirectory() method</a> <a href="#ref-for-filesystemdirectoryhandle⑦">(2)</a> <a href="#ref-for-filesystemdirectoryhandle⑧">(3)</a>
+    <li><a href="#ref-for-filesystemdirectoryhandle">2.2. The FileSystemHandle interface</a> <a href="#ref-for-filesystemdirectoryhandle①">(2)</a> <a href="#ref-for-filesystemdirectoryhandle②">(3)</a>
+    <li><a href="#ref-for-filesystemdirectoryhandle③">2.4. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-filesystemdirectoryhandle④">(2)</a>
+    <li><a href="#ref-for-filesystemdirectoryhandle⑤">4.1. The getSystemDirectory() method</a> <a href="#ref-for-filesystemdirectoryhandle⑥">(2)</a> <a href="#ref-for-filesystemdirectoryhandle⑦">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemdirectoryhandle-removerecursively">
    <b><a href="#dom-filesystemdirectoryhandle-removerecursively">#dom-filesystemdirectoryhandle-removerecursively</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-filesystemdirectoryhandle-removerecursively">2.4.4. The removeRecursively() method</a> <a href="#ref-for-dom-filesystemdirectoryhandle-removerecursively①">(2)</a>
+    <li><a href="#ref-for-dom-filesystemdirectoryhandle-removerecursively">2.4.5. The removeRecursively() method</a> <a href="#ref-for-dom-filesystemdirectoryhandle-removerecursively①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemdirectoryhandle-getfile">
@@ -2646,6 +2625,13 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
     <li><a href="#ref-for-dom-filesystemdirectoryhandle-getentries①">2.4.3. The getEntries() method</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getentries②">(2)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="dom-filesystemdirectoryhandle-resolve">
+   <b><a href="#dom-filesystemdirectoryhandle-resolve">#dom-filesystemdirectoryhandle-resolve</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-filesystemdirectoryhandle-resolve">2.4. The FileSystemDirectoryHandle interface</a>
+    <li><a href="#ref-for-dom-filesystemdirectoryhandle-resolve①">2.4.4. The resolve() method</a> <a href="#ref-for-dom-filesystemdirectoryhandle-resolve②">(2)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="filesystemwriter">
    <b><a href="#filesystemwriter">#filesystemwriter</a></b><b>Referenced in:</b>
    <ul>
@@ -2661,11 +2647,18 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
     <li><a href="#ref-for-dom-filesystemwriter-write①">2.5.1. The write() method</a> <a href="#ref-for-dom-filesystemwriter-write②">(2)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="dom-filesystemwriter-aswritablestream">
+   <b><a href="#dom-filesystemwriter-aswritablestream">#dom-filesystemwriter-aswritablestream</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-filesystemwriter-aswritablestream">2.5. The FileSystemWriter interface</a>
+    <li><a href="#ref-for-dom-filesystemwriter-aswritablestream①">2.5.2. The asWritableStream() method</a> <a href="#ref-for-dom-filesystemwriter-aswritablestream②">(2)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="dom-filesystemwriter-truncate">
    <b><a href="#dom-filesystemwriter-truncate">#dom-filesystemwriter-truncate</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-filesystemwriter-truncate">2.5. The FileSystemWriter interface</a>
-    <li><a href="#ref-for-dom-filesystemwriter-truncate①">2.5.2. The truncate() method</a> <a href="#ref-for-dom-filesystemwriter-truncate②">(2)</a>
+    <li><a href="#ref-for-dom-filesystemwriter-truncate①">2.5.3. The truncate() method</a> <a href="#ref-for-dom-filesystemwriter-truncate②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="enumdef-choosefilesystementriestype">
