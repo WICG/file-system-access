@@ -308,7 +308,7 @@ these steps:
 ### The {{FileSystemDirectoryHandle/resolve()}} method ### {#api-filesystemdirectoryhandle-resolve}
 
 <div class="note domintro">
-  : |relativePath| = await |directoryHandle| . {{FileSystemDirectoryHandle/resolve()|FileSystemDirectoryHandle/resolve}}(|otherHandle|)
+  : |relativePath| = await |directoryHandle| . {{FileSystemDirectoryHandle/resolve()|resolve}}(|otherHandle|)
   :: If |otherHandle| is a descendant of |directoryHandle|, returns an array representing the path
      you can take to get from |directoryHandle| to |otherHandle|.
 
