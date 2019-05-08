@@ -13,8 +13,7 @@ what we're providing is several bits:
    interface.
 3. Various entry points to get a handle representing a limited view of the
    native file system. I.e. either via a file picker, or to get access to
-   certain well known directories, or even to get access to the whole native
-   file system. Mimicking things such as chrome's
+   certain well known directories. Mimicking things such as chrome's
    [`chrome.fileSystem.chooseEntry`](https://developer.chrome.com/apps/fileSystem#method-chooseEntry) API.
 
 ## Goals
@@ -95,9 +94,11 @@ file_reader.onload = (event) => {
     await file_writer.write(0, new Blob(['foobar']));
     await file_writer.write(1024, new Blob(['bla']));
 
+    // Can also write using a WritableStream
+    let stream = file_writer.asWritableStream();
     // Can also write contents of a ReadableStream.
     let response = await fetch('foo');
-    await file_writer.write(response.body);
+    await response.body.pipeTo(stream);
 };
 
 // file_ref.file() method will reject if site (no longer) has access to the

@@ -3,7 +3,7 @@ Title: Native File System
 Shortname: native-file-system
 Abstract: This document defines a web platform API that lets websites gain write access to the
   native file system. It builds on [[FILE-API]], but adds lots of new functionality on top.
-Status: ED
+Status: CG-DRAFT
 ED: https://wicg.github.io/native-file-system/
 Level: 1
 Editor: Marijn Kruisselbrink, Google, mek@chromium.org, w3cid 72440
@@ -59,21 +59,8 @@ data</dfn> and a <dfn for="file entry">modification timestamp</dfn>.
 A <dfn lt="directory|directory entry">directory entry</dfn> additionally consists of a [=/set=] of
 <dfn for="directory entry">entries</dfn>. Each member is either a [=file=] or a [=directory=].
 
-The <dfn lt="parent|parent directory">parent directory</dfn> of a [=/entry=] |child| is the
-[=directory=] |parent| for which |parent|'s [=entries=] [=list/contains=] |child|, if such a
-[=directory=] exist. Each [=directory entry=] must be [=list/contained=] by the [=entries=] of at
-most one [=directory entry=], while each [=file entry=] must be [=list/contained=] by the entries
-of exactly one [=directory entry=].
-
-If a [=directory=] does not have a [=parent directory=], it is called a <dfn>root directory</dfn>.
-
-Each [=/entry=] |entry| has an associated <dfn>file system</dfn>, which is either |entry| itself if
-|entry| is a [=root directory=], or otherwise is equal to the [=file system=] of |entry|'s [=parent
-directory=].
-
 Issue: TODO: Explain how entries map to files on disk (multiple entries can map to the same file or
-directory on disk but doesn't have to map to any file on disk). Root directories typically don't map
-to files on disk at all. Same file represented by different entries can have different parents etc.
+directory on disk but doesn't have to map to any file on disk).
 
 ## The {{FileSystemHandle}} interface ## {#api-filesystemhandle}
 
@@ -83,8 +70,7 @@ interface FileSystemHandle {
   readonly attribute boolean isDirectory;
   readonly attribute USVString name;
 
-  Promise<FileSystemDirectoryHandle> getParent();
-
+  Promise<FileSystemHandle> moveTo(USVString name);
   Promise<FileSystemHandle> moveTo(
       FileSystemDirectoryHandle parent, optional USVString name);
   Promise<FileSystemHandle> copyTo(
@@ -117,30 +103,10 @@ associated [=FileSystemHandle/entry=] is a [=directory entry=], and false otherw
 The <dfn attribute for=FileSystemHandle>name</dfn> attribute must return the [=entry/name=] of the
 associated [=FileSystemHandle/entry=].
 
-### The {{FileSystemHandle/getParent()}} method ### {#api-filesystemhandle-getparent}
-
-<div class="note domintro">
-  : |parent| = await |handle| . {{FileSystemHandle/getParent()}}
-  :: Returns a promise resolved to the [=parent directory=] of |handle|.
-     If |handle| is the [=root directory=] of its file system the promise
-     resolves to `null`.
-
-     Can reject if the entry no longer exists in the underlying file system, or
-     if some error prevents reading the entry or its parent.
-</div>
-
-<div algorithm>
-The <dfn method for=FileSystemHandle>getParent()</dfn> method, when invoked, must run these steps:
-
-1. TODO
-
-</div>
-
 ### The {{FileSystemHandle/moveTo()}} method ### {#api-filesystemhandle-moveto}
 
 <div class="note domintro">
-  : |newHandle| = await |handle| . {{FileSystemHandle/moveTo()|moveTo}}(await
-        |handle|.{{FileSystemHandle/getParent()}}, |newName|)
+  : |newHandle| = await |handle| . {{FileSystemHandle/moveTo()|moveTo}}(|newName|)
   :: Renames the entry represented by |handle| to |newName|.
 
   : |newHandle| = await |handle| . {{FileSystemHandle/moveTo()|moveTo}}(|otherDir|)
@@ -167,10 +133,6 @@ these steps:
 ### The {{FileSystemHandle/copyTo()}} method ### {#api-filesystemhandle-copyto}
 
 <div class="note domintro">
-  : |newHandle| = await |handle| . {{FileSystemHandle/copyTo()|copyTo}}(await
-        |handle|.{{FileSystemHandle/getParent()}}, |newName|)
-  :: Creates a copy of the entry represented by |handle| with name |newName|.
-
   : |newHandle| = await |handle| . {{FileSystemHandle/copyTo()|copyTo}}(|otherDir|)
   :: Creates a copy of the entry represented by |handle| in |otherDir|, while keeping its existing
      name.
@@ -264,6 +226,8 @@ interface FileSystemDirectoryHandle : FileSystemHandle {
   // This really returns an async iterable, but that is not yet expressable in WebIDL.
   object getEntries();
 
+  Promise<sequence<USVString>?> resolve(FileSystemHandle handle);
+
   Promise<void> removeRecursively();
 };
 </xmp>
@@ -341,6 +305,32 @@ these steps:
 
 </div>
 
+### The {{FileSystemDirectoryHandle/resolve()}} method ### {#api-filesystemdirectoryhandle-resolve}
+
+<div class="note domintro">
+  : |relativePath| = await |directoryHandle| . {{FileSystemDirectoryHandle/resolve()|resolve}}(|otherHandle|)
+  :: If |otherHandle| is a descendant of |directoryHandle|, returns an array representing the path
+     you can take to get from |directoryHandle| to |otherHandle|.
+
+     For example if |otherHandle| is a direct child of |directoryHandle|,
+     |relativePath| will be equal to an array containing just |otherHandle|.name.
+
+     If |otherHandle| isn't a descendant of |directoryHandle|, resolves with `null`.
+
+     If |otherHandle| represents the same entry as |directoryHandle|, resolves with an empty array.
+
+     If for whatever reason |directoryHandle| or |otherHandle| isn't readable, rejects with some
+     exception.
+</div>
+
+<div algorithm>
+The <dfn method for=FileSystemDirectoryHandle>resolve(|handle|)</dfn> method, when invoked, must run
+these steps:
+
+1. TODO
+
+</div>
+
 ### The {{FileSystemDirectoryHandle/removeRecursively()}} method ### {#api-filesystemdirectoryhandle-removerecursively}
 
 <div class="note domintro">
@@ -353,7 +343,8 @@ these steps:
 
 <xmp class=idl>
 interface FileSystemWriter {
-  Promise<void> write(unsigned long long position, (Blob or ReadableStream) data);
+  Promise<void> write(unsigned long long position, (BufferSource or Blob or USVString) data);
+  WritableStream asWritableStream();
   Promise<void> truncate(unsigned long long size);
   Promise<void> close();
 };
@@ -370,6 +361,22 @@ interface FileSystemWriter {
 <div algorithm>
 The <dfn method for=FileSystemWriter>write(|position|, |data|)</dfn> method, when invoked, must run
 these steps:
+
+1. TODO
+
+</div>
+
+### The {{FileSystemWriter/asWritableStream()}} method ### {#api-filesystemwriter-aswritablestream}
+
+<div class="note domintro">
+  : let |stream| = |writer| . {{FileSystemWriter/asWritableStream()}}
+  :: Returns a {{WritableStream}} that can be used to write data into the file, starting
+     at the beginning of the file.
+</div>
+
+<div algorithm>
+The <dfn method for=FileSystemWriter>asWritableStream()</dfn> method, when invoked,
+must run these steps:
 
 1. TODO
 
