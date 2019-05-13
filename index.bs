@@ -65,6 +65,10 @@ directory on disk but doesn't have to map to any file on disk).
 ## The {{FileSystemHandle}} interface ## {#api-filesystemhandle}
 
 <xmp class=idl>
+dictionary FileSystemHandlePermissionDescriptor {
+  boolean writable = false;
+};
+
 interface FileSystemHandle {
   readonly attribute boolean isFile;
   readonly attribute boolean isDirectory;
@@ -76,6 +80,9 @@ interface FileSystemHandle {
   Promise<FileSystemHandle> copyTo(
       FileSystemDirectoryHandle parent, optional USVString name);
   Promise<void> remove();
+
+  Promise<PermissionState> queryPermission(optional FileSystemHandlePermissionDescriptor descriptor);
+  Promise<PermissionState> requestPermission(optional FileSystemHandlePermissionDescriptor descriptor);
 };
 </xmp>
 
@@ -165,6 +172,62 @@ these steps:
 
 <div algorithm>
 The <dfn method for=FileSystemHandle>remove()</dfn> method, when invoked, must run these steps:
+
+1. TODO
+
+</div>
+
+### The {{FileSystemHandle/queryPermission()}} method ### {#api-filesystemhandle-querypermission}
+
+<div class="note domintro">
+  : |status| = await |handle| . {{FileSystemHandle/queryPermission()|queryPermission}}({ {{FileSystemHandlePermissionDescriptor/writable}} = false }) 
+  : |status| = await |handle| . {{FileSystemHandle/queryPermission()}}
+  :: Queries the current state of the read permission of this handle. If this returns `"prompt"`
+     the website will have to call {{FileSystemHandle/requestPermission()}} before any
+     operations on the handle can be done. If this returns `"denied"` any operations will reject.
+
+     Usually handles returned by {{chooseFileSystemEntries}} will initially return `"granted"` for
+     their read permission state, however other than through the user revoking permission, a handle
+     retrieved from IndexedDB is also likely to return `"prompt"`.
+
+  : |status| = await |handle| . {{FileSystemHandle/queryPermission()|queryPermission}}({ {{FileSystemHandlePermissionDescriptor/writable}} = true }) 
+  :: Queries the current state of the write permission of this handle. If this returns `"prompt"`,
+     attempting to modify the file or directory this handle represents will require user activation
+     and will result in a confirmation prompt being shown to the user. However if the state of the
+     read permission of this handle is also `"prompt"` the website will need to call
+     {{FileSystemHandle/requestPermission()}}. There is no automatic prompting for read access when
+     attempting to read from a file or directory.
+</div>
+
+<div algorithm>
+The <dfn method for=FileSystemHandle>queryPermission(|descriptor|)</dfn> method, when invoked, must run these steps:
+
+1. TODO
+
+</div>
+
+### The {{FileSystemHandle/requestPermission()}} method ### {#api-filesystemhandle-requestpermission}
+
+<div class="note domintro">
+  : |status| = await |handle| . {{FileSystemHandle/requestPermission()|requestPermission}}({ {{FileSystemHandlePermissionDescriptor/writable}} = false }) 
+  : |status| = await |handle| . {{FileSystemHandle/requestPermission()}}
+  :: If the state of the read permission of this handle is anything other than `"prompt"`, this
+     will return that state directly. If it is `"prompt"` however, user activation is required and
+     this will show a confirmation prompt to the user. The new read permission state is then
+     returned, depending on what the user selected.
+
+  : |status| = await |handle| . {{FileSystemHandle/requestPermission()|requestPermission}}({ {{FileSystemHandlePermissionDescriptor/writable}} = true }) 
+  :: If the state of the write permission of this handle is anything other than `"prompt"`, this
+     will return that state directly. If the status of the read permission of this handle is
+     `"denied"` this will return that.
+     
+     Otherwise the state of the write permission `"prompt"` this will show a confirmation prompt
+     to the user. The new write permission state is then returned, depending on what the user
+     selected.
+</div>
+
+<div algorithm>
+The <dfn method for=FileSystemHandle>requestPermission(|descriptor|)</dfn> method, when invoked, must run these steps:
 
 1. TODO
 
