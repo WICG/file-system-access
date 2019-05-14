@@ -1213,9 +1213,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version e0f6b8b749fa390ec1e89d64ac471d2710b038a2" name="generator">
+  <meta content="Bikeshed version ee4d7efc3ed6155392d49e10a542e2351fd5792d" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="22ebaf645d0db9fcda4ae58028ba2f13aeb36d83" name="document-revision">
+  <meta content="e6850b7f6d15589d611b749eed4b09a9b917cbc6" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1487,7 +1487,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-04-22">22 April 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-05-14">14 May 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1536,6 +1536,8 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
         <li><a href="#api-filesystemhandle-moveto"><span class="secno">2.2.1</span> <span class="content">The <code class="idl"><span>moveTo()</span></code> method</span></a>
         <li><a href="#api-filesystemhandle-copyto"><span class="secno">2.2.2</span> <span class="content">The <code class="idl"><span>copyTo()</span></code> method</span></a>
         <li><a href="#api-filesystemhandle-remove"><span class="secno">2.2.3</span> <span class="content">The <code class="idl"><span>remove()</span></code> method</span></a>
+        <li><a href="#api-filesystemhandle-querypermission"><span class="secno">2.2.4</span> <span class="content">The <code class="idl"><span>queryPermission()</span></code> method</span></a>
+        <li><a href="#api-filesystemhandle-requestpermission"><span class="secno">2.2.5</span> <span class="content">The <code class="idl"><span>requestPermission()</span></code> method</span></a>
        </ol>
       <li>
        <a href="#api-filesystemfilehandle"><span class="secno">2.3</span> <span class="content">The <code class="idl"><span>FileSystemFileHandle</span></code> interface</span></a>
@@ -1608,9 +1610,13 @@ data<a class="self-link" href="#file-entry-binary-data"></a></dfn> and a <dfn da
    <p class="issue" id="issue-7a61bf3c"><a class="self-link" href="#issue-7a61bf3c"></a> TODO: Explain how entries map to files on disk (multiple entries can map to the same file or
 directory on disk but doesn’t have to map to any file on disk).</p>
    <h3 class="heading settled" data-level="2.2" id="api-filesystemhandle"><span class="secno">2.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle">FileSystemHandle</a></code> interface</span><a class="self-link" href="#api-filesystemhandle"></a></h3>
-<pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemhandle"><code><c- g>FileSystemHandle</c-></code></dfn> {
-  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isfile" id="ref-for-dom-filesystemhandle-isfile"><c- g>isFile</c-></a>;
-  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean①"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isdirectory" id="ref-for-dom-filesystemhandle-isdirectory"><c- g>isDirectory</c-></a>;
+<pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystemhandlepermissiondescriptor"><code><c- g>FileSystemHandlePermissionDescriptor</c-></code></dfn> {
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemHandlePermissionDescriptor" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemhandlepermissiondescriptor-writable"><code><c- g>writable</c-></code></dfn> = <c- b>false</c->;
+};
+
+<c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemhandle"><code><c- g>FileSystemHandle</c-></code></dfn> {
+  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean①"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isfile" id="ref-for-dom-filesystemhandle-isfile"><c- g>isFile</c-></a>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean②"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isdirectory" id="ref-for-dom-filesystemhandle-isdirectory"><c- g>isDirectory</c-></a>;
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString"><c- b>USVString</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="USVString" href="#dom-filesystemhandle-name" id="ref-for-dom-filesystemhandle-name"><c- g>name</c-></a>;
 
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①"><c- n>FileSystemHandle</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="method" data-export data-lt="moveTo(name)" id="dom-filesystemhandle-moveto"><code><c- g>moveTo</c-></code></dfn>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/moveTo(name)" data-dfn-type="argument" data-export id="dom-filesystemhandle-moveto-name-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemhandle-moveto-name-name"></a></dfn>);
@@ -1619,6 +1625,9 @@ directory on disk but doesn’t have to map to any file on disk).</p>
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle③"><c- n>FileSystemHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-copyto" id="ref-for-dom-filesystemhandle-copyto"><c- g>copyTo</c-></a>(
       <a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①"><c- n>FileSystemDirectoryHandle</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/copyTo(parent, name), FileSystemHandle/copyTo(parent)" data-dfn-type="argument" data-export id="dom-filesystemhandle-copyto-parent-name-parent"><code><c- g>parent</c-></code><a class="self-link" href="#dom-filesystemhandle-copyto-parent-name-parent"></a></dfn>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString③"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/copyTo(parent, name), FileSystemHandle/copyTo(parent)" data-dfn-type="argument" data-export id="dom-filesystemhandle-copyto-parent-name-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemhandle-copyto-parent-name-name"></a></dfn>);
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-remove" id="ref-for-dom-filesystemhandle-remove"><c- g>remove</c-></a>();
+
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/permissions/#enumdef-permissionstate" id="ref-for-enumdef-permissionstate"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission"><c- g>queryPermission</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/queryPermission(descriptor), FileSystemHandle/queryPermission()" data-dfn-type="argument" data-export id="dom-filesystemhandle-querypermission-descriptor-descriptor"><code><c- g>descriptor</c-></code><a class="self-link" href="#dom-filesystemhandle-querypermission-descriptor-descriptor"></a></dfn>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/permissions/#enumdef-permissionstate" id="ref-for-enumdef-permissionstate①"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission"><c- g>requestPermission</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor①"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/requestPermission(descriptor), FileSystemHandle/requestPermission()" data-dfn-type="argument" data-export id="dom-filesystemhandle-requestpermission-descriptor-descriptor"><code><c- g>descriptor</c-></code><a class="self-link" href="#dom-filesystemhandle-requestpermission-descriptor-descriptor"></a></dfn>);
 };
 </pre>
    <p>A <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle④">FileSystemHandle</a></code> object represents a <a data-link-type="dfn" href="#entry" id="ref-for-entry①">entry</a>. Each <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle⑤">FileSystemHandle</a></code> object is assocaited
@@ -1708,6 +1717,59 @@ these steps:
       <p>TODO</p>
     </ol>
    </div>
+   <h4 class="heading settled" data-level="2.2.4" id="api-filesystemhandle-querypermission"><span class="secno">2.2.4. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission①">queryPermission()</a></code> method</span><a class="self-link" href="#api-filesystemhandle-querypermission"></a></h4>
+   <div class="note domintro" role="note">
+    <dl>
+     <dt data-md><var>status</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission②">queryPermission</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable">writable</a></code> = false })
+     <dt data-md><var>status</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission③">queryPermission()</a></code>
+     <dd data-md>
+      <p>Queries the current state of the read permission of this handle. If this returns <code>"prompt"</code> the website will have to call <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission①">requestPermission()</a></code> before any
+ operations on the handle can be done. If this returns <code>"denied"</code> any operations will reject.</p>
+      <p>Usually handles returned by <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries">chooseFileSystemEntries</a></code> will initially return <code>"granted"</code> for
+ their read permission state, however other than through the user revoking permission, a handle
+ retrieved from IndexedDB is also likely to return <code>"prompt"</code>.</p>
+     <dt data-md><var>status</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission④">queryPermission</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①">writable</a></code> = true })
+     <dd data-md>
+      <p>Queries the current state of the write permission of this handle. If this returns <code>"prompt"</code>,
+ attempting to modify the file or directory this handle represents will require user activation
+ and will result in a confirmation prompt being shown to the user. However if the state of the
+ read permission of this handle is also <code>"prompt"</code> the website will need to call <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission②">requestPermission()</a></code>. There is no automatic prompting for read access when
+ attempting to read from a file or directory.</p>
+    </dl>
+   </div>
+   <div class="algorithm" data-algorithm="queryPermission(descriptor)">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="method" data-export data-lt="queryPermission(descriptor)|queryPermission()" id="dom-filesystemhandle-querypermission"><code>queryPermission(<var>descriptor</var>)</code></dfn> method, when invoked, must run these steps: 
+    <ol>
+     <li data-md>
+      <p>TODO</p>
+    </ol>
+   </div>
+   <h4 class="heading settled" data-level="2.2.5" id="api-filesystemhandle-requestpermission"><span class="secno">2.2.5. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission③">requestPermission()</a></code> method</span><a class="self-link" href="#api-filesystemhandle-requestpermission"></a></h4>
+   <div class="note domintro" role="note">
+    <dl>
+     <dt data-md><var>status</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission④">requestPermission</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable②">writable</a></code> = false })
+     <dt data-md><var>status</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission⑤">requestPermission()</a></code>
+     <dd data-md>
+      <p>If the state of the read permission of this handle is anything other than <code>"prompt"</code>, this
+ will return that state directly. If it is <code>"prompt"</code> however, user activation is required and
+ this will show a confirmation prompt to the user. The new read permission state is then
+ returned, depending on the user’s response to the prompt.</p>
+     <dt data-md><var>status</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission⑥">requestPermission</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable③">writable</a></code> = true })
+     <dd data-md>
+      <p>If the state of the write permission of this handle is anything other than <code>"prompt"</code>, this
+ will return that state directly. If the status of the read permission of this handle is <code>"denied"</code> this will return that.</p>
+      <p>Otherwise the state of the write permission is <code>"prompt"</code> and this will show a confirmation
+ prompt to the user. The new write permission state is then returned, depending on what the user
+ selected.</p>
+    </dl>
+   </div>
+   <div class="algorithm" data-algorithm="requestPermission(descriptor)">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="method" data-export data-lt="requestPermission(descriptor)|requestPermission()" id="dom-filesystemhandle-requestpermission"><code>requestPermission(<var>descriptor</var>)</code></dfn> method, when invoked, must run these steps: 
+    <ol>
+     <li data-md>
+      <p>TODO</p>
+    </ol>
+   </div>
    <h3 class="heading settled" data-level="2.3" id="api-filesystemfilehandle"><span class="secno">2.3. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle①">FileSystemFileHandle</a></code> interface</span><a class="self-link" href="#api-filesystemfilehandle"></a></h3>
 <pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemfilehandle"><code><c- g>FileSystemFileHandle</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑦"><c- n>FileSystemHandle</c-></a> {
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-file" id="ref-for-dfn-file"><c- n>File</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-getfile" id="ref-for-dom-filesystemfilehandle-getfile"><c- g>getFile</c-></a>();
@@ -1746,11 +1808,11 @@ these steps:
    </div>
    <h3 class="heading settled" data-level="2.4" id="api-filesystemdirectoryhandle"><span class="secno">2.4. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle③">FileSystemDirectoryHandle</a></code> interface</span><a class="self-link" href="#api-filesystemdirectoryhandle"></a></h3>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystemgetfileoptions"><code><c- g>FileSystemGetFileOptions</c-></code></dfn> {
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean②"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemGetFileOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemgetfileoptions-create"><code><c- g>create</c-></code></dfn> = <c- b>false</c->;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean③"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemGetFileOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemgetfileoptions-create"><code><c- g>create</c-></code></dfn> = <c- b>false</c->;
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystemgetdirectoryoptions"><code><c- g>FileSystemGetDirectoryOptions</c-></code></dfn> {
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean③"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemGetDirectoryOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemgetdirectoryoptions-create"><code><c- g>create</c-></code></dfn> = <c- b>false</c->;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean④"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemGetDirectoryOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemgetdirectoryoptions-create"><code><c- g>create</c-></code></dfn> = <c- b>false</c->;
 };
 
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemdirectoryhandle"><code><c- g>FileSystemDirectoryHandle</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑧"><c- n>FileSystemHandle</c-></a> {
@@ -1926,7 +1988,7 @@ steps:
     </ol>
    </div>
    <h2 class="heading settled" data-level="3" id="native-filesystem"><span class="secno">3. </span><span class="content">Accessing native filesystem</span><a class="self-link" href="#native-filesystem"></a></h2>
-   <h3 class="heading settled" data-level="3.1" id="api-choosefilesystementries"><span class="secno">3.1. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries">chooseFileSystemEntries()</a></code> method</span><a class="self-link" href="#api-choosefilesystementries"></a></h3>
+   <h3 class="heading settled" data-level="3.1" id="api-choosefilesystementries"><span class="secno">3.1. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries①">chooseFileSystemEntries()</a></code> method</span><a class="self-link" href="#api-choosefilesystementries"></a></h3>
 <pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-choosefilesystementriestype"><code><c- g>ChooseFileSystemEntriesType</c-></code></dfn> { <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-openfile"><code><c- s>"openFile"</c-></code></dfn>, <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-savefile"><code><c- s>"saveFile"</c-></code></dfn>, <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-opendirectory"><code><c- s>"openDirectory"</c-></code></dfn> };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-choosefilesystementriesoptionsaccepts"><code><c- g>ChooseFileSystemEntriesOptionsAccepts</c-></code></dfn> {
@@ -1937,20 +1999,20 @@ steps:
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-choosefilesystementriesoptions"><code><c- g>ChooseFileSystemEntriesOptions</c-></code></dfn> {
     <a class="n" data-link-type="idl-name" href="#enumdef-choosefilesystementriestype" id="ref-for-enumdef-choosefilesystementriestype"><c- n>ChooseFileSystemEntriesType</c-></a> <dfn class="dfn-paneled idl-code" data-default="&quot;openFile&quot;" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="ChooseFileSystemEntriesType " id="dom-choosefilesystementriesoptions-type"><code><c- g>type</c-></code></dfn> = "openFile";
-    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean④"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-choosefilesystementriesoptions-multiple"><code><c- g>multiple</c-></code></dfn> = <c- b>false</c->;
+    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑤"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-choosefilesystementriesoptions-multiple"><code><c- g>multiple</c-></code></dfn> = <c- b>false</c->;
     <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptionsaccepts" id="ref-for-dictdef-choosefilesystementriesoptionsaccepts"><c- n>ChooseFileSystemEntriesOptionsAccepts</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="sequence<ChooseFileSystemEntriesOptionsAccepts> " id="dom-choosefilesystementriesoptions-accepts"><code><c- g>accepts</c-></code></dfn>;
-    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑤"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-choosefilesystementriesoptions-excludeacceptalloption"><code><c- g>excludeAcceptAllOption</c-></code></dfn> = <c- b>false</c->;
+    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑥"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-choosefilesystementriesoptions-excludeacceptalloption"><code><c- g>excludeAcceptAllOption</c-></code></dfn> = <c- b>false</c->;
 };
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/window-object.html#window" id="ref-for-window"><c- g>Window</c-></a> {
     [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext"><c- g>SecureContext</c-></a>]
     <c- b>Promise</c->&lt;(<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①⓪"><c- n>FileSystemHandle</c-></a> <c- b>or</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①①"><c- n>FileSystemHandle</c-></a>>)>
-        <a class="idl-code" data-link-type="method" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries①"><c- g>chooseFileSystemEntries</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptions" id="ref-for-dictdef-choosefilesystementriesoptions"><c- n>ChooseFileSystemEntriesOptions</c-></a> <dfn class="idl-code" data-dfn-for="Window/chooseFileSystemEntries(options), Window/chooseFileSystemEntries()" data-dfn-type="argument" data-export id="dom-window-choosefilesystementries-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-window-choosefilesystementries-options-options"></a></dfn>);
+        <a class="idl-code" data-link-type="method" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries②"><c- g>chooseFileSystemEntries</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptions" id="ref-for-dictdef-choosefilesystementriesoptions"><c- n>ChooseFileSystemEntriesOptions</c-></a> <dfn class="idl-code" data-dfn-for="Window/chooseFileSystemEntries(options), Window/chooseFileSystemEntries()" data-dfn-type="argument" data-export id="dom-window-choosefilesystementries-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-window-choosefilesystementries-options-options"></a></dfn>);
 };
 </pre>
    <div class="note domintro" role="note">
     <dl>
-     <dt data-md><var>result</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries②">chooseFileSystemEntries</a></code>(<var>options</var>)
+     <dt data-md><var>result</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries③">chooseFileSystemEntries</a></code>(<var>options</var>)
      <dd data-md>
       <p>Shows a file picker dialog to the user and returns handles for the selected files or
  directories.</p>
@@ -2202,6 +2264,7 @@ invoked, must run these steps:
    <li><a href="#dictdef-filesystemgetdirectoryoptions">FileSystemGetDirectoryOptions</a><span>, in §2.4</span>
    <li><a href="#dictdef-filesystemgetfileoptions">FileSystemGetFileOptions</a><span>, in §2.4</span>
    <li><a href="#filesystemhandle">FileSystemHandle</a><span>, in §2.2</span>
+   <li><a href="#dictdef-filesystemhandlepermissiondescriptor">FileSystemHandlePermissionDescriptor</a><span>, in §2.2</span>
    <li><a href="#filesystemwriter">FileSystemWriter</a><span>, in §2.5</span>
    <li><a href="#dom-filesystemdirectoryhandle-getdirectory">getDirectory(name, options)</a><span>, in §2.4.2</span>
    <li><a href="#dom-filesystemdirectoryhandle-getentries">getEntries()</a><span>, in §2.4.3</span>
@@ -2225,8 +2288,12 @@ invoked, must run these steps:
     </ul>
    <li><a href="#dom-choosefilesystementriestype-opendirectory">"openDirectory"</a><span>, in §3.1</span>
    <li><a href="#dom-choosefilesystementriestype-openfile">"openFile"</a><span>, in §3.1</span>
+   <li><a href="#dom-filesystemhandle-querypermission">queryPermission()</a><span>, in §2.2.4</span>
+   <li><a href="#dom-filesystemhandle-querypermission">queryPermission(descriptor)</a><span>, in §2.2.4</span>
    <li><a href="#dom-filesystemhandle-remove">remove()</a><span>, in §2.2.3</span>
    <li><a href="#dom-filesystemdirectoryhandle-removerecursively">removeRecursively()</a><span>, in §2.4</span>
+   <li><a href="#dom-filesystemhandle-requestpermission">requestPermission()</a><span>, in §2.2.5</span>
+   <li><a href="#dom-filesystemhandle-requestpermission">requestPermission(descriptor)</a><span>, in §2.2.5</span>
    <li><a href="#dom-filesystemdirectoryhandle-resolve">resolve(handle)</a><span>, in §2.4.4</span>
    <li><a href="#dom-systemdirectorytype-sandbox">"sandbox"</a><span>, in §4.1</span>
    <li><a href="#dom-choosefilesystementriestype-savefile">"saveFile"</a><span>, in §3.1</span>
@@ -2238,6 +2305,7 @@ invoked, must run these steps:
      <li><a href="#dom-choosefilesystementriesoptions-type">dict-member for ChooseFileSystemEntriesOptions</a><span>, in §3.1</span>
      <li><a href="#dom-getsystemdirectoryoptions-type">dict-member for GetSystemDirectoryOptions</a><span>, in §4.1</span>
     </ul>
+   <li><a href="#dom-filesystemhandlepermissiondescriptor-writable">writable</a><span>, in §2.2</span>
    <li><a href="#dom-filesystemwriter-write">write(position, data)</a><span>, in §2.5.1</span>
   </ul>
   <aside class="dfn-panel" data-for="term-for-dfn-Blob">
@@ -2263,6 +2331,12 @@ invoked, must run these steps:
    <a href="https://infra.spec.whatwg.org/#ordered-set">https://infra.spec.whatwg.org/#ordered-set</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-ordered-set">2.1. Concepts</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-enumdef-permissionstate">
+   <a href="https://w3c.github.io/permissions/#enumdef-permissionstate">https://w3c.github.io/permissions/#enumdef-permissionstate</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-enumdef-permissionstate">2.2. The FileSystemHandle interface</a> <a href="#ref-for-enumdef-permissionstate①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-ws-class">
@@ -2296,9 +2370,9 @@ invoked, must run these steps:
   <aside class="dfn-panel" data-for="term-for-idl-boolean">
    <a href="https://heycam.github.io/webidl/#idl-boolean">https://heycam.github.io/webidl/#idl-boolean</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-idl-boolean">2.2. The FileSystemHandle interface</a> <a href="#ref-for-idl-boolean①">(2)</a>
-    <li><a href="#ref-for-idl-boolean②">2.4. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-idl-boolean③">(2)</a>
-    <li><a href="#ref-for-idl-boolean④">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-idl-boolean⑤">(2)</a>
+    <li><a href="#ref-for-idl-boolean">2.2. The FileSystemHandle interface</a> <a href="#ref-for-idl-boolean①">(2)</a> <a href="#ref-for-idl-boolean②">(3)</a>
+    <li><a href="#ref-for-idl-boolean③">2.4. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-idl-boolean④">(2)</a>
+    <li><a href="#ref-for-idl-boolean⑤">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-idl-boolean⑥">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-object">
@@ -2332,6 +2406,11 @@ invoked, must run these steps:
      <li><span class="dfn-paneled" id="term-for-ordered-set" style="color:initial">set</span>
     </ul>
    <li>
+    <a data-link-type="biblio">[permissions]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-enumdef-permissionstate" style="color:initial">PermissionState</span>
+    </ul>
+   <li>
     <a data-link-type="biblio">[STREAMS]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-ws-class" style="color:initial">WritableStream</span>
@@ -2356,6 +2435,8 @@ invoked, must run these steps:
    <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/">HTML Standard</a>. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
    <dt id="biblio-infra">[INFRA]
    <dd>Anne van Kesteren; Domenic Denicola. <a href="https://infra.spec.whatwg.org/">Infra Standard</a>. Living Standard. URL: <a href="https://infra.spec.whatwg.org/">https://infra.spec.whatwg.org/</a>
+   <dt id="biblio-permissions">[PERMISSIONS]
+   <dd>Mounir Lamouri; Marcos Caceres; Jeffrey Yasskin. <a href="https://www.w3.org/TR/permissions/">Permissions</a>. 25 September 2017. WD. URL: <a href="https://www.w3.org/TR/permissions/">https://www.w3.org/TR/permissions/</a>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
    <dt id="biblio-streams">[STREAMS]
@@ -2371,9 +2452,13 @@ invoked, must run these steps:
    <dd>Eric Uhrhane. <a href="https://www.w3.org/TR/file-system-api/">File API: Directories and System</a>. 24 April 2014. NOTE. URL: <a href="https://www.w3.org/TR/file-system-api/">https://www.w3.org/TR/file-system-api/</a>
   </dl>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
-<pre class="idl highlight def"><c- b>interface</c-> <a href="#filesystemhandle"><code><c- g>FileSystemHandle</c-></code></a> {
-  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑥"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isfile" id="ref-for-dom-filesystemhandle-isfile②"><c- g>isFile</c-></a>;
-  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean①①"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isdirectory" id="ref-for-dom-filesystemhandle-isdirectory②"><c- g>isDirectory</c-></a>;
+<pre class="idl highlight def"><c- b>dictionary</c-> <a href="#dictdef-filesystemhandlepermissiondescriptor"><code><c- g>FileSystemHandlePermissionDescriptor</c-></code></a> {
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑦"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-filesystemhandlepermissiondescriptor-writable"><code><c- g>writable</c-></code></a> = <c- b>false</c->;
+};
+
+<c- b>interface</c-> <a href="#filesystemhandle"><code><c- g>FileSystemHandle</c-></code></a> {
+  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean①①"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isfile" id="ref-for-dom-filesystemhandle-isfile②"><c- g>isFile</c-></a>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean②①"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isdirectory" id="ref-for-dom-filesystemhandle-isdirectory②"><c- g>isDirectory</c-></a>;
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①②"><c- b>USVString</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="USVString" href="#dom-filesystemhandle-name" id="ref-for-dom-filesystemhandle-name②"><c- g>name</c-></a>;
 
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①④"><c- n>FileSystemHandle</c-></a>> <a href="#dom-filesystemhandle-moveto"><code><c- g>moveTo</c-></code></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①①"><c- b>USVString</c-></a> <a href="#dom-filesystemhandle-moveto-name-name"><code><c- g>name</c-></code></a>);
@@ -2382,6 +2467,9 @@ invoked, must run these steps:
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle③①"><c- n>FileSystemHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-copyto" id="ref-for-dom-filesystemhandle-copyto④"><c- g>copyTo</c-></a>(
       <a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①①"><c- n>FileSystemDirectoryHandle</c-></a> <a href="#dom-filesystemhandle-copyto-parent-name-parent"><code><c- g>parent</c-></code></a>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString③①"><c- b>USVString</c-></a> <a href="#dom-filesystemhandle-copyto-parent-name-name"><code><c- g>name</c-></code></a>);
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-remove" id="ref-for-dom-filesystemhandle-remove③"><c- g>remove</c-></a>();
+
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/permissions/#enumdef-permissionstate" id="ref-for-enumdef-permissionstate②"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission⑤"><c- g>queryPermission</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor②"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <a href="#dom-filesystemhandle-querypermission-descriptor-descriptor"><code><c- g>descriptor</c-></code></a>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/permissions/#enumdef-permissionstate" id="ref-for-enumdef-permissionstate①①"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission⑦"><c- g>requestPermission</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor①①"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <a href="#dom-filesystemhandle-requestpermission-descriptor-descriptor"><code><c- g>descriptor</c-></code></a>);
 };
 
 <c- b>interface</c-> <a href="#filesystemfilehandle"><code><c- g>FileSystemFileHandle</c-></code></a> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑦①"><c- n>FileSystemHandle</c-></a> {
@@ -2390,11 +2478,11 @@ invoked, must run these steps:
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-filesystemgetfileoptions"><code><c- g>FileSystemGetFileOptions</c-></code></a> {
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean②①"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-filesystemgetfileoptions-create"><code><c- g>create</c-></code></a> = <c- b>false</c->;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean③①"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-filesystemgetfileoptions-create"><code><c- g>create</c-></code></a> = <c- b>false</c->;
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-filesystemgetdirectoryoptions"><code><c- g>FileSystemGetDirectoryOptions</c-></code></a> {
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean③①"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-filesystemgetdirectoryoptions-create"><code><c- g>create</c-></code></a> = <c- b>false</c->;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean④①"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-filesystemgetdirectoryoptions-create"><code><c- g>create</c-></code></a> = <c- b>false</c->;
 };
 
 <c- b>interface</c-> <a href="#filesystemdirectoryhandle"><code><c- g>FileSystemDirectoryHandle</c-></code></a> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑧①"><c- n>FileSystemHandle</c-></a> {
@@ -2426,15 +2514,15 @@ invoked, must run these steps:
 
 <c- b>dictionary</c-> <a href="#dictdef-choosefilesystementriesoptions"><code><c- g>ChooseFileSystemEntriesOptions</c-></code></a> {
     <a class="n" data-link-type="idl-name" href="#enumdef-choosefilesystementriestype" id="ref-for-enumdef-choosefilesystementriestype①"><c- n>ChooseFileSystemEntriesType</c-></a> <a data-default="&quot;openFile&quot;" data-type="ChooseFileSystemEntriesType " href="#dom-choosefilesystementriesoptions-type"><code><c- g>type</c-></code></a> = "openFile";
-    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean④①"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-choosefilesystementriesoptions-multiple"><code><c- g>multiple</c-></code></a> = <c- b>false</c->;
+    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑤①"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-choosefilesystementriesoptions-multiple"><code><c- g>multiple</c-></code></a> = <c- b>false</c->;
     <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptionsaccepts" id="ref-for-dictdef-choosefilesystementriesoptionsaccepts①"><c- n>ChooseFileSystemEntriesOptionsAccepts</c-></a>> <a data-type="sequence<ChooseFileSystemEntriesOptionsAccepts> " href="#dom-choosefilesystementriesoptions-accepts"><code><c- g>accepts</c-></code></a>;
-    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑤①"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-choosefilesystementriesoptions-excludeacceptalloption"><code><c- g>excludeAcceptAllOption</c-></code></a> = <c- b>false</c->;
+    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑥①"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-choosefilesystementriesoptions-excludeacceptalloption"><code><c- g>excludeAcceptAllOption</c-></code></a> = <c- b>false</c->;
 };
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/window-object.html#window" id="ref-for-window①"><c- g>Window</c-></a> {
     [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext①"><c- g>SecureContext</c-></a>]
     <c- b>Promise</c->&lt;(<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①⓪①"><c- n>FileSystemHandle</c-></a> <c- b>or</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①①①"><c- n>FileSystemHandle</c-></a>>)>
-        <a class="idl-code" data-link-type="method" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries①①"><c- g>chooseFileSystemEntries</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptions" id="ref-for-dictdef-choosefilesystementriesoptions①"><c- n>ChooseFileSystemEntriesOptions</c-></a> <a href="#dom-window-choosefilesystementries-options-options"><code><c- g>options</c-></code></a>);
+        <a class="idl-code" data-link-type="method" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries②①"><c- g>chooseFileSystemEntries</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptions" id="ref-for-dictdef-choosefilesystementriesoptions①"><c- n>ChooseFileSystemEntriesOptions</c-></a> <a href="#dom-window-choosefilesystementries-options-options"><code><c- g>options</c-></code></a>);
 };
 
 <c- b>enum</c-> <a href="#enumdef-systemdirectorytype"><code><c- g>SystemDirectoryType</c-></code></a> {
@@ -2491,6 +2579,19 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
     <li><a href="#ref-for-directory②">2.2. The FileSystemHandle interface</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="dictdef-filesystemhandlepermissiondescriptor">
+   <b><a href="#dictdef-filesystemhandlepermissiondescriptor">#dictdef-filesystemhandlepermissiondescriptor</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dictdef-filesystemhandlepermissiondescriptor">2.2. The FileSystemHandle interface</a> <a href="#ref-for-dictdef-filesystemhandlepermissiondescriptor①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-filesystemhandlepermissiondescriptor-writable">
+   <b><a href="#dom-filesystemhandlepermissiondescriptor-writable">#dom-filesystemhandlepermissiondescriptor-writable</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable">2.2.4. The queryPermission() method</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①">(2)</a>
+    <li><a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable②">2.2.5. The requestPermission() method</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable③">(2)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="filesystemhandle">
    <b><a href="#filesystemhandle">#filesystemhandle</a></b><b>Referenced in:</b>
    <ul>
@@ -2543,6 +2644,21 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
    <ul>
     <li><a href="#ref-for-dom-filesystemhandle-remove">2.2. The FileSystemHandle interface</a>
     <li><a href="#ref-for-dom-filesystemhandle-remove①">2.2.3. The remove() method</a> <a href="#ref-for-dom-filesystemhandle-remove②">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-filesystemhandle-querypermission">
+   <b><a href="#dom-filesystemhandle-querypermission">#dom-filesystemhandle-querypermission</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-filesystemhandle-querypermission">2.2. The FileSystemHandle interface</a>
+    <li><a href="#ref-for-dom-filesystemhandle-querypermission①">2.2.4. The queryPermission() method</a> <a href="#ref-for-dom-filesystemhandle-querypermission②">(2)</a> <a href="#ref-for-dom-filesystemhandle-querypermission③">(3)</a> <a href="#ref-for-dom-filesystemhandle-querypermission④">(4)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-filesystemhandle-requestpermission">
+   <b><a href="#dom-filesystemhandle-requestpermission">#dom-filesystemhandle-requestpermission</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-filesystemhandle-requestpermission">2.2. The FileSystemHandle interface</a>
+    <li><a href="#ref-for-dom-filesystemhandle-requestpermission①">2.2.4. The queryPermission() method</a> <a href="#ref-for-dom-filesystemhandle-requestpermission②">(2)</a>
+    <li><a href="#ref-for-dom-filesystemhandle-requestpermission③">2.2.5. The requestPermission() method</a> <a href="#ref-for-dom-filesystemhandle-requestpermission④">(2)</a> <a href="#ref-for-dom-filesystemhandle-requestpermission⑤">(3)</a> <a href="#ref-for-dom-filesystemhandle-requestpermission⑥">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="filesystemfilehandle">
@@ -2743,7 +2859,8 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
   <aside class="dfn-panel" data-for="dom-window-choosefilesystementries">
    <b><a href="#dom-window-choosefilesystementries">#dom-window-choosefilesystementries</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-window-choosefilesystementries">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-dom-window-choosefilesystementries①">(2)</a> <a href="#ref-for-dom-window-choosefilesystementries②">(3)</a>
+    <li><a href="#ref-for-dom-window-choosefilesystementries">2.2.4. The queryPermission() method</a>
+    <li><a href="#ref-for-dom-window-choosefilesystementries①">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-dom-window-choosefilesystementries②">(2)</a> <a href="#ref-for-dom-window-choosefilesystementries③">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="enumdef-systemdirectorytype">
