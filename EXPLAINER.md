@@ -192,8 +192,12 @@ const file_ref = await dir_ref.getFile('foo.js');
 // Get a subdirectory.
 const subdir = await dir_ref.getDirectory('bla', {createIfNotExists: true});
 
-// And you can possibly do stuff like move and/or copy files around.
-await file_ref.copyTo(dir_ref, 'new_name', {overwrite: true});
+// No special API to create copies, but still possible to do so by using
+// available read and write APIs.
+const new_file = await dir_ref.getFile('new_name', {create: true});
+const new_file_writer = await new_file.createWriter();
+await new_file_writer.truncate(0);
+await new_file_writer.write(0, await file_ref.getFile());
 ```
 
 You can also check if two references reference the same file or directory (or at
