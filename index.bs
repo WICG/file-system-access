@@ -74,11 +74,6 @@ interface FileSystemHandle {
   readonly attribute boolean isDirectory;
   readonly attribute USVString name;
 
-  Promise<FileSystemHandle> moveTo(USVString name);
-  Promise<FileSystemHandle> moveTo(
-      FileSystemDirectoryHandle parent, optional USVString name);
-  Promise<FileSystemHandle> copyTo(
-      FileSystemDirectoryHandle parent, optional USVString name);
   Promise<void> remove();
 
   Promise<PermissionState> queryPermission(optional FileSystemHandlePermissionDescriptor descriptor);
@@ -109,59 +104,6 @@ associated [=FileSystemHandle/entry=] is a [=directory entry=], and false otherw
 
 The <dfn attribute for=FileSystemHandle>name</dfn> attribute must return the [=entry/name=] of the
 associated [=FileSystemHandle/entry=].
-
-### The {{FileSystemHandle/moveTo()}} method ### {#api-filesystemhandle-moveto}
-
-<div class="note domintro">
-  : |newHandle| = await |handle| . {{FileSystemHandle/moveTo()|moveTo}}(|newName|)
-  :: Renames the entry represented by |handle| to |newName|.
-
-  : |newHandle| = await |handle| . {{FileSystemHandle/moveTo()|moveTo}}(|otherDir|)
-  :: Moves the entry represented by |handle| to |otherDir|, while keeping its existing name.
-
-  : |newHandle| = await |handle| . {{FileSystemHandle/moveTo()|moveTo}}(|otherDir|, |newName|)
-  :: Moves the entry represented by |handle| to |otherDir|, while renaming it to |newName|.
-
-     In all of these cases, |handle| will no longer represent a valid entry, and thus any further
-     operations on it will fail.
-
-     Attempting to move an entry to the directory it already exists in, without renaming it is
-     an error. In all other cases if the target entry already exists, it is overwritten.
-</div>
-
-<div algorithm>
-The <dfn method for=FileSystemHandle>moveTo(|parent|, |name|)</dfn> method, when invoked, must run
-these steps:
-
-1. TODO
-
-</div>
-
-### The {{FileSystemHandle/copyTo()}} method ### {#api-filesystemhandle-copyto}
-
-<div class="note domintro">
-  : |newHandle| = await |handle| . {{FileSystemHandle/copyTo()|copyTo}}(|otherDir|)
-  :: Creates a copy of the entry represented by |handle| in |otherDir|, while keeping its existing
-     name.
-
-  : |newHandle| = await |handle| . {{FileSystemHandle/copyTo()|copyTo}}(|otherDir|, |newName|)
-  :: Creates a copy of the entry represented by |handle| in |otherDir|, using |newName| for the
-     name of the new entry.
-
-     In all of these cases, |handle| will no longer represent a valid entry, and thus any further
-     operations on it will fail.
-
-     Attempting to copy an entry on top of itself will fail. In all other cases if the target entry
-     already exists, it is overwritten.
-</div>
-
-<div algorithm>
-The <dfn method for=FileSystemHandle>copyTo(|parent|, |name|)</dfn> method, when invoked, must run
-these steps:
-
-1. TODO
-
-</div>
 
 ### The {{FileSystemHandle/remove()}} method ### {#api-filesystemhandle-remove}
 
