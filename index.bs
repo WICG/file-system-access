@@ -74,7 +74,6 @@ interface FileSystemHandle {
   readonly attribute boolean isDirectory;
   readonly attribute USVString name;
 
-  Promise<void> remove();
 
   Promise<PermissionState> queryPermission(optional FileSystemHandlePermissionDescriptor descriptor);
   Promise<PermissionState> requestPermission(optional FileSystemHandlePermissionDescriptor descriptor);
@@ -105,15 +104,6 @@ associated [=FileSystemHandle/entry=] is a [=directory entry=], and false otherw
 The <dfn attribute for=FileSystemHandle>name</dfn> attribute must return the [=entry/name=] of the
 associated [=FileSystemHandle/entry=].
 
-### The {{FileSystemHandle/remove()}} method ### {#api-filesystemhandle-remove}
-
-<div class="note domintro">
-  : await |handle| . {{FileSystemHandle/remove()}}
-  :: Attempts to remove the entry represented by |handle| from the underlying file system.
-</div>
-
-<div algorithm>
-The <dfn method for=FileSystemHandle>remove()</dfn> method, when invoked, must run these steps:
 
 1. TODO
 
@@ -224,6 +214,10 @@ dictionary FileSystemGetDirectoryOptions {
   boolean create = false;
 };
 
+dictionary FileSystemRemoveOptions {
+  boolean recursive = false;
+};
+
 interface FileSystemDirectoryHandle : FileSystemHandle {
   Promise<FileSystemFileHandle> getFile(USVString name, optional FileSystemGetFileOptions options);
   Promise<FileSystemDirectoryHandle> getDirectory(USVString name, optional FileSystemGetDirectoryOptions options);
@@ -233,7 +227,7 @@ interface FileSystemDirectoryHandle : FileSystemHandle {
 
   Promise<sequence<USVString>?> resolve(FileSystemHandle handle);
 
-  Promise<void> removeRecursively();
+  Promise<void> removeEntry(USVString name, optional FileSystemRemoveOptions options);
 };
 </xmp>
 
@@ -336,12 +330,31 @@ these steps:
 
 </div>
 
-### The {{FileSystemDirectoryHandle/removeRecursively()}} method ### {#api-filesystemdirectoryhandle-removerecursively}
+### The {{FileSystemDirectoryHandle/removeEntry()}} method ### {#api-filesystemdirectoryhandle-removeentry}
 
 <div class="note domintro">
-  : await |directoryHandle| . {{FileSystemDirectoryHandle/removeRecursively()}}
-  :: Removes the entry represented by |directoryHandle|, and all entries contained within it,
+  : await |directoryHandle| . {{FileSystemDirectoryHandle/removeEntry()|removeEntry}}(|name|)
+  : await |directoryHandle| . {{FileSystemDirectoryHandle/removeEntry()|removeEntry}}(|name|, { {{FileSystemRemoveOptions/recursive}}: false })
+  :: If the directory represented by |directoryHandle| contains a file named |name|, or an empty
+     directory named |name|, this will attempt to delete that file or directory.
+
+     Attempting to delete a file or directory that does not exist is considered success,
+     while attempting to delete a non-empty directory will result in a promise rejection.
+
+  : await |directoryHandle| . {{FileSystemDirectoryHandle/removeEntry()|removeEntry}}(|name|, { {{FileSystemRemoveOptions/recursive}}: true })
+  :: Removes the entry named |name| in the directory represented by |directoryHandle|.
+     If that entry is a directory, its contents will also be deleted recursively.
      recursively.
+
+     Attempting to delete a file or directory that does not exist is considered success.
+</div>
+
+<div algorithm>
+The <dfn method for=FileSystemDirectoryHandle>removeEntry(|name|, |options|)</dfn> method, when invoked, must run
+these steps:
+
+1. TODO
+
 </div>
 
 ## The {{FileSystemWriter}} interface ## {#api-filesystemwriter}
