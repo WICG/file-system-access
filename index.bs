@@ -245,6 +245,7 @@ iterable itself?
 
 <div class="note domintro">
   : |fileHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getFile()|getFile}}(|name|)
+  : |fileHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getFile()|getFile}}(|name|, { {{FileSystemGetFileOptions/create}}: false })
   :: Returns a handle for a file named |name| in the directory represented by |directoryHandle|. If
      no such file exists, this rejects.
 
@@ -255,7 +256,10 @@ iterable itself?
      name uses characters that aren't supported in file names on the underlying file system, or
      because the user agent for security reasons decided not to allow creation of the file.
 
-     See TODO section for possible security reasons.
+     This operation requires write permission, even if the file being returned already exists. If
+     this handle doesn't already have write permission, this could result in a prompt being shown to
+     the user. To get an existing file without needing write permission, call this method
+     with <code>{ {{FileSystemGetFileOptions/create}}: false }</code>.
 </div>
 
 <div algorithm>
@@ -270,6 +274,7 @@ must run these steps:
 
 <div class="note domintro">
   : |subdirHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getDirectory()|getDirectory}}(|name|)
+  : |subdirHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getDirectory()|getDirectory}}(|name|, { {{FileSystemGetDirectoryOptions/create}}: false })
   :: Returns a handle for a directory named |name| in the directory represented by
     |directoryHandle|. If no such directory exists, this rejects.
 
@@ -279,6 +284,11 @@ must run these steps:
      directory failed, this rejects. Creation can fail because there already is a file with the same
      name, or because the name uses characters that aren't supported in file names on the underlying
      file system.
+
+     This operation requires write permission, even if the directory being returned already exists.
+     If this handle doesn't already have write permission, this could result in a prompt being shown
+     to the user. To get an existing directory without needing write permission, call this method
+     with <code>{ {{FileSystemGetDirectoryOptions/create}}: false }</code>.
 </div>
 
 <div algorithm>
