@@ -111,6 +111,11 @@ associated [=FileSystemHandle/entry=].
 
 ### The {{FileSystemHandle/queryPermission()}} method ### {#api-filesystemhandle-querypermission}
 
+Issue: the currently described API here assumes a model where it is not possible to have a
+    write-only handle. I.e. it is not possible to have or request write access without also having
+    read access. There definitely are use cases for write-only handles (i.e. directory downloads),
+    so we might have to reconsider this.
+
 <div class="note domintro">
   : |status| = await |handle| . {{FileSystemHandle/queryPermission()|queryPermission}}({ {{FileSystemHandlePermissionDescriptor/writable}} = false })
   : |status| = await |handle| . {{FileSystemHandle/queryPermission()}}
