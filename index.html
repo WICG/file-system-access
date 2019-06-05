@@ -1213,9 +1213,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version a8675e8c315faa3f78e47e67c76649fa9a07ee9b" name="generator">
+  <meta content="Bikeshed version 99a2a93baa70312286549947a2cb0a824f8d1240" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="eeaffce3ae155d74854502f55630c28aca5df2ea" name="document-revision">
+  <meta content="8f03c81d37c6801b9efcaad9fd926404abd3665a" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1487,7 +1487,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-06-04">4 June 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-06-05">5 June 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1680,7 +1680,7 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
      <dt data-md><var>status</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission⑤">requestPermission()</a></code>
      <dd data-md>
       <p>If the state of the read permission of this handle is anything other than <code>"prompt"</code>, this
- will return that state directly. If it is <code>"prompt"</code> however, user activation is required and
+ will return that state directly. If it is <code>"prompt"</code> however, user activation is needed and
  this will show a confirmation prompt to the user. The new read permission state is then
  returned, depending on the user’s response to the prompt.</p>
      <dt data-md><var>status</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission⑥">requestPermission</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable③">writable</a></code> = true })
@@ -1771,17 +1771,21 @@ iterable itself?</p>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md><var>fileHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile②">getFile</a></code>(<var>name</var>)
+     <dt data-md><var>fileHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile③">getFile</a></code>(<var>name</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetfileoptions-create" id="ref-for-dom-filesystemgetfileoptions-create">create</a></code>: false })
      <dd data-md>
       <p>Returns a handle for a file named <var>name</var> in the directory represented by <var>directoryHandle</var>. If
  no such file exists, this rejects.</p>
-     <dt data-md><var>fileHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile③">getFile</a></code>(<var>name</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetfileoptions-create" id="ref-for-dom-filesystemgetfileoptions-create">create</a></code>: true })
+     <dt data-md><var>fileHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile④">getFile</a></code>(<var>name</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetfileoptions-create" id="ref-for-dom-filesystemgetfileoptions-create①">create</a></code>: true })
      <dd data-md>
       <p>Returns a handle for a file named <var>name</var> in the directory represented by <var>directoryHandle</var>. If
  no such file exists, this creates a new file. If no file with named <var>name</var> can be created this
  rejects. Creation can fail because there already is a directory with the same name, because the
  name uses characters that aren’t supported in file names on the underlying file system, or
  because the user agent for security reasons decided not to allow creation of the file.</p>
-      <p>See TODO section for possible security reasons.</p>
+      <p>This operation requires write permission, even if the file being returned already exists. If
+ this handle doesn’t already have write permission, this could result in a prompt being shown to
+ the user. To get an existing file without needing write permission, call this method
+ with <code>{ <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetfileoptions-create" id="ref-for-dom-filesystemgetfileoptions-create②">create</a></code>: false }</code>.</p>
     </dl>
    </div>
    <div class="algorithm" data-algorithm="getFile(name, options)">
@@ -1796,14 +1800,19 @@ must run these steps:
    <div class="note domintro" role="note">
     <dl>
      <dt data-md><var>subdirHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory②">getDirectory</a></code>(<var>name</var>)
+     <dt data-md><var>subdirHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory③">getDirectory</a></code>(<var>name</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetdirectoryoptions-create" id="ref-for-dom-filesystemgetdirectoryoptions-create">create</a></code>: false })
      <dd data-md>
       <p>Returns a handle for a directory named <var>name</var> in the directory represented by <var>directoryHandle</var>. If no such directory exists, this rejects.</p>
-     <dt data-md><var>subdirHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory③">getDirectory</a></code>(<var>name</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetdirectoryoptions-create" id="ref-for-dom-filesystemgetdirectoryoptions-create">create</a></code>: true })
+     <dt data-md><var>subdirHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory④">getDirectory</a></code>(<var>name</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetdirectoryoptions-create" id="ref-for-dom-filesystemgetdirectoryoptions-create①">create</a></code>: true })
      <dd data-md>
       <p>Returns a handle for a directory named <var>name</var> in the directory represented by <var>directoryHandle</var>. If no such directory exists, this creates a new directory. If creating the
  directory failed, this rejects. Creation can fail because there already is a file with the same
  name, or because the name uses characters that aren’t supported in file names on the underlying
  file system.</p>
+      <p>This operation requires write permission, even if the directory being returned already exists.
+ If this handle doesn’t already have write permission, this could result in a prompt being shown
+ to the user. To get an existing directory without needing write permission, call this method
+ with <code>{ <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetdirectoryoptions-create" id="ref-for-dom-filesystemgetdirectoryoptions-create②">create</a></code>: false }</code>.</p>
     </dl>
    </div>
    <div class="algorithm" data-algorithm="getDirectory(name, options)">
@@ -2430,8 +2439,8 @@ invoked, must run these steps:
 };
 
 <c- b>interface</c-> <a href="#filesystemdirectoryhandle"><code><c- g>FileSystemDirectoryHandle</c-></code></a> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑤①"><c- n>FileSystemHandle</c-></a> {
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle②①"><c- n>FileSystemFileHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile④"><c- g>getFile</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①①"><c- b>USVString</c-></a> <a href="#dom-filesystemdirectoryhandle-getfile-name-options-name"><code><c- g>name</c-></code></a>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetfileoptions" id="ref-for-dictdef-filesystemgetfileoptions①"><c- n>FileSystemGetFileOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getfile-name-options-options"><code><c- g>options</c-></code></a>);
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle②①"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory④"><c- g>getDirectory</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString②①"><c- b>USVString</c-></a> <a href="#dom-filesystemdirectoryhandle-getdirectory-name-options-name"><code><c- g>name</c-></code></a>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetdirectoryoptions" id="ref-for-dictdef-filesystemgetdirectoryoptions①"><c- n>FileSystemGetDirectoryOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getdirectory-name-options-options"><code><c- g>options</c-></code></a>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle②①"><c- n>FileSystemFileHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile⑤"><c- g>getFile</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①①"><c- b>USVString</c-></a> <a href="#dom-filesystemdirectoryhandle-getfile-name-options-name"><code><c- g>name</c-></code></a>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetfileoptions" id="ref-for-dictdef-filesystemgetfileoptions①"><c- n>FileSystemGetFileOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getfile-name-options-options"><code><c- g>options</c-></code></a>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle②①"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory⑤"><c- g>getDirectory</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString②①"><c- b>USVString</c-></a> <a href="#dom-filesystemdirectoryhandle-getdirectory-name-options-name"><code><c- g>name</c-></code></a>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetdirectoryoptions" id="ref-for-dictdef-filesystemgetdirectoryoptions①"><c- n>FileSystemGetDirectoryOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getdirectory-name-options-options"><code><c- g>options</c-></code></a>);
 
   // This really returns an async iterable, but that is not yet expressable in WebIDL.
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-object" id="ref-for-idl-object①"><c- b>object</c-></a> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getentries" id="ref-for-dom-filesystemdirectoryhandle-getentries③"><c- g>getEntries</c-></a>();
@@ -2615,7 +2624,7 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
   <aside class="dfn-panel" data-for="dom-filesystemgetfileoptions-create">
    <b><a href="#dom-filesystemgetfileoptions-create">#dom-filesystemgetfileoptions-create</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-filesystemgetfileoptions-create">2.4.1. The getFile() method</a>
+    <li><a href="#ref-for-dom-filesystemgetfileoptions-create">2.4.1. The getFile() method</a> <a href="#ref-for-dom-filesystemgetfileoptions-create①">(2)</a> <a href="#ref-for-dom-filesystemgetfileoptions-create②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-filesystemgetdirectoryoptions">
@@ -2627,7 +2636,7 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
   <aside class="dfn-panel" data-for="dom-filesystemgetdirectoryoptions-create">
    <b><a href="#dom-filesystemgetdirectoryoptions-create">#dom-filesystemgetdirectoryoptions-create</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-filesystemgetdirectoryoptions-create">2.4.2. The getDirectory() method</a>
+    <li><a href="#ref-for-dom-filesystemgetdirectoryoptions-create">2.4.2. The getDirectory() method</a> <a href="#ref-for-dom-filesystemgetdirectoryoptions-create①">(2)</a> <a href="#ref-for-dom-filesystemgetdirectoryoptions-create②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-filesystemremoveoptions">
@@ -2654,14 +2663,14 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
    <b><a href="#dom-filesystemdirectoryhandle-getfile">#dom-filesystemdirectoryhandle-getfile</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-filesystemdirectoryhandle-getfile">2.4. The FileSystemDirectoryHandle interface</a>
-    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getfile①">2.4.1. The getFile() method</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getfile②">(2)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getfile③">(3)</a>
+    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getfile①">2.4.1. The getFile() method</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getfile②">(2)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getfile③">(3)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getfile④">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemdirectoryhandle-getdirectory">
    <b><a href="#dom-filesystemdirectoryhandle-getdirectory">#dom-filesystemdirectoryhandle-getdirectory</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-filesystemdirectoryhandle-getdirectory">2.4. The FileSystemDirectoryHandle interface</a>
-    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getdirectory①">2.4.2. The getDirectory() method</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getdirectory②">(2)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getdirectory③">(3)</a>
+    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getdirectory①">2.4.2. The getDirectory() method</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getdirectory②">(2)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getdirectory③">(3)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getdirectory④">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemdirectoryhandle-getentries">
