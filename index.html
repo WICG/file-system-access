@@ -1213,9 +1213,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 99a2a93baa70312286549947a2cb0a824f8d1240" name="generator">
+  <meta content="Bikeshed version 872cce6d3026423d677f3bd5837f1a1a46299a04" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="8f03c81d37c6801b9efcaad9fd926404abd3665a" name="document-revision">
+  <meta content="fac322890fe3618116328088222ce336b3e61935" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1647,6 +1647,10 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
      <p>TODO</p>
    </ol>
    <h4 class="heading settled" data-level="2.2.1" id="api-filesystemhandle-querypermission"><span class="secno">2.2.1. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission①">queryPermission()</a></code> method</span><a class="self-link" href="#api-filesystemhandle-querypermission"></a></h4>
+   <p class="issue" id="issue-af0c279b"><a class="self-link" href="#issue-af0c279b"></a> the currently described API here assumes a model where it is not possible to have a
+    write-only handle. I.e. it is not possible to have or request write access without also having
+    read access. There definitely are use cases for write-only handles (i.e. directory downloads),
+    so we might have to reconsider this.</p>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md><var>status</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission②">queryPermission</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable">writable</a></code> = false })
@@ -2495,6 +2499,10 @@ invoked, must run these steps:
   <div style="counter-reset:issue">
    <div class="issue"> TODO: Explain how entries map to files on disk (multiple entries can map to the same file or
 directory on disk but doesn’t have to map to any file on disk).<a href="#issue-7a61bf3c"> ↵ </a></div>
+   <div class="issue"> the currently described API here assumes a model where it is not possible to have a
+    write-only handle. I.e. it is not possible to have or request write access without also having
+    read access. There definitely are use cases for write-only handles (i.e. directory downloads),
+    so we might have to reconsider this.<a href="#issue-af0c279b"> ↵ </a></div>
    <div class="issue"> Should we have separate getFile and getDirectory methods, or just a single getChild/getEntry
 method?<a href="#issue-a4e7d3b2"> ↵ </a></div>
    <div class="issue"> Having getFile methods in both FileSystemDirectoryHandle and FileSystemFileHandle, but with
