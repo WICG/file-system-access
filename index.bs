@@ -112,7 +112,7 @@ associated [=FileSystemHandle/entry=].
 ### The {{FileSystemHandle/queryPermission()}} method ### {#api-filesystemhandle-querypermission}
 
 <div class="note domintro">
-  : |status| = await |handle| . {{FileSystemHandle/queryPermission()|queryPermission}}({ {{FileSystemHandlePermissionDescriptor/writable}} = false }) 
+  : |status| = await |handle| . {{FileSystemHandle/queryPermission()|queryPermission}}({ {{FileSystemHandlePermissionDescriptor/writable}} = false })
   : |status| = await |handle| . {{FileSystemHandle/queryPermission()}}
   :: Queries the current state of the read permission of this handle. If this returns `"prompt"`
      the website will have to call {{FileSystemHandle/requestPermission()}} before any
@@ -122,7 +122,7 @@ associated [=FileSystemHandle/entry=].
      their read permission state, however other than through the user revoking permission, a handle
      retrieved from IndexedDB is also likely to return `"prompt"`.
 
-  : |status| = await |handle| . {{FileSystemHandle/queryPermission()|queryPermission}}({ {{FileSystemHandlePermissionDescriptor/writable}} = true }) 
+  : |status| = await |handle| . {{FileSystemHandle/queryPermission()|queryPermission}}({ {{FileSystemHandlePermissionDescriptor/writable}} = true })
   :: Queries the current state of the write permission of this handle. If this returns `"prompt"`,
      attempting to modify the file or directory this handle represents will require user activation
      and will result in a confirmation prompt being shown to the user. However if the state of the
@@ -141,18 +141,18 @@ The <dfn method for=FileSystemHandle>queryPermission(|descriptor|)</dfn> method,
 ### The {{FileSystemHandle/requestPermission()}} method ### {#api-filesystemhandle-requestpermission}
 
 <div class="note domintro">
-  : |status| = await |handle| . {{FileSystemHandle/requestPermission()|requestPermission}}({ {{FileSystemHandlePermissionDescriptor/writable}} = false }) 
+  : |status| = await |handle| . {{FileSystemHandle/requestPermission()|requestPermission}}({ {{FileSystemHandlePermissionDescriptor/writable}} = false })
   : |status| = await |handle| . {{FileSystemHandle/requestPermission()}}
   :: If the state of the read permission of this handle is anything other than `"prompt"`, this
-     will return that state directly. If it is `"prompt"` however, user activation is required and
+     will return that state directly. If it is `"prompt"` however, user activation is needed and
      this will show a confirmation prompt to the user. The new read permission state is then
      returned, depending on the user's response to the prompt.
 
-  : |status| = await |handle| . {{FileSystemHandle/requestPermission()|requestPermission}}({ {{FileSystemHandlePermissionDescriptor/writable}} = true }) 
+  : |status| = await |handle| . {{FileSystemHandle/requestPermission()|requestPermission}}({ {{FileSystemHandlePermissionDescriptor/writable}} = true })
   :: If the state of the write permission of this handle is anything other than `"prompt"`, this
      will return that state directly. If the status of the read permission of this handle is
      `"denied"` this will return that.
-     
+
      Otherwise the state of the write permission is `"prompt"` and this will show a confirmation
      prompt to the user. The new write permission state is then returned, depending on what the user
      selected.
