@@ -69,6 +69,7 @@ dictionary FileSystemHandlePermissionDescriptor {
   boolean writable = false;
 };
 
+[Exposed=(Window,Worker), SecureContext]
 interface FileSystemHandle {
   readonly attribute boolean isFile;
   readonly attribute boolean isDirectory;
@@ -173,6 +174,7 @@ The <dfn method for=FileSystemHandle>requestPermission(|descriptor|)</dfn> metho
 ## The {{FileSystemFileHandle}} interface ## {#api-filesystemfilehandle}
 
 <xmp class=idl>
+[Exposed=(Window,Worker), SecureContext]
 interface FileSystemFileHandle : FileSystemHandle {
   Promise<File> getFile();
   Promise<FileSystemWriter> createWriter();
@@ -223,6 +225,7 @@ dictionary FileSystemRemoveOptions {
   boolean recursive = false;
 };
 
+[Exposed=(Window,Worker), SecureContext]
 interface FileSystemDirectoryHandle : FileSystemHandle {
   Promise<FileSystemFileHandle> getFile(USVString name, optional FileSystemGetFileOptions options);
   Promise<FileSystemDirectoryHandle> getDirectory(USVString name, optional FileSystemGetDirectoryOptions options);
@@ -375,6 +378,7 @@ these steps:
 ## The {{FileSystemWriter}} interface ## {#api-filesystemwriter}
 
 <xmp class=idl>
+[Exposed=(Window,Worker), SecureContext]
 interface FileSystemWriter {
   Promise<void> write(unsigned long long position, (BufferSource or Blob or USVString) data);
   WritableStream asWritableStream();
@@ -451,8 +455,8 @@ dictionary ChooseFileSystemEntriesOptions {
     boolean excludeAcceptAllOption = false;
 };
 
+[SecureContext]
 partial interface Window {
-    [SecureContext]
     Promise<(FileSystemHandle or sequence<FileSystemHandle>)>
         chooseFileSystemEntries(optional ChooseFileSystemEntriesOptions options);
 };
@@ -517,6 +521,7 @@ dictionary GetSystemDirectoryOptions {
   required SystemDirectoryType type;
 };
 
+[SecureContext]
 partial interface FileSystemDirectoryHandle {
   static Promise<FileSystemDirectoryHandle> getSystemDirectory(GetSystemDirectoryOptions options);
 };
