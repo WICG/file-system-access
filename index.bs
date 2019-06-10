@@ -180,7 +180,7 @@ interface FileSystemFileHandle : FileSystemHandle {
 };
 </xmp>
 
-Issue: boolean's that default to "true" can be confusing (see comment in
+Issue: booleans that default to "true" can be confusing (see comment in
 https://heycam.github.io/webidl/#idl-dictionaries). We should try to come up with other names
 without ending up with double negations.
 
