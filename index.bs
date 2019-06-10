@@ -169,8 +169,8 @@ The <dfn method for=FileSystemHandle>requestPermission(|descriptor|)</dfn> metho
 
 <xmp class=idl>
 dictionary FileSystemCreateWriterOptions {
-  boolean truncate = true;
-  boolean atomic = true;
+  boolean inPlace = false;
+  boolean keepExistingData = false;
 };
 
 [Exposed=(Window,Worker), SecureContext]
@@ -202,8 +202,8 @@ The <dfn method for=FileSystemFileHandle>getFile()</dfn> method, when invoked, m
 
 <div class="note domintro">
   : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()}}
-  : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/atomic}}: true })
-  : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/truncate}}: |truncate|, {{FileSystemCreateWriterOptions/atomic}}: true })
+  : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/inPlace}}: false })
+  : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/keepExistingData}}: |keepExistingData|, {{FileSystemCreateWriterOptions/inPlace}}: false })
   :: Returns a {{FileSystemWriter}} that can be used to write to the file. Any changes made through
      |writer| won't be reflected in the file represented by |fileHandle| until its
      {{FileSystemWriter/close()}} method is called.
@@ -214,21 +214,21 @@ The <dfn method for=FileSystemFileHandle>getFile()</dfn> method, when invoked, m
      This is typically implemented by writing data to a temporary file, and only replacing the file
      represented by |fileHandle| with the temporary file when the writer is closed.
 
-     If |truncate| is `true` or not specified, the temporary file starts out empty, otherwise the
-     existing file is first copied to this temporary file.
+     If |keepExistingData| is `false` or not specified, the temporary file starts out empty,
+     otherwise the existing file is first copied to this temporary file.
 
-   : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/atomic}}: false })
-   : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/truncate}}: |truncate|, {{FileSystemCreateWriterOptions/atomic}}: false })
+   : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/inPlace}}: true })
+   : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/keepExistingData}}: |keepExistingData|, {{FileSystemCreateWriterOptions/inPlace}}: true })
    :: Returns a {{FileSystemWriter}} that can be used to write to the file. Any changes made through
       |writer| might not be reflected in the file represented by |fileHandle| until its
       {{FileSystemWriter/close()}} method is called.
       User agents are free to either flush changes to the file as they are made, or batch them
       up (possibly by writing to some kind of change log) until {{FileSystemWriter/close()}}
       is called. Specifically for less trusted websites, user agents
-      should probably batch up changes so that malware scanners or other security checks can be
+      will want to batch up changes so that malware scanners or other security checks can be
       performed before actually flushing changes to disk.
 
-      If |truncate| is true or not specified, the file will start out empty.
+      If |keepExistingData| is `false` or not specified, the file will start out empty.
 </div>
 
 <div algorithm>
