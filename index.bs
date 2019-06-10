@@ -545,8 +545,85 @@ invoked, must run these steps:
 
 </div>
 
+# Privacy Considerations # {#privacy-considerations}
+
+*This section is non-normative.*
+
+This API does not give websites any more access to data than the existing `<input type=file>` and
+<input type=file webkitdirectory>` APIs already do. Furthermore similarly to those APIs, all
+access to files and directories is explicitly gated behind a file or directory picker.
+
+There are however several major privacy risks with this new API:
+
+## Users giving access to more, or more sensitive files than they intended. ## {#privacy-wide-access}
+
+This isn't a new risk with this API, but user agents should try to make sure that users are aware
+of what exactly they're giving websites access to. This is particularly important when giving
+access to a directory, where it might not be immediately clear to a user just how many files
+actually exist in that directory.
+
+Related to that there is also the risk of a user giving access to particularly sensitive data. This
+could for example include some of a user agent's configuration data, network cache or cookie store,
+or operating system configuration data such as password files. To protect against this user agents
+are encouraged to restrict which directories a user is allowed to select in a directory picker,
+and potentially even restrict which files the user is allowed to select. This will make it much
+harder to accidentally give access to a directory that contains particularly sensitive data. Care
+must be taken to strike the right balance between restricting what the API can access while still
+having the API be useful. After all this API intentionally lets the user use websites to interact
+with some of their most private personal data.
+
+## Websites trying to use this API for tracking. ## {#privacy-tracking}
+
+Other than write access, what sets this API apart from the existing file access APIs is that user
+agents are able to grant persistent access to files or directories, and the fact that websites
+can re-prompt for access to files it was granted access to before if they still have a handle to
+the file. This, combined with the ability to write back to files, could be used by websites to try
+to track the user across clearing browsing data (as the files that are written to by this API are
+and should not be deleted by such an action).
+
+This risk is somewhat mitigated by the fact that
+clearing browsing data will also clear IndexedDB, so websites won't have any handles to re-prompt
+for permission after browsing data was cleared. Further more user agents are encouraged to make it
+clear what files and directories a website has access to, and to automatically expire permission
+grants except for particularly well trusted origins.
+
+User agents also are encouraged to provide a way for users to revoke permissions granted, and
+clearing browsing data is expected to revoke all permissions as well.
+
+## First-party vs third-party contexts. ## {#privacy-third-party}
+
+In third-party contexts (i.e. an iframe whose origin does not match that of the top-level frame)
+websites can't gain access to data they don't already have access to. This includes both getting
+access to new files or directories via the {{chooseFileSystemEntries}} API, as well as requesting
+more permissions to existing handles via the {{requestPermission}} API.
+
+Handles can also only be post-messaged to same-origin destinations. Attempts to send a handle to
+a cross-origin destination will result in a {{MessagePort/messageerror}} event.
+
 # Security Considerations # {#security-considerations}
 
-## Secure Context ## {#secure-context}
+*This section is non-normative.*
 
-## Limiting types of files that can be written to ## {#file-type-limitations}
+This API gives websites the ability to modify existing files on disk, as well as write to new
+files. this has a couple of important security considerations:
+
+## Malware ## {#security-malware}
+
+This API could be used by websites to try to store and/or execute malware on the users system.
+To mitigate this risk, this API does not provide any way to mark files as executable. Furthermore
+user agents are encouraged to apply things like Mark-of-the-Web to files created or modified by
+this API.
+
+Finally, user agents are encouraged to invoke any kind of malware, safe browsing or potentially
+unwanted programs scans on files modified by this API, unless some kind of external strong trust
+relation already exists. This of course has effects on the performance characteristics of this API.
+
+Issue(51): "Atomic writes" attempt to make it explicit what this API can and can't do, and how
+performance can be effected by safe browsing checks.
+
+## Ransomware attacks ## {#security-ransomware}
+
+Another risk factor is that of ransomware attacks. The limitations described above regarding
+blocking access to certain sensitive directories helps limit the damage such an attack can do.
+Additionally user agents can grant write access to files at whatever granularity they deem
+appropriate.
