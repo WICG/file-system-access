@@ -75,7 +75,6 @@ interface FileSystemHandle {
   readonly attribute boolean isDirectory;
   readonly attribute USVString name;
 
-
   Promise<PermissionState> queryPermission(optional FileSystemHandlePermissionDescriptor descriptor);
   Promise<PermissionState> requestPermission(optional FileSystemHandlePermissionDescriptor descriptor);
 };
@@ -104,11 +103,6 @@ associated [=FileSystemHandle/entry=] is a [=directory entry=], and false otherw
 
 The <dfn attribute for=FileSystemHandle>name</dfn> attribute must return the [=entry/name=] of the
 associated [=FileSystemHandle/entry=].
-
-
-1. TODO
-
-</div>
 
 ### The {{FileSystemHandle/queryPermission()}} method ### {#api-filesystemhandle-querypermission}
 
@@ -174,13 +168,21 @@ The <dfn method for=FileSystemHandle>requestPermission(|descriptor|)</dfn> metho
 ## The {{FileSystemFileHandle}} interface ## {#api-filesystemfilehandle}
 
 <xmp class=idl>
+dictionary FileSystemCreateWriterOptions {
+  boolean inPlace = false;
+  boolean keepExistingData = false;
+};
+
 [Exposed=(Window,Worker), SecureContext]
 interface FileSystemFileHandle : FileSystemHandle {
   Promise<File> getFile();
-  Promise<FileSystemWriter> createWriter();
+  Promise<FileSystemWriter> createWriter(optional FileSystemCreateWriterOptions options);
 };
 </xmp>
 
+Issue: booleans that default to "true" can be confusing (see comment in
+https://heycam.github.io/webidl/#idl-dictionaries). We should try to come up with other names
+without ending up with double negations.
 
 ### The {{FileSystemFileHandle/getFile()}} method ### {#api-filesystemfilehandle-getfile}
 
@@ -200,11 +202,37 @@ The <dfn method for=FileSystemFileHandle>getFile()</dfn> method, when invoked, m
 
 <div class="note domintro">
   : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()}}
-  :: Returns a {{FileSystemWriter}} that can be used to write to the file.
+  : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/inPlace}}: false })
+  : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/keepExistingData}}: |keepExistingData|, {{FileSystemCreateWriterOptions/inPlace}}: false })
+  :: Returns a {{FileSystemWriter}} that can be used to write to the file. Any changes made through
+     |writer| won't be reflected in the file represented by |fileHandle| until its
+     {{FileSystemWriter/close()}} method is called.
+     User agents try to ensure that no partial writes happen, i.e. the file represented by
+     |fileHandle| will either contains its old contents or it will contain whatever data was written
+     through |writer| up until one of these methods was called.
+
+     This is typically implemented by writing data to a temporary file, and only replacing the file
+     represented by |fileHandle| with the temporary file when the writer is closed.
+
+     If |keepExistingData| is `false` or not specified, the temporary file starts out empty,
+     otherwise the existing file is first copied to this temporary file.
+
+   : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/inPlace}}: true })
+   : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/keepExistingData}}: |keepExistingData|, {{FileSystemCreateWriterOptions/inPlace}}: true })
+   :: Returns a {{FileSystemWriter}} that can be used to write to the file. Any changes made through
+      |writer| might not be reflected in the file represented by |fileHandle| until its
+      {{FileSystemWriter/close()}} method is called.
+      User agents are free to either flush changes to the file as they are made, or batch them
+      up (possibly by writing to some kind of change log) until {{FileSystemWriter/close()}}
+      is called. Specifically for less trusted websites, user agents
+      will want to batch up changes so that malware scanners or other security checks can be
+      performed before actually flushing changes to disk.
+
+      If |keepExistingData| is `false` or not specified, the file will start out empty.
 </div>
 
 <div algorithm>
-The <dfn method for=FileSystemFileHandle>createWriter()</dfn> method, when invoked, must run these steps:
+The <dfn method for=FileSystemFileHandle>createWriter(|options|)</dfn> method, when invoked, must run these steps:
 
 1. TODO
 
@@ -387,12 +415,20 @@ interface FileSystemWriter {
 };
 </xmp>
 
+A {{FileSystemWriter}} has an associated <dfn for=FileSystemWriter>atomic flag</dfn>.
+
 ### The {{FileSystemWriter/write()}} method ### {#api-filesystemwriter-write}
 
 <div class="note domintro">
   : await |writer| . {{FileSystemWriter/write()|write}}(|position|, |data|)
   :: Writes the content of |data| into the file associated with |writer| at position |position|.
      If |position| is past the end of the file writing will fail and this method rejects.
+
+     There are no guarantees that the data written to the file using this method is actually
+     reflected in the file on disk until the {{FileSystemWriter/close()}}
+     method is called. Specifically when |writer|'s
+     [=atomic flag=] is set, the user agent will ensure that no changes are written to the actual
+     file until one of those methods is called.
 </div>
 
 <div algorithm>
@@ -405,10 +441,19 @@ these steps:
 
 ### The {{FileSystemWriter/asWritableStream()}} method ### {#api-filesystemwriter-aswritablestream}
 
+Issue(19): The functionality described by this method will likely stay, but the exact shape of
+the method is still in flux even more than the rest of this specification.
+
 <div class="note domintro">
   : let |stream| = |writer| . {{FileSystemWriter/asWritableStream()}}
   :: Returns a {{WritableStream}} that can be used to write data into the file, starting
      at the beginning of the file.
+
+     There are no guarantees that the data written to the file using this method is actually
+     reflected in the file on disk until the {{FileSystemWriter/close()}}
+     method is called. Specifically when |writer|'s
+     [=atomic flag=] is set, the user agent will ensure that no changes are written to the actual
+     file until one of those methods is called.
 </div>
 
 <div algorithm>
@@ -425,10 +470,40 @@ must run these steps:
   : await |writer| . {{FileSystemWriter/truncate()|truncate}}(|size|)
   :: Resizes the file associated with |writer| to be |size| bytes long. If |size| is larger than
      the current file size this pads the file with zero bytes, otherwise it truncates the file.
+
+     There are no guarantees that the changes made to the file using this method are actually
+     reflected in the file on disk until the {{FileSystemWriter/close()}}
+     method is called. Specifically when |writer|'s
+     [=atomic flag=] is set, the user agent will ensure that no changes are written to the actual
+     file until one of those methods is called.
 </div>
 
 <div algorithm>
 The <dfn method for=FileSystemWriter>truncate(|size|)</dfn> method, when invoked, must run these
+steps:
+
+1. TODO
+
+</div>
+
+### The {{FileSystemWriter/close()}} method ### {#api-filesystemwriter-close}
+
+<div class="note domintro">
+  : await |writer| . {{FileSystemWriter/close()}}
+  :: First flushes any data written so far to disk, and then closes the writer.
+     If |writer|'s [=atomic flag=] is set, no changes will
+     be visible in the file until this method is called.
+     Furthermore, if the file on disk changed between creating this |writer| and this invocation of
+     {{FileSystemWriter/close()}}, this will reject and all future operations on the writer will
+     fail.
+
+     This operation can take some time to complete (even if the |writer|'s [=atomic flag=] is not
+     set), as user agents might use this moment to run malware scanners or perform other security
+     checks if the website isn't sufficiently trusted.
+</div>
+
+<div algorithm>
+The <dfn method for=FileSystemWriter>close()</dfn> method, when invoked, must run these
 steps:
 
 1. TODO
