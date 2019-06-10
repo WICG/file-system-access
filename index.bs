@@ -206,7 +206,7 @@ The <dfn method for=FileSystemFileHandle>getFile()</dfn> method, when invoked, m
   : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/truncate}}: |truncate|, {{FileSystemCreateWriterOptions/atomic}}: true })
   :: Returns a {{FileSystemWriter}} that can be used to write to the file. Any changes made through
      |writer| won't be reflected in the file represented by |fileHandle| until its
-     {{FileSystemWriter/close()}} or {{FileSystemWriter/flush()}} methods are called.
+     {{FileSystemWriter/close()}} method is called.
      User agents try to ensure that no partial writes happen, i.e. the file represented by
      |fileHandle| will either contains its old contents or it will contain whatever data was written
      through |writer| up until one of these methods was called.
@@ -221,10 +221,10 @@ The <dfn method for=FileSystemFileHandle>getFile()</dfn> method, when invoked, m
    : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/truncate}}: |truncate|, {{FileSystemCreateWriterOptions/atomic}}: false })
    :: Returns a {{FileSystemWriter}} that can be used to write to the file. Any changes made through
       |writer| might not be reflected in the file represented by |fileHandle| until its
-      {{FileSystemWriter/close()}} or {{FileSystemWriter/flush()}} methods are called.
+      {{FileSystemWriter/close()}} method is called.
       User agents are free to either flush changes to the file as they are made, or batch them
-      up (possibly by writing to some kind of change log) until {{FileSystemWriter/close()}} or
-      {{FileSystemWriter/flush()}} is called. Specifically for less trusted websites, user agents
+      up (possibly by writing to some kind of change log) until {{FileSystemWriter/close()}}
+      is called. Specifically for less trusted websites, user agents
       should probably batch up changes so that malware scanners or other security checks can be
       performed before actually flushing changes to disk.
 
@@ -411,7 +411,6 @@ interface FileSystemWriter {
   Promise<void> write(unsigned long long position, (BufferSource or Blob or USVString) data);
   WritableStream asWritableStream();
   Promise<void> truncate(unsigned long long size);
-  Promise<void> flush();
   Promise<void> close();
 };
 </xmp>
@@ -426,8 +425,8 @@ A {{FileSystemWriter}} has an associated <dfn for=FileSystemWriter>atomic flag</
      If |position| is past the end of the file writing will fail and this method rejects.
 
      There are no guarantees that the data written to the file using this method is actually
-     reflected in the file on disk until the {{FileSystemWriter/close()}} or
-     {{FileSystemWriter/flush()}} methods are called. Specifically when |writer|'s
+     reflected in the file on disk until the {{FileSystemWriter/close()}}
+     method is called. Specifically when |writer|'s
      [=atomic flag=] is set, the user agent will ensure that no changes are written to the actual
      file until one of those methods is called.
 </div>
@@ -451,8 +450,8 @@ the method is still in flux even more than the rest of this specification.
      at the beginning of the file.
 
      There are no guarantees that the data written to the file using this method is actually
-     reflected in the file on disk until the {{FileSystemWriter/close()}} or
-     {{FileSystemWriter/flush()}} methods are called. Specifically when |writer|'s
+     reflected in the file on disk until the {{FileSystemWriter/close()}}
+     method is called. Specifically when |writer|'s
      [=atomic flag=] is set, the user agent will ensure that no changes are written to the actual
      file until one of those methods is called.
 </div>
@@ -473,8 +472,8 @@ must run these steps:
      the current file size this pads the file with zero bytes, otherwise it truncates the file.
 
      There are no guarantees that the changes made to the file using this method are actually
-     reflected in the file on disk until the {{FileSystemWriter/close()}} or
-     {{FileSystemWriter/flush()}} methods are called. Specifically when |writer|'s
+     reflected in the file on disk until the {{FileSystemWriter/close()}}
+     method is called. Specifically when |writer|'s
      [=atomic flag=] is set, the user agent will ensure that no changes are written to the actual
      file until one of those methods is called.
 </div>
@@ -487,41 +486,20 @@ steps:
 
 </div>
 
-### The {{FileSystemWriter/flush()}} method ### {#api-filesystemwriter-flush}
-
-<div class="note domintro">
-  : await |writer| . {{FileSystemWriter/flush()}}
-  :: Flushes any data written so far to disk. If |writer|'s [=atomic flag=] is set, no changes will
-     be visible in the file until this method (or {{FileSystemWriter/close()}}) is called.
-     Furthermore, if the file on disk changed between creating this |writer| (or the last time
-     {{FileSystemWriter/flush()}} was called) and this invocation of{{FileSystemWriter/flush()}},
-     this will reject and all future operations on the writer will fail.
-
-     This operation can take some time to complete (even if the |writer|'s [=atomic flag=] is not
-     set), as user agents might use this moment to run malware scanners or perform other security
-     checks if the website isn't sufficiently trusted.
-</div>
-
-<div algorithm>
-The <dfn method for=FileSystemWriter>flush()</dfn> method, when invoked, must run these
-steps:
-
-1. TODO
-
-</div>
-
 ### The {{FileSystemWriter/close()}} method ### {#api-filesystemwriter-close}
 
 <div class="note domintro">
   : await |writer| . {{FileSystemWriter/close()}}
-  :: First flushes any data written so far to disk, like invoking the {{FileSystemWriter/flush()}}
-     method does, and then closes the writer. If a |writer|'s [=atomic flag=] is set calling
-     {{FileSystemWriter/close()}} can be more efficient than calling {{FileSystemWriter/flush()}},
-     since this tells the user agent that no more writes to the file will be made using this writer.
+  :: First flushes any data written so far to disk, and then closes the writer.
+     If |writer|'s [=atomic flag=] is set, no changes will
+     be visible in the file until this method is called.
+     Furthermore, if the file on disk changed between creating this |writer| and this invocation of
+     {{FileSystemWriter/close()}}, this will reject and all future operations on the writer will
+     fail.
 
-     Like {{FileSystemWriter/flush()}}, this operation can take some time to complete (even if the
-     |writer|'s [=atomic flag=] is not set), as user agents might use this moment to run malware
-     scanners or perform other security checks if the website isn't sufficiently trusted.
+     This operation can take some time to complete (even if the |writer|'s [=atomic flag=] is not
+     set), as user agents might use this moment to run malware scanners or perform other security
+     checks if the website isn't sufficiently trusted.
 </div>
 
 <div algorithm>
