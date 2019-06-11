@@ -190,14 +190,14 @@ The <dfn method for=FileSystemHandle>requestPermission(|descriptor|)</dfn> metho
 ## The {{FileSystemFileHandle}} interface ## {#api-filesystemfilehandle}
 
 <xmp class=idl>
-dictionary FileSystemCreateWriterOptions {
+dictionary FileSystemCreateWritableOptions {
   boolean keepExistingData = false;
 };
 
 [Exposed=(Window,Worker), SecureContext, Serializable]
 interface FileSystemFileHandle : FileSystemHandle {
   Promise<File> getFile();
-  Promise<FileSystemWriter> createWriter(optional FileSystemCreateWriterOptions options = {});
+  Promise<FileSystemWritableFileStream> createWritable(optional FileSystemCreateWritableOptions options);
 };
 </xmp>
 
@@ -222,27 +222,29 @@ The <dfn method for=FileSystemFileHandle>getFile()</dfn> method, when invoked, m
 
 </div>
 
-### The {{FileSystemFileHandle/createWriter()}} method ### {#api-filesystemfilehandle-createwriter}
+### The {{FileSystemFileHandle/createWritable()}} method ### {#api-filesystemfilehandle-createwritable}
+
+Advisement: In the Origin Trial as available in Chrome 82, createWritable replaces the createWriter method.
 
 <div class="note domintro">
-  : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()}}
-  : |writer| = await |fileHandle| . {{FileSystemFileHandle/createWriter()|createWriter}}({ {{FileSystemCreateWriterOptions/keepExistingData}}: true/false })
-  :: Returns a {{FileSystemWriter}} that can be used to write to the file. Any changes made through
-     |writer| won't be reflected in the file represented by |fileHandle| until its
-     {{FileSystemWriter/close()}} method is called.
+  : |stream| = await |fileHandle| . {{FileSystemFileHandle/createWritable()}}
+  : |stream| = await |fileHandle| . {{FileSystemFileHandle/createWritable()|createWritable}}({ {{FileSystemCreateWritableOptions/keepExistingData}}: true/false })
+  :: Returns a {{FileSystemWritableFileStream}} that can be used to write to the file. Any changes made through
+     |stream| won't be reflected in the file represented by |fileHandle| until its
+     {{FileSystemWritableFileStream/close()}} method is called.
      User agents try to ensure that no partial writes happen, i.e. the file represented by
      |fileHandle| will either contains its old contents or it will contain whatever data was written
-     through |writer| up until {{FileSystemWriter/close()}} was called.
+     through |stream| up until {{FileSystemWritableFileStream/close()}} was called.
 
      This is typically implemented by writing data to a temporary file, and only replacing the file
-     represented by |fileHandle| with the temporary file when the writer is closed.
+     represented by |fileHandle| with the temporary file when the writable filestream is closed.
 
-     If {{FileSystemCreateWriterOptions/keepExistingData}} is `false` or not specified,
+     If {{FileSystemCreateWritableOptions/keepExistingData}} is `false` or not specified,
      the temporary file starts out empty,
      otherwise the existing file is first copied to this temporary file.
 </div>
 
-Issue: There has been some discussion around and desire for a "inPlace" mode for createWriter (where
+Issue: There has been some discussion around and desire for a "inPlace" mode for createWritable (where
 changes will be written to the actual underlying file as they are written to the writer, for example
 to support in-place modification of large files or things like databases). This is not currently
 implemented in Chrome. Implementing this is currently blocked on figuring out how to combine the
@@ -250,7 +252,7 @@ desire to run malware checks with the desire to let websites make fast in-place 
 existing large files.
 
 <div algorithm>
-The <dfn method for=FileSystemFileHandle>createWriter(|options|)</dfn> method, when invoked, must run these steps:
+The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method, when invoked, must run these steps:
 
 1. TODO
 
@@ -404,74 +406,136 @@ these steps:
 
 </div>
 
-## The {{FileSystemWriter}} interface ## {#api-filesystemwriter}
+## The {{FileSystemWritableFileStream}} interface ## {#api-filesystemwritablefilestream}
 
 <xmp class=idl>
-[Exposed=(Window,Worker), SecureContext]
-interface FileSystemWriter {
-  Promise<void> write(unsigned long long position, (BufferSource or Blob or USVString) data);
+enum WriteCommandType {
+  "truncate",
+  "seek",
+  "write",
+};
+
+dictionary WriteParams {
+  required WriteCommandType type;
+  unsigned long long? size;
+  unsigned long long? position;
+  (BufferSource or Blob or USVString)? data;
+};
+
+[Exposed=(Window,Worker), SecureContext, Serializable]
+interface FileSystemWritableFileStream : WritableStream {
+  Promise<void> write((BufferSource or Blob or USVString or WriteParams) data);
+  Promise<void> seek(unsigned long long position);
   Promise<void> truncate(unsigned long long size);
-  Promise<void> close();
 };
 </xmp>
 
-Issue(19): We want some kind of integration with writable streams. One possible option is to make
-FileStreamWriter inherit from WritableStream, but other options should be considered as well.
+A {{FileSystemWritableFileStream}} object is a {{WritableStream}} object with additional methods to operate
+on a single file on disk.
 
-### The {{FileSystemWriter/write()}} method ### {#api-filesystemwriter-write}
+Upon creation, an underlying sink will have been created and the stream will be usable. All operations executed on the stream are queuable and producers will be able to respond to backpressure.
+
+The underlying sink's write method, and therefore {{WritableStreamDefaultWriter/write()|WritableStreamDefaultWriter's write()}} method, will accept byte-like data or {{WriteParams}} as input.
+
+The {{FileSystemWritableFileStream}} has a file position cursor initialized at byte offset 0 from the top of the file. When using {{FileSystemWritableFileStream/write()|write()}} or by using WritableStream capabilities through the {{WritableStreamDefaultWriter/write()|WritableStreamDefaultWriter's write()}} method, this position will be advanced based on the number of bytes written through the stream object.
+
+Similarly, when piping a {{ReadableStream}} into a {{FileSystemWritableFileStream}} object, this position is updated with the number of bytes that passed through the stream.
+
+{{WritableStream/getWriter()|getWriter()}} returns an instance of {{WritableStreamDefaultWriter}}.
+
+<div algorithm="serialization steps">
+{{FileSystemWritableFileStream}} objects are [=serializable objects=]. They not cloneable, i.e. they are transferable-only, as are {{WritableStream}} objects.
+
+Advisement: In the Origin Trial as available in Chrome 82, these objects are not yet serializable.
+
+Their [=serialization steps=], given |value|, |serialized| and |forStorage| are:
+
+1. Set |serialized|.\[[Origin]] to |value|'s [=relevant settings object=]'s [=environment settings object/origin=].
+1. TODO
+
+</div>
+
+<div algorithm="deserialization steps">
+Their [=deserialization steps=], given |serialized| and |value| are:
+
+1. If |serialized|.\[[Origin]] is not [=same origin=] with
+   |value|'s [=relevant settings object=]'s [=environment settings object/origin=],
+   then throw a {{DataCloneError}}.
+1. TODO
+
+</div>
+
+### The {{FileSystemWritableFileStream/write()}} method ### {#api-filesystemwritablefilestream-write}
 
 <div class="note domintro">
-  : await |writer| . {{FileSystemWriter/write()|write}}(|position|, |data|)
-  :: Writes the content of |data| into the file associated with |writer| at position |position|.
-     If |position| is past the end of the file writing will fail and this method rejects.
+  : await |stream| . {{FileSystemWritableFileStream/write()|write}}(|data|)
+  :: Writes the content of |data| into the file associated with |stream| at the current file
+     cursor offset in bytes from the top of the file by default.
 
-     No changes are written to the actual file until on disk until {{FileSystemWriter/close()}}
+     No changes are written to the actual file until on disk until {{FileSystemWritableFileStream/close()}}
+     is called. Changes are typically written to a temporary file instead.
+
+     If |data| is of type {{WriteParams}}, validates and executes the content of |data|, which might result in changes into the file associated with |stream|.
+
+     {{WriteParams}} requires the attribute {{WriteParams/type|type}} which determines what the operations to
+     execute are.
+
+     If {{WriteParams/type|type}} is {{truncate}}, {{WriteParams/size|size}} is a <span class=allow-2119>required</span> attribute.
+
+     If {{WriteParams/type|type}} is {{seek}}, {{WriteParams/position|position}} is a <span class=allow-2119>required</span> attribute.
+
+     If {{WriteParams/type|type}} is {{write}}, {{WriteParams/position|position}} is an <span class=allow-2119>optional</span> attribute, {{WriteParams/data|data}} is a <span class=allow-2119>required</span> attribute.
+
+     No changes are written to the actual file until on disk until {{FileSystemWritableFileStream/close()}}
      is called. Changes are typically written to a temporary file instead.
 </div>
 
 <div algorithm>
-The <dfn method for=FileSystemWriter>write(|position|, |data|)</dfn> method, when invoked, must run
+The <dfn method for=FileSystemWritableFileStream>write(|data|)</dfn> method, when invoked, must run
 these steps:
 
 1. TODO
 
 </div>
 
-### The {{FileSystemWriter/truncate()}} method ### {#api-filesystemwriter-truncate}
+### The {{FileSystemWritableFileStream/truncate()}} method ### {#api-filesystemwritablefilestream-truncate}
 
 <div class="note domintro">
-  : await |writer| . {{FileSystemWriter/truncate()|truncate}}(|size|)
-  :: Resizes the file associated with |writer| to be |size| bytes long. If |size| is larger than
+  : await |stream| . {{FileSystemWritableFileStream/truncate()|truncate}}(|size|)
+  :: Resizes the file associated with |stream| to be |size| bytes long. If |size| is larger than
      the current file size this pads the file with zero bytes, otherwise it truncates the file.
 
-     No changes are written to the actual file until on disk until {{FileSystemWriter/close()}}
+     The file cursor is updated when {{truncate}} is called. If the offset is smaller than offset,
+     it remains unchanged. If the offset is larger than |size|, the offset is set to |size| to
+     ensure that subsequent writes do not error.
+
+     No changes are written to the actual file until on disk until {{FileSystemWritableFileStream/close()}}
      is called. Changes are typically written to a temporary file instead.
 </div>
 
 <div algorithm>
-The <dfn method for=FileSystemWriter>truncate(|size|)</dfn> method, when invoked, must run these
+The <dfn method for=FileSystemWritableFileStream>truncate(|size|)</dfn> method, when invoked, must run these
 steps:
 
 1. TODO
 
 </div>
 
-### The {{FileSystemWriter/close()}} method ### {#api-filesystemwriter-close}
+### The {{FileSystemWritableFileStream/close()}} method ### {#api-filesystemwritablefilestream-close}
 
 <div class="note domintro">
-  : await |writer| . {{FileSystemWriter/close()}}
-  :: First flushes any data written so far to disk, and then closes the writer.
+  : await |stream| . {{FileSystemWritableFileStream/close()}}
+  :: First flushes any data written so far to disk, and then closes the writable stream.
      No changes will be visible in the destination file until this method is called.
-     Furthermore, if the file on disk changed between creating this |writer| and this invocation of
-     {{FileSystemWriter/close()}}, this will reject and all future operations on the writer will
-     fail.
+     Furthermore, if the file on disk changed between creating this |stream| and this invocation of
+     {{FileSystemWritableFileStream/close()}}, this will reject and all future operations on the stream will fail.
 
      This operation can take some time to complete, as user agents might use this moment to run
      malware scanners or perform other security checks if the website isn't sufficiently trusted.
 </div>
 
 <div algorithm>
-The <dfn method for=FileSystemWriter>close()</dfn> method, when invoked, must run these
+The <dfn method for=FileSystemWritableFileStream>close()</dfn> method, when invoked, must run these
 steps:
 
 1. TODO
