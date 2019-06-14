@@ -564,28 +564,28 @@ actually exist in that directory.
 
 Related to that there is also the risk of a user giving access to particularly sensitive data. This
 could for example include some of a user agent's configuration data, network cache or cookie store,
-or operating system configuration data such as password files. To protect against this user agents
+or operating system configuration data such as password files. To protect against this, user agents
 are encouraged to restrict which directories a user is allowed to select in a directory picker,
 and potentially even restrict which files the user is allowed to select. This will make it much
 harder to accidentally give access to a directory that contains particularly sensitive data. Care
 must be taken to strike the right balance between restricting what the API can access while still
-having the API be useful. After all this API intentionally lets the user use websites to interact
+having the API be useful. After all, this API intentionally lets the user use websites to interact
 with some of their most private personal data.
 
 ## Websites trying to use this API for tracking. ## {#privacy-tracking}
 
-Other than write access, what sets this API apart from the existing file access APIs is that user
-agents are able to grant persistent access to files or directories, and the fact that websites
-can re-prompt for access to files it was granted access to before if they still have a handle to
-the file. This, combined with the ability to write back to files, could be used by websites to try
-to track the user across clearing browsing data (as the files that are written to by this API are
-and should not be deleted by such an action).
+This API could be used by websites to track the user across clearing browsing
+data. This is because, in contrast with existing file access APIs, user agents are
+able to grant persistent access to files or directories and can re-prompt. In
+combination with the ability to write to files, websites will be able to persist an
+identifier on the users' disk. Clearing browsing data will not affect those files
+in any way, making these identifiers persist through those actions.
 
-This risk is somewhat mitigated by the fact that
-clearing browsing data will also clear IndexedDB, so websites won't have any handles to re-prompt
-for permission after browsing data was cleared. Further more user agents are encouraged to make it
-clear what files and directories a website has access to, and to automatically expire permission
-grants except for particularly well trusted origins.
+This risk is somewhat mitigated by the fact that clearing browsing data will also clear IndexedDB,
+so websites won't have any handles to re-prompt for permission after browsing data was cleared.
+Furthermore user agents are encouraged to make it clear what files and directories a website has
+access to, and to automatically expire permission grants except for particularly well trusted
+origins (for example persistent permissions could be limited to "installed" web applications).
 
 User agents also are encouraged to provide a way for users to revoke permissions granted, and
 clearing browsing data is expected to revoke all permissions as well.
