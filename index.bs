@@ -610,9 +610,10 @@ files. this has a couple of important security considerations:
 ## Malware ## {#security-malware}
 
 This API could be used by websites to try to store and/or execute malware on the users system.
-To mitigate this risk, this API does not provide any way to mark files as executable. Furthermore
-user agents are encouraged to apply things like Mark-of-the-Web to files created or modified by
-this API.
+To mitigate this risk, this API does not provide any way to mark files as executable (on the other
+hand files that are already executable likely remain that way, even after the files is modified
+through this API). Furthermore user agents are encouraged to apply things like Mark-of-the-Web to
+files created or modified by this API.
 
 Finally, user agents are encouraged to invoke any kind of malware, safe browsing or potentially
 unwanted programs scans on files modified by this API, unless some kind of external strong trust

@@ -24,13 +24,15 @@ Yes, this specification lets websites store handles they've gotten access to (vi
 
 Furthermore, the user will be able to clear storage (storage is just IndexedDB) and/or revoke permissions to clear the state that was persisted, similarly to how other permissions work.
 
+Websites can also store any state they like in files they get write access to via this API. This state would not be cleared when clearing browser data, however access to this state would be removed. If a user later picks the same files or directories again to give the website access to them, the websites will regain access to whatever state they persisted.
+
 ### 2.6. What information from the underlying platform, e.g. configuration data, is exposed by this specification to an origin?
 
 Anything that exists on disk in files could be exposed by the user to the web. However, user agents are encouraged to maintain a block list of certain directories with particularly sensitive files, and thus somewhat restrict which files and directories the user is allowed to select. For example, things like Chrome's "Profile" directory, and other platform configuration data directories are likely going to be on this block list.
 
 ### 2.7. Does this specification allow an origin access to sensors on a user’s device
 
-No (unless a device exposes such sensors as "fake" files or directories).
+No (unless a device exposes such sensors as files or directories).
 
 ### 2.8. What data does this specification expose to an origin? Please also document what data is identical to data exposed by other features, in the same or different contexts.
 
@@ -42,7 +44,7 @@ No.
 
 ### 2.10. Does this specification allow an origin to access other devices?
 
-Not really. The exception would be devices that are exposed as "fake" files or directories by the platform. I.e. network shares or cloud storage sync clients could expose data on other devices in a way that looks like regular files or directories. The user agent could let the user pick these files or directories, thereby giving an origin implicit access to this other device. This API doesn't have any functionality to let a website enumerate all network shares on the local network, only explicitly selected files or directories can be accessed by an origin.
+Not really. The exception would be devices that are exposed as files or directories by the platform. I.e. network shares or cloud storage sync clients could expose data on other devices in a way that looks like regular files or directories. The user agent could let the user pick these files or directories, thereby giving an origin implicit access to this other device. This API doesn't have any functionality to let a website enumerate all network shares on the local network, only explicitly selected files or directories can be accessed by an origin.
 
 ### 2.11. Does this specification allow an origin some measure of control over a user agent’s native UI?
 
