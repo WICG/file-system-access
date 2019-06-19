@@ -549,8 +549,8 @@ invoked, must run these steps:
 
 *This section is non-normative.*
 
-This API does not give websites any more access to data than the existing `<input type=file>` and
-<input type=file webkitdirectory>` APIs already do. Furthermore similarly to those APIs, all
+This API does not give websites any more read access to data than the existing `<input type=file>`
+and `<input type=file webkitdirectory>` APIs already do. Furthermore similarly to those APIs, all
 access to files and directories is explicitly gated behind a file or directory picker.
 
 There are however several major privacy risks with this new API:
@@ -605,7 +605,7 @@ a cross-origin destination will result in a {{MessagePort/messageerror}} event.
 *This section is non-normative.*
 
 This API gives websites the ability to modify existing files on disk, as well as write to new
-files. this has a couple of important security considerations:
+files. This has a couple of important security considerations:
 
 ## Malware ## {#security-malware}
 
@@ -615,11 +615,11 @@ hand files that are already executable likely remain that way, even after the fi
 through this API). Furthermore user agents are encouraged to apply things like Mark-of-the-Web to
 files created or modified by this API.
 
-Finally, user agents are encouraged to invoke any kind of malware, safe browsing or potentially
-unwanted programs scans on files modified by this API, unless some kind of external strong trust
-relation already exists. This of course has effects on the performance characteristics of this API.
+Finally, user agents are encouraged to verify the contents of files modified by this API via malware
+scans and safe browsing checks, unless some kind of external strong trust relation already exists.
+This of course has effects on the performance characteristics of this API.
 
-Issue(51): "Atomic writes" attempt to make it explicit what this API can and can't do, and how
+Issue(51): "Atomic writes" attempts to make it explicit what this API can and can't do, and how
 performance can be effected by safe browsing checks.
 
 ## Ransomware attacks ## {#security-ransomware}
