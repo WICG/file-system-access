@@ -1215,7 +1215,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 872cce6d3026423d677f3bd5837f1a1a46299a04" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="4a385e8163a0c4693399aabe46341d05af40caf2" name="document-revision">
+  <meta content="c0f8a1ef629790d7065ab1b359e3836c35c84bf5" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1487,7 +1487,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-06-15">15 June 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-06-21">21 June 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1571,10 +1571,17 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       <li><a href="#api-getsystemdirectory"><span class="secno">4.1</span> <span class="content">The <code class="idl"><span>getSystemDirectory()</span></code> method</span></a>
      </ol>
     <li>
-     <a href="#security-considerations"><span class="secno">5</span> <span class="content">Security Considerations</span></a>
+     <a href="#privacy-considerations"><span class="secno">5</span> <span class="content">Privacy Considerations</span></a>
      <ol class="toc">
-      <li><a href="#secure-context"><span class="secno">5.1</span> <span class="content">Secure Context</span></a>
-      <li><a href="#file-type-limitations"><span class="secno">5.2</span> <span class="content">Limiting types of files that can be written to</span></a>
+      <li><a href="#privacy-wide-access"><span class="secno">5.1</span> <span class="content">Users giving access to more, or more sensitive files than they intended.</span></a>
+      <li><a href="#privacy-tracking"><span class="secno">5.2</span> <span class="content">Websites trying to use this API for tracking.</span></a>
+      <li><a href="#privacy-third-party"><span class="secno">5.3</span> <span class="content">First-party vs third-party contexts.</span></a>
+     </ol>
+    <li>
+     <a href="#security-considerations"><span class="secno">6</span> <span class="content">Security Considerations</span></a>
+     <ol class="toc">
+      <li><a href="#security-malware"><span class="secno">6.1</span> <span class="content">Malware</span></a>
+      <li><a href="#security-ransomware"><span class="secno">6.2</span> <span class="content">Ransomware attacks</span></a>
      </ol>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
     <li>
@@ -2098,9 +2105,66 @@ invoked, must run these steps:
       <p>TODO</p>
     </ol>
    </div>
-   <h2 class="heading settled" data-level="5" id="security-considerations"><span class="secno">5. </span><span class="content">Security Considerations</span><a class="self-link" href="#security-considerations"></a></h2>
-   <h3 class="heading settled" data-level="5.1" id="secure-context"><span class="secno">5.1. </span><span class="content">Secure Context</span><a class="self-link" href="#secure-context"></a></h3>
-   <h3 class="heading settled" data-level="5.2" id="file-type-limitations"><span class="secno">5.2. </span><span class="content">Limiting types of files that can be written to</span><a class="self-link" href="#file-type-limitations"></a></h3>
+   <h2 class="heading settled" data-level="5" id="privacy-considerations"><span class="secno">5. </span><span class="content">Privacy Considerations</span><a class="self-link" href="#privacy-considerations"></a></h2>
+   <p><em>This section is non-normative.</em></p>
+   <p>This API does not give websites any more read access to data than the existing <code>&lt;input type=file></code> and <code>&lt;input type=file webkitdirectory></code> APIs already do. Furthermore similarly to those APIs, all
+access to files and directories is explicitly gated behind a file or directory picker.</p>
+   <p>There are however several major privacy risks with this new API:</p>
+   <h3 class="heading settled" data-level="5.1" id="privacy-wide-access"><span class="secno">5.1. </span><span class="content">Users giving access to more, or more sensitive files than they intended.</span><a class="self-link" href="#privacy-wide-access"></a></h3>
+   <p>This isn’t a new risk with this API, but user agents should try to make sure that users are aware
+of what exactly they’re giving websites access to. This is particularly important when giving
+access to a directory, where it might not be immediately clear to a user just how many files
+actually exist in that directory.</p>
+   <p>A related risk is having a user give access to particularly sensitive data. This
+could include some of a user agent’s configuration data, network cache or cookie store,
+or operating system configuration data such as password files. To protect against this, user agents
+are encouraged to restrict which directories a user is allowed to select in a directory picker,
+and potentially even restrict which files the user is allowed to select. This will make it much
+harder to accidentally give access to a directory that contains particularly sensitive data. Care
+must be taken to strike the right balance between restricting what the API can access while still
+having the API be useful. After all, this API intentionally lets the user use websites to interact
+with some of their most private personal data.</p>
+   <h3 class="heading settled" data-level="5.2" id="privacy-tracking"><span class="secno">5.2. </span><span class="content">Websites trying to use this API for tracking.</span><a class="self-link" href="#privacy-tracking"></a></h3>
+   <p>This API could be used by websites to track the user across clearing browsing
+data. This is because, in contrast with existing file access APIs, user agents are
+able to grant persistent access to files or directories and can re-prompt. In
+combination with the ability to write to files, websites will be able to persist an
+identifier on the users' disk. Clearing browsing data will not affect those files
+in any way, making these identifiers persist through those actions.</p>
+   <p>This risk is somewhat mitigated by the fact that clearing browsing data will also clear IndexedDB,
+so websites won’t have any handles to re-prompt for permission after browsing data was cleared.
+Furthermore user agents are encouraged to make it clear what files and directories a website has
+access to, and to automatically expire permission grants except for particularly well trusted
+origins (for example persistent permissions could be limited to "installed" web applications).</p>
+   <p>User agents also are encouraged to provide a way for users to revoke permissions granted.
+Clearing browsing data is expected to revoke all permissions as well.</p>
+   <h3 class="heading settled" data-level="5.3" id="privacy-third-party"><span class="secno">5.3. </span><span class="content">First-party vs third-party contexts.</span><a class="self-link" href="#privacy-third-party"></a></h3>
+   <p>In third-party contexts (i.e. an iframe whose origin does not match that of the top-level frame)
+websites can’t gain access to data they don’t already have access to. This includes both getting
+access to new files or directories via the <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries④">chooseFileSystemEntries</a></code> API, as well as requesting
+more permissions to existing handles via the <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission⑦">requestPermission</a></code> API.</p>
+   <p>Handles can also only be post-messaged to same-origin destinations. Attempts to send a handle to
+a cross-origin destination will result in a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/indices.html#event-messageerror" id="ref-for-event-messageerror">messageerror</a></code> event.</p>
+   <h2 class="heading settled" data-level="6" id="security-considerations"><span class="secno">6. </span><span class="content">Security Considerations</span><a class="self-link" href="#security-considerations"></a></h2>
+   <p><em>This section is non-normative.</em></p>
+   <p>This API gives websites the ability to modify existing files on disk, as well as write to new
+files. This has a couple of important security considerations:</p>
+   <h3 class="heading settled" data-level="6.1" id="security-malware"><span class="secno">6.1. </span><span class="content">Malware</span><a class="self-link" href="#security-malware"></a></h3>
+   <p>This API could be used by websites to try to store and/or execute malware on the users system.
+To mitigate this risk, this API does not provide any way to mark files as executable (on the other
+hand files that are already executable likely remain that way, even after the files are modified
+through this API). Furthermore user agents are encouraged to apply things like Mark-of-the-Web to
+files created or modified by this API.</p>
+   <p>Finally, user agents are encouraged to verify the contents of files modified by this API via malware
+scans and safe browsing checks, unless some kind of external strong trust relation already exists.
+This of course has effects on the performance characteristics of this API.</p>
+   <p class="issue" id="issue-1f744509"><a class="self-link" href="#issue-1f744509"></a> "Atomic writes" attempts to make it explicit what this API can and can’t do, and how
+performance can be effected by safe browsing checks. <a href="https://github.com/wicg/native-file-system/issues/51">&lt;https://github.com/wicg/native-file-system/issues/51></a></p>
+   <h3 class="heading settled" data-level="6.2" id="security-ransomware"><span class="secno">6.2. </span><span class="content">Ransomware attacks</span><a class="self-link" href="#security-ransomware"></a></h3>
+   <p>Another risk factor is that of ransomware attacks. The limitations described above regarding
+blocking access to certain sensitive directories helps limit the damage such an attack can do.
+Additionally user agents can grant write access to files at whatever granularity they deem
+appropriate.</p>
   </main>
   <div data-fill-with="conformance">
    <h2 class="no-ref no-num heading settled" id="conformance"><span class="content"> Conformance</span><a class="self-link" href="#conformance"></a></h2>
@@ -2352,6 +2416,12 @@ invoked, must run these steps:
     <li><a href="#ref-for-window">3.1. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-event-messageerror">
+   <a href="https://html.spec.whatwg.org/multipage/indices.html#event-messageerror">https://html.spec.whatwg.org/multipage/indices.html#event-messageerror</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-event-messageerror">5.3. First-party vs third-party contexts.</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-ordered-set">
    <a href="https://infra.spec.whatwg.org/#ordered-set">https://infra.spec.whatwg.org/#ordered-set</a><b>Referenced in:</b>
    <ul>
@@ -2439,6 +2509,7 @@ invoked, must run these steps:
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-window" style="color:initial">Window</span>
+     <li><span class="dfn-paneled" id="term-for-event-messageerror" style="color:initial">messageerror</span>
     </ul>
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
@@ -2504,7 +2575,7 @@ invoked, must run these steps:
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑨"><c- b>USVString</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="USVString" href="#dom-filesystemhandle-name" id="ref-for-dom-filesystemhandle-name②"><c- g>name</c-></a>;
 
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/permissions/#enumdef-permissionstate" id="ref-for-enumdef-permissionstate②"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission⑤"><c- g>queryPermission</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor②"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <a href="#dom-filesystemhandle-querypermission-descriptor-descriptor"><code><c- g>descriptor</c-></code></a>);
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/permissions/#enumdef-permissionstate" id="ref-for-enumdef-permissionstate①①"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission⑦"><c- g>requestPermission</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor①①"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <a href="#dom-filesystemhandle-requestpermission-descriptor-descriptor"><code><c- g>descriptor</c-></code></a>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/permissions/#enumdef-permissionstate" id="ref-for-enumdef-permissionstate①①"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission⑧"><c- g>requestPermission</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor①①"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <a href="#dom-filesystemhandle-requestpermission-descriptor-descriptor"><code><c- g>descriptor</c-></code></a>);
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-filesystemcreatewriteroptions"><code><c- g>FileSystemCreateWriterOptions</c-></code></a> {
@@ -2608,6 +2679,8 @@ iterable itself?<a href="#issue-bd7b13a2"> ↵ </a></div>
 the method is still in flux even more than the rest of this specification. <a href="https://github.com/wicg/native-file-system/issues/19">&lt;https://github.com/wicg/native-file-system/issues/19></a><a href="#issue-fe12fb63"> ↵ </a></div>
    <div class="issue"> getSystemDirectory might not be the best name. Also perhaps should be on Window rather
 than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-system/issues/27">&lt;https://github.com/wicg/native-file-system/issues/27></a><a href="#issue-2a3d989a"> ↵ </a></div>
+   <div class="issue"> "Atomic writes" attempts to make it explicit what this API can and can’t do, and how
+performance can be effected by safe browsing checks. <a href="https://github.com/wicg/native-file-system/issues/51">&lt;https://github.com/wicg/native-file-system/issues/51></a><a href="#issue-1f744509"> ↵ </a></div>
   </div>
   <aside class="dfn-panel" data-for="entry">
    <b><a href="#entry">#entry</a></b><b>Referenced in:</b>
@@ -2695,6 +2768,7 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
     <li><a href="#ref-for-dom-filesystemhandle-requestpermission">2.2. The FileSystemHandle interface</a>
     <li><a href="#ref-for-dom-filesystemhandle-requestpermission①">2.2.1. The queryPermission() method</a> <a href="#ref-for-dom-filesystemhandle-requestpermission②">(2)</a>
     <li><a href="#ref-for-dom-filesystemhandle-requestpermission③">2.2.2. The requestPermission() method</a> <a href="#ref-for-dom-filesystemhandle-requestpermission④">(2)</a> <a href="#ref-for-dom-filesystemhandle-requestpermission⑤">(3)</a> <a href="#ref-for-dom-filesystemhandle-requestpermission⑥">(4)</a>
+    <li><a href="#ref-for-dom-filesystemhandle-requestpermission⑦">5.3. First-party vs third-party contexts.</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-filesystemcreatewriteroptions">
@@ -2948,6 +3022,7 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
    <ul>
     <li><a href="#ref-for-dom-window-choosefilesystementries">2.2.1. The queryPermission() method</a>
     <li><a href="#ref-for-dom-window-choosefilesystementries①">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-dom-window-choosefilesystementries②">(2)</a> <a href="#ref-for-dom-window-choosefilesystementries③">(3)</a>
+    <li><a href="#ref-for-dom-window-choosefilesystementries④">5.3. First-party vs third-party contexts.</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="enumdef-systemdirectorytype">
