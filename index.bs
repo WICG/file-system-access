@@ -562,8 +562,8 @@ of what exactly they're giving websites access to. This is particularly importan
 access to a directory, where it might not be immediately clear to a user just how many files
 actually exist in that directory.
 
-Related to that there is also the risk of a user giving access to particularly sensitive data. This
-could for example include some of a user agent's configuration data, network cache or cookie store,
+A related risk is having a user give access to particularly sensitive data. This
+could include some of a user agent's configuration data, network cache or cookie store,
 or operating system configuration data such as password files. To protect against this, user agents
 are encouraged to restrict which directories a user is allowed to select in a directory picker,
 and potentially even restrict which files the user is allowed to select. This will make it much
@@ -587,8 +587,8 @@ Furthermore user agents are encouraged to make it clear what files and directori
 access to, and to automatically expire permission grants except for particularly well trusted
 origins (for example persistent permissions could be limited to "installed" web applications).
 
-User agents also are encouraged to provide a way for users to revoke permissions granted, and
-clearing browsing data is expected to revoke all permissions as well.
+User agents also are encouraged to provide a way for users to revoke permissions granted.
+Clearing browsing data is expected to revoke all permissions as well.
 
 ## First-party vs third-party contexts. ## {#privacy-third-party}
 
@@ -611,7 +611,7 @@ files. This has a couple of important security considerations:
 
 This API could be used by websites to try to store and/or execute malware on the users system.
 To mitigate this risk, this API does not provide any way to mark files as executable (on the other
-hand files that are already executable likely remain that way, even after the files is modified
+hand files that are already executable likely remain that way, even after the files are modified
 through this API). Furthermore user agents are encouraged to apply things like Mark-of-the-Web to
 files created or modified by this API.
 

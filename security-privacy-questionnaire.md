@@ -22,9 +22,9 @@ No data is exposed without the user explicitly choosing what files or directorie
 
 Yes, this specification lets websites store handles they've gotten access to (via a file or directory picker) in IndexedDB. User agents could also persist the permission grants that go with these handles, but at least in the Chrome implementation, these permission grants will only be persistent for installed PWAs. The drive-by web will only have enough state to allow it to re-prompt for access, but the access itself won't be persistent.
 
-Furthermore, the user will be able to clear storage (storage is just IndexedDB) and/or revoke permissions to clear the state that was persisted, similarly to how other permissions work.
+Furthermore, the user will be able to clear storage (storage is file handles in IndexedDB) and/or revoke permissions to clear the state that was persisted, similarly to how other permissions work.
 
-Websites can also store any state they like in files they get write access to via this API. This state would not be cleared when clearing browser data, however access to this state would be removed. If a user later picks the same files or directories again to give the website access to them, the websites will regain access to whatever state they persisted.
+Websites can also store any state they like in files they get write access to via this API. Since files written to using this API are considered to be data owned by the user, not by the application, this state would not be cleared when clearing browser data. However access to this state would be removed. If a user later picks the same files or directories again to give the website access to them, the websites will regain access to whatever state they persisted.
 
 ### 2.6. What information from the underlying platform, e.g. configuration data, is exposed by this specification to an origin?
 
@@ -32,7 +32,7 @@ Anything that exists on disk in files could be exposed by the user to the web. H
 
 ### 2.7. Does this specification allow an origin access to sensors on a user’s device
 
-No (unless a device exposes such sensors as files or directories).
+No, unless a device exposes such sensors as files or directories. User agents are encouraged to block access to such files or directories (for example `/dev` on linux like systems).
 
 ### 2.8. What data does this specification expose to an origin? Please also document what data is identical to data exposed by other features, in the same or different contexts.
 
@@ -58,7 +58,7 @@ None.
 
 It is expected that user agents do not allow third-party contexts to prompt for any kind of access using this API. I.e. third-party contexts can potentially access files or directories that their origin was already granted access to in a first-party context (by sharing handles via IndexedDB or postMessage), but can't trigger any new file/directory pickers or permission requests.
 
-### 2.14. How does this specification work in the context of a user agent’s Private \ Browsing or "incognito" mode?
+### 2.14. How does this specification work in the context of a user agent’s Private Browsing or "incognito" mode?
 
 The feature will work mostly the same as in regular mode, except no handles or permission grants will be persistent. Web sites can use this API to store data to disk even in private browsing mode, but to later be able to read this data again (either from private browsing or regular mode), the user would have to explicitly re-pick the same file or directory.
 
@@ -71,3 +71,5 @@ Yes.
 No.
 
 ### 2.17. What should this questionnaire have asked?
+
+Perhaps something about how a feature might impact privacy and security in a bigger picture. Particularly this questionnaire focuses on all the ways it might make privacy or security worse. And while that is important, and while adding new capabilities like this looks scary, from a higher level perspective we do believe that this actually makes things better. Adding these capabilities to the web will lead to Web replacements for one-off native apps, resulting in a net benefit for user security & privacy.
