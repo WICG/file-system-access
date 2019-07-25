@@ -1029,7 +1029,7 @@ Possible extra rowspan handling
 		}
 	/* } */
 
-	@supports (display:grid) {
+	@supports (display:grid) and (display:contents) {
 		/* Use #toc over .toc to override non-@supports rules. */
 		#toc {
 			display: grid;
@@ -1213,9 +1213,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 872cce6d3026423d677f3bd5837f1a1a46299a04" name="generator">
+  <meta content="Bikeshed version b9c59eccbcc25454195a0043aa99cbc393f9772d" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="0d2e64157a2bc06caf8856da1479dcac6f3ebdd8" name="document-revision">
+  <meta content="051d26c40e57907644d4326b917ad88368e906ab" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1487,7 +1487,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-06-21">21 June 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-07-25">25 July 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1744,7 +1744,8 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
     <dl>
      <dt data-md><var>file</var> = await <var>fileHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemfilehandle-getfile" id="ref-for-dom-filesystemfilehandle-getfile②">getFile()</a></code>
      <dd data-md>
-      <p>Returns a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/FileAPI/#dfn-file" id="ref-for-dfn-file①">File</a></code> representing the state on disk of the entry represented by <var>handle</var>.</p>
+      <p>Returns a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/FileAPI/#dfn-file" id="ref-for-dfn-file①">File</a></code> representing the state on disk of the entry represented by <var>handle</var>.
+ If the file on disk changes or is removed after this method is called, the returned <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/FileAPI/#dfn-file" id="ref-for-dfn-file②">File</a></code> object will likely be no longer readable.</p>
     </dl>
    </div>
    <div class="algorithm" data-algorithm="getFile()">
@@ -2425,7 +2426,7 @@ appropriate.</p>
    <a href="https://w3c.github.io/FileAPI/#dfn-file">https://w3c.github.io/FileAPI/#dfn-file</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dfn-file">2.3. The FileSystemFileHandle interface</a>
-    <li><a href="#ref-for-dfn-file①">2.3.1. The getFile() method</a>
+    <li><a href="#ref-for-dfn-file①">2.3.1. The getFile() method</a> <a href="#ref-for-dfn-file②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-serializable">
@@ -2641,7 +2642,7 @@ appropriate.</p>
   <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
   <dl>
    <dt id="biblio-entries-api">[ENTRIES-API]
-   <dd><a href="https://wicg.github.io/entries-api/">File and Directory Entries API</a>. Living Standard. URL: <a href="https://wicg.github.io/entries-api/">https://wicg.github.io/entries-api/</a>
+   <dd><a href="https://wicg.github.io/entries-api/">File and Directory Entries API</a>. cg-draft. URL: <a href="https://wicg.github.io/entries-api/">https://wicg.github.io/entries-api/</a>
    <dt id="biblio-file-system-api">[FILE-SYSTEM-API]
    <dd>Eric Uhrhane. <a href="https://www.w3.org/TR/file-system-api/">File API: Directories and System</a>. 24 April 2014. NOTE. URL: <a href="https://www.w3.org/TR/file-system-api/">https://www.w3.org/TR/file-system-api/</a>
   </dl>
@@ -2667,7 +2668,7 @@ appropriate.</p>
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed①①"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->), <a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext①①"><c- g>SecureContext</c-></a>, <a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/structured-data.html#serializable" id="ref-for-serializable①①"><c- g>Serializable</c-></a>]
 <c- b>interface</c-> <a href="#filesystemfilehandle"><code><c- g>FileSystemFileHandle</c-></code></a> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑤①"><c- n>FileSystemHandle</c-></a> {
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-file" id="ref-for-dfn-file②"><c- n>File</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-getfile" id="ref-for-dom-filesystemfilehandle-getfile③"><c- g>getFile</c-></a>();
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-file" id="ref-for-dfn-file③"><c- n>File</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-getfile" id="ref-for-dom-filesystemfilehandle-getfile③"><c- g>getFile</c-></a>();
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemwriter" id="ref-for-filesystemwriter⑤"><c- n>FileSystemWriter</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-createwriter" id="ref-for-dom-filesystemfilehandle-createwriter⑦"><c- g>createWriter</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemcreatewriteroptions" id="ref-for-dictdef-filesystemcreatewriteroptions①"><c- n>FileSystemCreateWriterOptions</c-></a> <a href="#dom-filesystemfilehandle-createwriter-options-options"><code><c- g>options</c-></code></a>);
 };
 
