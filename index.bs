@@ -207,6 +207,8 @@ interface FileSystemFileHandle : FileSystemHandle {
 <div class="note domintro">
   : |file| = await |fileHandle| . {{FileSystemFileHandle/getFile()}}
   :: Returns a {{File}} representing the state on disk of the entry represented by |handle|.
+     If the file on disk changes or is removed after this method is called, the returned
+     {{File}} object will likely be no longer readable.
 </div>
 
 <div algorithm>
