@@ -568,11 +568,14 @@ partial interface Window {
      The |options| argument sets options that influence the behavior of the shown file picker.
 
      |options|.{{ChooseFileSystemEntriesOptions/type}} specifies the type of the entry the website
-     wants the user to pick. When set to {{ChooseFileSystemEntriesType/"openFile"}} (the default),
-     the user can select only existing files. When set to {{ChooseFileSystemEntriesType/"saveFile"}}
-     the dialog will additionally let the user select files that don't yet exist. Finally when set
-     to {{ChooseFileSystemEntriesType/"openDirectory"}}, the dialog will let the user select
-     directories instead of files.
+     wants the user to pick.
+     When set to {{ChooseFileSystemEntriesType/"openFile"}} (the default), the user can select only
+     existing files.
+     When set to {{ChooseFileSystemEntriesType/"saveFile"}} the dialog will additionally let the
+     user select files that don't yet exist, and if the user selects a file that does exist already,
+     its contents will be cleared before the handle is returned to the website.
+     Finally when set to {{ChooseFileSystemEntriesType/"openDirectory"}}, the dialog will let the
+     user select directories instead of files.
 
      If |options|.{{ChooseFileSystemEntriesOptions/multiple}} is false (or absent) the user can
      only select a single file, and the |result| will be a single {{FileSystemHandle}}. If on the
