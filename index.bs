@@ -75,8 +75,8 @@ interface FileSystemHandle {
   readonly attribute boolean isDirectory;
   readonly attribute USVString name;
 
-  Promise<PermissionState> queryPermission(optional FileSystemHandlePermissionDescriptor descriptor);
-  Promise<PermissionState> requestPermission(optional FileSystemHandlePermissionDescriptor descriptor);
+  Promise<PermissionState> queryPermission(optional FileSystemHandlePermissionDescriptor descriptor = {});
+  Promise<PermissionState> requestPermission(optional FileSystemHandlePermissionDescriptor descriptor = {});
 };
 </xmp>
 
@@ -197,7 +197,7 @@ dictionary FileSystemCreateWriterOptions {
 [Exposed=(Window,Worker), SecureContext, Serializable]
 interface FileSystemFileHandle : FileSystemHandle {
   Promise<File> getFile();
-  Promise<FileSystemWriter> createWriter(optional FileSystemCreateWriterOptions options);
+  Promise<FileSystemWriter> createWriter(optional FileSystemCreateWriterOptions options = {});
 };
 </xmp>
 
@@ -273,13 +273,13 @@ dictionary FileSystemRemoveOptions {
 
 [Exposed=(Window,Worker), SecureContext, Serializable]
 interface FileSystemDirectoryHandle : FileSystemHandle {
-  Promise<FileSystemFileHandle> getFile(USVString name, optional FileSystemGetFileOptions options);
-  Promise<FileSystemDirectoryHandle> getDirectory(USVString name, optional FileSystemGetDirectoryOptions options);
+  Promise<FileSystemFileHandle> getFile(USVString name, optional FileSystemGetFileOptions options = {});
+  Promise<FileSystemDirectoryHandle> getDirectory(USVString name, optional FileSystemGetDirectoryOptions options = {});
 
   // This really returns an async iterable, but that is not yet expressable in WebIDL.
   object getEntries();
 
-  Promise<void> removeEntry(USVString name, optional FileSystemRemoveOptions options);
+  Promise<void> removeEntry(USVString name, optional FileSystemRemoveOptions options = {});
 };
 </xmp>
 
@@ -410,7 +410,6 @@ these steps:
 [Exposed=(Window,Worker), SecureContext]
 interface FileSystemWriter {
   Promise<void> write(unsigned long long position, (BufferSource or Blob or USVString) data);
-  WritableStream asWritableStream();
   Promise<void> truncate(unsigned long long size);
   Promise<void> close();
 };
@@ -502,7 +501,7 @@ dictionary ChooseFileSystemEntriesOptions {
 [SecureContext]
 partial interface Window {
     Promise<(FileSystemHandle or sequence<FileSystemHandle>)>
-        chooseFileSystemEntries(optional ChooseFileSystemEntriesOptions options);
+        chooseFileSystemEntries(optional ChooseFileSystemEntriesOptions options = {});
 };
 </xmp>
 
