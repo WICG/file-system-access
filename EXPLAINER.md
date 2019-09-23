@@ -211,7 +211,7 @@ if (!dir_ref) {
     return;
 }
 // Read directory contents.
-for await (const entry of dir_ref.entries()) {
+for await (const entry of dir_ref.getEntries()) {
     // entry is a FileSystemFileHandle or a FileSystemDirectoryHandle.
 }
 
@@ -274,7 +274,7 @@ similar. Could still include some kind of permission prompt if needed.
 
 ```javascript
 const font_dir = await FileSystemDirectoryHandle.getSystemDirectory({type: 'fonts'});
-for await (const entry of font_dir.entries()) {
+for await (const entry of font_dir.getEntries()) {
     // Use font entry.
 };
 ```
