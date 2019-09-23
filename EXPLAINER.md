@@ -211,7 +211,7 @@ if (!dir_ref) {
     return;
 }
 // Read directory contents.
-for await (const entry of dir_ref.entries()) {
+for await (const entry of dir_ref.getEntries()) {
     // entry is a FileSystemFileHandle or a FileSystemDirectoryHandle.
 }
 
