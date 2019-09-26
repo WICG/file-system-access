@@ -554,6 +554,43 @@ these steps:
 
 </div>
 
+### Security Considerations: Restricted Folders
+
+*This section is non-normative.*
+
+This API could be used by websites to access more files than the users intended. As a mitigation,
+an implementor can choose to diminish the potential damage caused by this API by blocking access
+to certain paths.
+
+These paths will vary depending on the target platform. For instance, here are some possible paths
+to be excluded, per platform:
+
+#### Common Directories to all Platforms
+* Home Root Directory
+* Desktop Root Directory
+* Document Root Directory
+* Downloads Root Directory
+* Browser's Directory Tree
+* Browser's profile Directory Tree
+* "HOME_DIR/.ssh" Directory Tree
+* "HOME_DIR/.gnupg" Directory Tree
+
+#### Windows
+* "C:\Program Files" variant Directory Trees
+* "C:\Windows" Directory Tree
+* All AppData Directory Trees
+
+#### Linux
+* /dev/*
+* /sys/*
+* /proc/*
+* /.config/*
+* /.dbus/*
+
+#### Mac OS X
+* App Data Directory Tree
+* $HOME/Library/*
+
 # Accessing special filesystems # {#special-filesystems}
 
 ## The {{FileSystemDirectoryHandle/getSystemDirectory()}} method ## {#api-getsystemdirectory}
