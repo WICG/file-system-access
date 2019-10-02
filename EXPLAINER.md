@@ -16,6 +16,37 @@ what we're providing is several bits:
    certain well known directories. Mimicking things such as chrome's
    [`chrome.fileSystem.chooseEntry`](https://developer.chrome.com/apps/fileSystem#method-chooseEntry) API.
 
+## Use-Cases
+
+In native applications, there are common file access patterns that we aim to address with this API.
+
+### Single-file Editor
+1. Open a file from the user's file system
+1. Edit the file and save the changes back to the file system
+1. Open another file in the same manner described above
+1. Auto-save any changes to the files in the browsing session
+1. The files can be opened in any native or web applications concurrently
+1. Changes to the files on disk, made in any native or other web application, are accessible
+1. Access the files with the same access in future browsing sessions
+
+### Multi-file Editor
+1. Open a directory that contains many files and sub-directories, represented hierarchically
+1. Find and edit multiple files and save the changes back to the file system
+1. Auto-save any further changes to the files in the browsing session
+1. The files can be opened in any native or web applications concurrently
+1. Changes to the files on disk, made in any native or other web applications, are accessible
+1. Access the files with the same access in future browsing sessions
+1. New files in the directory tree, that were not present at the time the root directory was
+   opened, created in any native or other web application, are accessible
+
+### File Libraries
+1. Open one or more directories that contain many files and sub-directories
+1. Changes to the files on disk, made in any native or other web applications, are accessible
+1. Access the files with the same access in future browsing sessions
+1. New files in the directory tree, that were not present at the time the root directory was
+   opened, created in any native or other web application, are accessible
+1. When the user chooses to do some work, access one or more of those files
+
 ## Goals
 
 The main overarching goal here is to increase interoperability of web applications
@@ -26,10 +57,9 @@ Traditionally the file system is how different apps collaborate and share data o
 desktop platforms, but also on mobile there is generally at least some sort of
 concept of a file system, although it is less prevalent there.
 
-Some example use cases we would like to address:
+Some example applications of the API we would like to address:
 
-* A simple "single file" editor. Open a file, edit it, save the changes back to
-  the same file or other files. Also possible integration with a "file-type
+* A simple "single file" editor. Also possible integration with a "file-type
   handler" kind of API. Things like (rich) text editors, photo editors, etc.
 
 * Multi-File editors. Things like IDEs, CAD style applications, the kind of apps
@@ -181,7 +211,7 @@ if (!dir_ref) {
     return;
 }
 // Read directory contents.
-for await (const entry of dir_ref.entries()) {
+for await (const entry of dir_ref.getEntries()) {
     // entry is a FileSystemFileHandle or a FileSystemDirectoryHandle.
 }
 
@@ -192,8 +222,12 @@ const file_ref = await dir_ref.getFile('foo.js');
 // Get a subdirectory.
 const subdir = await dir_ref.getDirectory('bla', {createIfNotExists: true});
 
-// And you can possibly do stuff like move and/or copy files around.
-await file_ref.copyTo(dir_ref, 'new_name', {overwrite: true});
+// No special API to create copies, but still possible to do so by using
+// available read and write APIs.
+const new_file = await dir_ref.getFile('new_name', {create: true});
+const new_file_writer = await new_file.createWriter();
+await new_file_writer.truncate(0);
+await new_file_writer.write(0, await file_ref.getFile());
 ```
 
 You can also check if two references reference the same file or directory (or at
@@ -240,7 +274,7 @@ similar. Could still include some kind of permission prompt if needed.
 
 ```javascript
 const font_dir = await FileSystemDirectoryHandle.getSystemDirectory({type: 'fonts'});
-for await (const entry of font_dir.entries()) {
+for await (const entry of font_dir.getEntries()) {
     // Use font entry.
 };
 ```
