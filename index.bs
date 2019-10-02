@@ -510,6 +510,12 @@ partial interface Window {
   :: Shows a file picker dialog to the user and returns handles for the selected files or
      directories.
 
+     The file picker dialog MUST NOT be preset and prepopulated with files or directories from other APIs,
+     specifically, but not limited to, files and directories previously selected at HTML
+     [`<input type="file">`](https://html.spec.whatwg.org/multipage/input.html#file-upload-state-(type=file)),
+     <b>unless explicitly specified by this API and set by the user</b>, in order to prevent data leaks 
+     between APIs accessing the users' local filesystem.
+
      The |options| argument sets options that influence the behavior of the shown file picker.
 
      |options|.{{ChooseFileSystemEntriesOptions/type}} specifies the type of the entry the website
