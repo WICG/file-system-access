@@ -1213,9 +1213,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version e86d5b1b47a216fa66165c234892adc259212183" name="generator">
+  <meta content="Bikeshed version f5a6d58a6b9207b620f985d7239601eb3a483162" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="e40b07fbbe3f78526ba6bf80ccdfc5eef21d1e5d" name="document-revision">
+  <meta content="c176b4f4351de98a9ee971b5730062617f5e3d90" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1487,7 +1487,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-09-30">30 September 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-01">1 November 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1844,7 +1844,7 @@ tree.</p>
     </dl>
    </div>
    <div class="algorithm" data-algorithm="getFile(name, options)">
-     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export id="dom-filesystemdirectoryhandle-getfile"><code>getFile(<var>name</var>, <var>options</var>)</code></dfn> method, when invoked,
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export data-lt="getFile(name, options)|getFile(name)" id="dom-filesystemdirectoryhandle-getfile"><code>getFile(<var>name</var>, <var>options</var>)</code></dfn> method, when invoked,
 must run these steps: 
     <ol>
      <li data-md>
@@ -1871,7 +1871,7 @@ must run these steps:
     </dl>
    </div>
    <div class="algorithm" data-algorithm="getDirectory(name, options)">
-     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export id="dom-filesystemdirectoryhandle-getdirectory"><code>getDirectory(<var>name</var>, <var>options</var>)</code></dfn> method, when
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export data-lt="getDirectory(name, options)|getDirectory(name)" id="dom-filesystemdirectoryhandle-getdirectory"><code>getDirectory(<var>name</var>, <var>options</var>)</code></dfn> method, when
 invoked, must run these steps: 
     <ol>
      <li data-md>
@@ -1913,7 +1913,7 @@ these steps:
     </dl>
    </div>
    <div class="algorithm" data-algorithm="removeEntry(name, options)">
-     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export id="dom-filesystemdirectoryhandle-removeentry"><code>removeEntry(<var>name</var>, <var>options</var>)</code></dfn> method, when invoked, must run
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export data-lt="removeEntry(name, options)|removeEntry(name)" id="dom-filesystemdirectoryhandle-removeentry"><code>removeEntry(<var>name</var>, <var>options</var>)</code></dfn> method, when invoked, must run
 these steps: 
     <ol>
      <li data-md>
@@ -1989,7 +1989,7 @@ steps:
    </div>
    <h2 class="heading settled" data-level="3" id="native-filesystem"><span class="secno">3. </span><span class="content">Accessing native filesystem</span><a class="self-link" href="#native-filesystem"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="api-choosefilesystementries"><span class="secno">3.1. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries①">chooseFileSystemEntries()</a></code> method</span><a class="self-link" href="#api-choosefilesystementries"></a></h3>
-<pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-choosefilesystementriestype"><code><c- g>ChooseFileSystemEntriesType</c-></code></dfn> { <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-openfile"><code><c- s>"openFile"</c-></code></dfn>, <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-savefile"><code><c- s>"saveFile"</c-></code></dfn>, <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-opendirectory"><code><c- s>"openDirectory"</c-></code></dfn> };
+<pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-choosefilesystementriestype"><code><c- g>ChooseFileSystemEntriesType</c-></code></dfn> { <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-open-file"><code><c- s>"open-file"</c-></code></dfn>, <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-save-file"><code><c- s>"save-file"</c-></code></dfn>, <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-open-directory"><code><c- s>"open-directory"</c-></code></dfn> };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-choosefilesystementriesoptionsaccepts"><code><c- g>ChooseFileSystemEntriesOptionsAccepts</c-></code></dfn> {
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑤"><c- b>USVString</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="USVString " id="dom-choosefilesystementriesoptionsaccepts-description"><code><c- g>description</c-></code></dfn>;
@@ -1998,7 +1998,7 @@ steps:
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-choosefilesystementriesoptions"><code><c- g>ChooseFileSystemEntriesOptions</c-></code></dfn> {
-    <a class="n" data-link-type="idl-name" href="#enumdef-choosefilesystementriestype" id="ref-for-enumdef-choosefilesystementriestype"><c- n>ChooseFileSystemEntriesType</c-></a> <dfn class="dfn-paneled idl-code" data-default="&quot;openFile&quot;" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="ChooseFileSystemEntriesType " id="dom-choosefilesystementriesoptions-type"><code><c- g>type</c-></code></dfn> = "openFile";
+    <a class="n" data-link-type="idl-name" href="#enumdef-choosefilesystementriestype" id="ref-for-enumdef-choosefilesystementriestype"><c- n>ChooseFileSystemEntriesType</c-></a> <dfn class="dfn-paneled idl-code" data-default="&quot;open-file&quot;" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="ChooseFileSystemEntriesType " id="dom-choosefilesystementriesoptions-type"><code><c- g>type</c-></code></dfn> = "open-file";
     <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑦"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-choosefilesystementriesoptions-multiple"><code><c- g>multiple</c-></code></dfn> = <c- b>false</c->;
     <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptionsaccepts" id="ref-for-dictdef-choosefilesystementriesoptionsaccepts"><c- n>ChooseFileSystemEntriesOptionsAccepts</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="sequence<ChooseFileSystemEntriesOptionsAccepts> " id="dom-choosefilesystementriesoptions-accepts"><code><c- g>accepts</c-></code></dfn>;
     <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑧"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-choosefilesystementriesoptions-excludeacceptalloption"><code><c- g>excludeAcceptAllOption</c-></code></dfn> = <c- b>false</c->;
@@ -2019,12 +2019,12 @@ steps:
       <p>The <var>options</var> argument sets options that influence the behavior of the shown file picker.</p>
       <p><var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-type" id="ref-for-dom-choosefilesystementriesoptions-type">type</a></code> specifies the type of the entry the website
  wants the user to pick.
- When set to <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-openfile" id="ref-for-dom-choosefilesystementriestype-openfile">"openFile"</a></code> (the default), the user can select only
+ When set to <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-open-file" id="ref-for-dom-choosefilesystementriestype-open-file">"open-file"</a></code> (the default), the user can select only
  existing files.
- When set to <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-savefile" id="ref-for-dom-choosefilesystementriestype-savefile">"saveFile"</a></code> the dialog will additionally let the
+ When set to <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-save-file" id="ref-for-dom-choosefilesystementriestype-save-file">"save-file"</a></code> the dialog will additionally let the
  user select files that don’t yet exist, and if the user selects a file that does exist already,
  its contents will be cleared before the handle is returned to the website.
- Finally when set to <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-opendirectory" id="ref-for-dom-choosefilesystementriestype-opendirectory">"openDirectory"</a></code>, the dialog will let the
+ Finally when set to <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-open-directory" id="ref-for-dom-choosefilesystementriestype-open-directory">"open-directory"</a></code>, the dialog will let the
  user select directories instead of files.</p>
       <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-multiple" id="ref-for-dom-choosefilesystementriesoptions-multiple">multiple</a></code> is false (or absent) the user can
  only select a single file, and the <var>result</var> will be a single <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle①①">FileSystemHandle</a></code>. If on the
@@ -2328,9 +2328,11 @@ appropriate.</p>
    <li><a href="#dictdef-filesystemhandlepermissiondescriptor">FileSystemHandlePermissionDescriptor</a><span>, in §2.2</span>
    <li><a href="#dictdef-filesystemremoveoptions">FileSystemRemoveOptions</a><span>, in §2.4</span>
    <li><a href="#filesystemwriter">FileSystemWriter</a><span>, in §2.5</span>
+   <li><a href="#dom-filesystemdirectoryhandle-getdirectory">getDirectory(name)</a><span>, in §2.4.2</span>
    <li><a href="#dom-filesystemdirectoryhandle-getdirectory">getDirectory(name, options)</a><span>, in §2.4.2</span>
    <li><a href="#dom-filesystemdirectoryhandle-getentries">getEntries()</a><span>, in §2.4.3</span>
    <li><a href="#dom-filesystemfilehandle-getfile">getFile()</a><span>, in §2.3.1</span>
+   <li><a href="#dom-filesystemdirectoryhandle-getfile">getFile(name)</a><span>, in §2.4.1</span>
    <li><a href="#dom-filesystemdirectoryhandle-getfile">getFile(name, options)</a><span>, in §2.4.1</span>
    <li><a href="#dom-filesystemdirectoryhandle-getsystemdirectory">getSystemDirectory(options)</a><span>, in §4.1</span>
    <li><a href="#dictdef-getsystemdirectoryoptions">GetSystemDirectoryOptions</a><span>, in §4.1</span>
@@ -2346,16 +2348,17 @@ appropriate.</p>
      <li><a href="#dom-filesystemhandle-name">attribute for FileSystemHandle</a><span>, in §2.2</span>
      <li><a href="#entry-name">dfn for entry</a><span>, in §2.1</span>
     </ul>
-   <li><a href="#dom-choosefilesystementriestype-opendirectory">"openDirectory"</a><span>, in §3.1</span>
-   <li><a href="#dom-choosefilesystementriestype-openfile">"openFile"</a><span>, in §3.1</span>
+   <li><a href="#dom-choosefilesystementriestype-open-directory">"open-directory"</a><span>, in §3.1</span>
+   <li><a href="#dom-choosefilesystementriestype-open-file">"open-file"</a><span>, in §3.1</span>
    <li><a href="#dom-filesystemhandle-querypermission">queryPermission()</a><span>, in §2.2.1</span>
    <li><a href="#dom-filesystemhandle-querypermission">queryPermission(descriptor)</a><span>, in §2.2.1</span>
    <li><a href="#dom-filesystemremoveoptions-recursive">recursive</a><span>, in §2.4</span>
+   <li><a href="#dom-filesystemdirectoryhandle-removeentry">removeEntry(name)</a><span>, in §2.4.4</span>
    <li><a href="#dom-filesystemdirectoryhandle-removeentry">removeEntry(name, options)</a><span>, in §2.4.4</span>
    <li><a href="#dom-filesystemhandle-requestpermission">requestPermission()</a><span>, in §2.2.2</span>
    <li><a href="#dom-filesystemhandle-requestpermission">requestPermission(descriptor)</a><span>, in §2.2.2</span>
    <li><a href="#dom-systemdirectorytype-sandbox">"sandbox"</a><span>, in §4.1</span>
-   <li><a href="#dom-choosefilesystementriestype-savefile">"saveFile"</a><span>, in §3.1</span>
+   <li><a href="#dom-choosefilesystementriestype-save-file">"save-file"</a><span>, in §3.1</span>
    <li><a href="#enumdef-systemdirectorytype">SystemDirectoryType</a><span>, in §4.1</span>
    <li><a href="#dom-filesystemwriter-truncate">truncate(size)</a><span>, in §2.5.2</span>
    <li>
@@ -2638,7 +2641,7 @@ appropriate.</p>
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwriter-close" id="ref-for-dom-filesystemwriter-close②①"><c- g>close</c-></a>();
 };
 
-<c- b>enum</c-> <a href="#enumdef-choosefilesystementriestype"><code><c- g>ChooseFileSystemEntriesType</c-></code></a> { <a href="#dom-choosefilesystementriestype-openfile"><code><c- s>"openFile"</c-></code></a>, <a href="#dom-choosefilesystementriestype-savefile"><code><c- s>"saveFile"</c-></code></a>, <a href="#dom-choosefilesystementriestype-opendirectory"><code><c- s>"openDirectory"</c-></code></a> };
+<c- b>enum</c-> <a href="#enumdef-choosefilesystementriestype"><code><c- g>ChooseFileSystemEntriesType</c-></code></a> { <a href="#dom-choosefilesystementriestype-open-file"><code><c- s>"open-file"</c-></code></a>, <a href="#dom-choosefilesystementriestype-save-file"><code><c- s>"save-file"</c-></code></a>, <a href="#dom-choosefilesystementriestype-open-directory"><code><c- s>"open-directory"</c-></code></a> };
 
 <c- b>dictionary</c-> <a href="#dictdef-choosefilesystementriesoptionsaccepts"><code><c- g>ChooseFileSystemEntriesOptionsAccepts</c-></code></a> {
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑤①"><c- b>USVString</c-></a> <a data-type="USVString " href="#dom-choosefilesystementriesoptionsaccepts-description"><code><c- g>description</c-></code></a>;
@@ -2647,7 +2650,7 @@ appropriate.</p>
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-choosefilesystementriesoptions"><code><c- g>ChooseFileSystemEntriesOptions</c-></code></a> {
-    <a class="n" data-link-type="idl-name" href="#enumdef-choosefilesystementriestype" id="ref-for-enumdef-choosefilesystementriestype①"><c- n>ChooseFileSystemEntriesType</c-></a> <a data-default="&quot;openFile&quot;" data-type="ChooseFileSystemEntriesType " href="#dom-choosefilesystementriesoptions-type"><code><c- g>type</c-></code></a> = "openFile";
+    <a class="n" data-link-type="idl-name" href="#enumdef-choosefilesystementriestype" id="ref-for-enumdef-choosefilesystementriestype①"><c- n>ChooseFileSystemEntriesType</c-></a> <a data-default="&quot;open-file&quot;" data-type="ChooseFileSystemEntriesType " href="#dom-choosefilesystementriesoptions-type"><code><c- g>type</c-></code></a> = "open-file";
     <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑦①"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-choosefilesystementriesoptions-multiple"><code><c- g>multiple</c-></code></a> = <c- b>false</c->;
     <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptionsaccepts" id="ref-for-dictdef-choosefilesystementriesoptionsaccepts①"><c- n>ChooseFileSystemEntriesOptionsAccepts</c-></a>> <a data-type="sequence<ChooseFileSystemEntriesOptionsAccepts> " href="#dom-choosefilesystementriesoptions-accepts"><code><c- g>accepts</c-></code></a>;
     <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑧①"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-choosefilesystementriesoptions-excludeacceptalloption"><code><c- g>excludeAcceptAllOption</c-></code></a> = <c- b>false</c->;
@@ -2939,22 +2942,22 @@ performance can be effected by safe browsing checks. <a href="https://github.com
     <li><a href="#ref-for-enumdef-choosefilesystementriestype">3.1. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-choosefilesystementriestype-openfile">
-   <b><a href="#dom-choosefilesystementriestype-openfile">#dom-choosefilesystementriestype-openfile</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-choosefilesystementriestype-open-file">
+   <b><a href="#dom-choosefilesystementriestype-open-file">#dom-choosefilesystementriestype-open-file</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-choosefilesystementriestype-openfile">3.1. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-dom-choosefilesystementriestype-open-file">3.1. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-choosefilesystementriestype-savefile">
-   <b><a href="#dom-choosefilesystementriestype-savefile">#dom-choosefilesystementriestype-savefile</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-choosefilesystementriestype-save-file">
+   <b><a href="#dom-choosefilesystementriestype-save-file">#dom-choosefilesystementriestype-save-file</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-choosefilesystementriestype-savefile">3.1. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-dom-choosefilesystementriestype-save-file">3.1. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-choosefilesystementriestype-opendirectory">
-   <b><a href="#dom-choosefilesystementriestype-opendirectory">#dom-choosefilesystementriestype-opendirectory</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-choosefilesystementriestype-open-directory">
+   <b><a href="#dom-choosefilesystementriestype-open-directory">#dom-choosefilesystementriestype-open-directory</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-choosefilesystementriestype-opendirectory">3.1. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-dom-choosefilesystementriestype-open-directory">3.1. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-choosefilesystementriesoptionsaccepts">
