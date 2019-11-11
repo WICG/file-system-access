@@ -550,6 +550,20 @@ partial interface Window {
 The <dfn method for=Window>chooseFileSystemEntries(|options|)</dfn> method, when invoked, must run
 these steps:
 
+1. Let |environment| be the [=current settings object=].
+
+1. If |environment|'s [=environment settings object/origin=] is an [=opaque origin=],
+   return [=a promise rejected with=] a {{SecurityError}}.
+
+1. Let |browsing context| be |environment|'s [=responsible browsing context=].
+
+1. Let |top-level context| be |browsing context|'s [=top-level browsing context=].
+
+1. If |environment|'s [=environment settings object/origin=] is not [=same origin=] with |browsing context|'s [=top-level browsing context=]'s [=active document=]'s [=relevant settings object=]'s [=environment settings object/origin=],
+   return [=a promise rejected with=] a {{SecurityError}}.
+
+   Issue: There must be a better way to express this "no third-party iframes" constraint.
+
 1. TODO
 
 </div>
@@ -586,6 +600,11 @@ than on FileSystemDirectoryHandle.
 <div algorithm>
 The <dfn method for=FileSystemDirectoryHandle>getSystemDirectory(|options|)</dfn> method, when
 invoked, must run these steps:
+
+1. Let |environment| be the [=current settings object=].
+
+1. If |environment|'s [=environment settings object/origin=] is an [=opaque origin=],
+   return [=a promise rejected with=] a {{SecurityError}}.
 
 1. TODO
 
