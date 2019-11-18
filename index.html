@@ -1213,9 +1213,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version f5a6d58a6b9207b620f985d7239601eb3a483162" name="generator">
+  <meta content="Bikeshed version 0dd2bba6dfda6c3168490a3a3044dd1d0b1ef8e0" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="c176b4f4351de98a9ee971b5730062617f5e3d90" name="document-revision">
+  <meta content="533b736076cf158bbfc5db215ce5454f3730267a" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1487,7 +1487,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-01">1 November 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-18">18 November 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2044,6 +2044,19 @@ steps:
 these steps: 
     <ol>
      <li data-md>
+      <p>Let <var>environment</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object" id="ref-for-current-settings-object">current settings object</a>.</p>
+     <li data-md>
+      <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin②">origin</a> is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque" id="ref-for-concept-origin-opaque">opaque origin</a>,
+ return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror">SecurityError</a></code>.</p>
+     <li data-md>
+      <p>Let <var>browsing context</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#responsible-browsing-context" id="ref-for-responsible-browsing-context">responsible browsing context</a>.</p>
+     <li data-md>
+      <p>Let <var>top-level context</var> be <var>browsing context</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#top-level-browsing-context" id="ref-for-top-level-browsing-context">top-level browsing context</a>.</p>
+     <li data-md>
+      <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin③">origin</a> is not <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#same-origin" id="ref-for-same-origin①">same origin</a> with <var>browsing context</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#top-level-browsing-context" id="ref-for-top-level-browsing-context①">top-level browsing context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#active-document" id="ref-for-active-document">active document</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin" id="ref-for-concept-origin">origin</a>,
+ return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with①">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror①">SecurityError</a></code>.</p>
+      <p class="issue" id="issue-0fb1070c"><a class="self-link" href="#issue-0fb1070c"></a> There must be a better way to express this "no third-party iframes" constraint.</p>
+     <li data-md>
       <p>TODO</p>
     </ol>
    </div>
@@ -2075,6 +2088,11 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
      The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export id="dom-filesystemdirectoryhandle-getsystemdirectory"><code>getSystemDirectory(<var>options</var>)</code></dfn> method, when
 invoked, must run these steps: 
     <ol>
+     <li data-md>
+      <p>Let <var>environment</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object" id="ref-for-current-settings-object①">current settings object</a>.</p>
+     <li data-md>
+      <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin④">origin</a> is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque" id="ref-for-concept-origin-opaque①">opaque origin</a>,
+ return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with②">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror②">SecurityError</a></code>.</p>
      <li data-md>
       <p>TODO</p>
     </ol>
@@ -2397,6 +2415,19 @@ appropriate.</p>
     <li><a href="#ref-for-window">3.1. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-active-document">
+   <a href="https://html.spec.whatwg.org/multipage/browsers.html#active-document">https://html.spec.whatwg.org/multipage/browsers.html#active-document</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-active-document">3.1. The chooseFileSystemEntries() method</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-current-settings-object">
+   <a href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object">https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-current-settings-object">3.1. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-current-settings-object①">4.1. The getSystemDirectory() method</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-deserialization-steps">
    <a href="https://html.spec.whatwg.org/multipage/structured-data.html#deserialization-steps">https://html.spec.whatwg.org/multipage/structured-data.html#deserialization-steps</a><b>Referenced in:</b>
    <ul>
@@ -2411,10 +2442,19 @@ appropriate.</p>
     <li><a href="#ref-for-event-messageerror">5.3. First-party vs third-party contexts.</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-concept-origin-opaque">
+   <a href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque">https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-concept-origin-opaque">3.1. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-concept-origin-opaque①">4.1. The getSystemDirectory() method</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-concept-settings-object-origin">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin">https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-settings-object-origin">2.2. The FileSystemHandle interface</a> <a href="#ref-for-concept-settings-object-origin①">(2)</a>
+    <li><a href="#ref-for-concept-settings-object-origin②">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-concept-settings-object-origin③">(2)</a>
+    <li><a href="#ref-for-concept-settings-object-origin④">4.1. The getSystemDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-relevant-settings-object">
@@ -2423,10 +2463,17 @@ appropriate.</p>
     <li><a href="#ref-for-relevant-settings-object">2.2. The FileSystemHandle interface</a> <a href="#ref-for-relevant-settings-object①">(2)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-responsible-browsing-context">
+   <a href="https://html.spec.whatwg.org/multipage/webappapis.html#responsible-browsing-context">https://html.spec.whatwg.org/multipage/webappapis.html#responsible-browsing-context</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-responsible-browsing-context">3.1. The chooseFileSystemEntries() method</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-same-origin">
    <a href="https://html.spec.whatwg.org/multipage/origin.html#same-origin">https://html.spec.whatwg.org/multipage/origin.html#same-origin</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-same-origin">2.2. The FileSystemHandle interface</a>
+    <li><a href="#ref-for-same-origin①">3.1. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-serializable-objects">
@@ -2443,6 +2490,12 @@ appropriate.</p>
     <li><a href="#ref-for-serialization-steps">2.2. The FileSystemHandle interface</a>
     <li><a href="#ref-for-serialization-steps①">2.3. The FileSystemFileHandle interface</a>
     <li><a href="#ref-for-serialization-steps②">2.4. The FileSystemDirectoryHandle interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-top-level-browsing-context">
+   <a href="https://html.spec.whatwg.org/multipage/browsers.html#top-level-browsing-context">https://html.spec.whatwg.org/multipage/browsers.html#top-level-browsing-context</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-top-level-browsing-context">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-top-level-browsing-context①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-ordered-set">
@@ -2489,6 +2542,13 @@ appropriate.</p>
     <li><a href="#ref-for-SecureContext⑤">4.1. The getSystemDirectory() method</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-securityerror">
+   <a href="https://heycam.github.io/webidl/#securityerror">https://heycam.github.io/webidl/#securityerror</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-securityerror">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-securityerror①">(2)</a>
+    <li><a href="#ref-for-securityerror②">4.1. The getSystemDirectory() method</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-idl-USVString">
    <a href="https://heycam.github.io/webidl/#idl-USVString">https://heycam.github.io/webidl/#idl-USVString</a><b>Referenced in:</b>
    <ul>
@@ -2496,6 +2556,13 @@ appropriate.</p>
     <li><a href="#ref-for-idl-USVString①">2.4. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-idl-USVString②">(2)</a> <a href="#ref-for-idl-USVString③">(3)</a>
     <li><a href="#ref-for-idl-USVString④">2.5. The FileSystemWriter interface</a>
     <li><a href="#ref-for-idl-USVString⑤">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-idl-USVString⑥">(2)</a> <a href="#ref-for-idl-USVString⑦">(3)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-a-promise-rejected-with">
+   <a href="https://heycam.github.io/webidl/#a-promise-rejected-with">https://heycam.github.io/webidl/#a-promise-rejected-with</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-a-promise-rejected-with">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-a-promise-rejected-with①">(2)</a>
+    <li><a href="#ref-for-a-promise-rejected-with②">4.1. The getSystemDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-boolean">
@@ -2532,13 +2599,18 @@ appropriate.</p>
     <ul>
      <li><span class="dfn-paneled" id="term-for-serializable" style="color:initial">Serializable</span>
      <li><span class="dfn-paneled" id="term-for-window" style="color:initial">Window</span>
+     <li><span class="dfn-paneled" id="term-for-active-document" style="color:initial">active document</span>
+     <li><span class="dfn-paneled" id="term-for-current-settings-object" style="color:initial">current settings object</span>
      <li><span class="dfn-paneled" id="term-for-deserialization-steps" style="color:initial">deserialization steps</span>
      <li><span class="dfn-paneled" id="term-for-event-messageerror" style="color:initial">messageerror</span>
-     <li><span class="dfn-paneled" id="term-for-concept-settings-object-origin" style="color:initial">origin</span>
+     <li><span class="dfn-paneled" id="term-for-concept-origin-opaque" style="color:initial">opaque origin</span>
+     <li><span class="dfn-paneled" id="term-for-concept-settings-object-origin" style="color:initial">origin <small>(for environment settings object)</small></span>
      <li><span class="dfn-paneled" id="term-for-relevant-settings-object" style="color:initial">relevant settings object</span>
+     <li><span class="dfn-paneled" id="term-for-responsible-browsing-context" style="color:initial">responsible browsing context</span>
      <li><span class="dfn-paneled" id="term-for-same-origin" style="color:initial">same origin</span>
      <li><span class="dfn-paneled" id="term-for-serializable-objects" style="color:initial">serializable objects</span>
      <li><span class="dfn-paneled" id="term-for-serialization-steps" style="color:initial">serialization steps</span>
+     <li><span class="dfn-paneled" id="term-for-top-level-browsing-context" style="color:initial">top-level browsing context</span>
     </ul>
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
@@ -2557,7 +2629,9 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-datacloneerror" style="color:initial">DataCloneError</span>
      <li><span class="dfn-paneled" id="term-for-Exposed" style="color:initial">Exposed</span>
      <li><span class="dfn-paneled" id="term-for-SecureContext" style="color:initial">SecureContext</span>
+     <li><span class="dfn-paneled" id="term-for-securityerror" style="color:initial">SecurityError</span>
      <li><span class="dfn-paneled" id="term-for-idl-USVString" style="color:initial">USVString</span>
+     <li><span class="dfn-paneled" id="term-for-a-promise-rejected-with" style="color:initial">a promise rejected with</span>
      <li><span class="dfn-paneled" id="term-for-idl-boolean" style="color:initial">boolean</span>
      <li><span class="dfn-paneled" id="term-for-idl-object" style="color:initial">object</span>
      <li><span class="dfn-paneled" id="term-for-idl-unsigned-long-long" style="color:initial">unsigned long long</span>
@@ -2704,6 +2778,7 @@ part of the "project" the IDE has open, allowing the IDE to highlight the select
 tree.<a href="#issue-1da05031"> ↵ </a></div>
    <div class="issue"> We want some kind of integration with writable streams. One possible option is to make
 FileStreamWriter inherit from WritableStream, but other options should be considered as well. <a href="https://github.com/wicg/native-file-system/issues/19">&lt;https://github.com/wicg/native-file-system/issues/19></a><a href="#issue-b9e65915"> ↵ </a></div>
+   <div class="issue"> There must be a better way to express this "no third-party iframes" constraint.<a href="#issue-0fb1070c"> ↵ </a></div>
    <div class="issue"> getSystemDirectory might not be the best name. Also perhaps should be on Window rather
 than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-system/issues/27">&lt;https://github.com/wicg/native-file-system/issues/27></a><a href="#issue-2a3d989a"> ↵ </a></div>
    <div class="issue"> "Atomic writes" attempts to make it explicit what this API can and can’t do, and how
