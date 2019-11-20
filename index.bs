@@ -242,13 +242,6 @@ The <dfn method for=FileSystemFileHandle>getFile()</dfn> method, when invoked, m
      otherwise the existing file is first copied to this temporary file.
 </div>
 
-Issue: There has been some discussion around and desire for a "inPlace" mode for createWriter (where
-changes will be written to the actual underlying file as they are written to the writer, for example
-to support in-place modification of large files or things like databases). This is not currently
-implemented in Chrome. Implementing this is currently blocked on figuring out how to combine the
-desire to run malware checks with the desire to let websites make fast in-place modifications to
-existing large files.
-
 <div algorithm>
 The <dfn method for=FileSystemFileHandle>createWriter(|options|)</dfn> method, when invoked, must run these steps:
 
