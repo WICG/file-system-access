@@ -81,7 +81,7 @@ interface FileSystemHandle {
 </xmp>
 
 A {{FileSystemHandle}} object represents a [=/entry=]. Each {{FileSystemHandle}} object is assocaited
-with a <dfn for=FileSystemHandle>entry</dfn> (a [=/entry=]). Multiple separate objects implementing
+with a <dfn for=FileSystemHandle>entry</dfn> (an [=/entry=]). Multiple separate objects implementing
 the {{FileSystemHandle}} interface can all be associated with the same [=/entry=] simultaneously.
 
 <div algorithm="serialization steps">
@@ -542,7 +542,7 @@ partial interface Window {
      {{ChooseFileSystemEntriesOptionsAccepts/description}} is provided one will be generated.
 
      If |options|.{{ChooseFileSystemEntriesOptions/excludeAcceptAllOption}} is true, or if no valid
-     entries exist in |options|.{{ChooseFileSystemEntriesOptions/accepts}}, a option matching all
+     entries exist in |options|.{{ChooseFileSystemEntriesOptions/accepts}}, an option matching all
      files will be included in the file types the dialog lets the user select.
 </div>
 
