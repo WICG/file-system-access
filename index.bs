@@ -128,7 +128,7 @@ associated [=FileSystemHandle/entry=].
 
 ### The {{FileSystemHandle/queryPermission()}} method ### {#api-filesystemhandle-querypermission}
 
-Issue: the currently described API here assumes a model where it is not possible to have a
+Issue(119): the currently described API here assumes a model where it is not possible to have a
     write-only handle. I.e. it is not possible to have or request write access without also having
     read access. There definitely are use cases for write-only handles (i.e. directory downloads),
     so we might have to reconsider this.
@@ -242,12 +242,12 @@ The <dfn method for=FileSystemFileHandle>getFile()</dfn> method, when invoked, m
      otherwise the existing file is first copied to this temporary file.
 </div>
 
-Issue: There has been some discussion around and desire for a "inPlace" mode for createWriter (where
-changes will be written to the actual underlying file as they are written to the writer, for example
-to support in-place modification of large files or things like databases). This is not currently
-implemented in Chrome. Implementing this is currently blocked on figuring out how to combine the
-desire to run malware checks with the desire to let websites make fast in-place modifications to
-existing large files.
+Issue(67): There has been some discussion around and desire for a "inPlace" mode for createWriter
+(where changes will be written to the actual underlying file as they are written to the writer, for
+example to support in-place modification of large files or things like databases). This is not
+currently implemented in Chrome. Implementing this is currently blocked on figuring out how to
+combine the desire to run malware checks with the desire to let websites make fast in-place
+modifications to existing large files.
 
 <div algorithm>
 The <dfn method for=FileSystemFileHandle>createWriter(|options|)</dfn> method, when invoked, must run these steps:
@@ -291,18 +291,18 @@ Advisement: In the Origin Trial as available in Chrome 78, these objects are not
 Issue: Should we have separate getFile and getDirectory methods, or just a single getChild/getEntry
 method?
 
-Issue: Having getFile methods in both FileSystemDirectoryHandle and FileSystemFileHandle, but with
-very different behavior might be confusing? Perhaps rename at least one of them (but see also
+Issue(98): Having getFile methods in both FileSystemDirectoryHandle and FileSystemFileHandle, but
+with very different behavior might be confusing? Perhaps rename at least one of them (but see also
 previous issue).
 
-Issue: Should getEntries be its own method, or should FileSystemDirectoryHandle just be an async
+Issue(47): Should getEntries be its own method, or should FileSystemDirectoryHandle just be an async
 iterable itself?
 
-Issue: We will probably want some method to make it possible to compare two handles, and/or determine
-if one handle represents a descendant of another handle. Such a method will enable for example an IDE
-to detect that the user tries to open a file (through the file picker), where that file actually is
-part of the "project" the IDE has open, allowing the IDE to highlight the selected file in a directory
-tree.
+Issue(125): We will probably want some method to make it possible to compare two handles, and/or
+determine if one handle represents a descendant of another handle. Such a method will enable for
+example an IDE to detect that the user tries to open a file (through the file picker), where that
+file actually is part of the "project" the IDE has open, allowing the IDE to highlight the selected
+file in a directory tree.
 
 ### The {{FileSystemDirectoryHandle/getFile()}} method ### {#api-filesystemdirectoryhandle-getfile}
 
