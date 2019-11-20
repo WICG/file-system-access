@@ -2,7 +2,7 @@
 Title: Native File System
 Shortname: native-file-system
 Abstract: This document defines a web platform API that lets websites gain write access to the
-  native file system. It builds on [[FILE-API]], but adds lots of new functionality on top.
+  native file system. It builds on [[FILE-API|File API]], but adds lots of new functionality on top.
 Status: CG-DRAFT
 ED: https://wicg.github.io/native-file-system/
 Level: 1
@@ -42,8 +42,9 @@ spec:fetch; type:interface; text:ReadableStream
 
 TODO
 
-This provides similar functionality as earlier drafts of the [[file-system-api]] as well as the
-[[entries-api]], but with a more modern API.
+This provides similar functionality as earlier drafts of the
+[[file-system-api|File API: Directories and System]] as well as the
+[[entries-api|File and Directory Entries API]], but with a more modern API.
 
 # Files and Directories # {#files-and-directories}
 
