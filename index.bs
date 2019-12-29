@@ -483,7 +483,7 @@ steps:
 ## The {{Window/chooseFileSystemEntries()}} method ## {#api-choosefilesystementries}
 
 <xmp class=idl>
-enum ChooseFileSystemEntriesType { "open-file", "save-file", "open-directory" };
+enum ChooseFileSystemEntriesType { "openFile", "saveFile", "openDirectory" };
 
 dictionary ChooseFileSystemEntriesOptionsAccepts {
   USVString description;
