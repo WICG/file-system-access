@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 70c86369151f7b7b97b78c0f664dba09a4024ca2" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="146c6b07a2420c8a47bb182e909211a344d54341" name="document-revision">
+  <meta content="21a0ffc044ce5b488db146ecb3f4e8078e118b41" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1963,7 +1963,7 @@ these steps:
      <dt data-md>await <var>writer</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemwriter-truncate" id="ref-for-dom-filesystemwriter-truncate②">truncate</a></code>(<var>size</var>)
      <dd data-md>
       <p>Resizes the file associated with <var>writer</var> to be <var>size</var> bytes long. If <var>size</var> is larger than
- the current file size this pads the file with zero bytes, otherwise it truncates the file.</p>
+ the current file size this pads the file with null bytes, otherwise it truncates the file.</p>
       <p>No changes are written to the actual file until on disk until <code class="idl"><a data-link-type="idl" href="#dom-filesystemwriter-close" id="ref-for-dom-filesystemwriter-close④">close()</a></code> is called. Changes are typically written to a temporary file instead.</p>
     </dl>
    </div>
