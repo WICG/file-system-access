@@ -108,10 +108,10 @@ Their [=deserialization steps=], given |serialized| and |value| are:
 
 <div class="note domintro">
   : |handle| . {{FileSystemHandle/isFile}}
-  :: Returns true iff |handle| is a {{FileSystemFileHandle}}.
+  :: Returns true if |handle| is a {{FileSystemFileHandle}}.
 
   : |handle| . {{FileSystemHandle/isDirectory}}
-  :: Returns true iff |handle| is a {{FileSystemDirectoryHandle}}.
+  :: Returns true if |handle| is a {{FileSystemDirectoryHandle}}.
 
   : |handle| . {{FileSystemHandle/name}}
   :: Returns the [=entry/name=] of the entry represented by |handle|.
