@@ -442,7 +442,7 @@ these steps:
 <div class="note domintro">
   : await |writer| . {{FileSystemWriter/truncate()|truncate}}(|size|)
   :: Resizes the file associated with |writer| to be |size| bytes long. If |size| is larger than
-     the current file size this pads the file with zero bytes, otherwise it truncates the file.
+     the current file size this pads the file with null bytes, otherwise it truncates the file.
 
      No changes are written to the actual file until on disk until {{FileSystemWriter/close()}}
      is called. Changes are typically written to a temporary file instead.
