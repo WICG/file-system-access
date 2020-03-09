@@ -1167,6 +1167,18 @@ Possible extra rowspan handling
 		margin-left: auto;
 		margin-right: auto;
 	}
+	.overlarge {
+		/* Magic to create good table positioning:
+		   "content column" is 50ems wide at max; less on smaller screens.
+		   Extra space (after ToC + content) is empty on the right.
+
+		   1. When table < content column, centers table in column.
+		   2. When content < table < available, left-aligns.
+		   3. When table > available, fills available + scroll bar.
+		*/ 
+		display: grid;
+		grid-template-columns: minmax(0, 50em);
+	}
 	.overlarge > table {
 		/* limit preferred width of table */
 		max-width: 50em;
@@ -1176,7 +1188,6 @@ Possible extra rowspan handling
 
 	@media (min-width: 55em) {
 		.overlarge {
-			margin-left: calc(13px + 26.5rem - 50vw);
 			margin-right: calc(13px + 26.5rem - 50vw);
 			max-width: none;
 		}
@@ -1184,14 +1195,12 @@ Possible extra rowspan handling
 	@media screen and (min-width: 78em) {
 		body:not(.toc-inline) .overlarge {
 			/* 30.5em body padding 50em content area */
-			margin-left: calc(40em - 50vw) !important;
 			margin-right: calc(40em - 50vw) !important;
 		}
 	}
 	@media screen and (min-width: 90em) {
 		body:not(.toc-inline) .overlarge {
 			/* 4em html margin 30.5em body padding 50em content area */
-			margin-left: 0 !important;
 			margin-right: calc(84.5em - 100vw) !important;
 		}
 	}
@@ -1213,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 0dd2bba6dfda6c3168490a3a3044dd1d0b1ef8e0" name="generator">
+  <meta content="Bikeshed version 70c86369151f7b7b97b78c0f664dba09a4024ca2" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="533b736076cf158bbfc5db215ce5454f3730267a" name="document-revision">
+  <meta content="146c6b07a2420c8a47bb182e909211a344d54341" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1487,7 +1496,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-11-18">18 November 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-03-09">9 March 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1500,7 +1509,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2019 the Contributors to the Native File System Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2020 the Contributors to the Native File System Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
 A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available. </p>
    <hr title="Separator for header">
   </div>
@@ -1670,9 +1679,9 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
    <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="attribute" data-export id="dom-filesystemhandle-name"><code>name</code></dfn> attribute must return the <a data-link-type="dfn" href="#entry-name" id="ref-for-entry-name①">name</a> of the
 associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②">entry</a>.</p>
    <h4 class="heading settled" data-level="2.2.1" id="api-filesystemhandle-querypermission"><span class="secno">2.2.1. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission①">queryPermission()</a></code> method</span><a class="self-link" href="#api-filesystemhandle-querypermission"></a></h4>
-   <p class="issue" id="issue-af0c279b"><a class="self-link" href="#issue-af0c279b"></a> the currently described API here assumes a model where it is not possible to have a
+   <p class="issue" id="issue-c3f1b283"><a class="self-link" href="#issue-c3f1b283"></a> the currently described API here assumes a model where it is not possible to have a
     write-only handle. I.e. it is not possible to have or request write access without also having
-    read access. There definitely are use cases for write-only handles (i.e. directory downloads),
+    read access. There definitely are use cases for write-only handles (e.g. directory downloads),
     so we might have to reconsider this.</p>
    <div class="note domintro" role="note">
     <dl>
@@ -2131,7 +2140,7 @@ origins (for example persistent permissions could be limited to "installed" web 
    <p>User agents also are encouraged to provide a way for users to revoke permissions granted.
 Clearing browsing data is expected to revoke all permissions as well.</p>
    <h3 class="heading settled" data-level="5.3" id="privacy-third-party"><span class="secno">5.3. </span><span class="content">First-party vs third-party contexts.</span><a class="self-link" href="#privacy-third-party"></a></h3>
-   <p>In third-party contexts (i.e. an iframe whose origin does not match that of the top-level frame)
+   <p>In third-party contexts (e.g. an iframe whose origin does not match that of the top-level frame)
 websites can’t gain access to data they don’t already have access to. This includes both getting
 access to new files or directories via the <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries④">chooseFileSystemEntries</a></code> API, as well as requesting
 more permissions to existing handles via the <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission⑦">requestPermission</a></code> API.</p>
@@ -2756,8 +2765,8 @@ appropriate.</p>
 directory on disk but doesn’t have to map to any file on disk).<a href="#issue-7a61bf3c"> ↵ </a></div>
    <div class="issue"> the currently described API here assumes a model where it is not possible to have a
     write-only handle. I.e. it is not possible to have or request write access without also having
-    read access. There definitely are use cases for write-only handles (i.e. directory downloads),
-    so we might have to reconsider this.<a href="#issue-af0c279b"> ↵ </a></div>
+    read access. There definitely are use cases for write-only handles (e.g. directory downloads),
+    so we might have to reconsider this.<a href="#issue-c3f1b283"> ↵ </a></div>
    <div class="issue"> There has been some discussion around and desire for a "inPlace" mode for createWriter (where
 changes will be written to the actual underlying file as they are written to the writer, for example
 to support in-place modification of large files or things like databases). This is not currently
