@@ -130,7 +130,7 @@ associated [=FileSystemHandle/entry=].
 
 Issue: the currently described API here assumes a model where it is not possible to have a
     write-only handle. I.e. it is not possible to have or request write access without also having
-    read access. There definitely are use cases for write-only handles (i.e. directory downloads),
+    read access. There definitely are use cases for write-only handles (e.g. directory downloads),
     so we might have to reconsider this.
 
 <div class="note domintro">
@@ -657,7 +657,7 @@ Clearing browsing data is expected to revoke all permissions as well.
 
 ## First-party vs third-party contexts. ## {#privacy-third-party}
 
-In third-party contexts (i.e. an iframe whose origin does not match that of the top-level frame)
+In third-party contexts (e.g. an iframe whose origin does not match that of the top-level frame)
 websites can't gain access to data they don't already have access to. This includes both getting
 access to new files or directories via the {{chooseFileSystemEntries}} API, as well as requesting
 more permissions to existing handles via the {{requestPermission}} API.
