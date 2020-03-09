@@ -120,15 +120,17 @@ file_reader.onload = (event) => {
     // file might have changed, or the user/user agent might have revoked write
     // access for this website to this file after it acquired the file
     // reference.
-    const file_writer = await file_ref.createWriter();
-    await file_writer.write(0, new Blob(['foobar']));
-    await file_writer.write(1024, new Blob(['bla']));
+    const writable = await file_ref.createWritable();
+    await writable.write(new Blob(['foobar']));
+    await writable.seek(1024);
+    await writable.write(new Blob(['bla']));
 
-    // Can also write using a WritableStream
-    let stream = file_writer.asWritableStream();
-    // Can also write contents of a ReadableStream.
+    // |writable| is also a WritableStream, so you can for example pipe into it.
     let response = await fetch('foo');
-    await response.body.pipeTo(stream);
+    await response.body.pipeTo(writable);
+
+    // pipeTo by default closes the destination pipe, otherwise an explicit
+    // writable.close() call would have been needed to persist the written data.
 };
 
 // file_ref.file() method will reject if site (no longer) has access to the
@@ -150,7 +152,7 @@ request.onerror = function(e) { console.log(e); }
 request.onsuccess = function(e) { db = e.target.result; }
 
 // Show file picker UI.
-const file_ref = await FileSystemFileHandle.choose();
+const file_ref = await self.chooseFileSystemEntries();
 
 if (file_ref) {
     // Save the reference to open the file later.
@@ -172,6 +174,14 @@ let request = transaction.objectStore("filerefs").get(file_id);
 request.onsuccess = function(e) {
     let ref = e.result;
 
+    // Permissions for the handle may have expired while the handle was stored
+    // in IndexedDB. Before it is safe to use the handle we should request at
+    // least read access to the handle again.
+    if (await ref.requestPermission() != 'granted') {
+      // No longer allowed to access the handle.
+      return;
+    }
+
     // Rejects if file is no longer readable, either because it doesn't exist
     // anymore or because the website no longer has permission to read it.
     let file = await ref.file();
@@ -179,7 +189,7 @@ request.onsuccess = function(e) {
 
     // Rejects if file is no longer writable, because the website no longer has
     // permission to write to it.
-    let file_writer = await ref.createWriter({createIfNotExists: true});
+    let file_writer = await ref.createWritable({createIfNotExists: true});
     // ... write to file_writer
 }
 ```
@@ -225,9 +235,13 @@ const subdir = await dir_ref.getDirectory('bla', {createIfNotExists: true});
 // No special API to create copies, but still possible to do so by using
 // available read and write APIs.
 const new_file = await dir_ref.getFile('new_name', {create: true});
-const new_file_writer = await new_file.createWriter();
-await new_file_writer.truncate(0);
-await new_file_writer.write(0, await file_ref.getFile());
+const new_file_writer = await new_file.createWritable();
+await new_file_writer.write(await file_ref.getFile());
+await new_file_writer.close();
+
+// Or using streams:
+const copy2 = await dir_ref.getFile('new_name', {create: true});
+(await file_ref.getFile()).stream().pipeTo(await copy2.createWritable());
 ```
 
 You can also check if two references reference the same file or directory (or at
@@ -264,7 +278,7 @@ if (relative_path === null) {
     }
 
     // Now |entry| will represent the same file on disk as |file_ref|.
-    assert entry.isSameEntry(file_ref) == true;
+    assert await entry.isSameEntry(file_ref) == true;
 }
 ```
 
