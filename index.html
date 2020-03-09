@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 70c86369151f7b7b97b78c0f664dba09a4024ca2" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="934d8609e9223d684fbf6f68ed1e94767a81d5e5" name="document-revision">
+  <meta content="07df58bfada65c1d3601b0fe89dcd0aab96f360a" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1637,7 +1637,7 @@ directory on disk but doesn’t have to map to any file on disk).</p>
 };
 </pre>
    <p>A <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle①">FileSystemHandle</a></code> object represents a <a data-link-type="dfn" href="#entry" id="ref-for-entry①">entry</a>. Each <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle②">FileSystemHandle</a></code> object is assocaited
-with a <dfn class="dfn-paneled" data-dfn-for="FileSystemHandle" data-dfn-type="dfn" data-noexport id="filesystemhandle-entry">entry</dfn> (a <a data-link-type="dfn" href="#entry" id="ref-for-entry②">entry</a>). Multiple separate objects implementing
+with a <dfn class="dfn-paneled" data-dfn-for="FileSystemHandle" data-dfn-type="dfn" data-noexport id="filesystemhandle-entry">entry</dfn> (an <a data-link-type="dfn" href="#entry" id="ref-for-entry②">entry</a>). Multiple separate objects implementing
 the <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle③">FileSystemHandle</a></code> interface can all be associated with the same <a data-link-type="dfn" href="#entry" id="ref-for-entry③">entry</a> simultaneously.</p>
    <div class="algorithm" data-algorithm="serialization steps">
      <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle④">FileSystemHandle</a></code> objects are <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/structured-data.html#serializable-objects" id="ref-for-serializable-objects">serializable objects</a>. 
@@ -2044,7 +2044,7 @@ steps:
  the dialog will let the user select. Each entry in <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-accepts" id="ref-for-dom-choosefilesystementriesoptions-accepts①">accepts</a></code> describes a single type of file,
  consisting of a <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-description" id="ref-for-dom-choosefilesystementriesoptionsaccepts-description">description</a></code>, zero or more <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-mimetypes" id="ref-for-dom-choosefilesystementriesoptionsaccepts-mimetypes">mimeTypes</a></code> and zero or more <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-extensions" id="ref-for-dom-choosefilesystementriesoptionsaccepts-extensions">extensions</a></code>. Options with no valid <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-mimetypes" id="ref-for-dom-choosefilesystementriesoptionsaccepts-mimetypes①">mimeTypes</a></code> and no <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-extensions" id="ref-for-dom-choosefilesystementriesoptionsaccepts-extensions①">extensions</a></code> are invalid and are ignored. If no <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-description" id="ref-for-dom-choosefilesystementriesoptionsaccepts-description①">description</a></code> is provided one will be generated.</p>
       <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-excludeacceptalloption" id="ref-for-dom-choosefilesystementriesoptions-excludeacceptalloption①">excludeAcceptAllOption</a></code> is true, or if no valid
- entries exist in <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-accepts" id="ref-for-dom-choosefilesystementriesoptions-accepts②">accepts</a></code>, a option matching all
+ entries exist in <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-accepts" id="ref-for-dom-choosefilesystementriesoptions-accepts②">accepts</a></code>, an option matching all
  files will be included in the file types the dialog lets the user select.</p>
     </dl>
    </div>
