@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 70c86369151f7b7b97b78c0f664dba09a4024ca2" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="07df58bfada65c1d3601b0fe89dcd0aab96f360a" name="document-revision">
+  <meta content="2cc2ae08dae529805263d5e627b12e1d0c5c27c1" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1682,7 +1682,7 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
    <p class="issue" id="issue-c3f1b283"><a class="self-link" href="#issue-c3f1b283"></a> the currently described API here assumes a model where it is not possible to have a
     write-only handle. I.e. it is not possible to have or request write access without also having
     read access. There definitely are use cases for write-only handles (e.g. directory downloads),
-    so we might have to reconsider this.</p>
+    so we might have to reconsider this. <a href="https://github.com/wicg/native-file-system/issues/119">&lt;https://github.com/wicg/native-file-system/issues/119></a></p>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md><var>status</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission②">queryPermission</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable">writable</a></code> = false })
@@ -1780,12 +1780,12 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
  otherwise the existing file is first copied to this temporary file.</p>
     </dl>
    </div>
-   <p class="issue" id="issue-6e95a203"><a class="self-link" href="#issue-6e95a203"></a> There has been some discussion around and desire for a "inPlace" mode for createWriter (where
-changes will be written to the actual underlying file as they are written to the writer, for example
-to support in-place modification of large files or things like databases). This is not currently
-implemented in Chrome. Implementing this is currently blocked on figuring out how to combine the
-desire to run malware checks with the desire to let websites make fast in-place modifications to
-existing large files.</p>
+   <p class="issue" id="issue-6e95a203"><a class="self-link" href="#issue-6e95a203"></a> There has been some discussion around and desire for a "inPlace" mode for createWriter
+(where changes will be written to the actual underlying file as they are written to the writer, for
+example to support in-place modification of large files or things like databases). This is not
+currently implemented in Chrome. Implementing this is currently blocked on figuring out how to
+combine the desire to run malware checks with the desire to let websites make fast in-place
+modifications to existing large files. <a href="https://github.com/wicg/native-file-system/issues/67">&lt;https://github.com/wicg/native-file-system/issues/67></a></p>
    <div class="algorithm" data-algorithm="createWriter(options)">
      The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemFileHandle" data-dfn-type="method" data-export data-lt="createWriter(options)|createWriter()" id="dom-filesystemfilehandle-createwriter"><code>createWriter(<var>options</var>)</code></dfn> method, when invoked, must run these steps: 
     <ol>
@@ -1821,16 +1821,16 @@ existing large files.</p>
    <p><strong class="advisement"> In the Origin Trial as available in Chrome 78, these objects are not yet serializable.</strong></p>
    <p class="issue" id="issue-a4e7d3b2"><a class="self-link" href="#issue-a4e7d3b2"></a> Should we have separate getFile and getDirectory methods, or just a single getChild/getEntry
 method?</p>
-   <p class="issue" id="issue-6152e539"><a class="self-link" href="#issue-6152e539"></a> Having getFile methods in both FileSystemDirectoryHandle and FileSystemFileHandle, but with
-very different behavior might be confusing? Perhaps rename at least one of them (but see also
-previous issue).</p>
+   <p class="issue" id="issue-6152e539"><a class="self-link" href="#issue-6152e539"></a> Having getFile methods in both FileSystemDirectoryHandle and FileSystemFileHandle, but
+with very different behavior might be confusing? Perhaps rename at least one of them (but see also
+previous issue). <a href="https://github.com/wicg/native-file-system/issues/98">&lt;https://github.com/wicg/native-file-system/issues/98></a></p>
    <p class="issue" id="issue-bd7b13a2"><a class="self-link" href="#issue-bd7b13a2"></a> Should getEntries be its own method, or should FileSystemDirectoryHandle just be an async
-iterable itself?</p>
-   <p class="issue" id="issue-1da05031"><a class="self-link" href="#issue-1da05031"></a> We will probably want some method to make it possible to compare two handles, and/or determine
-if one handle represents a descendant of another handle. Such a method will enable for example an IDE
-to detect that the user tries to open a file (through the file picker), where that file actually is
-part of the "project" the IDE has open, allowing the IDE to highlight the selected file in a directory
-tree.</p>
+iterable itself? <a href="https://github.com/wicg/native-file-system/issues/47">&lt;https://github.com/wicg/native-file-system/issues/47></a></p>
+   <p class="issue" id="issue-1da05031"><a class="self-link" href="#issue-1da05031"></a> We will probably want some method to make it possible to compare two handles, and/or
+determine if one handle represents a descendant of another handle. Such a method will enable for
+example an IDE to detect that the user tries to open a file (through the file picker), where that
+file actually is part of the "project" the IDE has open, allowing the IDE to highlight the selected
+file in a directory tree. <a href="https://github.com/wicg/native-file-system/issues/125">&lt;https://github.com/wicg/native-file-system/issues/125></a></p>
    <h4 class="heading settled" data-level="2.4.1" id="api-filesystemdirectoryhandle-getfile"><span class="secno">2.4.1. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile①">getFile()</a></code> method</span><a class="self-link" href="#api-filesystemdirectoryhandle-getfile"></a></h4>
    <div class="note domintro" role="note">
     <dl>
@@ -2766,25 +2766,25 @@ directory on disk but doesn’t have to map to any file on disk).<a href="#issue
    <div class="issue"> the currently described API here assumes a model where it is not possible to have a
     write-only handle. I.e. it is not possible to have or request write access without also having
     read access. There definitely are use cases for write-only handles (e.g. directory downloads),
-    so we might have to reconsider this.<a href="#issue-c3f1b283"> ↵ </a></div>
-   <div class="issue"> There has been some discussion around and desire for a "inPlace" mode for createWriter (where
-changes will be written to the actual underlying file as they are written to the writer, for example
-to support in-place modification of large files or things like databases). This is not currently
-implemented in Chrome. Implementing this is currently blocked on figuring out how to combine the
-desire to run malware checks with the desire to let websites make fast in-place modifications to
-existing large files.<a href="#issue-6e95a203"> ↵ </a></div>
+    so we might have to reconsider this. <a href="https://github.com/wicg/native-file-system/issues/119">&lt;https://github.com/wicg/native-file-system/issues/119></a><a href="#issue-c3f1b283"> ↵ </a></div>
+   <div class="issue"> There has been some discussion around and desire for a "inPlace" mode for createWriter
+(where changes will be written to the actual underlying file as they are written to the writer, for
+example to support in-place modification of large files or things like databases). This is not
+currently implemented in Chrome. Implementing this is currently blocked on figuring out how to
+combine the desire to run malware checks with the desire to let websites make fast in-place
+modifications to existing large files. <a href="https://github.com/wicg/native-file-system/issues/67">&lt;https://github.com/wicg/native-file-system/issues/67></a><a href="#issue-6e95a203"> ↵ </a></div>
    <div class="issue"> Should we have separate getFile and getDirectory methods, or just a single getChild/getEntry
 method?<a href="#issue-a4e7d3b2"> ↵ </a></div>
-   <div class="issue"> Having getFile methods in both FileSystemDirectoryHandle and FileSystemFileHandle, but with
-very different behavior might be confusing? Perhaps rename at least one of them (but see also
-previous issue).<a href="#issue-6152e539"> ↵ </a></div>
+   <div class="issue"> Having getFile methods in both FileSystemDirectoryHandle and FileSystemFileHandle, but
+with very different behavior might be confusing? Perhaps rename at least one of them (but see also
+previous issue). <a href="https://github.com/wicg/native-file-system/issues/98">&lt;https://github.com/wicg/native-file-system/issues/98></a><a href="#issue-6152e539"> ↵ </a></div>
    <div class="issue"> Should getEntries be its own method, or should FileSystemDirectoryHandle just be an async
-iterable itself?<a href="#issue-bd7b13a2"> ↵ </a></div>
-   <div class="issue"> We will probably want some method to make it possible to compare two handles, and/or determine
-if one handle represents a descendant of another handle. Such a method will enable for example an IDE
-to detect that the user tries to open a file (through the file picker), where that file actually is
-part of the "project" the IDE has open, allowing the IDE to highlight the selected file in a directory
-tree.<a href="#issue-1da05031"> ↵ </a></div>
+iterable itself? <a href="https://github.com/wicg/native-file-system/issues/47">&lt;https://github.com/wicg/native-file-system/issues/47></a><a href="#issue-bd7b13a2"> ↵ </a></div>
+   <div class="issue"> We will probably want some method to make it possible to compare two handles, and/or
+determine if one handle represents a descendant of another handle. Such a method will enable for
+example an IDE to detect that the user tries to open a file (through the file picker), where that
+file actually is part of the "project" the IDE has open, allowing the IDE to highlight the selected
+file in a directory tree. <a href="https://github.com/wicg/native-file-system/issues/125">&lt;https://github.com/wicg/native-file-system/issues/125></a><a href="#issue-1da05031"> ↵ </a></div>
    <div class="issue"> We want some kind of integration with writable streams. One possible option is to make
 FileStreamWriter inherit from WritableStream, but other options should be considered as well. <a href="https://github.com/wicg/native-file-system/issues/19">&lt;https://github.com/wicg/native-file-system/issues/19></a><a href="#issue-b9e65915"> ↵ </a></div>
    <div class="issue"> There must be a better way to express this "no third-party iframes" constraint.<a href="#issue-0fb1070c"> ↵ </a></div>
