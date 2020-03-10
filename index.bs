@@ -2,7 +2,7 @@
 Title: Native File System
 Shortname: native-file-system
 Abstract: This document defines a web platform API that lets websites gain write access to the
-  native file system. It builds on [[FILE-API]], but adds lots of new functionality on top.
+  native file system. It builds on [[FILE-API|File API]], but adds lots of new functionality on top.
 Status: CG-DRAFT
 ED: https://wicg.github.io/native-file-system/
 Level: 1
@@ -42,8 +42,9 @@ spec:fetch; type:interface; text:ReadableStream
 
 TODO
 
-This provides similar functionality as earlier drafts of the [[file-system-api]] as well as the
-[[entries-api]], but with a more modern API.
+This provides similar functionality as earlier drafts of the
+[[file-system-api|File API: Directories and System]] as well as the
+[[entries-api|File and Directory Entries API]], but with a more modern API.
 
 # Files and Directories # {#files-and-directories}
 
@@ -81,7 +82,7 @@ interface FileSystemHandle {
 </xmp>
 
 A {{FileSystemHandle}} object represents a [=/entry=]. Each {{FileSystemHandle}} object is assocaited
-with a <dfn for=FileSystemHandle>entry</dfn> (a [=/entry=]). Multiple separate objects implementing
+with a <dfn for=FileSystemHandle>entry</dfn> (an [=/entry=]). Multiple separate objects implementing
 the {{FileSystemHandle}} interface can all be associated with the same [=/entry=] simultaneously.
 
 <div algorithm="serialization steps">
@@ -108,10 +109,10 @@ Their [=deserialization steps=], given |serialized| and |value| are:
 
 <div class="note domintro">
   : |handle| . {{FileSystemHandle/isFile}}
-  :: Returns true iff |handle| is a {{FileSystemFileHandle}}.
+  :: Returns true if |handle| is a {{FileSystemFileHandle}}.
 
   : |handle| . {{FileSystemHandle/isDirectory}}
-  :: Returns true iff |handle| is a {{FileSystemDirectoryHandle}}.
+  :: Returns true if |handle| is a {{FileSystemDirectoryHandle}}.
 
   : |handle| . {{FileSystemHandle/name}}
   :: Returns the [=entry/name=] of the entry represented by |handle|.
@@ -128,9 +129,9 @@ associated [=FileSystemHandle/entry=].
 
 ### The {{FileSystemHandle/queryPermission()}} method ### {#api-filesystemhandle-querypermission}
 
-Issue: the currently described API here assumes a model where it is not possible to have a
+Issue(119): the currently described API here assumes a model where it is not possible to have a
     write-only handle. I.e. it is not possible to have or request write access without also having
-    read access. There definitely are use cases for write-only handles (i.e. directory downloads),
+    read access. There definitely are use cases for write-only handles (e.g. directory downloads),
     so we might have to reconsider this.
 
 <div class="note domintro">
@@ -244,12 +245,12 @@ Advisement: In the Origin Trial as available in Chrome 82, createWritable replac
      otherwise the existing file is first copied to this temporary file.
 </div>
 
-Issue: There has been some discussion around and desire for a "inPlace" mode for createWritable (where
-changes will be written to the actual underlying file as they are written to the writer, for example
-to support in-place modification of large files or things like databases). This is not currently
-implemented in Chrome. Implementing this is currently blocked on figuring out how to combine the
-desire to run malware checks with the desire to let websites make fast in-place modifications to
-existing large files.
+Issue(67): There has been some discussion around and desire for a "inPlace" mode for createWritable
+(where changes will be written to the actual underlying file as they are written to the writer, for
+example to support in-place modification of large files or things like databases). This is not
+currently implemented in Chrome. Implementing this is currently blocked on figuring out how to
+combine the desire to run malware checks with the desire to let websites make fast in-place
+modifications to existing large files.
 
 <div algorithm>
 The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method, when invoked, must run these steps:
@@ -293,18 +294,18 @@ Advisement: In the Origin Trial as available in Chrome 78, these objects are not
 Issue: Should we have separate getFile and getDirectory methods, or just a single getChild/getEntry
 method?
 
-Issue: Having getFile methods in both FileSystemDirectoryHandle and FileSystemFileHandle, but with
-very different behavior might be confusing? Perhaps rename at least one of them (but see also
+Issue(98): Having getFile methods in both FileSystemDirectoryHandle and FileSystemFileHandle, but
+with very different behavior might be confusing? Perhaps rename at least one of them (but see also
 previous issue).
 
-Issue: Should getEntries be its own method, or should FileSystemDirectoryHandle just be an async
+Issue(47): Should getEntries be its own method, or should FileSystemDirectoryHandle just be an async
 iterable itself?
 
-Issue: We will probably want some method to make it possible to compare two handles, and/or determine
-if one handle represents a descendant of another handle. Such a method will enable for example an IDE
-to detect that the user tries to open a file (through the file picker), where that file actually is
-part of the "project" the IDE has open, allowing the IDE to highlight the selected file in a directory
-tree.
+Issue(125): We will probably want some method to make it possible to compare two handles, and/or
+determine if one handle represents a descendant of another handle. Such a method will enable for
+example an IDE to detect that the user tries to open a file (through the file picker), where that
+file actually is part of the "project" the IDE has open, allowing the IDE to highlight the selected
+file in a directory tree.
 
 ### The {{FileSystemDirectoryHandle/getFile()}} method ### {#api-filesystemdirectoryhandle-getfile}
 
@@ -503,7 +504,7 @@ these steps:
 <div class="note domintro">
   : await |stream| . {{FileSystemWritableFileStream/truncate()|truncate}}(|size|)
   :: Resizes the file associated with |stream| to be |size| bytes long. If |size| is larger than
-     the current file size this pads the file with zero bytes, otherwise it truncates the file.
+     the current file size this pads the file with null bytes, otherwise it truncates the file.
 
      The file cursor is updated when {{truncate}} is called. If the offset is smaller than offset,
      it remains unchanged. If the offset is larger than |size|, the offset is set to |size| to
@@ -547,7 +548,7 @@ steps:
 ## The {{Window/chooseFileSystemEntries()}} method ## {#api-choosefilesystementries}
 
 <xmp class=idl>
-enum ChooseFileSystemEntriesType { "openFile", "saveFile", "openDirectory" };
+enum ChooseFileSystemEntriesType { "open-file", "save-file", "open-directory" };
 
 dictionary ChooseFileSystemEntriesOptionsAccepts {
   USVString description;
@@ -556,7 +557,7 @@ dictionary ChooseFileSystemEntriesOptionsAccepts {
 };
 
 dictionary ChooseFileSystemEntriesOptions {
-    ChooseFileSystemEntriesType type = "openFile";
+    ChooseFileSystemEntriesType type = "open-file";
     boolean multiple = false;
     sequence<ChooseFileSystemEntriesOptionsAccepts> accepts;
     boolean excludeAcceptAllOption = false;
@@ -578,12 +579,12 @@ partial interface Window {
 
      |options|.{{ChooseFileSystemEntriesOptions/type}} specifies the type of the entry the website
      wants the user to pick.
-     When set to {{ChooseFileSystemEntriesType/"openFile"}} (the default), the user can select only
+     When set to {{ChooseFileSystemEntriesType/"open-file"}} (the default), the user can select only
      existing files.
-     When set to {{ChooseFileSystemEntriesType/"saveFile"}} the dialog will additionally let the
+     When set to {{ChooseFileSystemEntriesType/"save-file"}} the dialog will additionally let the
      user select files that don't yet exist, and if the user selects a file that does exist already,
      its contents will be cleared before the handle is returned to the website.
-     Finally when set to {{ChooseFileSystemEntriesType/"openDirectory"}}, the dialog will let the
+     Finally when set to {{ChooseFileSystemEntriesType/"open-directory"}}, the dialog will let the
      user select directories instead of files.
 
      If |options|.{{ChooseFileSystemEntriesOptions/multiple}} is false (or absent) the user can
@@ -606,13 +607,27 @@ partial interface Window {
      {{ChooseFileSystemEntriesOptionsAccepts/description}} is provided one will be generated.
 
      If |options|.{{ChooseFileSystemEntriesOptions/excludeAcceptAllOption}} is true, or if no valid
-     entries exist in |options|.{{ChooseFileSystemEntriesOptions/accepts}}, a option matching all
+     entries exist in |options|.{{ChooseFileSystemEntriesOptions/accepts}}, an option matching all
      files will be included in the file types the dialog lets the user select.
 </div>
 
 <div algorithm>
 The <dfn method for=Window>chooseFileSystemEntries(|options|)</dfn> method, when invoked, must run
 these steps:
+
+1. Let |environment| be the [=current settings object=].
+
+1. If |environment|'s [=environment settings object/origin=] is an [=opaque origin=],
+   return [=a promise rejected with=] a {{SecurityError}}.
+
+1. Let |browsing context| be |environment|'s [=responsible browsing context=].
+
+1. Let |top-level context| be |browsing context|'s [=top-level browsing context=].
+
+1. If |environment|'s [=environment settings object/origin=] is not [=same origin=] with |browsing context|'s [=top-level browsing context=]'s [=active document=]'s  [=/origin=],
+   return [=a promise rejected with=] a {{SecurityError}}.
+
+   Issue: There must be a better way to express this "no third-party iframes" constraint.
 
 1. TODO
 
@@ -650,6 +665,11 @@ than on FileSystemDirectoryHandle.
 <div algorithm>
 The <dfn method for=FileSystemDirectoryHandle>getSystemDirectory(|options|)</dfn> method, when
 invoked, must run these steps:
+
+1. Let |environment| be the [=current settings object=].
+
+1. If |environment|'s [=environment settings object/origin=] is an [=opaque origin=],
+   return [=a promise rejected with=] a {{SecurityError}}.
 
 1. TODO
 
@@ -702,7 +722,7 @@ Clearing browsing data is expected to revoke all permissions as well.
 
 ## First-party vs third-party contexts. ## {#privacy-third-party}
 
-In third-party contexts (i.e. an iframe whose origin does not match that of the top-level frame)
+In third-party contexts (e.g. an iframe whose origin does not match that of the top-level frame)
 websites can't gain access to data they don't already have access to. This includes both getting
 access to new files or directories via the {{chooseFileSystemEntries}} API, as well as requesting
 more permissions to existing handles via the {{requestPermission}} API.
