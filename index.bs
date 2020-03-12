@@ -423,7 +423,7 @@ dictionary WriteParams {
   (BufferSource or Blob or USVString)? data;
 };
 
-[Exposed=(Window,Worker), SecureContext, Serializable]
+[Exposed=(Window,Worker), SecureContext]
 interface FileSystemWritableFileStream : WritableStream {
   Promise<void> write((BufferSource or Blob or USVString or WriteParams) data);
   Promise<void> seek(unsigned long long position);
@@ -443,28 +443,6 @@ The {{FileSystemWritableFileStream}} has a file position cursor initialized at b
 Similarly, when piping a {{ReadableStream}} into a {{FileSystemWritableFileStream}} object, this position is updated with the number of bytes that passed through the stream.
 
 {{WritableStream/getWriter()|getWriter()}} returns an instance of {{WritableStreamDefaultWriter}}.
-
-<div algorithm="serialization steps">
-{{FileSystemWritableFileStream}} objects are [=serializable objects=]. They not cloneable, i.e. they are transferable-only, as are {{WritableStream}} objects.
-
-Advisement: In the Origin Trial as available in Chrome 82, these objects are not yet serializable.
-
-Their [=serialization steps=], given |value|, |serialized| and |forStorage| are:
-
-1. Set |serialized|.\[[Origin]] to |value|'s [=relevant settings object=]'s [=environment settings object/origin=].
-1. TODO
-
-</div>
-
-<div algorithm="deserialization steps">
-Their [=deserialization steps=], given |serialized| and |value| are:
-
-1. If |serialized|.\[[Origin]] is not [=same origin=] with
-   |value|'s [=relevant settings object=]'s [=environment settings object/origin=],
-   then throw a {{DataCloneError}}.
-1. TODO
-
-</div>
 
 ### The {{FileSystemWritableFileStream/write()}} method ### {#api-filesystemwritablefilestream-write}
 
