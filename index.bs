@@ -16,6 +16,7 @@ Markup Shorthands: css no, markdown yes
 
 <pre class=link-defaults>
 spec:fetch; type:interface; text:ReadableStream
+spec:webidl; type:dfn; text:resolve
 </pre>
 
 <pre class=anchors>
@@ -66,8 +67,33 @@ and [=children=] of entries to be modified by applications outside of this speci
 Exactly how external changes are reflected in the data structures defined by this specification
 is left up to individual implementations.
 
+An [=/entry=] |a| is <dfn for="entry">the same as</dfn> an [=/entry=] |b| if |a| is equal to |b|, or
+if |a| and |b| are backed by the same file or directory on the native file system.
+
 Issue: TODO: Explain better how entries map to files on disk (multiple entries can map to the same file or
 directory on disk but doesn't have to map to any file on disk).
+
+<div algorithm>
+To <dfn for="entry">resolve</dfn> an [=/entry=] |child| relative to a [=directory entry=] |root|,
+run the following steps:
+
+1. Let |result| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+  1. If |child| is [=the same as=] |root|,
+     [=/resolve=] |result| with an empty list, and abort these substeps.
+  1. Let |childPromises| be << >>.
+  1. [=set/For each=] |entry| of |root|'s [=FileSystemHandle/entry=]'s [=children=]:
+    1. Let |p| be the result of [=entry/resolving=] |child| relative to |entry|.
+    1. [=list/Append=] |p| to |childPromises|.
+    1. [=Upon fulfillment=] of |p| with value |path|:
+      1. If |path| is not null:
+        1. [=list/Prepend=] |entry|'s [=entry/name=] to |path|.
+        1. [=/Resolve=] |result| with |path|.
+  1. [=Wait for all=] |childPromises|, with the following success steps:
+    1. If |result| hasn't been resolved yet, [=/resolve=] |result| with `null`.
+1. Return |result|.
+
+</div>
 
 ## The {{FileSystemHandle}} interface ## {#api-filesystemhandle}
 
@@ -81,6 +107,8 @@ interface FileSystemHandle {
   readonly attribute boolean isFile;
   readonly attribute boolean isDirectory;
   readonly attribute USVString name;
+
+  Promise<boolean> isSameEntry(FileSystemHandle other);
 
   Promise<PermissionState> queryPermission(optional FileSystemHandlePermissionDescriptor descriptor = {});
   Promise<PermissionState> requestPermission(optional FileSystemHandlePermissionDescriptor descriptor = {});
@@ -133,6 +161,26 @@ associated [=FileSystemHandle/entry=] is a [=directory entry=], and false otherw
 
 The <dfn attribute for=FileSystemHandle>name</dfn> attribute must return the [=entry/name=] of the
 associated [=FileSystemHandle/entry=].
+
+### The {{FileSystemHandle/isSameEntry()}} method ### {#api-filesystemhandle-issameentry}
+
+<div class="note domintro">
+  : |same| = await |handle1| . {{FileSystemHandle/isSameEntry()|isSameEntry}}( |handle2| )
+  :: Returns true if |handle1| and |handle2| represent the same file or directory.
+</div>
+
+<div algorithm>
+The <dfn method for=FileSystemHandle>isSameEntry(|other|)</dfn> method, when invoked, must run these steps:
+
+1. Let |realm| be [=this=]'s [=relevant Realm=].
+1. Let |p| be [=a new promise=] in |realm|.
+1. Run the following steps [=in parallel=]:
+  1. If [=this=]'s [=FileSystemHandle/entry=] is [=the same as=] |other|'s [=FileSystemHandle/entry=],
+     [=/resolve=] |p| with `true`.
+  1. Else [=/resolve=] |p| with `false`.
+1. Return |p|.
+
+</div>
 
 ### The {{FileSystemHandle/queryPermission()}} method ### {#api-filesystemhandle-querypermission}
 
@@ -291,6 +339,8 @@ interface FileSystemDirectoryHandle : FileSystemHandle {
   object getEntries();
 
   Promise<void> removeEntry(USVString name, optional FileSystemRemoveOptions options = {});
+
+  Promise<sequence<USVString>?> resolve(FileSystemHandle possibleDescendant);
 };
 </xmp>
 
@@ -309,12 +359,6 @@ previous issue).
 
 Issue(47): Should getEntries be its own method, or should FileSystemDirectoryHandle just be an async
 iterable itself?
-
-Issue(125): We will probably want some method to make it possible to compare two handles, and/or
-determine if one handle represents a descendant of another handle. Such a method will enable for
-example an IDE to detect that the user tries to open a file (through the file picker), where that
-file actually is part of the "project" the IDE has open, allowing the IDE to highlight the selected
-file in a directory tree.
 
 ### The {{FileSystemDirectoryHandle/getFile()}} method ### {#api-filesystemdirectoryhandle-getfile}
 
@@ -415,6 +459,20 @@ these steps:
 1. TODO
 
 </div>
+
+### The {{FileSystemDirectoryHandle/resolve()}} method ### {#api-filesystemdirectoryhandle-resolve}
+
+<div class="note domintro">
+</div>
+
+<div algorithm>
+The <dfn method for=FileSystemDirectoryHandle>resolve(|possibleDescendant|)</dfn> method,
+when invoked, must return the result of [=entry/resolving=]
+|possibleDescendant|'s [=FileSystemHandle/entry=] relative to [=this=]'s [=FileSystemHandle/entry=].
+
+</div>
+
+
 
 ## The {{FileSystemWritableFileStream}} interface ## {#api-filesystemwritablefilestream}
 
