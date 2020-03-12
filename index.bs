@@ -64,8 +64,9 @@ A <dfn lt="directory|directory entry">directory entry</dfn> additionally consist
 [=/Entries=] can (but don't have to) be backed by files on the systems native file system,
 as such it is possible for the [=binary data=], [=modification timestamp=],
 and [=children=] of entries to be modified by applications outside of this specification.
-Exactly how external changes are reflected in the data structures defined by this specification
-is left up to individual implementations.
+Exactly how external changes are reflected in the data structures defined by this specification,
+as well as how changes made to the data structures defined here are reflected externally
+is left up to individual user-agent implementations.
 
 An [=/entry=] |a| is <dfn for="entry">the same as</dfn> an [=/entry=] |b| if |a| is equal to |b|, or
 if |a| and |b| are backed by the same file or directory on the native file system.
