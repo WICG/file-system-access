@@ -169,6 +169,8 @@ associated [=FileSystemHandle/entry=].
   :: Returns true if |handle1| and |handle2| represent the same file or directory.
 </div>
 
+Advisement: This method is first available in Chrome 82.
+
 <div algorithm>
 The <dfn method for=FileSystemHandle>isSameEntry(|other|)</dfn> method, when invoked, must run these steps:
 
@@ -463,6 +465,48 @@ these steps:
 ### The {{FileSystemDirectoryHandle/resolve()}} method ### {#api-filesystemdirectoryhandle-resolve}
 
 <div class="note domintro">
+  : |path| = await |directory| . {{FileSystemDirectoryHandle/resolve()|resolve}}( |child| )
+  :: If |child| is equal to |directory|, |path| will be an empty array.
+  :: If |child| is a direct child of |directory|, |path| will be an array containing |child|'s name.
+  :: If |child| is a descendant of |directory|, |path| will be an array containing the names of
+     all the intermediate directories and |child|'s name as last element.
+  :: Otherwise (|directory| and |child| are not related), |path| will be null.
+</div>
+
+Advisement: This method is first available in Chrome 82.
+
+<div class=example id=filesystemdirectoryhandle-resolve-example>
+<xmp highlight=js>
+// Assume we at some point got a valid directory handle.
+const dir_ref = current_project_dir;
+if (!dir_ref) return;
+
+// Now get a file reference by showing a file picker:
+const file_ref = await self.chooseFileSystemEntries({type: 'openFile'});
+if (!file_ref) {
+    // User cancelled, or otherwise failed to open a file.
+    return;
+}
+
+// Check if file_ref exists inside dir_ref:
+const relative_path = await dir_ref.resolve(file_ref);
+if (relative_path === null) {
+    // Not inside dir_ref
+} else {
+    // relative_path is an array of names, giving the relative path
+    // from dir_ref to the file that is represented by file_ref:
+    assert relative_path.pop() == file_ref.name;
+
+    let entry = dir_ref;
+    for (const name of relative_path) {
+        entry = await entry.getDirectory(name);
+    }
+    entry = await entry.getFile(file_ref.name);
+
+    // Now |entry| will represent the same file on disk as |file_ref|.
+    assert await entry.isSameEntry(file_ref) == true;
+}
+</xmp>
 </div>
 
 <div algorithm>
