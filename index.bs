@@ -59,7 +59,7 @@ A <dfn lt="file|file entry">file entry</dfn> additionally consists of <dfn for="
 data</dfn> and a <dfn for="file entry">modification timestamp</dfn>.
 
 A <dfn lt="directory|directory entry">directory entry</dfn> additionally consists of a [=/set=] of
-<dfn for="directory entry">children</dfn>, which are themselves [=/entries=]. Each member is either a [=file=] or a [=directory=].
+<dfn for="directory entry">children</dfn>, which are themselves [=/entries=]. Each member is either a [=/file=] or a [=directory=].
 
 [=/Entries=] can (but don't have to) be backed by files on the systems native file system,
 as such it is possible for the [=binary data=], [=modification timestamp=],
@@ -290,11 +290,10 @@ Advisement: In the Origin Trial as available in Chrome 82, createWritable replac
   : |stream| = await |fileHandle| . {{FileSystemFileHandle/createWritable()}}
   : |stream| = await |fileHandle| . {{FileSystemFileHandle/createWritable()|createWritable}}({ {{FileSystemCreateWritableOptions/keepExistingData}}: true/false })
   :: Returns a {{FileSystemWritableFileStream}} that can be used to write to the file. Any changes made through
-     |stream| won't be reflected in the file represented by |fileHandle| until its
-     {{FileSystemWritableFileStream/close()}} method is called.
+     |stream| won't be reflected in the file represented by |fileHandle| until the stream has been closed.
      User agents try to ensure that no partial writes happen, i.e. the file represented by
      |fileHandle| will either contains its old contents or it will contain whatever data was written
-     through |stream| up until {{FileSystemWritableFileStream/close()}} was called.
+     through |stream| up until the stream has been closed.
 
      This is typically implemented by writing data to a temporary file, and only replacing the file
      represented by |fileHandle| with the temporary file when the writable filestream is closed.
@@ -314,7 +313,12 @@ modifications to existing large files.
 <div algorithm>
 The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method, when invoked, must run these steps:
 
-1. TODO
+1. Issue: TODO: Check permissions.
+1. Let |stream| be the result of [=create a new FileSystemWritableFileStream|creating a new FileSystemWritableFileStream=]
+   for <b>[=this=]</b>'s [=FileSystemHandle/entry=].
+1. If |options|.{{FileSystemCreateWritableOptions/keepExistingData}} is `true`:
+   1. Set |stream|.[=[[buffer]]=] to a copy of <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=file entry/binary data=].
+1. Return [=a promise resolved with=] |stream|.
 
 </div>
 
@@ -523,9 +527,9 @@ when invoked, must return the result of [=entry/resolving=]
 
 <xmp class=idl>
 enum WriteCommandType {
-  "truncate",
-  "seek",
   "write",
+  "seek",
+  "truncate",
 };
 
 dictionary WriteParams {
@@ -535,57 +539,207 @@ dictionary WriteParams {
   (BufferSource or Blob or USVString)? data;
 };
 
+typedef (BufferSource or Blob or USVString or WriteParams) FileSystemWriteChunkType;
+
 [Exposed=(Window,Worker), SecureContext]
 interface FileSystemWritableFileStream : WritableStream {
-  Promise<void> write((BufferSource or Blob or USVString or WriteParams) data);
+  Promise<void> write(FileSystemWriteChunkType data);
   Promise<void> seek(unsigned long long position);
   Promise<void> truncate(unsigned long long size);
 };
 </xmp>
 
-A {{FileSystemWritableFileStream}} object is a {{WritableStream}} object with additional methods to operate
-on a single file on disk.
+A {{FileSystemWritableFileStream}} has an associated <dfn for=FileSystemWritableFileStream>\[[file]]</dfn> (a [=file entry=]).
 
-Upon creation, an underlying sink will have been created and the stream will be usable. All operations executed on the stream are queuable and producers will be able to respond to backpressure.
+A {{FileSystemWritableFileStream}} has an associated <dfn for=FileSystemWritableFileStream>\[[buffer]]</dfn> (a [=byte sequence=]).
+It is initially empty.
 
-The underlying sink's write method, and therefore {{WritableStreamDefaultWriter/write()|WritableStreamDefaultWriter's write()}} method, will accept byte-like data or {{WriteParams}} as input.
+Note: This buffer can get arbitrarily large, so it is expected that implementations will not keep this in memory,
+but instead use a temporary file for this.
 
-The {{FileSystemWritableFileStream}} has a file position cursor initialized at byte offset 0 from the top of the file. When using {{FileSystemWritableFileStream/write()|write()}} or by using WritableStream capabilities through the {{WritableStreamDefaultWriter/write()|WritableStreamDefaultWriter's write()}} method, this position will be advanced based on the number of bytes written through the stream object.
+A {{FileSystemWritableFileStream}} has an associated <dfn for=FileSystemWritableFileStream>\[[seekOffset]]</dfn> (a number).
+It is initially 0.
+
+<div class="note domintro">
+A {{FileSystemWritableFileStream}} object is a {{WritableStream}} object with additional
+convenience methods, which operates on a single file on disk.
+
+Upon creation, an underlying sink will have been created and the stream will be usable.
+All operations executed on the stream are queuable and producers will be able to respond to backpressure.
+
+The underlying sink's write method, and therefore {{WritableStreamDefaultWriter/write()|WritableStreamDefaultWriter's write()}}
+method, will accept byte-like data or {{WriteParams}} as input.
+
+The {{FileSystemWritableFileStream}} has a file position cursor initialized at byte offset 0 from the top of the file.
+When using {{FileSystemWritableFileStream/write()|write()}} or by using WritableStream capabilities through the {{WritableStreamDefaultWriter/write()|WritableStreamDefaultWriter's write()}} method, this position will be advanced based on the number of bytes written through the stream object.
 
 Similarly, when piping a {{ReadableStream}} into a {{FileSystemWritableFileStream}} object, this position is updated with the number of bytes that passed through the stream.
 
 {{WritableStream/getWriter()|getWriter()}} returns an instance of {{WritableStreamDefaultWriter}}.
+</div>
+
+<div algorithm>
+To <dfn>create a new FileSystemWritableFileStream</dfn> given a [=file entry=] `file`, perform the following steps:
+
+1. Let |stream| be a new {{FileSystemWritableFileStream}}.
+1. Perform [$InitializeWritableStream$](|stream|)
+1. Set |stream|.[=FileSystemWritableFileStream/[[file]]=] to [=file entry=].
+1. Let |controller| be a new {{WritableStreamDefaultController}}.
+1. Let |startAlgorithm| be an algorithm that returns `undefined`.
+1. Let |writeAlgorithm| be an algorithm which takes a |chunk| argument
+   and runs the [=write a chunk=] algorithm with |stream| and |chunk|.
+1. Let |closeAlgorithm| be the following steps:
+   1. Issue: TODO: Check permissions.
+   1. Set |stream|.[=[[file]]=]'s [=file entry/binary data=] to |stream|.[=[[buffer]]=].
+      If that throws an exception, return [=a promise rejected with=] that exception.
+
+      Note: it is expected that this atomically updates the contents of the file on disk
+      being written to.
+1. Let |abortAlgorithm| be an algorithm that returns `undefined`.
+1. Let |highWaterMark| be 1.
+1. Let |sizeAlgorithm| be an algorithm that returns `1`.
+1. Perform [$SetUpWritableStreamDefaultController$](|stream|, |controller|, |startAlgorithm|, |writeAlgorithm|, |closeAlgorithm|, |abortAlgorithm|, |highWaterMark|, |sizeAlgorithm|).
+1. Return |stream|.
+
+</div>
+
+<div algorithm>
+The <dfn>write a chunk</dfn> algorithm,
+given a {{FileSystemWritableFileStream}} |stream| and |chunk|,
+runs these steps:
+
+1. Let |input| be the result of [=converting=] |chunk| to a {{FileSystemWriteChunkType}}.
+   If this throws an exception, then return [=a promise rejected with=] that exception.
+1. Let |p| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+   1. Issue: TODO: Check permissions.
+   1. Let |command| be |input|.{{WriteParams/type}} if |input| is a {{WriteParams}},
+      and {{WriteCommandType/"write"}} otherwise.
+   1. If |command| is {{WriteCommandType/"write"}}:
+      1. Let |data| be |input|.{{WriteParams/data}} if |input| is a {{WriteParams}},
+         and |input| otherwise.
+      1. If |data| is `undefined`,
+         reject |p| with a {{TypeError}} and abort.
+      1. Let |writePosition| be |stream|.[=[[seekOffset]]=].
+      1. If |input| is a {{WriteParams}} and |input|.{{WriteParams/position}} is not `undefined`,
+         set |writePosition| to |input|.{{WriteParams/position}}.
+      1. Let |oldSize| be |stream|.[=[[buffer]]=]'s [=byte sequence/length=].
+      1. If |writePosition| is larger than |oldSize|,
+         [=/reject=] |p| with a {{InvalidStateError}} and abort.
+
+         Issue: Not clear if this should reject, and if it does, is this really the right error type?
+         Chrome's implementation is actually inconsistent about this rejecting or not.
+
+      1. If |data| is a {{BufferSource}},
+         let |dataBytes| be [=get a copy of the buffer source|a copy of=] |data|.
+      1. Else if |data| is a {{Blob}}:
+         1. Let |dataBytes| be the result of performing the
+            <a spec=FileAPI>read operation</a> on |data|.
+            If this throws an exception, [=/reject=] |p| with that exception and abort.
+      1. Else:
+         1. [=Assert=]: |data| is a {{USVString}}.
+         1. Let |dataBytes| be the result of [=UTF-8 encoding=] |data|.
+
+      1. Let |head| be a [=byte sequence=] containing the first |writePosition| bytes of |stream|.[=[[buffer]]=].
+      1. Let |tail| be an empty [=byte sequence=].
+      1. If |writePosition| + |data|.[=byte sequence/length=] is smaller than |oldSize|:
+         1. Let |tail| be a [=byte sequence=] containing the last
+            |oldSize| - (|writePosition| + |data|.[=byte sequence/length=]) bytes of |stream|.[=[[buffer]]=].
+      1. Set |stream|.[=[[buffer]]=] to the concatenation of |head|, |data| and |tail|.
+      1. Set |stream|.[=[[seekOffset]]=] to |writePosition| + |data|.[=byte sequence/length=].
+      1. [=/Resolve=] |p|.
+   1. Else if |command| is {{WriteCommandType/"seek"}}:
+      1. If |chunk|.{{WriteParams/position}} is `undefined`,
+         [=/reject=] |p| with a {{TypeError}} and abort.
+      1. Set |stream|.[=[[seekOffset]]=] to |chunk|.{{WriteParams/position}}.
+      1. [=/Resolve=] |p|.
+   1. Else if |command| is {{WriteCommandType/"truncate"}}:
+      1. If |chunk|.{{WriteParams/size}} is `undefined`,
+         [=/reject=] |p| with a {{TypeError}} and abort.
+      1. Let |newSize| be |chunk|.{{WriteParams/size}}.
+      1. Let |oldSize| be |stream|.[=[[buffer]]=]'s [=byte sequence/length=].
+      1. If |newSize| is larger than |oldSize|:
+         1. Set |stream|.[=[[buffer]]=] to a [=byte sequence=] formed by concating
+            |stream|.[=[[buffer]]=] with a [=byte sequence=] containing |newSize|-|oldSize| `0x00` bytes.
+      1. Else if |newSize| is smaller than |oldSize|:
+         1. Set |stream|.[=[[buffer]]=] to a [=byte sequence=] containing the first |newSize| bytes
+            in |stream|.[=[[buffer]]=].
+      1. If |stream|.[=[[seekOffset]]=] is bigger than |newSize|,
+         set |stream|.[=[[seekOffset]]=] to |newSize|.
+      1. [=/Resolve=] |p|.
+1. Return |p|.
+
+</div>
 
 ### The {{FileSystemWritableFileStream/write()}} method ### {#api-filesystemwritablefilestream-write}
 
 <div class="note domintro">
   : await |stream| . {{FileSystemWritableFileStream/write()|write}}(|data|)
+  : await |stream| . {{FileSystemWritableFileStream/write()|write}}({
+      {{WriteParams/type}}: {{WriteCommandType/"write"}},
+      {{WriteParams/data}}: |data| })
   :: Writes the content of |data| into the file associated with |stream| at the current file
-     cursor offset in bytes from the top of the file by default.
+     cursor offset.
 
-     No changes are written to the actual file until on disk until {{FileSystemWritableFileStream/close()}}
-     is called. Changes are typically written to a temporary file instead.
+     No changes are written to the actual file on disk until the stream has been closed.
+     Changes are typically written to a temporary file instead.
 
-     If |data| is of type {{WriteParams}}, validates and executes the content of |data|, which might result in changes into the file associated with |stream|.
+  : await |stream| . {{FileSystemWritableFileStream/write()|write}}({
+      {{WriteParams/type}}: {{WriteCommandType/"write"}},
+      {{WriteParams/position}}: |position|,
+      {{WriteParams/data}}: |data| })
+  :: Writes the content of |data| into the file associated with |stream| at |position|
+     bytes from the top of the file. Also updates the current file cursor offset to the
+     end of the written data.
 
-     {{WriteParams}} requires the attribute {{WriteParams/type|type}} which determines what the operations to
-     execute are.
+     No changes are written to the actual file on disk until the stream has been closed.
+     Changes are typically written to a temporary file instead.
 
-     If {{WriteParams/type|type}} is {{truncate}}, {{WriteParams/size|size}} is a <span class=allow-2119>required</span> attribute.
+  : await |stream| . {{FileSystemWritableFileStream/write()|write}}({
+      {{WriteParams/type}}: {{WriteCommandType/"seek"}},
+      {{WriteParams/position}}: |position| })
+  :: Updates the current file cursor offset the |position| bytes from the top of the file.
 
-     If {{WriteParams/type|type}} is {{seek}}, {{WriteParams/position|position}} is a <span class=allow-2119>required</span> attribute.
+  : await |stream| . {{FileSystemWritableFileStream/write()|write}}({
+      {{WriteParams/type}}: {{WriteCommandType/"truncate"}},
+      {{WriteParams/size}}: |size| })
+  :: Resizes the file associated with |stream| to be |size| bytes long. If |size| is larger than
+     the current file size this pads the file with null bytes, otherwise it truncates the file.
 
-     If {{WriteParams/type|type}} is {{write}}, {{WriteParams/position|position}} is an <span class=allow-2119>optional</span> attribute, {{WriteParams/data|data}} is a <span class=allow-2119>required</span> attribute.
+     The file cursor is updated when {{truncate}} is called. If the offset is smaller than offset,
+     it remains unchanged. If the offset is larger than |size|, the offset is set to |size| to
+     ensure that subsequent writes do not error.
 
-     No changes are written to the actual file until on disk until {{FileSystemWritableFileStream/close()}}
-     is called. Changes are typically written to a temporary file instead.
+     No changes are written to the actual file until on disk until the stream has been closed.
+     Changes are typically written to a temporary file instead.
 </div>
 
 <div algorithm>
 The <dfn method for=FileSystemWritableFileStream>write(|data|)</dfn> method, when invoked, must run
 these steps:
 
-1. TODO
+1. Let |writer| be the result of calling [$AcquireWritableStreamDefaultWriter$](<b>[=this=]</b>).
+1. Let |result| be [$WritableStreamDefaultWriterWrite$](|writer|, |data|).
+1. Perform [$WritableStreamDefaultWriterRelease$](|writer|).
+1. Return |result|.
+
+</div>
+
+### The {{FileSystemWritableFileStream/seek()}} method ### {#api-filesystemwritablefilestream-seek}
+
+<div class="note domintro">
+  : await |stream| . {{FileSystemWritableFileStream/seek()|seek}}(|position|)
+  :: Updates the current file cursor offset the |position| bytes from the top of the file.
+</div>
+
+<div algorithm>
+The <dfn method for=FileSystemWritableFileStream>seek(|position|)</dfn> method, when invoked, must run these
+steps:
+
+1. Let |writer| be the result of calling [$AcquireWritableStreamDefaultWriter$](<b>[=this=]</b>).
+1. Let |result| be [$WritableStreamDefaultWriterWrite$](|writer|, <code>{type: {{WriteCommandType/"seek"}}, position: |position|}</code>).
+1. Perform [$WritableStreamDefaultWriterRelease$](|writer|).
+1. Return |result|.
 
 </div>
 
@@ -600,36 +754,18 @@ these steps:
      it remains unchanged. If the offset is larger than |size|, the offset is set to |size| to
      ensure that subsequent writes do not error.
 
-     No changes are written to the actual file until on disk until {{FileSystemWritableFileStream/close()}}
-     is called. Changes are typically written to a temporary file instead.
+     No changes are written to the actual file until on disk until the stream has been closed.
+     Changes are typically written to a temporary file instead.
 </div>
 
 <div algorithm>
 The <dfn method for=FileSystemWritableFileStream>truncate(|size|)</dfn> method, when invoked, must run these
 steps:
 
-1. TODO
-
-</div>
-
-### The {{FileSystemWritableFileStream/close()}} method ### {#api-filesystemwritablefilestream-close}
-
-<div class="note domintro">
-  : await |stream| . {{FileSystemWritableFileStream/close()}}
-  :: First flushes any data written so far to disk, and then closes the writable stream.
-     No changes will be visible in the destination file until this method is called.
-     Furthermore, if the file on disk changed between creating this |stream| and this invocation of
-     {{FileSystemWritableFileStream/close()}}, this will reject and all future operations on the stream will fail.
-
-     This operation can take some time to complete, as user agents might use this moment to run
-     malware scanners or perform other security checks if the website isn't sufficiently trusted.
-</div>
-
-<div algorithm>
-The <dfn method for=FileSystemWritableFileStream>close()</dfn> method, when invoked, must run these
-steps:
-
-1. TODO
+1. Let |writer| be the result of calling [$AcquireWritableStreamDefaultWriter$](<b>[=this=]</b>).
+1. Let |result| be [$WritableStreamDefaultWriterWrite$](|writer|, <code>{type: {{WriteCommandType/"truncate"}}, size: |size|}</code>).
+1. Perform [$WritableStreamDefaultWriterRelease$](|writer|).
+1. Return |result|.
 
 </div>
 
