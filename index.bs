@@ -72,7 +72,7 @@ An [=/entry=] |a| is <dfn for="entry">the same as</dfn> an [=/entry=] |b| if |a|
 if |a| and |b| are backed by the same file or directory on the native file system.
 
 Issue: TODO: Explain better how entries map to files on disk (multiple entries can map to the same file or
-directory on disk but doesn't have to map to any file on disk).
+directory on disk but an entry doesn't have to map to any file on disk).
 
 <div algorithm>
 To <dfn for="entry">resolve</dfn> an [=/entry=] |child| relative to a [=directory entry=] |root|,
