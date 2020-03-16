@@ -16,6 +16,7 @@ Markup Shorthands: css no, markdown yes
 
 <pre class=link-defaults>
 spec:fetch; type:interface; text:ReadableStream
+spec:webidl; type:dfn; text:resolve
 </pre>
 
 <pre class=anchors>
@@ -50,7 +51,7 @@ This provides similar functionality as earlier drafts of the
 
 ## Concepts ## {#concepts}
 
-A <dfn>entry</dfn> is either a [=file entry=] or a [=directory entry=].
+An <dfn>entry</dfn> is either a [=file entry=] or a [=directory entry=].
 
 Each [=/entry=] has an associated <dfn for=entry>name</dfn>.
 
@@ -58,10 +59,42 @@ A <dfn lt="file|file entry">file entry</dfn> additionally consists of <dfn for="
 data</dfn> and a <dfn for="file entry">modification timestamp</dfn>.
 
 A <dfn lt="directory|directory entry">directory entry</dfn> additionally consists of a [=/set=] of
-<dfn for="directory entry">entries</dfn>. Each member is either a [=file=] or a [=directory=].
+<dfn for="directory entry">children</dfn>, which are themselves [=/entries=]. Each member is either a [=file=] or a [=directory=].
 
-Issue: TODO: Explain how entries map to files on disk (multiple entries can map to the same file or
-directory on disk but doesn't have to map to any file on disk).
+[=/Entries=] can (but don't have to) be backed by files on the systems native file system,
+as such it is possible for the [=binary data=], [=modification timestamp=],
+and [=children=] of entries to be modified by applications outside of this specification.
+Exactly how external changes are reflected in the data structures defined by this specification,
+as well as how changes made to the data structures defined here are reflected externally
+is left up to individual user-agent implementations.
+
+An [=/entry=] |a| is <dfn for="entry">the same as</dfn> an [=/entry=] |b| if |a| is equal to |b|, or
+if |a| and |b| are backed by the same file or directory on the native file system.
+
+Issue: TODO: Explain better how entries map to files on disk (multiple entries can map to the same file or
+directory on disk but an entry doesn't have to map to any file on disk).
+
+<div algorithm>
+To <dfn for="entry">resolve</dfn> an [=/entry=] |child| relative to a [=directory entry=] |root|,
+run the following steps:
+
+1. Let |result| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+  1. If |child| is [=the same as=] |root|,
+     [=/resolve=] |result| with an empty list, and abort these substeps.
+  1. Let |childPromises| be << >>.
+  1. [=set/For each=] |entry| of |root|'s [=FileSystemHandle/entry=]'s [=children=]:
+    1. Let |p| be the result of [=entry/resolving=] |child| relative to |entry|.
+    1. [=list/Append=] |p| to |childPromises|.
+    1. [=Upon fulfillment=] of |p| with value |path|:
+      1. If |path| is not null:
+        1. [=list/Prepend=] |entry|'s [=entry/name=] to |path|.
+        1. [=/Resolve=] |result| with |path|.
+  1. [=Wait for all=] |childPromises|, with the following success steps:
+    1. If |result| hasn't been resolved yet, [=/resolve=] |result| with `null`.
+1. Return |result|.
+
+</div>
 
 ## The {{FileSystemHandle}} interface ## {#api-filesystemhandle}
 
@@ -76,6 +109,8 @@ interface FileSystemHandle {
   readonly attribute boolean isDirectory;
   readonly attribute USVString name;
 
+  Promise<boolean> isSameEntry(FileSystemHandle other);
+
   Promise<PermissionState> queryPermission(optional FileSystemHandlePermissionDescriptor descriptor = {});
   Promise<PermissionState> requestPermission(optional FileSystemHandlePermissionDescriptor descriptor = {});
 };
@@ -88,12 +123,13 @@ the {{FileSystemHandle}} interface can all be associated with the same [=/entry=
 <div algorithm="serialization steps">
 {{FileSystemHandle}} objects are [=serializable objects=].
 
-Advisement: In the Origin Trial as available in Chrome 78, these objects are not yet serializable.
+Advisement: In the Origin Trial as available in Chrome 78, these objects are not yet serializable. 
+In Chrome 82 they are.
 
 Their [=serialization steps=], given |value|, |serialized| and |forStorage| are:
 
 1. Set |serialized|.\[[Origin]] to |value|'s [=relevant settings object=]'s [=environment settings object/origin=].
-1. TODO
+1. Set |serialized|.\[[Entry]] to |value|'s [=FileSystemHandle/entry=].
 
 </div>
 
@@ -103,7 +139,7 @@ Their [=deserialization steps=], given |serialized| and |value| are:
 1. If |serialized|.\[[Origin]] is not [=same origin=] with
    |value|'s [=relevant settings object=]'s [=environment settings object/origin=],
    then throw a {{DataCloneError}}.
-1. TODO
+1. Set |value|'s [=FileSystemHandle/entry=] to |serialized|.\[[Entry]]
 
 </div>
 
@@ -126,6 +162,28 @@ associated [=FileSystemHandle/entry=] is a [=directory entry=], and false otherw
 
 The <dfn attribute for=FileSystemHandle>name</dfn> attribute must return the [=entry/name=] of the
 associated [=FileSystemHandle/entry=].
+
+### The {{FileSystemHandle/isSameEntry()}} method ### {#api-filesystemhandle-issameentry}
+
+<div class="note domintro">
+  : |same| = await |handle1| . {{FileSystemHandle/isSameEntry()|isSameEntry}}( |handle2| )
+  :: Returns true if |handle1| and |handle2| represent the same file or directory.
+</div>
+
+Advisement: This method is first available in Chrome 82.
+
+<div algorithm>
+The <dfn method for=FileSystemHandle>isSameEntry(|other|)</dfn> method, when invoked, must run these steps:
+
+1. Let |realm| be [=this=]'s [=relevant Realm=].
+1. Let |p| be [=a new promise=] in |realm|.
+1. Run the following steps [=in parallel=]:
+  1. If [=this=]'s [=FileSystemHandle/entry=] is [=the same as=] |other|'s [=FileSystemHandle/entry=],
+     [=/resolve=] |p| with `true`.
+  1. Else [=/resolve=] |p| with `false`.
+1. Return |p|.
+
+</div>
 
 ### The {{FileSystemHandle/queryPermission()}} method ### {#api-filesystemhandle-querypermission}
 
@@ -205,7 +263,8 @@ interface FileSystemFileHandle : FileSystemHandle {
 {{FileSystemFileHandle}} objects are [=serializable objects=]. Their [=serialization steps=] and
 [=deserialization steps=] are the same as those for {{FileSystemHandle}}.
 
-Advisement: In the Origin Trial as available in Chrome 78, these objects are not yet serializable.
+Advisement: In the Origin Trial as available in Chrome 78, these objects are not yet serializable. 
+In Chrome 82 they are.
 
 ### The {{FileSystemFileHandle/getFile()}} method ### {#api-filesystemfilehandle-getfile}
 
@@ -283,13 +342,16 @@ interface FileSystemDirectoryHandle : FileSystemHandle {
   object getEntries();
 
   Promise<void> removeEntry(USVString name, optional FileSystemRemoveOptions options = {});
+
+  Promise<sequence<USVString>?> resolve(FileSystemHandle possibleDescendant);
 };
 </xmp>
 
 {{FileSystemDirectoryHandle}} objects are [=serializable objects=]. Their [=serialization steps=] and
 [=deserialization steps=] are the same as those for {{FileSystemHandle}}.
 
-Advisement: In the Origin Trial as available in Chrome 78, these objects are not yet serializable.
+Advisement: In the Origin Trial as available in Chrome 78, these objects are not yet serializable. 
+In Chrome 82 they are.
 
 Issue: Should we have separate getFile and getDirectory methods, or just a single getChild/getEntry
 method?
@@ -300,12 +362,6 @@ previous issue).
 
 Issue(47): Should getEntries be its own method, or should FileSystemDirectoryHandle just be an async
 iterable itself?
-
-Issue(125): We will probably want some method to make it possible to compare two handles, and/or
-determine if one handle represents a descendant of another handle. Such a method will enable for
-example an IDE to detect that the user tries to open a file (through the file picker), where that
-file actually is part of the "project" the IDE has open, allowing the IDE to highlight the selected
-file in a directory tree.
 
 ### The {{FileSystemDirectoryHandle/getFile()}} method ### {#api-filesystemdirectoryhandle-getfile}
 
@@ -407,6 +463,62 @@ these steps:
 
 </div>
 
+### The {{FileSystemDirectoryHandle/resolve()}} method ### {#api-filesystemdirectoryhandle-resolve}
+
+<div class="note domintro">
+  : |path| = await |directory| . {{FileSystemDirectoryHandle/resolve()|resolve}}( |child| )
+  :: If |child| is equal to |directory|, |path| will be an empty array.
+  :: If |child| is a direct child of |directory|, |path| will be an array containing |child|'s name.
+  :: If |child| is a descendant of |directory|, |path| will be an array containing the names of
+     all the intermediate directories and |child|'s name as last element.
+  :: Otherwise (|directory| and |child| are not related), |path| will be null.
+</div>
+
+Advisement: This method is first available in Chrome 82.
+
+<div class=example id=filesystemdirectoryhandle-resolve-example>
+<xmp highlight=js>
+// Assume we at some point got a valid directory handle.
+const dir_ref = current_project_dir;
+if (!dir_ref) return;
+
+// Now get a file reference by showing a file picker:
+const file_ref = await self.chooseFileSystemEntries({type: 'openFile'});
+if (!file_ref) {
+    // User cancelled, or otherwise failed to open a file.
+    return;
+}
+
+// Check if file_ref exists inside dir_ref:
+const relative_path = await dir_ref.resolve(file_ref);
+if (relative_path === null) {
+    // Not inside dir_ref
+} else {
+    // relative_path is an array of names, giving the relative path
+    // from dir_ref to the file that is represented by file_ref:
+    assert relative_path.pop() == file_ref.name;
+
+    let entry = dir_ref;
+    for (const name of relative_path) {
+        entry = await entry.getDirectory(name);
+    }
+    entry = await entry.getFile(file_ref.name);
+
+    // Now |entry| will represent the same file on disk as |file_ref|.
+    assert await entry.isSameEntry(file_ref) == true;
+}
+</xmp>
+</div>
+
+<div algorithm>
+The <dfn method for=FileSystemDirectoryHandle>resolve(|possibleDescendant|)</dfn> method,
+when invoked, must return the result of [=entry/resolving=]
+|possibleDescendant|'s [=FileSystemHandle/entry=] relative to [=this=]'s [=FileSystemHandle/entry=].
+
+</div>
+
+
+
 ## The {{FileSystemWritableFileStream}} interface ## {#api-filesystemwritablefilestream}
 
 <xmp class=idl>
@@ -423,7 +535,7 @@ dictionary WriteParams {
   (BufferSource or Blob or USVString)? data;
 };
 
-[Exposed=(Window,Worker), SecureContext, Serializable]
+[Exposed=(Window,Worker), SecureContext]
 interface FileSystemWritableFileStream : WritableStream {
   Promise<void> write((BufferSource or Blob or USVString or WriteParams) data);
   Promise<void> seek(unsigned long long position);
@@ -443,28 +555,6 @@ The {{FileSystemWritableFileStream}} has a file position cursor initialized at b
 Similarly, when piping a {{ReadableStream}} into a {{FileSystemWritableFileStream}} object, this position is updated with the number of bytes that passed through the stream.
 
 {{WritableStream/getWriter()|getWriter()}} returns an instance of {{WritableStreamDefaultWriter}}.
-
-<div algorithm="serialization steps">
-{{FileSystemWritableFileStream}} objects are [=serializable objects=]. They not cloneable, i.e. they are transferable-only, as are {{WritableStream}} objects.
-
-Advisement: In the Origin Trial as available in Chrome 82, these objects are not yet serializable.
-
-Their [=serialization steps=], given |value|, |serialized| and |forStorage| are:
-
-1. Set |serialized|.\[[Origin]] to |value|'s [=relevant settings object=]'s [=environment settings object/origin=].
-1. TODO
-
-</div>
-
-<div algorithm="deserialization steps">
-Their [=deserialization steps=], given |serialized| and |value| are:
-
-1. If |serialized|.\[[Origin]] is not [=same origin=] with
-   |value|'s [=relevant settings object=]'s [=environment settings object/origin=],
-   then throw a {{DataCloneError}}.
-1. TODO
-
-</div>
 
 ### The {{FileSystemWritableFileStream/write()}} method ### {#api-filesystemwritablefilestream-write}
 
