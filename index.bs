@@ -555,7 +555,8 @@ A {{FileSystemWritableFileStream}} has an associated <dfn for=FileSystemWritable
 It is initially empty.
 
 Note: This buffer can get arbitrarily large, so it is expected that implementations will not keep this in memory,
-but instead use a temporary file for this.
+but instead use a temporary file for this. All access to \[[buffer]] is done in promise returning methods and
+algorithms, so even though operations on it seem sync, implementations can implement them async.
 
 A {{FileSystemWritableFileStream}} has an associated <dfn for=FileSystemWritableFileStream>\[[seekOffset]]</dfn> (a number).
 It is initially 0.
