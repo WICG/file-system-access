@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 7dd49ddf2b095c0a9accc859934f2349a4fb5d3c" name="generator">
+  <meta content="Bikeshed version 576ef4f5126e3fb83bf07d9bbe1a64f99aa4944e" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="449ec17462b8cb0bf797f932843caa5e3e2f10bb" name="document-revision">
+  <meta content="3027b31548eb0ec0694fb442822c27209355003b" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1496,7 +1496,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-03-16">16 March 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-03-18">18 March 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1565,8 +1565,8 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
        <a href="#api-filesystemwritablefilestream"><span class="secno">2.5</span> <span class="content">The <code class="idl"><span>FileSystemWritableFileStream</span></code> interface</span></a>
        <ol class="toc">
         <li><a href="#api-filesystemwritablefilestream-write"><span class="secno">2.5.1</span> <span class="content">The <code class="idl"><span>write()</span></code> method</span></a>
-        <li><a href="#api-filesystemwritablefilestream-truncate"><span class="secno">2.5.2</span> <span class="content">The <code class="idl"><span>truncate()</span></code> method</span></a>
-        <li><a href="#api-filesystemwritablefilestream-close"><span class="secno">2.5.3</span> <span class="content">The <code class="idl"><span>close()</span></code> method</span></a>
+        <li><a href="#api-filesystemwritablefilestream-seek"><span class="secno">2.5.2</span> <span class="content">The <code class="idl"><span>seek()</span></code> method</span></a>
+        <li><a href="#api-filesystemwritablefilestream-truncate"><span class="secno">2.5.3</span> <span class="content">The <code class="idl"><span>truncate()</span></code> method</span></a>
        </ol>
      </ol>
     <li>
@@ -1857,9 +1857,9 @@ In Chrome 82 they are.</strong></p>
      <dt data-md><var>stream</var> = await <var>fileHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemfilehandle-createwritable" id="ref-for-dom-filesystemfilehandle-createwritable②">createWritable()</a></code>
      <dt data-md><var>stream</var> = await <var>fileHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemfilehandle-createwritable" id="ref-for-dom-filesystemfilehandle-createwritable③">createWritable</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-filesystemcreatewritableoptions-keepexistingdata" id="ref-for-dom-filesystemcreatewritableoptions-keepexistingdata">keepExistingData</a></code>: true/false })
      <dd data-md>
-      <p>Returns a <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream①">FileSystemWritableFileStream</a></code> that can be used to write to the file. Any changes made through <var>stream</var> won’t be reflected in the file represented by <var>fileHandle</var> until its <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-close" id="ref-for-dom-filesystemwritablefilestream-close">close()</a></code> method is called.
+      <p>Returns a <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream①">FileSystemWritableFileStream</a></code> that can be used to write to the file. Any changes made through <var>stream</var> won’t be reflected in the file represented by <var>fileHandle</var> until the stream has been closed.
  User agents try to ensure that no partial writes happen, i.e. the file represented by <var>fileHandle</var> will either contains its old contents or it will contain whatever data was written
- through <var>stream</var> up until <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-close" id="ref-for-dom-filesystemwritablefilestream-close①">close()</a></code> was called.</p>
+ through <var>stream</var> up until the stream has been closed.</p>
       <p>This is typically implemented by writing data to a temporary file, and only replacing the file
  represented by <var>fileHandle</var> with the temporary file when the writable filestream is closed.</p>
       <p>If <code class="idl"><a data-link-type="idl" href="#dom-filesystemcreatewritableoptions-keepexistingdata" id="ref-for-dom-filesystemcreatewritableoptions-keepexistingdata①">keepExistingData</a></code> is <code>false</code> or not specified,
@@ -1877,7 +1877,17 @@ modifications to existing large files. <a href="https://github.com/wicg/native-f
      The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemFileHandle" data-dfn-type="method" data-export data-lt="createWritable(options)|createWritable()" id="dom-filesystemfilehandle-createwritable"><code>createWritable(<var>options</var>)</code></dfn> method, when invoked, must run these steps: 
     <ol>
      <li data-md>
-      <p>TODO</p>
+      <p class="issue" id="issue-734c6e4e"><a class="self-link" href="#issue-734c6e4e"></a> TODO: Check permissions.</p>
+     <li data-md>
+      <p>Let <var>stream</var> be the result of <a data-link-type="dfn" href="#create-a-new-filesystemwritablefilestream" id="ref-for-create-a-new-filesystemwritablefilestream">creating a new FileSystemWritableFileStream</a> for <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑧">entry</a>.</p>
+     <li data-md>
+      <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystemcreatewritableoptions-keepexistingdata" id="ref-for-dom-filesystemcreatewritableoptions-keepexistingdata②">keepExistingData</a></code> is <code>true</code>:</p>
+      <ol>
+       <li data-md>
+        <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer">[[buffer]]</a> to a copy of <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this③">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑨">entry</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data①">binary data</a>.</p>
+      </ol>
+     <li data-md>
+      <p>Return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with">a promise resolved with</a> <var>stream</var>.</p>
     </ol>
    </div>
    <h3 class="heading settled" data-level="2.4" id="api-filesystemdirectoryhandle"><span class="secno">2.4. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①">FileSystemDirectoryHandle</a></code> interface</span><a class="self-link" href="#api-filesystemdirectoryhandle"></a></h3>
@@ -2064,12 +2074,12 @@ these steps:
 </pre>
    </div>
    <div class="algorithm" data-algorithm="resolve(possibleDescendant)"> The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export id="dom-filesystemdirectoryhandle-resolve"><code>resolve(<var>possibleDescendant</var>)</code></dfn> method,
-when invoked, must return the result of <a data-link-type="dfn" href="#entry-resolve" id="ref-for-entry-resolve①">resolving</a> <var>possibleDescendant</var>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑧">entry</a> relative to <a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②">this</a>'s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑨">entry</a>. </div>
+when invoked, must return the result of <a data-link-type="dfn" href="#entry-resolve" id="ref-for-entry-resolve①">resolving</a> <var>possibleDescendant</var>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⓪">entry</a> relative to <a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this④">this</a>'s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①①">entry</a>. </div>
    <h3 class="heading settled" data-level="2.5" id="api-filesystemwritablefilestream"><span class="secno">2.5. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream②">FileSystemWritableFileStream</a></code> interface</span><a class="self-link" href="#api-filesystemwritablefilestream"></a></h3>
 <pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-writecommandtype"><code><c- g>WriteCommandType</c-></code></dfn> {
-  <dfn class="dfn-paneled idl-code" data-dfn-for="WriteCommandType" data-dfn-type="enum-value" data-export id="dom-writecommandtype-truncate"><code><c- s>"truncate"</c-></code></dfn>,
-  <dfn class="dfn-paneled idl-code" data-dfn-for="WriteCommandType" data-dfn-type="enum-value" data-export id="dom-writecommandtype-seek"><code><c- s>"seek"</c-></code></dfn>,
   <dfn class="dfn-paneled idl-code" data-dfn-for="WriteCommandType" data-dfn-type="enum-value" data-export id="dom-writecommandtype-write"><code><c- s>"write"</c-></code></dfn>,
+  <dfn class="dfn-paneled idl-code" data-dfn-for="WriteCommandType" data-dfn-type="enum-value" data-export id="dom-writecommandtype-seek"><code><c- s>"seek"</c-></code></dfn>,
+  <dfn class="dfn-paneled idl-code" data-dfn-for="WriteCommandType" data-dfn-type="enum-value" data-export id="dom-writecommandtype-truncate"><code><c- s>"truncate"</c-></code></dfn>,
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-writeparams"><code><c- g>WriteParams</c-></code></dfn> {
@@ -2079,35 +2089,219 @@ when invoked, must return the result of <a data-link-type="dfn" href="#entry-res
   (<a class="n" data-link-type="idl-name" href="https://heycam.github.io/webidl/#BufferSource" id="ref-for-BufferSource"><c- n>BufferSource</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-Blob" id="ref-for-dfn-Blob"><c- n>Blob</c-></a> <c- b>or</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑤"><c- b>USVString</c-></a>)? <dfn class="dfn-paneled idl-code" data-dfn-for="WriteParams" data-dfn-type="dict-member" data-export data-type="(BufferSource or Blob or USVString)? " id="dom-writeparams-data"><code><c- g>data</c-></code></dfn>;
 };
 
+<c- b>typedef</c-> (<a class="n" data-link-type="idl-name" href="https://heycam.github.io/webidl/#BufferSource" id="ref-for-BufferSource①"><c- n>BufferSource</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-Blob" id="ref-for-dfn-Blob①"><c- n>Blob</c-></a> <c- b>or</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑥"><c- b>USVString</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="#dictdef-writeparams" id="ref-for-dictdef-writeparams"><c- n>WriteParams</c-></a>) <dfn class="dfn-paneled idl-code" data-dfn-type="typedef" data-export id="typedefdef-filesystemwritechunktype"><code><c- g>FileSystemWriteChunkType</c-></code></dfn>;
+
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed③"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->), <a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext③"><c- g>SecureContext</c-></a>]
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemwritablefilestream"><code><c- g>FileSystemWritableFileStream</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#ws-class" id="ref-for-ws-class"><c- n>WritableStream</c-></a> {
-  <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write"><c- g>write</c-></a>((<a class="n" data-link-type="idl-name" href="https://heycam.github.io/webidl/#BufferSource" id="ref-for-BufferSource①"><c- n>BufferSource</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-Blob" id="ref-for-dfn-Blob①"><c- n>Blob</c-></a> <c- b>or</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑥"><c- b>USVString</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="#dictdef-writeparams" id="ref-for-dictdef-writeparams"><c- n>WriteParams</c-></a>) <dfn class="idl-code" data-dfn-for="FileSystemWritableFileStream/write(data)" data-dfn-type="argument" data-export id="dom-filesystemwritablefilestream-write-data-data"><code><c- g>data</c-></code><a class="self-link" href="#dom-filesystemwritablefilestream-write-data-data"></a></dfn>);
-  <c- b>Promise</c->&lt;<c- b>void</c->> <dfn class="idl-code" data-dfn-for="FileSystemWritableFileStream" data-dfn-type="method" data-export data-lt="seek(position)" id="dom-filesystemwritablefilestream-seek"><code><c- g>seek</c-></code><a class="self-link" href="#dom-filesystemwritablefilestream-seek"></a></dfn>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long②"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemWritableFileStream/seek(position)" data-dfn-type="argument" data-export id="dom-filesystemwritablefilestream-seek-position-position"><code><c- g>position</c-></code><a class="self-link" href="#dom-filesystemwritablefilestream-seek-position-position"></a></dfn>);
+  <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write"><c- g>write</c-></a>(<a class="n" data-link-type="idl-name" href="#typedefdef-filesystemwritechunktype" id="ref-for-typedefdef-filesystemwritechunktype"><c- n>FileSystemWriteChunkType</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemWritableFileStream/write(data)" data-dfn-type="argument" data-export id="dom-filesystemwritablefilestream-write-data-data"><code><c- g>data</c-></code><a class="self-link" href="#dom-filesystemwritablefilestream-write-data-data"></a></dfn>);
+  <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-seek" id="ref-for-dom-filesystemwritablefilestream-seek"><c- g>seek</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long②"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemWritableFileStream/seek(position)" data-dfn-type="argument" data-export id="dom-filesystemwritablefilestream-seek-position-position"><code><c- g>position</c-></code><a class="self-link" href="#dom-filesystemwritablefilestream-seek-position-position"></a></dfn>);
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-truncate" id="ref-for-dom-filesystemwritablefilestream-truncate"><c- g>truncate</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long③"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemWritableFileStream/truncate(size)" data-dfn-type="argument" data-export id="dom-filesystemwritablefilestream-truncate-size-size"><code><c- g>size</c-></code><a class="self-link" href="#dom-filesystemwritablefilestream-truncate-size-size"></a></dfn>);
 };
 </pre>
-   <p>A <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream③">FileSystemWritableFileStream</a></code> object is a <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#ws-class" id="ref-for-ws-class①">WritableStream</a></code> object with additional methods to operate
-on a single file on disk.</p>
-   <p>Upon creation, an underlying sink will have been created and the stream will be usable. All operations executed on the stream are queuable and producers will be able to respond to backpressure.</p>
-   <p>The underlying sink’s write method, and therefore <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#default-writer-write" id="ref-for-default-writer-write">WritableStreamDefaultWriter’s write()</a></code> method, will accept byte-like data or <code class="idl"><a data-link-type="idl" href="#dictdef-writeparams" id="ref-for-dictdef-writeparams①">WriteParams</a></code> as input.</p>
-   <p>The <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream④">FileSystemWritableFileStream</a></code> has a file position cursor initialized at byte offset 0 from the top of the file. When using <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write①">write()</a></code> or by using WritableStream capabilities through the <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#default-writer-write" id="ref-for-default-writer-write①">WritableStreamDefaultWriter’s write()</a></code> method, this position will be advanced based on the number of bytes written through the stream object.</p>
-   <p>Similarly, when piping a <code class="idl"><a data-link-type="idl" href="https://fetch.spec.whatwg.org/#concept-readablestream" id="ref-for-concept-readablestream">ReadableStream</a></code> into a <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑤">FileSystemWritableFileStream</a></code> object, this position is updated with the number of bytes that passed through the stream.</p>
-   <p><code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#ws-get-writer" id="ref-for-ws-get-writer">getWriter()</a></code> returns an instance of <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#default-writer-class" id="ref-for-default-writer-class">WritableStreamDefaultWriter</a></code>.</p>
+   <p>A <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream③">FileSystemWritableFileStream</a></code> has an associated <dfn class="dfn-paneled" data-dfn-for="FileSystemWritableFileStream" data-dfn-type="dfn" data-noexport id="filesystemwritablefilestream-file">[[file]]</dfn> (a <a data-link-type="dfn" href="#file" id="ref-for-file③">file entry</a>).</p>
+   <p>A <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream④">FileSystemWritableFileStream</a></code> has an associated <dfn class="dfn-paneled" data-dfn-for="FileSystemWritableFileStream" data-dfn-type="dfn" data-noexport id="filesystemwritablefilestream-buffer">[[buffer]]</dfn> (a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence">byte sequence</a>).
+It is initially empty.</p>
+   <p class="note" role="note"><span>Note:</span> This buffer can get arbitrarily large, so it is expected that implementations will not keep this in memory,
+but instead use a temporary file for this. All access to [[buffer]] is done in promise returning methods and
+algorithms, so even though operations on it seem sync, implementations can implement them async.</p>
+   <p>A <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑤">FileSystemWritableFileStream</a></code> has an associated <dfn class="dfn-paneled" data-dfn-for="FileSystemWritableFileStream" data-dfn-type="dfn" data-noexport id="filesystemwritablefilestream-seekoffset">[[seekOffset]]</dfn> (a number).
+It is initially 0.</p>
+   <div class="note domintro" role="note">
+     A <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑥">FileSystemWritableFileStream</a></code> object is a <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#ws-class" id="ref-for-ws-class①">WritableStream</a></code> object with additional
+convenience methods, which operates on a single file on disk. 
+    <p>Upon creation, an underlying sink will have been created and the stream will be usable.
+All operations executed on the stream are queuable and producers will be able to respond to backpressure.</p>
+    <p>The underlying sink’s write method, and therefore <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#default-writer-write" id="ref-for-default-writer-write">WritableStreamDefaultWriter’s write()</a></code> method, will accept byte-like data or <code class="idl"><a data-link-type="idl" href="#dictdef-writeparams" id="ref-for-dictdef-writeparams①">WriteParams</a></code> as input.</p>
+    <p>The <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑦">FileSystemWritableFileStream</a></code> has a file position cursor initialized at byte offset 0 from the top of the file.
+When using <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write①">write()</a></code> or by using WritableStream capabilities through the <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#default-writer-write" id="ref-for-default-writer-write①">WritableStreamDefaultWriter’s write()</a></code> method, this position will be advanced based on the number of bytes written through the stream object.</p>
+    <p>Similarly, when piping a <code class="idl"><a data-link-type="idl" href="https://fetch.spec.whatwg.org/#concept-readablestream" id="ref-for-concept-readablestream">ReadableStream</a></code> into a <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑧">FileSystemWritableFileStream</a></code> object, this position is updated with the number of bytes that passed through the stream.</p>
+    <p><code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#ws-get-writer" id="ref-for-ws-get-writer">getWriter()</a></code> returns an instance of <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#default-writer-class" id="ref-for-default-writer-class">WritableStreamDefaultWriter</a></code>.</p>
+   </div>
+   <div class="algorithm" data-algorithm="create a new FileSystemWritableFileStream">
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="create-a-new-filesystemwritablefilestream">create a new FileSystemWritableFileStream</dfn> given a <a data-link-type="dfn" href="#file" id="ref-for-file④">file entry</a> <code>file</code>, perform the following steps: 
+    <ol>
+     <li data-md>
+      <p>Let <var>stream</var> be a new <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑨">FileSystemWritableFileStream</a></code>.</p>
+     <li data-md>
+      <p>Perform <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#initialize-writable-stream" id="ref-for-initialize-writable-stream">InitializeWritableStream</a>(<var>stream</var>)</p>
+     <li data-md>
+      <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file">[[file]]</a> to <a data-link-type="dfn" href="#file" id="ref-for-file⑤">file entry</a>.</p>
+     <li data-md>
+      <p>Let <var>controller</var> be a new <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#ws-default-controller-class" id="ref-for-ws-default-controller-class">WritableStreamDefaultController</a></code>.</p>
+     <li data-md>
+      <p>Let <var>startAlgorithm</var> be an algorithm that returns <code>undefined</code>.</p>
+     <li data-md>
+      <p>Let <var>writeAlgorithm</var> be an algorithm which takes a <var>chunk</var> argument
+ and returns the result of running the <a data-link-type="dfn" href="#write-a-chunk" id="ref-for-write-a-chunk">write a chunk</a> algorithm with <var>stream</var> and <var>chunk</var>.</p>
+     <li data-md>
+      <p>Let <var>closeAlgorithm</var> be the following steps:</p>
+      <ol>
+       <li data-md>
+        <p class="issue" id="issue-734c6e4e①"><a class="self-link" href="#issue-734c6e4e①"></a> TODO: Check permissions.</p>
+       <li data-md>
+        <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file①">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data②">binary data</a> to <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer①">[[buffer]]</a>.
+  If that throws an exception, return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with">a promise rejected with</a> that exception.</p>
+        <p class="note" role="note"><span>Note:</span> it is expected that this atomically updates the contents of the file on disk
+  being written to.</p>
+       <li data-md>
+        <p>Return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with①">a promise resolved with</a> <code>undefined</code>.</p>
+      </ol>
+     <li data-md>
+      <p>Let <var>abortAlgorithm</var> be an algorithm that returns <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with②">a promise resolved with</a> <code>undefined</code>.</p>
+     <li data-md>
+      <p>Let <var>highWaterMark</var> be 1.</p>
+     <li data-md>
+      <p>Let <var>sizeAlgorithm</var> be an algorithm that returns <code>1</code>.</p>
+     <li data-md>
+      <p>Perform <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#set-up-writable-stream-default-controller" id="ref-for-set-up-writable-stream-default-controller">SetUpWritableStreamDefaultController</a>(<var>stream</var>, <var>controller</var>, <var>startAlgorithm</var>, <var>writeAlgorithm</var>, <var>closeAlgorithm</var>, <var>abortAlgorithm</var>, <var>highWaterMark</var>, <var>sizeAlgorithm</var>).</p>
+     <li data-md>
+      <p>Return <var>stream</var>.</p>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="write a chunk">
+     The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="write-a-chunk">write a chunk</dfn> algorithm,
+given a <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream①⓪">FileSystemWritableFileStream</a></code> <var>stream</var> and <var>chunk</var>,
+runs these steps: 
+    <ol>
+     <li data-md>
+      <p>Let <var>input</var> be the result of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#javascript-string-convert" id="ref-for-javascript-string-convert">converting</a> <var>chunk</var> to a <code class="idl"><a data-link-type="idl" href="#typedefdef-filesystemwritechunktype" id="ref-for-typedefdef-filesystemwritechunktype①">FileSystemWriteChunkType</a></code>.
+ If this throws an exception, then return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with①">a promise rejected with</a> that exception.</p>
+     <li data-md>
+      <p>Let <var>p</var> be <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-new-promise" id="ref-for-a-new-promise②">a new promise</a>.</p>
+     <li data-md>
+      <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel②">in parallel</a>:</p>
+      <ol>
+       <li data-md>
+        <p class="issue" id="issue-734c6e4e②"><a class="self-link" href="#issue-734c6e4e②"></a> TODO: Check permissions.</p>
+       <li data-md>
+        <p>Let <var>command</var> be <var>input</var>.<code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type">type</a></code> if <var>input</var> is a <code class="idl"><a data-link-type="idl" href="#dictdef-writeparams" id="ref-for-dictdef-writeparams②">WriteParams</a></code>,
+  and <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-write" id="ref-for-dom-writecommandtype-write">"write"</a></code> otherwise.</p>
+       <li data-md>
+        <p>If <var>command</var> is <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-write" id="ref-for-dom-writecommandtype-write①">"write"</a></code>:</p>
+        <ol>
+         <li data-md>
+          <p>Let <var>data</var> be <var>input</var>.<code class="idl"><a data-link-type="idl" href="#dom-writeparams-data" id="ref-for-dom-writeparams-data">data</a></code> if <var>input</var> is a <code class="idl"><a data-link-type="idl" href="#dictdef-writeparams" id="ref-for-dictdef-writeparams③">WriteParams</a></code>,
+ and <var>input</var> otherwise.</p>
+         <li data-md>
+          <p>If <var>data</var> is <code>undefined</code>,
+ reject <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror">TypeError</a></code> and abort.</p>
+         <li data-md>
+          <p>Let <var>writePosition</var> be <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-seekoffset" id="ref-for-filesystemwritablefilestream-seekoffset">[[seekOffset]]</a>.</p>
+         <li data-md>
+          <p>If <var>input</var> is a <code class="idl"><a data-link-type="idl" href="#dictdef-writeparams" id="ref-for-dictdef-writeparams④">WriteParams</a></code> and <var>input</var>.<code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position">position</a></code> is not <code>undefined</code>,
+ set <var>writePosition</var> to <var>input</var>.<code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position①">position</a></code>.</p>
+         <li data-md>
+          <p>Let <var>oldSize</var> be <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer②">[[buffer]]</a>'s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length">length</a>.</p>
+         <li data-md>
+          <p>If <var>writePosition</var> is larger than <var>oldSize</var>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject">reject</a> <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#invalidstateerror" id="ref-for-invalidstateerror">InvalidStateError</a></code> and abort.</p>
+          <p class="issue" id="issue-9aa12629"><a class="self-link" href="#issue-9aa12629"></a> Not clear if this should reject, and if it does, is this really the right error type?
+ Chrome’s implementation is actually inconsistent about this rejecting or not.</p>
+         <li data-md>
+          <p>If <var>data</var> is a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#BufferSource" id="ref-for-BufferSource②">BufferSource</a></code>,
+ let <var>dataBytes</var> be <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-get-buffer-source-copy" id="ref-for-dfn-get-buffer-source-copy">a copy of</a> <var>data</var>.</p>
+         <li data-md>
+          <p>Else if <var>data</var> is a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/FileAPI/#dfn-Blob" id="ref-for-dfn-Blob②">Blob</a></code>:</p>
+          <ol>
+           <li data-md>
+            <p>Let <var>dataBytes</var> be the result of performing the <a data-link-type="dfn" href="https://w3c.github.io/FileAPI/#readOperation" id="ref-for-readOperation">read operation</a> on <var>data</var>.
+  If this throws an exception, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject①">reject</a> <var>p</var> with that exception and abort.</p>
+          </ol>
+         <li data-md>
+          <p>Else:</p>
+          <ol>
+           <li data-md>
+            <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert">Assert</a>: <var>data</var> is a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑦">USVString</a></code>.</p>
+           <li data-md>
+            <p>Let <var>dataBytes</var> be the result of <a data-link-type="dfn" href="https://encoding.spec.whatwg.org/#utf-8-encode" id="ref-for-utf-8-encode">UTF-8 encoding</a> <var>data</var>.</p>
+          </ol>
+         <li data-md>
+          <p>Let <var>head</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence①">byte sequence</a> containing the first <var>writePosition</var> bytes of <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer③">[[buffer]]</a>.</p>
+         <li data-md>
+          <p>Let <var>tail</var> be an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence②">byte sequence</a>.</p>
+         <li data-md>
+          <p>If <var>writePosition</var> + <var>data</var>.<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length①">length</a> is smaller than <var>oldSize</var>:</p>
+          <ol>
+           <li data-md>
+            <p>Let <var>tail</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence③">byte sequence</a> containing the last <var>oldSize</var> - (<var>writePosition</var> + <var>data</var>.<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length②">length</a>) bytes of <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer④">[[buffer]]</a>.</p>
+          </ol>
+         <li data-md>
+          <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑤">[[buffer]]</a> to the concatenation of <var>head</var>, <var>data</var> and <var>tail</var>.</p>
+         <li data-md>
+          <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-seekoffset" id="ref-for-filesystemwritablefilestream-seekoffset①">[[seekOffset]]</a> to <var>writePosition</var> + <var>data</var>.<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length③">length</a>.</p>
+         <li data-md>
+          <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve⑤">Resolve</a> <var>p</var>.</p>
+        </ol>
+       <li data-md>
+        <p>Else if <var>command</var> is <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-seek" id="ref-for-dom-writecommandtype-seek">"seek"</a></code>:</p>
+        <ol>
+         <li data-md>
+          <p>If <var>chunk</var>.<code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position②">position</a></code> is <code>undefined</code>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②">reject</a> <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①">TypeError</a></code> and abort.</p>
+         <li data-md>
+          <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-seekoffset" id="ref-for-filesystemwritablefilestream-seekoffset②">[[seekOffset]]</a> to <var>chunk</var>.<code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position③">position</a></code>.</p>
+         <li data-md>
+          <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve⑥">Resolve</a> <var>p</var>.</p>
+        </ol>
+       <li data-md>
+        <p>Else if <var>command</var> is <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate">"truncate"</a></code>:</p>
+        <ol>
+         <li data-md>
+          <p>If <var>chunk</var>.<code class="idl"><a data-link-type="idl" href="#dom-writeparams-size" id="ref-for-dom-writeparams-size">size</a></code> is <code>undefined</code>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject③">reject</a> <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror②">TypeError</a></code> and abort.</p>
+         <li data-md>
+          <p>Let <var>newSize</var> be <var>chunk</var>.<code class="idl"><a data-link-type="idl" href="#dom-writeparams-size" id="ref-for-dom-writeparams-size①">size</a></code>.</p>
+         <li data-md>
+          <p>Let <var>oldSize</var> be <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑥">[[buffer]]</a>'s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length④">length</a>.</p>
+         <li data-md>
+          <p>If <var>newSize</var> is larger than <var>oldSize</var>:</p>
+          <ol>
+           <li data-md>
+            <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑦">[[buffer]]</a> to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence④">byte sequence</a> formed by concating <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑧">[[buffer]]</a> with a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑤">byte sequence</a> containing <var>newSize</var>-<var>oldSize</var> <code>0x00</code> bytes.</p>
+          </ol>
+         <li data-md>
+          <p>Else if <var>newSize</var> is smaller than <var>oldSize</var>:</p>
+          <ol>
+           <li data-md>
+            <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑨">[[buffer]]</a> to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑥">byte sequence</a> containing the first <var>newSize</var> bytes
+  in <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer①⓪">[[buffer]]</a>.</p>
+          </ol>
+         <li data-md>
+          <p>If <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-seekoffset" id="ref-for-filesystemwritablefilestream-seekoffset③">[[seekOffset]]</a> is bigger than <var>newSize</var>,
+ set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-seekoffset" id="ref-for-filesystemwritablefilestream-seekoffset④">[[seekOffset]]</a> to <var>newSize</var>.</p>
+         <li data-md>
+          <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve⑦">Resolve</a> <var>p</var>.</p>
+        </ol>
+      </ol>
+     <li data-md>
+      <p>Return <var>p</var>.</p>
+    </ol>
+   </div>
    <h4 class="heading settled" data-level="2.5.1" id="api-filesystemwritablefilestream-write"><span class="secno">2.5.1. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write②">write()</a></code> method</span><a class="self-link" href="#api-filesystemwritablefilestream-write"></a></h4>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md>await <var>stream</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write③">write</a></code>(<var>data</var>)
+     <dt data-md>await <var>stream</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write④">write</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type①">type</a></code>: <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-write" id="ref-for-dom-writecommandtype-write②">"write"</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-data" id="ref-for-dom-writeparams-data①">data</a></code>: <var>data</var> })
      <dd data-md>
       <p>Writes the content of <var>data</var> into the file associated with <var>stream</var> at the current file
- cursor offset in bytes from the top of the file by default.</p>
-      <p>No changes are written to the actual file until on disk until <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-close" id="ref-for-dom-filesystemwritablefilestream-close②">close()</a></code> is called. Changes are typically written to a temporary file instead.</p>
-      <p>If <var>data</var> is of type <code class="idl"><a data-link-type="idl" href="#dictdef-writeparams" id="ref-for-dictdef-writeparams②">WriteParams</a></code>, validates and executes the content of <var>data</var>, which might result in changes into the file associated with <var>stream</var>.</p>
-      <p><code class="idl"><a data-link-type="idl" href="#dictdef-writeparams" id="ref-for-dictdef-writeparams③">WriteParams</a></code> requires the attribute <code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type">type</a></code> which determines what the operations to
- execute are.</p>
-      <p>If <code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type①">type</a></code> is <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate">truncate</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-size" id="ref-for-dom-writeparams-size">size</a></code> is a <span class="allow-2119">required</span> attribute.</p>
-      <p>If <code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type②">type</a></code> is <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-seek" id="ref-for-dom-writecommandtype-seek">seek</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position">position</a></code> is a <span class="allow-2119">required</span> attribute.</p>
-      <p>If <code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type③">type</a></code> is <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-write" id="ref-for-dom-writecommandtype-write">write</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position①">position</a></code> is an <span class="allow-2119">optional</span> attribute, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-data" id="ref-for-dom-writeparams-data">data</a></code> is a <span class="allow-2119">required</span> attribute.</p>
-      <p>No changes are written to the actual file until on disk until <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-close" id="ref-for-dom-filesystemwritablefilestream-close③">close()</a></code> is called. Changes are typically written to a temporary file instead.</p>
+ cursor offset.</p>
+      <p>No changes are written to the actual file on disk until the stream has been closed.
+ Changes are typically written to a temporary file instead.</p>
+     <dt data-md>await <var>stream</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write⑤">write</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type②">type</a></code>: <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-write" id="ref-for-dom-writecommandtype-write③">"write"</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position④">position</a></code>: <var>position</var>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-data" id="ref-for-dom-writeparams-data②">data</a></code>: <var>data</var> })
+     <dd data-md>
+      <p>Writes the content of <var>data</var> into the file associated with <var>stream</var> at <var>position</var> bytes from the top of the file. Also updates the current file cursor offset to the
+ end of the written data.</p>
+      <p>No changes are written to the actual file on disk until the stream has been closed.
+ Changes are typically written to a temporary file instead.</p>
+     <dt data-md>await <var>stream</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write⑥">write</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type③">type</a></code>: <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-seek" id="ref-for-dom-writecommandtype-seek①">"seek"</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position⑤">position</a></code>: <var>position</var> })
+     <dd data-md>
+      <p>Updates the current file cursor offset the <var>position</var> bytes from the top of the file.</p>
+     <dt data-md>await <var>stream</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write⑦">write</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type④">type</a></code>: <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate①">"truncate"</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-size" id="ref-for-dom-writeparams-size②">size</a></code>: <var>size</var> })
+     <dd data-md>
+      <p>Resizes the file associated with <var>stream</var> to be <var>size</var> bytes long. If <var>size</var> is larger than
+ the current file size this pads the file with null bytes, otherwise it truncates the file.</p>
+      <p>The file cursor is updated when <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate②">truncate</a></code> is called. If the offset is smaller than offset,
+ it remains unchanged. If the offset is larger than <var>size</var>, the offset is set to <var>size</var> to
+ ensure that subsequent writes do not error.</p>
+      <p>No changes are written to the actual file until on disk until the stream has been closed.
+ Changes are typically written to a temporary file instead.</p>
     </dl>
    </div>
    <div class="algorithm" data-algorithm="write(data)">
@@ -2115,20 +2309,49 @@ on a single file on disk.</p>
 these steps: 
     <ol>
      <li data-md>
-      <p>TODO</p>
+      <p>Let <var>writer</var> be the result of calling <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer" id="ref-for-acquire-writable-stream-default-writer">AcquireWritableStreamDefaultWriter</a>(<b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑤">this</a></b>).</p>
+     <li data-md>
+      <p>Let <var>result</var> be <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-write" id="ref-for-writable-stream-default-writer-write">WritableStreamDefaultWriterWrite</a>(<var>writer</var>, <var>data</var>).</p>
+     <li data-md>
+      <p>Perform <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-release" id="ref-for-writable-stream-default-writer-release">WritableStreamDefaultWriterRelease</a>(<var>writer</var>).</p>
+     <li data-md>
+      <p>Return <var>result</var>.</p>
     </ol>
    </div>
-   <h4 class="heading settled" data-level="2.5.2" id="api-filesystemwritablefilestream-truncate"><span class="secno">2.5.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-truncate" id="ref-for-dom-filesystemwritablefilestream-truncate①">truncate()</a></code> method</span><a class="self-link" href="#api-filesystemwritablefilestream-truncate"></a></h4>
+   <h4 class="heading settled" data-level="2.5.2" id="api-filesystemwritablefilestream-seek"><span class="secno">2.5.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-seek" id="ref-for-dom-filesystemwritablefilestream-seek①">seek()</a></code> method</span><a class="self-link" href="#api-filesystemwritablefilestream-seek"></a></h4>
+   <div class="note domintro" role="note">
+    <dl>
+     <dt data-md>await <var>stream</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-seek" id="ref-for-dom-filesystemwritablefilestream-seek②">seek</a></code>(<var>position</var>)
+     <dd data-md>
+      <p>Updates the current file cursor offset the <var>position</var> bytes from the top of the file.</p>
+    </dl>
+   </div>
+   <div class="algorithm" data-algorithm="seek(position)">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemWritableFileStream" data-dfn-type="method" data-export id="dom-filesystemwritablefilestream-seek"><code>seek(<var>position</var>)</code></dfn> method, when invoked, must run these
+steps: 
+    <ol>
+     <li data-md>
+      <p>Let <var>writer</var> be the result of calling <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer" id="ref-for-acquire-writable-stream-default-writer①">AcquireWritableStreamDefaultWriter</a>(<b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑥">this</a></b>).</p>
+     <li data-md>
+      <p>Let <var>result</var> be <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-write" id="ref-for-writable-stream-default-writer-write①">WritableStreamDefaultWriterWrite</a>(<var>writer</var>, <code>{<code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type⑤">type</a></code>: <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-seek" id="ref-for-dom-writecommandtype-seek②">"seek"</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position⑥">position</a></code>: <var>position</var>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-size" id="ref-for-dom-writeparams-size③">size</a></code>: undefined, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-data" id="ref-for-dom-writeparams-data③">data</a></code>: undefined}</code>).</p>
+     <li data-md>
+      <p>Perform <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-release" id="ref-for-writable-stream-default-writer-release①">WritableStreamDefaultWriterRelease</a>(<var>writer</var>).</p>
+     <li data-md>
+      <p>Return <var>result</var>.</p>
+    </ol>
+   </div>
+   <h4 class="heading settled" data-level="2.5.3" id="api-filesystemwritablefilestream-truncate"><span class="secno">2.5.3. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-truncate" id="ref-for-dom-filesystemwritablefilestream-truncate①">truncate()</a></code> method</span><a class="self-link" href="#api-filesystemwritablefilestream-truncate"></a></h4>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md>await <var>stream</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-truncate" id="ref-for-dom-filesystemwritablefilestream-truncate②">truncate</a></code>(<var>size</var>)
      <dd data-md>
       <p>Resizes the file associated with <var>stream</var> to be <var>size</var> bytes long. If <var>size</var> is larger than
  the current file size this pads the file with null bytes, otherwise it truncates the file.</p>
-      <p>The file cursor is updated when <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate①">truncate</a></code> is called. If the offset is smaller than offset,
+      <p>The file cursor is updated when <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate③">truncate</a></code> is called. If the offset is smaller than offset,
  it remains unchanged. If the offset is larger than <var>size</var>, the offset is set to <var>size</var> to
  ensure that subsequent writes do not error.</p>
-      <p>No changes are written to the actual file until on disk until <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-close" id="ref-for-dom-filesystemwritablefilestream-close④">close()</a></code> is called. Changes are typically written to a temporary file instead.</p>
+      <p>No changes are written to the actual file until on disk until the stream has been closed.
+ Changes are typically written to a temporary file instead.</p>
     </dl>
    </div>
    <div class="algorithm" data-algorithm="truncate(size)">
@@ -2136,27 +2359,13 @@ these steps:
 steps: 
     <ol>
      <li data-md>
-      <p>TODO</p>
-    </ol>
-   </div>
-   <h4 class="heading settled" data-level="2.5.3" id="api-filesystemwritablefilestream-close"><span class="secno">2.5.3. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-close" id="ref-for-dom-filesystemwritablefilestream-close⑤">close()</a></code> method</span><a class="self-link" href="#api-filesystemwritablefilestream-close"></a></h4>
-   <div class="note domintro" role="note">
-    <dl>
-     <dt data-md>await <var>stream</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-close" id="ref-for-dom-filesystemwritablefilestream-close⑥">close()</a></code>
-     <dd data-md>
-      <p>First flushes any data written so far to disk, and then closes the writable stream.
- No changes will be visible in the destination file until this method is called.
- Furthermore, if the file on disk changed between creating this <var>stream</var> and this invocation of <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-close" id="ref-for-dom-filesystemwritablefilestream-close⑦">close()</a></code>, this will reject and all future operations on the stream will fail.</p>
-      <p>This operation can take some time to complete, as user agents might use this moment to run
- malware scanners or perform other security checks if the website isn’t sufficiently trusted.</p>
-    </dl>
-   </div>
-   <div class="algorithm" data-algorithm="close()">
-     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemWritableFileStream" data-dfn-type="method" data-export id="dom-filesystemwritablefilestream-close"><code>close()</code></dfn> method, when invoked, must run these
-steps: 
-    <ol>
+      <p>Let <var>writer</var> be the result of calling <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer" id="ref-for-acquire-writable-stream-default-writer②">AcquireWritableStreamDefaultWriter</a>(<b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑦">this</a></b>).</p>
      <li data-md>
-      <p>TODO</p>
+      <p>Let <var>result</var> be <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-write" id="ref-for-writable-stream-default-writer-write②">WritableStreamDefaultWriterWrite</a>(<var>writer</var>, <code>{<code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type⑥">type</a></code>: <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate④">"truncate"</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-size" id="ref-for-dom-writeparams-size④">size</a></code>: <var>size</var>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position⑦">position</a></code>: undefined, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-data" id="ref-for-dom-writeparams-data④">data</a></code>: undefined}</code>).</p>
+     <li data-md>
+      <p>Perform <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-release" id="ref-for-writable-stream-default-writer-release②">WritableStreamDefaultWriterRelease</a>(<var>writer</var>).</p>
+     <li data-md>
+      <p>Return <var>result</var>.</p>
     </ol>
    </div>
    <h2 class="heading settled" data-level="3" id="native-filesystem"><span class="secno">3. </span><span class="content">Accessing native filesystem</span><a class="self-link" href="#native-filesystem"></a></h2>
@@ -2164,9 +2373,9 @@ steps:
 <pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-choosefilesystementriestype"><code><c- g>ChooseFileSystemEntriesType</c-></code></dfn> { <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-open-file"><code><c- s>"open-file"</c-></code></dfn>, <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-save-file"><code><c- s>"save-file"</c-></code></dfn>, <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-open-directory"><code><c- s>"open-directory"</c-></code></dfn> };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-choosefilesystementriesoptionsaccepts"><code><c- g>ChooseFileSystemEntriesOptionsAccepts</c-></code></dfn> {
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑦"><c- b>USVString</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="USVString " id="dom-choosefilesystementriesoptionsaccepts-description"><code><c- g>description</c-></code></dfn>;
-  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑧"><c- b>USVString</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="sequence<USVString> " id="dom-choosefilesystementriesoptionsaccepts-mimetypes"><code><c- g>mimeTypes</c-></code></dfn>;
-  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑨"><c- b>USVString</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="sequence<USVString> " id="dom-choosefilesystementriesoptionsaccepts-extensions"><code><c- g>extensions</c-></code></dfn>;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑧"><c- b>USVString</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="USVString " id="dom-choosefilesystementriesoptionsaccepts-description"><code><c- g>description</c-></code></dfn>;
+  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑨"><c- b>USVString</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="sequence<USVString> " id="dom-choosefilesystementriesoptionsaccepts-mimetypes"><code><c- g>mimeTypes</c-></code></dfn>;
+  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①⓪"><c- b>USVString</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="sequence<USVString> " id="dom-choosefilesystementriesoptionsaccepts-extensions"><code><c- g>extensions</c-></code></dfn>;
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-choosefilesystementriesoptions"><code><c- g>ChooseFileSystemEntriesOptions</c-></code></dfn> {
@@ -2219,14 +2428,14 @@ these steps:
       <p>Let <var>environment</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object" id="ref-for-current-settings-object">current settings object</a>.</p>
      <li data-md>
       <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin②">origin</a> is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque" id="ref-for-concept-origin-opaque">opaque origin</a>,
- return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror">SecurityError</a></code>.</p>
+ return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with②">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror">SecurityError</a></code>.</p>
      <li data-md>
       <p>Let <var>browsing context</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#responsible-browsing-context" id="ref-for-responsible-browsing-context">responsible browsing context</a>.</p>
      <li data-md>
       <p>Let <var>top-level context</var> be <var>browsing context</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#top-level-browsing-context" id="ref-for-top-level-browsing-context">top-level browsing context</a>.</p>
      <li data-md>
       <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin③">origin</a> is not <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#same-origin" id="ref-for-same-origin①">same origin</a> with <var>browsing context</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#top-level-browsing-context" id="ref-for-top-level-browsing-context①">top-level browsing context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#active-document" id="ref-for-active-document">active document</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin" id="ref-for-concept-origin">origin</a>,
- return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with①">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror①">SecurityError</a></code>.</p>
+ return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with③">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror①">SecurityError</a></code>.</p>
       <p class="issue" id="issue-0fb1070c"><a class="self-link" href="#issue-0fb1070c"></a> There must be a better way to express this "no third-party iframes" constraint.</p>
      <li data-md>
       <p>TODO</p>
@@ -2264,7 +2473,7 @@ invoked, must run these steps:
       <p>Let <var>environment</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object" id="ref-for-current-settings-object①">current settings object</a>.</p>
      <li data-md>
       <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin④">origin</a> is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque" id="ref-for-concept-origin-opaque①">opaque origin</a>,
- return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with②">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror②">SecurityError</a></code>.</p>
+ return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with④">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror②">SecurityError</a></code>.</p>
      <li data-md>
       <p>TODO</p>
     </ol>
@@ -2481,19 +2690,20 @@ appropriate.</p>
   <ul class="index">
    <li><a href="#dom-choosefilesystementriesoptions-accepts">accepts</a><span>, in §3.1</span>
    <li><a href="#file-entry-binary-data">binary data</a><span>, in §2.1</span>
+   <li><a href="#filesystemwritablefilestream-buffer">[[buffer]]</a><span>, in §2.5</span>
    <li><a href="#directory-entry-children">children</a><span>, in §2.1</span>
    <li><a href="#dom-window-choosefilesystementries">chooseFileSystemEntries()</a><span>, in §3.1</span>
    <li><a href="#dom-window-choosefilesystementries">chooseFileSystemEntries(options)</a><span>, in §3.1</span>
    <li><a href="#dictdef-choosefilesystementriesoptions">ChooseFileSystemEntriesOptions</a><span>, in §3.1</span>
    <li><a href="#dictdef-choosefilesystementriesoptionsaccepts">ChooseFileSystemEntriesOptionsAccepts</a><span>, in §3.1</span>
    <li><a href="#enumdef-choosefilesystementriestype">ChooseFileSystemEntriesType</a><span>, in §3.1</span>
-   <li><a href="#dom-filesystemwritablefilestream-close">close()</a><span>, in §2.5.3</span>
    <li>
     create
     <ul>
      <li><a href="#dom-filesystemgetdirectoryoptions-create">dict-member for FileSystemGetDirectoryOptions</a><span>, in §2.4</span>
      <li><a href="#dom-filesystemgetfileoptions-create">dict-member for FileSystemGetFileOptions</a><span>, in §2.4</span>
     </ul>
+   <li><a href="#create-a-new-filesystemwritablefilestream">create a new FileSystemWritableFileStream</a><span>, in §2.5</span>
    <li><a href="#dom-filesystemfilehandle-createwritable">createWritable()</a><span>, in §2.3.2</span>
    <li><a href="#dom-filesystemfilehandle-createwritable">createWritable(options)</a><span>, in §2.3.2</span>
    <li><a href="#dom-writeparams-data">data</a><span>, in §2.5</span>
@@ -2509,6 +2719,7 @@ appropriate.</p>
    <li><a href="#dom-choosefilesystementriesoptions-excludeacceptalloption">excludeAcceptAllOption</a><span>, in §3.1</span>
    <li><a href="#dom-choosefilesystementriesoptionsaccepts-extensions">extensions</a><span>, in §3.1</span>
    <li><a href="#file">file</a><span>, in §2.1</span>
+   <li><a href="#filesystemwritablefilestream-file">[[file]]</a><span>, in §2.5</span>
    <li><a href="#file">file entry</a><span>, in §2.1</span>
    <li><a href="#dictdef-filesystemcreatewritableoptions">FileSystemCreateWritableOptions</a><span>, in §2.3</span>
    <li><a href="#filesystemdirectoryhandle">FileSystemDirectoryHandle</a><span>, in §2.4</span>
@@ -2519,6 +2730,7 @@ appropriate.</p>
    <li><a href="#dictdef-filesystemhandlepermissiondescriptor">FileSystemHandlePermissionDescriptor</a><span>, in §2.2</span>
    <li><a href="#dictdef-filesystemremoveoptions">FileSystemRemoveOptions</a><span>, in §2.4</span>
    <li><a href="#filesystemwritablefilestream">FileSystemWritableFileStream</a><span>, in §2.5</span>
+   <li><a href="#typedefdef-filesystemwritechunktype">FileSystemWriteChunkType</a><span>, in §2.5</span>
    <li><a href="#dom-filesystemdirectoryhandle-getdirectory">getDirectory(name)</a><span>, in §2.4.2</span>
    <li><a href="#dom-filesystemdirectoryhandle-getdirectory">getDirectory(name, options)</a><span>, in §2.4.2</span>
    <li><a href="#dom-filesystemdirectoryhandle-getentries">getEntries()</a><span>, in §2.4.3</span>
@@ -2555,12 +2767,13 @@ appropriate.</p>
    <li><a href="#dom-systemdirectorytype-sandbox">"sandbox"</a><span>, in §4.1</span>
    <li><a href="#dom-choosefilesystementriestype-save-file">"save-file"</a><span>, in §3.1</span>
    <li><a href="#dom-writecommandtype-seek">"seek"</a><span>, in §2.5</span>
-   <li><a href="#dom-filesystemwritablefilestream-seek">seek(position)</a><span>, in §2.5</span>
+   <li><a href="#filesystemwritablefilestream-seekoffset">[[seekOffset]]</a><span>, in §2.5</span>
+   <li><a href="#dom-filesystemwritablefilestream-seek">seek(position)</a><span>, in §2.5.2</span>
    <li><a href="#dom-writeparams-size">size</a><span>, in §2.5</span>
    <li><a href="#enumdef-systemdirectorytype">SystemDirectoryType</a><span>, in §4.1</span>
    <li><a href="#entry-the-same-as">the same as</a><span>, in §2.1</span>
    <li><a href="#dom-writecommandtype-truncate">"truncate"</a><span>, in §2.5</span>
-   <li><a href="#dom-filesystemwritablefilestream-truncate">truncate(size)</a><span>, in §2.5.2</span>
+   <li><a href="#dom-filesystemwritablefilestream-truncate">truncate(size)</a><span>, in §2.5.3</span>
    <li>
     type
     <ul>
@@ -2570,10 +2783,17 @@ appropriate.</p>
     </ul>
    <li><a href="#dom-filesystemhandlepermissiondescriptor-writable">writable</a><span>, in §2.2</span>
    <li><a href="#dom-writecommandtype-write">"write"</a><span>, in §2.5</span>
+   <li><a href="#write-a-chunk">write a chunk</a><span>, in §2.5</span>
    <li><a href="#enumdef-writecommandtype">WriteCommandType</a><span>, in §2.5</span>
    <li><a href="#dom-filesystemwritablefilestream-write">write(data)</a><span>, in §2.5.1</span>
    <li><a href="#dictdef-writeparams">WriteParams</a><span>, in §2.5</span>
   </ul>
+  <aside class="dfn-panel" data-for="term-for-utf-8-encode">
+   <a href="https://encoding.spec.whatwg.org/#utf-8-encode">https://encoding.spec.whatwg.org/#utf-8-encode</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-utf-8-encode">2.5. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-concept-readablestream">
    <a href="https://fetch.spec.whatwg.org/#concept-readablestream">https://fetch.spec.whatwg.org/#concept-readablestream</a><b>Referenced in:</b>
    <ul>
@@ -2583,7 +2803,7 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-dfn-Blob">
    <a href="https://w3c.github.io/FileAPI/#dfn-Blob">https://w3c.github.io/FileAPI/#dfn-Blob</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dfn-Blob">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dfn-Blob①">(2)</a>
+    <li><a href="#ref-for-dfn-Blob">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dfn-Blob①">(2)</a> <a href="#ref-for-dfn-Blob②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dfn-file">
@@ -2591,6 +2811,12 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-dfn-file">2.3. The FileSystemFileHandle interface</a>
     <li><a href="#ref-for-dfn-file①">2.3.1. The getFile() method</a> <a href="#ref-for-dfn-file②">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-readOperation">
+   <a href="https://w3c.github.io/FileAPI/#readOperation">https://w3c.github.io/FileAPI/#readOperation</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-readOperation">2.5. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-serializable">
@@ -2633,6 +2859,7 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-in-parallel">2.1. Concepts</a>
     <li><a href="#ref-for-in-parallel①">2.2.1. The isSameEntry() method</a>
+    <li><a href="#ref-for-in-parallel②">2.5. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-event-messageerror">
@@ -2709,10 +2936,34 @@ appropriate.</p>
     <li><a href="#ref-for-list-append">2.1. Concepts</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-assert">
+   <a href="https://infra.spec.whatwg.org/#assert">https://infra.spec.whatwg.org/#assert</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-assert">2.5. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-byte-sequence">
+   <a href="https://infra.spec.whatwg.org/#byte-sequence">https://infra.spec.whatwg.org/#byte-sequence</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-byte-sequence">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-byte-sequence①">(2)</a> <a href="#ref-for-byte-sequence②">(3)</a> <a href="#ref-for-byte-sequence③">(4)</a> <a href="#ref-for-byte-sequence④">(5)</a> <a href="#ref-for-byte-sequence⑤">(6)</a> <a href="#ref-for-byte-sequence⑥">(7)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-javascript-string-convert">
+   <a href="https://infra.spec.whatwg.org/#javascript-string-convert">https://infra.spec.whatwg.org/#javascript-string-convert</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-javascript-string-convert">2.5. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-list-iterate">
    <a href="https://infra.spec.whatwg.org/#list-iterate">https://infra.spec.whatwg.org/#list-iterate</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-list-iterate">2.1. Concepts</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-byte-sequence-length">
+   <a href="https://infra.spec.whatwg.org/#byte-sequence-length">https://infra.spec.whatwg.org/#byte-sequence-length</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-byte-sequence-length">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-byte-sequence-length①">(2)</a> <a href="#ref-for-byte-sequence-length②">(3)</a> <a href="#ref-for-byte-sequence-length③">(4)</a> <a href="#ref-for-byte-sequence-length④">(5)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-list-prepend">
@@ -2733,16 +2984,58 @@ appropriate.</p>
     <li><a href="#ref-for-enumdef-permissionstate">2.2. The FileSystemHandle interface</a> <a href="#ref-for-enumdef-permissionstate①">(2)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-acquire-writable-stream-default-writer">
+   <a href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer">https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-acquire-writable-stream-default-writer">2.5.1. The write() method</a>
+    <li><a href="#ref-for-acquire-writable-stream-default-writer①">2.5.2. The seek() method</a>
+    <li><a href="#ref-for-acquire-writable-stream-default-writer②">2.5.3. The truncate() method</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-initialize-writable-stream">
+   <a href="https://streams.spec.whatwg.org/#initialize-writable-stream">https://streams.spec.whatwg.org/#initialize-writable-stream</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-initialize-writable-stream">2.5. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-set-up-writable-stream-default-controller">
+   <a href="https://streams.spec.whatwg.org/#set-up-writable-stream-default-controller">https://streams.spec.whatwg.org/#set-up-writable-stream-default-controller</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-set-up-writable-stream-default-controller">2.5. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-ws-class">
    <a href="https://streams.spec.whatwg.org/#ws-class">https://streams.spec.whatwg.org/#ws-class</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-ws-class">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-ws-class①">(2)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-ws-default-controller-class">
+   <a href="https://streams.spec.whatwg.org/#ws-default-controller-class">https://streams.spec.whatwg.org/#ws-default-controller-class</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-ws-default-controller-class">2.5. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-default-writer-class">
    <a href="https://streams.spec.whatwg.org/#default-writer-class">https://streams.spec.whatwg.org/#default-writer-class</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-default-writer-class">2.5. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-writable-stream-default-writer-release">
+   <a href="https://streams.spec.whatwg.org/#writable-stream-default-writer-release">https://streams.spec.whatwg.org/#writable-stream-default-writer-release</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-writable-stream-default-writer-release">2.5.1. The write() method</a>
+    <li><a href="#ref-for-writable-stream-default-writer-release①">2.5.2. The seek() method</a>
+    <li><a href="#ref-for-writable-stream-default-writer-release②">2.5.3. The truncate() method</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-writable-stream-default-writer-write">
+   <a href="https://streams.spec.whatwg.org/#writable-stream-default-writer-write">https://streams.spec.whatwg.org/#writable-stream-default-writer-write</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-writable-stream-default-writer-write">2.5.1. The write() method</a>
+    <li><a href="#ref-for-writable-stream-default-writer-write①">2.5.2. The seek() method</a>
+    <li><a href="#ref-for-writable-stream-default-writer-write②">2.5.3. The truncate() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-ws-get-writer">
@@ -2760,7 +3053,7 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-BufferSource">
    <a href="https://heycam.github.io/webidl/#BufferSource">https://heycam.github.io/webidl/#BufferSource</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-BufferSource">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-BufferSource①">(2)</a>
+    <li><a href="#ref-for-BufferSource">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-BufferSource①">(2)</a> <a href="#ref-for-BufferSource②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-datacloneerror">
@@ -2776,6 +3069,12 @@ appropriate.</p>
     <li><a href="#ref-for-Exposed①">2.3. The FileSystemFileHandle interface</a>
     <li><a href="#ref-for-Exposed②">2.4. The FileSystemDirectoryHandle interface</a>
     <li><a href="#ref-for-Exposed③">2.5. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-invalidstateerror">
+   <a href="https://heycam.github.io/webidl/#invalidstateerror">https://heycam.github.io/webidl/#invalidstateerror</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-invalidstateerror">2.5. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-SecureContext">
@@ -2796,13 +3095,19 @@ appropriate.</p>
     <li><a href="#ref-for-securityerror②">4.1. The getSystemDirectory() method</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-exceptiondef-typeerror">
+   <a href="https://heycam.github.io/webidl/#exceptiondef-typeerror">https://heycam.github.io/webidl/#exceptiondef-typeerror</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-exceptiondef-typeerror">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-exceptiondef-typeerror①">(2)</a> <a href="#ref-for-exceptiondef-typeerror②">(3)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-idl-USVString">
    <a href="https://heycam.github.io/webidl/#idl-USVString">https://heycam.github.io/webidl/#idl-USVString</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-idl-USVString">2.2. The FileSystemHandle interface</a>
     <li><a href="#ref-for-idl-USVString①">2.4. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-idl-USVString②">(2)</a> <a href="#ref-for-idl-USVString③">(3)</a> <a href="#ref-for-idl-USVString④">(4)</a>
-    <li><a href="#ref-for-idl-USVString⑤">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-idl-USVString⑥">(2)</a>
-    <li><a href="#ref-for-idl-USVString⑦">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-idl-USVString⑧">(2)</a> <a href="#ref-for-idl-USVString⑨">(3)</a>
+    <li><a href="#ref-for-idl-USVString⑤">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-idl-USVString⑥">(2)</a> <a href="#ref-for-idl-USVString⑦">(3)</a>
+    <li><a href="#ref-for-idl-USVString⑧">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-idl-USVString⑨">(2)</a> <a href="#ref-for-idl-USVString①⓪">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-a-new-promise">
@@ -2810,13 +3115,22 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-a-new-promise">2.1. Concepts</a>
     <li><a href="#ref-for-a-new-promise①">2.2.1. The isSameEntry() method</a>
+    <li><a href="#ref-for-a-new-promise②">2.5. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-a-promise-rejected-with">
    <a href="https://heycam.github.io/webidl/#a-promise-rejected-with">https://heycam.github.io/webidl/#a-promise-rejected-with</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-a-promise-rejected-with">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-a-promise-rejected-with①">(2)</a>
-    <li><a href="#ref-for-a-promise-rejected-with②">4.1. The getSystemDirectory() method</a>
+    <li><a href="#ref-for-a-promise-rejected-with">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-a-promise-rejected-with①">(2)</a>
+    <li><a href="#ref-for-a-promise-rejected-with②">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-a-promise-rejected-with③">(2)</a>
+    <li><a href="#ref-for-a-promise-rejected-with④">4.1. The getSystemDirectory() method</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-a-promise-resolved-with">
+   <a href="https://heycam.github.io/webidl/#a-promise-resolved-with">https://heycam.github.io/webidl/#a-promise-resolved-with</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-a-promise-resolved-with">2.3.2. The createWritable() method</a>
+    <li><a href="#ref-for-a-promise-resolved-with①">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-a-promise-resolved-with②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-boolean">
@@ -2828,10 +3142,22 @@ appropriate.</p>
     <li><a href="#ref-for-idl-boolean⑧">3.1. The chooseFileSystemEntries() method</a> <a href="#ref-for-idl-boolean⑨">(2)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-dfn-get-buffer-source-copy">
+   <a href="https://heycam.github.io/webidl/#dfn-get-buffer-source-copy">https://heycam.github.io/webidl/#dfn-get-buffer-source-copy</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dfn-get-buffer-source-copy">2.5. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-idl-object">
    <a href="https://heycam.github.io/webidl/#idl-object">https://heycam.github.io/webidl/#idl-object</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-idl-object">2.4. The FileSystemDirectoryHandle interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-reject">
+   <a href="https://heycam.github.io/webidl/#reject">https://heycam.github.io/webidl/#reject</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-reject">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-reject①">(2)</a> <a href="#ref-for-reject②">(3)</a> <a href="#ref-for-reject③">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-resolve">
@@ -2839,13 +3165,18 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-resolve">2.1. Concepts</a> <a href="#ref-for-resolve①">(2)</a> <a href="#ref-for-resolve②">(3)</a>
     <li><a href="#ref-for-resolve③">2.2.1. The isSameEntry() method</a> <a href="#ref-for-resolve④">(2)</a>
+    <li><a href="#ref-for-resolve⑤">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-resolve⑥">(2)</a> <a href="#ref-for-resolve⑦">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-this">
    <a href="https://heycam.github.io/webidl/#this">https://heycam.github.io/webidl/#this</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-this">2.2.1. The isSameEntry() method</a> <a href="#ref-for-this①">(2)</a>
-    <li><a href="#ref-for-this②">2.4.5. The resolve() method</a>
+    <li><a href="#ref-for-this②">2.3.2. The createWritable() method</a> <a href="#ref-for-this③">(2)</a>
+    <li><a href="#ref-for-this④">2.4.5. The resolve() method</a>
+    <li><a href="#ref-for-this⑤">2.5.1. The write() method</a>
+    <li><a href="#ref-for-this⑥">2.5.2. The seek() method</a>
+    <li><a href="#ref-for-this⑦">2.5.3. The truncate() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-unsigned-long-long">
@@ -2869,6 +3200,11 @@ appropriate.</p>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
    <li>
+    <a data-link-type="biblio">[ENCODING]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-utf-8-encode" style="color:initial">utf-8 encode</span>
+    </ul>
+   <li>
     <a data-link-type="biblio">[FETCH]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-concept-readablestream" style="color:initial">ReadableStream</span>
@@ -2878,6 +3214,7 @@ appropriate.</p>
     <ul>
      <li><span class="dfn-paneled" id="term-for-dfn-Blob" style="color:initial">Blob</span>
      <li><span class="dfn-paneled" id="term-for-dfn-file" style="color:initial">File</span>
+     <li><span class="dfn-paneled" id="term-for-readOperation" style="color:initial">read operation</span>
     </ul>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
@@ -2903,7 +3240,11 @@ appropriate.</p>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-list-append" style="color:initial">append</span>
+     <li><span class="dfn-paneled" id="term-for-assert" style="color:initial">assert</span>
+     <li><span class="dfn-paneled" id="term-for-byte-sequence" style="color:initial">byte sequence</span>
+     <li><span class="dfn-paneled" id="term-for-javascript-string-convert" style="color:initial">convert</span>
      <li><span class="dfn-paneled" id="term-for-list-iterate" style="color:initial">for each</span>
+     <li><span class="dfn-paneled" id="term-for-byte-sequence-length" style="color:initial">length</span>
      <li><span class="dfn-paneled" id="term-for-list-prepend" style="color:initial">prepend</span>
      <li><span class="dfn-paneled" id="term-for-ordered-set" style="color:initial">set</span>
     </ul>
@@ -2915,8 +3256,14 @@ appropriate.</p>
    <li>
     <a data-link-type="biblio">[STREAMS]</a> defines the following terms:
     <ul>
+     <li><span class="dfn-paneled" id="term-for-acquire-writable-stream-default-writer" style="color:initial">AcquireWritableStreamDefaultWriter</span>
+     <li><span class="dfn-paneled" id="term-for-initialize-writable-stream" style="color:initial">InitializeWritableStream</span>
+     <li><span class="dfn-paneled" id="term-for-set-up-writable-stream-default-controller" style="color:initial">SetUpWritableStreamDefaultController</span>
      <li><span class="dfn-paneled" id="term-for-ws-class" style="color:initial">WritableStream</span>
+     <li><span class="dfn-paneled" id="term-for-ws-default-controller-class" style="color:initial">WritableStreamDefaultController</span>
      <li><span class="dfn-paneled" id="term-for-default-writer-class" style="color:initial">WritableStreamDefaultWriter</span>
+     <li><span class="dfn-paneled" id="term-for-writable-stream-default-writer-release" style="color:initial">WritableStreamDefaultWriterRelease</span>
+     <li><span class="dfn-paneled" id="term-for-writable-stream-default-writer-write" style="color:initial">WritableStreamDefaultWriterWrite</span>
      <li><span class="dfn-paneled" id="term-for-ws-get-writer" style="color:initial">getWriter()</span>
      <li><span class="dfn-paneled" id="term-for-default-writer-write" style="color:initial">write(chunk)</span>
     </ul>
@@ -2926,13 +3273,18 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-BufferSource" style="color:initial">BufferSource</span>
      <li><span class="dfn-paneled" id="term-for-datacloneerror" style="color:initial">DataCloneError</span>
      <li><span class="dfn-paneled" id="term-for-Exposed" style="color:initial">Exposed</span>
+     <li><span class="dfn-paneled" id="term-for-invalidstateerror" style="color:initial">InvalidStateError</span>
      <li><span class="dfn-paneled" id="term-for-SecureContext" style="color:initial">SecureContext</span>
      <li><span class="dfn-paneled" id="term-for-securityerror" style="color:initial">SecurityError</span>
+     <li><span class="dfn-paneled" id="term-for-exceptiondef-typeerror" style="color:initial">TypeError</span>
      <li><span class="dfn-paneled" id="term-for-idl-USVString" style="color:initial">USVString</span>
      <li><span class="dfn-paneled" id="term-for-a-new-promise" style="color:initial">a new promise</span>
      <li><span class="dfn-paneled" id="term-for-a-promise-rejected-with" style="color:initial">a promise rejected with</span>
+     <li><span class="dfn-paneled" id="term-for-a-promise-resolved-with" style="color:initial">a promise resolved with</span>
      <li><span class="dfn-paneled" id="term-for-idl-boolean" style="color:initial">boolean</span>
+     <li><span class="dfn-paneled" id="term-for-dfn-get-buffer-source-copy" style="color:initial">get a copy of the buffer source</span>
      <li><span class="dfn-paneled" id="term-for-idl-object" style="color:initial">object</span>
+     <li><span class="dfn-paneled" id="term-for-reject" style="color:initial">reject</span>
      <li><span class="dfn-paneled" id="term-for-resolve" style="color:initial">resolve</span>
      <li><span class="dfn-paneled" id="term-for-this" style="color:initial">this</span>
      <li><span class="dfn-paneled" id="term-for-idl-unsigned-long-long" style="color:initial">unsigned long long</span>
@@ -2943,8 +3295,8 @@ appropriate.</p>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
-   <dt id="biblio-fetch">[FETCH]
-   <dd>Anne van Kesteren. <a href="https://fetch.spec.whatwg.org/">Fetch Standard</a>. Living Standard. URL: <a href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>
+   <dt id="biblio-encoding">[ENCODING]
+   <dd>Anne van Kesteren. <a href="https://encoding.spec.whatwg.org/">Encoding Standard</a>. Living Standard. URL: <a href="https://encoding.spec.whatwg.org/">https://encoding.spec.whatwg.org/</a>
    <dt id="biblio-file-api">[FILE-API]
    <dd>Marijn Kruisselbrink; Arun Ranganathan. <a href="https://www.w3.org/TR/FileAPI/">File API</a>. 11 September 2019. WD. URL: <a href="https://www.w3.org/TR/FileAPI/">https://www.w3.org/TR/FileAPI/</a>
    <dt id="biblio-html">[HTML]
@@ -2964,6 +3316,8 @@ appropriate.</p>
   <dl>
    <dt id="biblio-entries-api">[ENTRIES-API]
    <dd><a href="https://wicg.github.io/entries-api/">File and Directory Entries API</a>. cg-draft. URL: <a href="https://wicg.github.io/entries-api/">https://wicg.github.io/entries-api/</a>
+   <dt id="biblio-fetch">[FETCH]
+   <dd>Anne van Kesteren. <a href="https://fetch.spec.whatwg.org/">Fetch Standard</a>. Living Standard. URL: <a href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>
    <dt id="biblio-file-system-api">[FILE-SYSTEM-API]
    <dd>Eric Uhrhane. <a href="https://www.w3.org/TR/file-system-api/">File API: Directories and System</a>. 24 April 2014. NOTE. URL: <a href="https://www.w3.org/TR/file-system-api/">https://www.w3.org/TR/file-system-api/</a>
   </dl>
@@ -2976,7 +3330,7 @@ appropriate.</p>
 <c- b>interface</c-> <a href="#filesystemhandle"><code><c- g>FileSystemHandle</c-></code></a> {
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean①①"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isfile" id="ref-for-dom-filesystemhandle-isfile②"><c- g>isFile</c-></a>;
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean②①"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isdirectory" id="ref-for-dom-filesystemhandle-isdirectory②"><c- g>isDirectory</c-></a>;
-  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①⓪"><c- b>USVString</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="USVString" href="#dom-filesystemhandle-name" id="ref-for-dom-filesystemhandle-name②"><c- g>name</c-></a>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①②"><c- b>USVString</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="USVString" href="#dom-filesystemhandle-name" id="ref-for-dom-filesystemhandle-name②"><c- g>name</c-></a>;
 
   <c- b>Promise</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean③①"><c- b>boolean</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-issameentry" id="ref-for-dom-filesystemhandle-issameentry③"><c- g>isSameEntry</c-></a>(<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①⑤"><c- n>FileSystemHandle</c-></a> <a href="#dom-filesystemhandle-issameentry-other-other"><code><c- g>other</c-></code></a>);
 
@@ -2991,7 +3345,7 @@ appropriate.</p>
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed①①"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->), <a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext①①"><c- g>SecureContext</c-></a>, <a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/structured-data.html#serializable" id="ref-for-serializable①①"><c- g>Serializable</c-></a>]
 <c- b>interface</c-> <a href="#filesystemfilehandle"><code><c- g>FileSystemFileHandle</c-></code></a> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑥①"><c- n>FileSystemHandle</c-></a> {
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-file" id="ref-for-dfn-file③"><c- n>File</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-getfile" id="ref-for-dom-filesystemfilehandle-getfile③"><c- g>getFile</c-></a>();
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑥"><c- n>FileSystemWritableFileStream</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-createwritable" id="ref-for-dom-filesystemfilehandle-createwritable④"><c- g>createWritable</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemcreatewritableoptions" id="ref-for-dictdef-filesystemcreatewritableoptions①"><c- n>FileSystemCreateWritableOptions</c-></a> <a href="#dom-filesystemfilehandle-createwritable-options-options"><code><c- g>options</c-></code></a>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream①①"><c- n>FileSystemWritableFileStream</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-createwritable" id="ref-for-dom-filesystemfilehandle-createwritable④"><c- g>createWritable</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemcreatewritableoptions" id="ref-for-dictdef-filesystemcreatewritableoptions①"><c- n>FileSystemCreateWritableOptions</c-></a> <a href="#dom-filesystemfilehandle-createwritable-options-options"><code><c- g>options</c-></code></a>);
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-filesystemgetfileoptions"><code><c- g>FileSystemGetFileOptions</c-></code></a> {
@@ -3020,31 +3374,33 @@ appropriate.</p>
 };
 
 <c- b>enum</c-> <a href="#enumdef-writecommandtype"><code><c- g>WriteCommandType</c-></code></a> {
-  <a href="#dom-writecommandtype-truncate"><code><c- s>"truncate"</c-></code></a>,
-  <a href="#dom-writecommandtype-seek"><code><c- s>"seek"</c-></code></a>,
   <a href="#dom-writecommandtype-write"><code><c- s>"write"</c-></code></a>,
+  <a href="#dom-writecommandtype-seek"><code><c- s>"seek"</c-></code></a>,
+  <a href="#dom-writecommandtype-truncate"><code><c- s>"truncate"</c-></code></a>,
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-writeparams"><code><c- g>WriteParams</c-></code></a> {
   <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#enumdef-writecommandtype" id="ref-for-enumdef-writecommandtype①"><c- n>WriteCommandType</c-></a> <a data-type="WriteCommandType " href="#dom-writeparams-type"><code><c- g>type</c-></code></a>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long④"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a>? <a data-type="unsigned long long? " href="#dom-writeparams-size"><code><c- g>size</c-></code></a>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long①①"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a>? <a data-type="unsigned long long? " href="#dom-writeparams-position"><code><c- g>position</c-></code></a>;
-  (<a class="n" data-link-type="idl-name" href="https://heycam.github.io/webidl/#BufferSource" id="ref-for-BufferSource②"><c- n>BufferSource</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-Blob" id="ref-for-dfn-Blob②"><c- n>Blob</c-></a> <c- b>or</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑤①"><c- b>USVString</c-></a>)? <a data-type="(BufferSource or Blob or USVString)? " href="#dom-writeparams-data"><code><c- g>data</c-></code></a>;
+  (<a class="n" data-link-type="idl-name" href="https://heycam.github.io/webidl/#BufferSource" id="ref-for-BufferSource③"><c- n>BufferSource</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-Blob" id="ref-for-dfn-Blob③"><c- n>Blob</c-></a> <c- b>or</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑤①"><c- b>USVString</c-></a>)? <a data-type="(BufferSource or Blob or USVString)? " href="#dom-writeparams-data"><code><c- g>data</c-></code></a>;
 };
+
+<c- b>typedef</c-> (<a class="n" data-link-type="idl-name" href="https://heycam.github.io/webidl/#BufferSource" id="ref-for-BufferSource①①"><c- n>BufferSource</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-Blob" id="ref-for-dfn-Blob①①"><c- n>Blob</c-></a> <c- b>or</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑥①"><c- b>USVString</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="#dictdef-writeparams" id="ref-for-dictdef-writeparams⑤"><c- n>WriteParams</c-></a>) <a href="#typedefdef-filesystemwritechunktype"><code><c- g>FileSystemWriteChunkType</c-></code></a>;
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed③①"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->), <a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext③①"><c- g>SecureContext</c-></a>]
 <c- b>interface</c-> <a href="#filesystemwritablefilestream"><code><c- g>FileSystemWritableFileStream</c-></code></a> : <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#ws-class" id="ref-for-ws-class②"><c- n>WritableStream</c-></a> {
-  <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write④"><c- g>write</c-></a>((<a class="n" data-link-type="idl-name" href="https://heycam.github.io/webidl/#BufferSource" id="ref-for-BufferSource①①"><c- n>BufferSource</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-Blob" id="ref-for-dfn-Blob①①"><c- n>Blob</c-></a> <c- b>or</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑥①"><c- b>USVString</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="#dictdef-writeparams" id="ref-for-dictdef-writeparams④"><c- n>WriteParams</c-></a>) <a href="#dom-filesystemwritablefilestream-write-data-data"><code><c- g>data</c-></code></a>);
-  <c- b>Promise</c->&lt;<c- b>void</c->> <a href="#dom-filesystemwritablefilestream-seek"><code><c- g>seek</c-></code></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long②①"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a href="#dom-filesystemwritablefilestream-seek-position-position"><code><c- g>position</c-></code></a>);
+  <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write⑧"><c- g>write</c-></a>(<a class="n" data-link-type="idl-name" href="#typedefdef-filesystemwritechunktype" id="ref-for-typedefdef-filesystemwritechunktype②"><c- n>FileSystemWriteChunkType</c-></a> <a href="#dom-filesystemwritablefilestream-write-data-data"><code><c- g>data</c-></code></a>);
+  <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-seek" id="ref-for-dom-filesystemwritablefilestream-seek③"><c- g>seek</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long②①"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a href="#dom-filesystemwritablefilestream-seek-position-position"><code><c- g>position</c-></code></a>);
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-truncate" id="ref-for-dom-filesystemwritablefilestream-truncate③"><c- g>truncate</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long③①"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a href="#dom-filesystemwritablefilestream-truncate-size-size"><code><c- g>size</c-></code></a>);
 };
 
 <c- b>enum</c-> <a href="#enumdef-choosefilesystementriestype"><code><c- g>ChooseFileSystemEntriesType</c-></code></a> { <a href="#dom-choosefilesystementriestype-open-file"><code><c- s>"open-file"</c-></code></a>, <a href="#dom-choosefilesystementriestype-save-file"><code><c- s>"save-file"</c-></code></a>, <a href="#dom-choosefilesystementriestype-open-directory"><code><c- s>"open-directory"</c-></code></a> };
 
 <c- b>dictionary</c-> <a href="#dictdef-choosefilesystementriesoptionsaccepts"><code><c- g>ChooseFileSystemEntriesOptionsAccepts</c-></code></a> {
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑦①"><c- b>USVString</c-></a> <a data-type="USVString " href="#dom-choosefilesystementriesoptionsaccepts-description"><code><c- g>description</c-></code></a>;
-  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑧①"><c- b>USVString</c-></a>> <a data-type="sequence<USVString> " href="#dom-choosefilesystementriesoptionsaccepts-mimetypes"><code><c- g>mimeTypes</c-></code></a>;
-  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑨①"><c- b>USVString</c-></a>> <a data-type="sequence<USVString> " href="#dom-choosefilesystementriesoptionsaccepts-extensions"><code><c- g>extensions</c-></code></a>;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑧①"><c- b>USVString</c-></a> <a data-type="USVString " href="#dom-choosefilesystementriesoptionsaccepts-description"><code><c- g>description</c-></code></a>;
+  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑨①"><c- b>USVString</c-></a>> <a data-type="sequence<USVString> " href="#dom-choosefilesystementriesoptionsaccepts-mimetypes"><code><c- g>mimeTypes</c-></code></a>;
+  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①⓪①"><c- b>USVString</c-></a>> <a data-type="sequence<USVString> " href="#dom-choosefilesystementriesoptionsaccepts-extensions"><code><c- g>extensions</c-></code></a>;
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-choosefilesystementriesoptions"><code><c- g>ChooseFileSystemEntriesOptions</c-></code></a> {
@@ -3088,6 +3444,7 @@ example to support in-place modification of large files or things like databases
 currently implemented in Chrome. Implementing this is currently blocked on figuring out how to
 combine the desire to run malware checks with the desire to let websites make fast in-place
 modifications to existing large files. <a href="https://github.com/wicg/native-file-system/issues/67">&lt;https://github.com/wicg/native-file-system/issues/67></a><a href="#issue-0693bc11"> ↵ </a></div>
+   <div class="issue"> TODO: Check permissions.<a href="#issue-734c6e4e"> ↵ </a></div>
    <div class="issue"> Should we have separate getFile and getDirectory methods, or just a single getChild/getEntry
 method?<a href="#issue-a4e7d3b2"> ↵ </a></div>
    <div class="issue"> Having getFile methods in both FileSystemDirectoryHandle and FileSystemFileHandle, but
@@ -3095,6 +3452,10 @@ with very different behavior might be confusing? Perhaps rename at least one of 
 previous issue). <a href="https://github.com/wicg/native-file-system/issues/98">&lt;https://github.com/wicg/native-file-system/issues/98></a><a href="#issue-6152e539"> ↵ </a></div>
    <div class="issue"> Should getEntries be its own method, or should FileSystemDirectoryHandle just be an async
 iterable itself? <a href="https://github.com/wicg/native-file-system/issues/47">&lt;https://github.com/wicg/native-file-system/issues/47></a><a href="#issue-bd7b13a2"> ↵ </a></div>
+   <div class="issue"> TODO: Check permissions.<a href="#issue-734c6e4e①"> ↵ </a></div>
+   <div class="issue"> TODO: Check permissions.<a href="#issue-734c6e4e②"> ↵ </a></div>
+   <div class="issue"> Not clear if this should reject, and if it does, is this really the right error type?
+ Chrome’s implementation is actually inconsistent about this rejecting or not.<a href="#issue-9aa12629"> ↵ </a></div>
    <div class="issue"> There must be a better way to express this "no third-party iframes" constraint.<a href="#issue-0fb1070c"> ↵ </a></div>
    <div class="issue"> getSystemDirectory might not be the best name. Also perhaps should be on Window rather
 than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-system/issues/27">&lt;https://github.com/wicg/native-file-system/issues/27></a><a href="#issue-2a3d989a"> ↵ </a></div>
@@ -3120,12 +3481,15 @@ performance can be effected by safe browsing checks. <a href="https://github.com
    <ul>
     <li><a href="#ref-for-file">2.1. Concepts</a> <a href="#ref-for-file①">(2)</a>
     <li><a href="#ref-for-file②">2.2. The FileSystemHandle interface</a>
+    <li><a href="#ref-for-file③">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-file④">(2)</a> <a href="#ref-for-file⑤">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="file-entry-binary-data">
    <b><a href="#file-entry-binary-data">#file-entry-binary-data</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-file-entry-binary-data">2.1. Concepts</a>
+    <li><a href="#ref-for-file-entry-binary-data①">2.3.2. The createWritable() method</a>
+    <li><a href="#ref-for-file-entry-binary-data②">2.5. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="file-entry-modification-timestamp">
@@ -3189,7 +3553,8 @@ performance can be effected by safe browsing checks. <a href="https://github.com
     <li><a href="#ref-for-filesystemhandle-entry">2.1. Concepts</a>
     <li><a href="#ref-for-filesystemhandle-entry①">2.2. The FileSystemHandle interface</a> <a href="#ref-for-filesystemhandle-entry②">(2)</a> <a href="#ref-for-filesystemhandle-entry③">(3)</a> <a href="#ref-for-filesystemhandle-entry④">(4)</a> <a href="#ref-for-filesystemhandle-entry⑤">(5)</a>
     <li><a href="#ref-for-filesystemhandle-entry⑥">2.2.1. The isSameEntry() method</a> <a href="#ref-for-filesystemhandle-entry⑦">(2)</a>
-    <li><a href="#ref-for-filesystemhandle-entry⑧">2.4.5. The resolve() method</a> <a href="#ref-for-filesystemhandle-entry⑨">(2)</a>
+    <li><a href="#ref-for-filesystemhandle-entry⑧">2.3.2. The createWritable() method</a> <a href="#ref-for-filesystemhandle-entry⑨">(2)</a>
+    <li><a href="#ref-for-filesystemhandle-entry①⓪">2.4.5. The resolve() method</a> <a href="#ref-for-filesystemhandle-entry①①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemhandle-isfile">
@@ -3242,7 +3607,7 @@ performance can be effected by safe browsing checks. <a href="https://github.com
   <aside class="dfn-panel" data-for="dom-filesystemcreatewritableoptions-keepexistingdata">
    <b><a href="#dom-filesystemcreatewritableoptions-keepexistingdata">#dom-filesystemcreatewritableoptions-keepexistingdata</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-filesystemcreatewritableoptions-keepexistingdata">2.3.2. The createWritable() method</a> <a href="#ref-for-dom-filesystemcreatewritableoptions-keepexistingdata①">(2)</a>
+    <li><a href="#ref-for-dom-filesystemcreatewritableoptions-keepexistingdata">2.3.2. The createWritable() method</a> <a href="#ref-for-dom-filesystemcreatewritableoptions-keepexistingdata①">(2)</a> <a href="#ref-for-dom-filesystemcreatewritableoptions-keepexistingdata②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="filesystemfilehandle">
@@ -3352,54 +3717,75 @@ performance can be effected by safe browsing checks. <a href="https://github.com
     <li><a href="#ref-for-enumdef-writecommandtype">2.5. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-writecommandtype-truncate">
-   <b><a href="#dom-writecommandtype-truncate">#dom-writecommandtype-truncate</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-writecommandtype-write">
+   <b><a href="#dom-writecommandtype-write">#dom-writecommandtype-write</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-writecommandtype-truncate">2.5.1. The write() method</a>
-    <li><a href="#ref-for-dom-writecommandtype-truncate①">2.5.2. The truncate() method</a>
+    <li><a href="#ref-for-dom-writecommandtype-write">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-writecommandtype-write①">(2)</a>
+    <li><a href="#ref-for-dom-writecommandtype-write②">2.5.1. The write() method</a> <a href="#ref-for-dom-writecommandtype-write③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-writecommandtype-seek">
    <b><a href="#dom-writecommandtype-seek">#dom-writecommandtype-seek</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-writecommandtype-seek">2.5.1. The write() method</a>
+    <li><a href="#ref-for-dom-writecommandtype-seek">2.5. The FileSystemWritableFileStream interface</a>
+    <li><a href="#ref-for-dom-writecommandtype-seek①">2.5.1. The write() method</a>
+    <li><a href="#ref-for-dom-writecommandtype-seek②">2.5.2. The seek() method</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-writecommandtype-write">
-   <b><a href="#dom-writecommandtype-write">#dom-writecommandtype-write</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-writecommandtype-truncate">
+   <b><a href="#dom-writecommandtype-truncate">#dom-writecommandtype-truncate</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-writecommandtype-write">2.5.1. The write() method</a>
+    <li><a href="#ref-for-dom-writecommandtype-truncate">2.5. The FileSystemWritableFileStream interface</a>
+    <li><a href="#ref-for-dom-writecommandtype-truncate①">2.5.1. The write() method</a> <a href="#ref-for-dom-writecommandtype-truncate②">(2)</a>
+    <li><a href="#ref-for-dom-writecommandtype-truncate③">2.5.3. The truncate() method</a> <a href="#ref-for-dom-writecommandtype-truncate④">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-writeparams">
    <b><a href="#dictdef-writeparams">#dictdef-writeparams</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dictdef-writeparams">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dictdef-writeparams①">(2)</a>
-    <li><a href="#ref-for-dictdef-writeparams②">2.5.1. The write() method</a> <a href="#ref-for-dictdef-writeparams③">(2)</a>
+    <li><a href="#ref-for-dictdef-writeparams">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dictdef-writeparams①">(2)</a> <a href="#ref-for-dictdef-writeparams②">(3)</a> <a href="#ref-for-dictdef-writeparams③">(4)</a> <a href="#ref-for-dictdef-writeparams④">(5)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-writeparams-type">
    <b><a href="#dom-writeparams-type">#dom-writeparams-type</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-writeparams-type">2.5.1. The write() method</a> <a href="#ref-for-dom-writeparams-type①">(2)</a> <a href="#ref-for-dom-writeparams-type②">(3)</a> <a href="#ref-for-dom-writeparams-type③">(4)</a>
+    <li><a href="#ref-for-dom-writeparams-type">2.5. The FileSystemWritableFileStream interface</a>
+    <li><a href="#ref-for-dom-writeparams-type①">2.5.1. The write() method</a> <a href="#ref-for-dom-writeparams-type②">(2)</a> <a href="#ref-for-dom-writeparams-type③">(3)</a> <a href="#ref-for-dom-writeparams-type④">(4)</a>
+    <li><a href="#ref-for-dom-writeparams-type⑤">2.5.2. The seek() method</a>
+    <li><a href="#ref-for-dom-writeparams-type⑥">2.5.3. The truncate() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-writeparams-size">
    <b><a href="#dom-writeparams-size">#dom-writeparams-size</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-writeparams-size">2.5.1. The write() method</a>
+    <li><a href="#ref-for-dom-writeparams-size">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-writeparams-size①">(2)</a>
+    <li><a href="#ref-for-dom-writeparams-size②">2.5.1. The write() method</a>
+    <li><a href="#ref-for-dom-writeparams-size③">2.5.2. The seek() method</a>
+    <li><a href="#ref-for-dom-writeparams-size④">2.5.3. The truncate() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-writeparams-position">
    <b><a href="#dom-writeparams-position">#dom-writeparams-position</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-writeparams-position">2.5.1. The write() method</a> <a href="#ref-for-dom-writeparams-position①">(2)</a>
+    <li><a href="#ref-for-dom-writeparams-position">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-writeparams-position①">(2)</a> <a href="#ref-for-dom-writeparams-position②">(3)</a> <a href="#ref-for-dom-writeparams-position③">(4)</a>
+    <li><a href="#ref-for-dom-writeparams-position④">2.5.1. The write() method</a> <a href="#ref-for-dom-writeparams-position⑤">(2)</a>
+    <li><a href="#ref-for-dom-writeparams-position⑥">2.5.2. The seek() method</a>
+    <li><a href="#ref-for-dom-writeparams-position⑦">2.5.3. The truncate() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-writeparams-data">
    <b><a href="#dom-writeparams-data">#dom-writeparams-data</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-writeparams-data">2.5.1. The write() method</a>
+    <li><a href="#ref-for-dom-writeparams-data">2.5. The FileSystemWritableFileStream interface</a>
+    <li><a href="#ref-for-dom-writeparams-data①">2.5.1. The write() method</a> <a href="#ref-for-dom-writeparams-data②">(2)</a>
+    <li><a href="#ref-for-dom-writeparams-data③">2.5.2. The seek() method</a>
+    <li><a href="#ref-for-dom-writeparams-data④">2.5.3. The truncate() method</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="typedefdef-filesystemwritechunktype">
+   <b><a href="#typedefdef-filesystemwritechunktype">#typedefdef-filesystemwritechunktype</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-typedefdef-filesystemwritechunktype">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-typedefdef-filesystemwritechunktype①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="filesystemwritablefilestream">
@@ -3407,30 +3793,59 @@ performance can be effected by safe browsing checks. <a href="https://github.com
    <ul>
     <li><a href="#ref-for-filesystemwritablefilestream">2.3. The FileSystemFileHandle interface</a>
     <li><a href="#ref-for-filesystemwritablefilestream①">2.3.2. The createWritable() method</a>
-    <li><a href="#ref-for-filesystemwritablefilestream②">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-filesystemwritablefilestream③">(2)</a> <a href="#ref-for-filesystemwritablefilestream④">(3)</a> <a href="#ref-for-filesystemwritablefilestream⑤">(4)</a>
+    <li><a href="#ref-for-filesystemwritablefilestream②">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-filesystemwritablefilestream③">(2)</a> <a href="#ref-for-filesystemwritablefilestream④">(3)</a> <a href="#ref-for-filesystemwritablefilestream⑤">(4)</a> <a href="#ref-for-filesystemwritablefilestream⑥">(5)</a> <a href="#ref-for-filesystemwritablefilestream⑦">(6)</a> <a href="#ref-for-filesystemwritablefilestream⑧">(7)</a> <a href="#ref-for-filesystemwritablefilestream⑨">(8)</a> <a href="#ref-for-filesystemwritablefilestream①⓪">(9)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="filesystemwritablefilestream-file">
+   <b><a href="#filesystemwritablefilestream-file">#filesystemwritablefilestream-file</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-filesystemwritablefilestream-file">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-filesystemwritablefilestream-file①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="filesystemwritablefilestream-buffer">
+   <b><a href="#filesystemwritablefilestream-buffer">#filesystemwritablefilestream-buffer</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-filesystemwritablefilestream-buffer">2.3.2. The createWritable() method</a>
+    <li><a href="#ref-for-filesystemwritablefilestream-buffer①">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-filesystemwritablefilestream-buffer②">(2)</a> <a href="#ref-for-filesystemwritablefilestream-buffer③">(3)</a> <a href="#ref-for-filesystemwritablefilestream-buffer④">(4)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑤">(5)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑥">(6)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑦">(7)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑧">(8)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑨">(9)</a> <a href="#ref-for-filesystemwritablefilestream-buffer①⓪">(10)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="filesystemwritablefilestream-seekoffset">
+   <b><a href="#filesystemwritablefilestream-seekoffset">#filesystemwritablefilestream-seekoffset</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-filesystemwritablefilestream-seekoffset">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-filesystemwritablefilestream-seekoffset①">(2)</a> <a href="#ref-for-filesystemwritablefilestream-seekoffset②">(3)</a> <a href="#ref-for-filesystemwritablefilestream-seekoffset③">(4)</a> <a href="#ref-for-filesystemwritablefilestream-seekoffset④">(5)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="create-a-new-filesystemwritablefilestream">
+   <b><a href="#create-a-new-filesystemwritablefilestream">#create-a-new-filesystemwritablefilestream</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-create-a-new-filesystemwritablefilestream">2.3.2. The createWritable() method</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="write-a-chunk">
+   <b><a href="#write-a-chunk">#write-a-chunk</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-write-a-chunk">2.5. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemwritablefilestream-write">
    <b><a href="#dom-filesystemwritablefilestream-write">#dom-filesystemwritablefilestream-write</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-filesystemwritablefilestream-write">2.5. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-filesystemwritablefilestream-write①">(2)</a>
-    <li><a href="#ref-for-dom-filesystemwritablefilestream-write②">2.5.1. The write() method</a> <a href="#ref-for-dom-filesystemwritablefilestream-write③">(2)</a>
+    <li><a href="#ref-for-dom-filesystemwritablefilestream-write②">2.5.1. The write() method</a> <a href="#ref-for-dom-filesystemwritablefilestream-write③">(2)</a> <a href="#ref-for-dom-filesystemwritablefilestream-write④">(3)</a> <a href="#ref-for-dom-filesystemwritablefilestream-write⑤">(4)</a> <a href="#ref-for-dom-filesystemwritablefilestream-write⑥">(5)</a> <a href="#ref-for-dom-filesystemwritablefilestream-write⑦">(6)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-filesystemwritablefilestream-seek">
+   <b><a href="#dom-filesystemwritablefilestream-seek">#dom-filesystemwritablefilestream-seek</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-filesystemwritablefilestream-seek">2.5. The FileSystemWritableFileStream interface</a>
+    <li><a href="#ref-for-dom-filesystemwritablefilestream-seek①">2.5.2. The seek() method</a> <a href="#ref-for-dom-filesystemwritablefilestream-seek②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemwritablefilestream-truncate">
    <b><a href="#dom-filesystemwritablefilestream-truncate">#dom-filesystemwritablefilestream-truncate</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-filesystemwritablefilestream-truncate">2.5. The FileSystemWritableFileStream interface</a>
-    <li><a href="#ref-for-dom-filesystemwritablefilestream-truncate①">2.5.2. The truncate() method</a> <a href="#ref-for-dom-filesystemwritablefilestream-truncate②">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-filesystemwritablefilestream-close">
-   <b><a href="#dom-filesystemwritablefilestream-close">#dom-filesystemwritablefilestream-close</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-filesystemwritablefilestream-close">2.3.2. The createWritable() method</a> <a href="#ref-for-dom-filesystemwritablefilestream-close①">(2)</a>
-    <li><a href="#ref-for-dom-filesystemwritablefilestream-close②">2.5.1. The write() method</a> <a href="#ref-for-dom-filesystemwritablefilestream-close③">(2)</a>
-    <li><a href="#ref-for-dom-filesystemwritablefilestream-close④">2.5.2. The truncate() method</a>
-    <li><a href="#ref-for-dom-filesystemwritablefilestream-close⑤">2.5.3. The close() method</a> <a href="#ref-for-dom-filesystemwritablefilestream-close⑥">(2)</a> <a href="#ref-for-dom-filesystemwritablefilestream-close⑦">(3)</a>
+    <li><a href="#ref-for-dom-filesystemwritablefilestream-truncate①">2.5.3. The truncate() method</a> <a href="#ref-for-dom-filesystemwritablefilestream-truncate②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="enumdef-choosefilesystementriestype">
