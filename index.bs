@@ -587,7 +587,7 @@ To <dfn>create a new FileSystemWritableFileStream</dfn> given a [=file entry=] `
 1. Let |controller| be a new {{WritableStreamDefaultController}}.
 1. Let |startAlgorithm| be an algorithm that returns `undefined`.
 1. Let |writeAlgorithm| be an algorithm which takes a |chunk| argument
-   and runs the [=write a chunk=] algorithm with |stream| and |chunk|.
+   and returns the result of running the [=write a chunk=] algorithm with |stream| and |chunk|.
 1. Let |closeAlgorithm| be the following steps:
    1. Issue: TODO: Check permissions.
    1. Set |stream|.[=[[file]]=]'s [=file entry/binary data=] to |stream|.[=[[buffer]]=].
@@ -595,7 +595,8 @@ To <dfn>create a new FileSystemWritableFileStream</dfn> given a [=file entry=] `
 
       Note: it is expected that this atomically updates the contents of the file on disk
       being written to.
-1. Let |abortAlgorithm| be an algorithm that returns `undefined`.
+   1. Return [=a promise resolved with=] `undefined`.
+1. Let |abortAlgorithm| be an algorithm that returns [=a promise resolved with=] `undefined`.
 1. Let |highWaterMark| be 1.
 1. Let |sizeAlgorithm| be an algorithm that returns `1`.
 1. Perform [$SetUpWritableStreamDefaultController$](|stream|, |controller|, |startAlgorithm|, |writeAlgorithm|, |closeAlgorithm|, |abortAlgorithm|, |highWaterMark|, |sizeAlgorithm|).
@@ -737,7 +738,10 @@ The <dfn method for=FileSystemWritableFileStream>seek(|position|)</dfn> method, 
 steps:
 
 1. Let |writer| be the result of calling [$AcquireWritableStreamDefaultWriter$](<b>[=this=]</b>).
-1. Let |result| be [$WritableStreamDefaultWriterWrite$](|writer|, <code>{type: {{WriteCommandType/"seek"}}, position: |position|}</code>).
+1. Let |result| be [$WritableStreamDefaultWriterWrite$](|writer|,
+   <code>{<l>{{WriteParams/type}}</l>: {{WriteCommandType/"seek"}},
+   <l>{{WriteParams/position}}</l>: |position|,
+   <l>{{WriteParams/size}}</l>: undefined, <l>{{WriteParams/data}}</l>: undefined}</code>).
 1. Perform [$WritableStreamDefaultWriterRelease$](|writer|).
 1. Return |result|.
 
@@ -763,7 +767,10 @@ The <dfn method for=FileSystemWritableFileStream>truncate(|size|)</dfn> method, 
 steps:
 
 1. Let |writer| be the result of calling [$AcquireWritableStreamDefaultWriter$](<b>[=this=]</b>).
-1. Let |result| be [$WritableStreamDefaultWriterWrite$](|writer|, <code>{type: {{WriteCommandType/"truncate"}}, size: |size|}</code>).
+1. Let |result| be [$WritableStreamDefaultWriterWrite$](|writer|,
+   <code>{<l>{{WriteParams/type}}</l>: {{WriteCommandType/"truncate"}},
+   <l>{{WriteParams/size}}</l>: |size|,
+   <l>{{WriteParams/position}}</l>: undefined, <l>{{WriteParams/data}}</l>: undefined}</code>).
 1. Perform [$WritableStreamDefaultWriterRelease$](|writer|).
 1. Return |result|.
 
