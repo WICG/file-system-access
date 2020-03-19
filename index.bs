@@ -260,6 +260,8 @@ interface FileSystemFileHandle : FileSystemHandle {
 };
 </xmp>
 
+A {{FileSystemFileHandle}}'s associated [=FileSystemHandle/entry=] must be a [=file entry=].
+
 {{FileSystemFileHandle}} objects are [=serializable objects=]. Their [=serialization steps=] and
 [=deserialization steps=] are the same as those for {{FileSystemHandle}}.
 
@@ -350,6 +352,8 @@ interface FileSystemDirectoryHandle : FileSystemHandle {
   Promise<sequence<USVString>?> resolve(FileSystemHandle possibleDescendant);
 };
 </xmp>
+
+A {{FileSystemDirectoryHandle}}'s associated [=FileSystemHandle/entry=] must be a [=directory entry=].
 
 {{FileSystemDirectoryHandle}} objects are [=serializable objects=]. Their [=serialization steps=] and
 [=deserialization steps=] are the same as those for {{FileSystemHandle}}.
@@ -867,7 +871,23 @@ these steps:
 
 </div>
 
-# Accessing special filesystems # {#special-filesystems}
+# Accessing special file systems # {#special-filesystems}
+
+## Concepts ## {#special-filesystem-concepts}
+
+A [=bucket=] contains a <dfn>sandboxed file system root</dfn>, a [=directory entry=].
+
+The [=sandboxed file system root=] for one [=bucket=] must be completely separate from
+that of any other [=bucket=].
+
+Note: While user agents will typically implement this by persisting the contents of this
+[=sandboxed file system root=] to disk, it is not intended that the contents are easily
+user accessible. Similarly there is no expectation that files or directories with names
+matching the names of children of the [=sandboxed file system root=] exist.
+
+Note: In Chrome this [=sandboxed file system root=] refers to the same storage as the
+<a href="https://dev.w3.org/2009/dap/file-system/file-dir-sys.html#dfn-temporary">temporary
+file system</a> as used to be defined in [[file-system-api|File API: Directories and System]].
 
 ## The {{FileSystemDirectoryHandle/getSystemDirectory()}} method ## {#api-getsystemdirectory}
 
@@ -890,7 +910,7 @@ partial interface FileSystemDirectoryHandle {
   : |directoryHandle| = {{FileSystemDirectoryHandle}} .
     {{FileSystemDirectoryHandle/getSystemDirectory()|getSystemDirectory}}({
        {{GetSystemDirectoryOptions/type}}: {{SystemDirectoryType/"sandbox"}} })
-  :: Returns the sandboxed filesystem.
+  :: Returns the sandboxed file system.
 </div>
 
 Issue(27): getSystemDirectory might not be the best name. Also perhaps should be on Window rather
@@ -905,7 +925,11 @@ invoked, must run these steps:
 1. If |environment|'s [=environment settings object/origin=] is an [=opaque origin=],
    return [=a promise rejected with=] a {{SecurityError}}.
 
-1. TODO
+1. [=Assert=]: |options|.{{GetSystemDirectoryOptions/type}} is {{SystemDirectoryType/"sandbox"}}.
+1. Let |storage| be |environment|'s [=environment settings object/origin=]'s [=site storage unit=].
+1. Let |bucket| be |storage|'s [=bucket=].
+1. Return [=a promise resolved with=] a new {{FileSystemDirectoryHandle}},
+   whose associated [=FileSystemHandle/entry=] is |bucket|'s [=sandboxed file system root=].
 
 </div>
 
