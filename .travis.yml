@@ -5,7 +5,7 @@ python:
 
 install:
   # Setup bikeshed. See https://tabatkins.github.io/bikeshed/#install-linux
-  - git clone https://github.com/tabatkins/bikeshed.git
+  - git clone https://github.com/tabatkins/bikeshed.git -b v0.9
   - pip install --editable $PWD/bikeshed
   - bikeshed update
  
