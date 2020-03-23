@@ -256,7 +256,7 @@ dictionary FileSystemCreateWritableOptions {
 [Exposed=(Window,Worker), SecureContext, Serializable]
 interface FileSystemFileHandle : FileSystemHandle {
   Promise<File> getFile();
-  Promise<FileSystemWritableFileStream> createWritable(optional FileSystemCreateWritableOptions options);
+  Promise<FileSystemWritableFileStream> createWritable(optional FileSystemCreateWritableOptions options = {});
 };
 </xmp>
 
