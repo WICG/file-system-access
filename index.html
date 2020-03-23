@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 8a606cd39d36033b27400c47ffcf6a695f400519" name="generator">
+  <meta content="Bikeshed version 2d9ffc40, updated Fri Mar 20 17:26:52 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="3dee94a23a939905181c3b6e3a3dbc17305d6df4" name="document-revision">
+  <meta content="6dd5c33ede0b24669fe9e2650356e690e72dd7a8" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1496,7 +1496,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-03-20">20 March 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-03-23">23 March 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1829,7 +1829,7 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed①"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->), <a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext①"><c- g>SecureContext</c-></a>, <a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/structured-data.html#serializable" id="ref-for-serializable①"><c- g>Serializable</c-></a>]
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemfilehandle"><code><c- g>FileSystemFileHandle</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑥"><c- n>FileSystemHandle</c-></a> {
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-file" id="ref-for-dfn-file"><c- n>File</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-getfile" id="ref-for-dom-filesystemfilehandle-getfile"><c- g>getFile</c-></a>();
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream"><c- n>FileSystemWritableFileStream</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-createwritable" id="ref-for-dom-filesystemfilehandle-createwritable"><c- g>createWritable</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemcreatewritableoptions" id="ref-for-dictdef-filesystemcreatewritableoptions"><c- n>FileSystemCreateWritableOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemFileHandle/createWritable(options), FileSystemFileHandle/createWritable()" data-dfn-type="argument" data-export id="dom-filesystemfilehandle-createwritable-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemfilehandle-createwritable-options-options"></a></dfn>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream"><c- n>FileSystemWritableFileStream</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-createwritable" id="ref-for-dom-filesystemfilehandle-createwritable"><c- g>createWritable</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemcreatewritableoptions" id="ref-for-dictdef-filesystemcreatewritableoptions"><c- n>FileSystemCreateWritableOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemFileHandle/createWritable(options), FileSystemFileHandle/createWritable()" data-dfn-type="argument" data-export id="dom-filesystemfilehandle-createwritable-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemfilehandle-createwritable-options-options"></a></dfn> = {});
 };
 </pre>
    <p>A <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle②">FileSystemFileHandle</a></code>'s associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑧">entry</a> must be a <a data-link-type="dfn" href="#file" id="ref-for-file③">file entry</a>.</p>
@@ -3388,7 +3388,7 @@ appropriate.</p>
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->), <a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext"><c- g>SecureContext</c-></a>, <a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/structured-data.html#serializable"><c- g>Serializable</c-></a>]
 <c- b>interface</c-> <a href="#filesystemfilehandle"><code><c- g>FileSystemFileHandle</c-></code></a> : <a class="n" data-link-type="idl-name" href="#filesystemhandle"><c- n>FileSystemHandle</c-></a> {
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-file"><c- n>File</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-getfile"><c- g>getFile</c-></a>();
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemwritablefilestream"><c- n>FileSystemWritableFileStream</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-createwritable"><c- g>createWritable</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemcreatewritableoptions"><c- n>FileSystemCreateWritableOptions</c-></a> <a href="#dom-filesystemfilehandle-createwritable-options-options"><code><c- g>options</c-></code></a>);
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemwritablefilestream"><c- n>FileSystemWritableFileStream</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-createwritable"><c- g>createWritable</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemcreatewritableoptions"><c- n>FileSystemCreateWritableOptions</c-></a> <a href="#dom-filesystemfilehandle-createwritable-options-options"><code><c- g>options</c-></code></a> = {});
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-filesystemgetfileoptions"><code><c- g>FileSystemGetFileOptions</c-></code></a> {
