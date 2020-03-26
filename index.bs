@@ -82,7 +82,7 @@ run the following steps:
 1. Run the following steps [=in parallel=]:
   1. If |child| is [=the same as=] |root|,
      [=/resolve=] |result| with an empty list, and abort these substeps.
-  1. Let |childPromises| be << >>.
+  1. Let |childPromises| be « ».
   1. [=set/For each=] |entry| of |root|'s [=FileSystemHandle/entry=]'s [=children=]:
     1. Let |p| be the result of [=entry/resolving=] |child| relative to |entry|.
     1. [=list/Append=] |p| to |childPromises|.
