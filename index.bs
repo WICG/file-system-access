@@ -12,6 +12,7 @@ Repository: wicg/native-file-system
 Indent: 2
 Complain About: accidental-2119 yes, missing-example-ids yes
 Markup Shorthands: css no, markdown yes
+Include Mdn Panels: no
 </pre>
 
 <pre class=link-defaults>
@@ -91,7 +92,7 @@ run the following steps:
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
   1. If |child| is [=the same as=] |root|,
-     [=/resolve=] |result| with an empty list, and abort these substeps.
+     [=/resolve=] |result| with an empty list, and abort.
   1. Let |childPromises| be << >>.
   1. [=set/For each=] |entry| of |root|'s [=FileSystemHandle/entry=]'s [=children=]:
     1. Let |p| be the result of [=entry/resolving=] |child| relative to |entry|.
@@ -136,6 +137,9 @@ Unless specified otherwise, these steps are:
 1. Let |parent| be |entry|'s [=entry/parent=].
 1. If |parent| is not null, run |parent|'s [=request permission steps=].
 
+Note: These steps do not return anything. However as a result of executing the request
+permission steps for an entry the permission state for that entry (and other entries)
+can be updated, and the new state can be queried by executing the query permission steps.
 </div>
 
 ## The {{FileSystemHandle}} interface ## {#api-filesystemhandle}
@@ -290,8 +294,8 @@ The <dfn method for=FileSystemHandle>requestPermission(|descriptor|)</dfn> metho
 
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
-  1. Run <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given |descriptor|.
-  1. If that throws an exception, [=reject=] |result| with that exception and abort.
+  1. Run <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=request permission steps=] given |descriptor|.
+     If that throws an exception, [=reject=] |result| with that exception and abort.
   1. [=/Resolve=] |result| with the result of running
      <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given |descriptor|.
 1. Return |result|.
@@ -338,7 +342,7 @@ The <dfn method for=FileSystemFileHandle>getFile()</dfn> method, when invoked, m
      <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
      «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]».
   1. If |permissionStatus| is not {{PermissionState/"granted"}},
-     reject |result| with a {{NotAllowedError}} and abort these steps.
+     reject |result| with a {{NotAllowedError}} and abort.
   1. TODO
 1. Return |result|.
 
@@ -384,7 +388,7 @@ The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method,
      <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
      «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
   1. If |permissionStatus| is not {{PermissionState/"granted"}},
-     reject |result| with a {{NotAllowedError}} and abort these steps.
+     reject |result| with a {{NotAllowedError}} and abort.
   1. Let |stream| be the result of [=create a new FileSystemWritableFileStream|creating a new FileSystemWritableFileStream=]
      for <b>[=this=]</b>'s [=FileSystemHandle/entry=].
   1. If |options|.{{FileSystemCreateWritableOptions/keepExistingData}} is `true`:
@@ -475,12 +479,12 @@ must run these steps:
     1. Let |permissionStatus| be the result of running
        <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
        «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
-  1. Else:
+  1. Otherwise:
     1. Let |permissionStatus| be the result of running
        <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
        «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]».
   1. If |permissionStatus| is not {{PermissionState/"granted"}},
-     reject |result| with a {{NotAllowedError}} and abort these steps.
+     reject |result| with a {{NotAllowedError}} and abort.
   1. TODO
 1. Return |result|.
 
@@ -525,7 +529,7 @@ invoked, must run these steps:
        <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
        «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]».
   1. If |permissionStatus| is not {{PermissionState/"granted"}},
-     reject |result| with a {{NotAllowedError}} and abort these steps.
+     reject |result| with a {{NotAllowedError}} and abort.
   1. TODO
 1. Return |result|.
 
@@ -548,7 +552,7 @@ these steps:
      <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
      «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]».
   1. If |permissionStatus| is not {{PermissionState/"granted"}},
-     reject |result| with a {{NotAllowedError}} and abort these steps.
+     reject |result| with a {{NotAllowedError}} and abort.
   1. TODO
 1. Return |result|.
 
@@ -586,7 +590,7 @@ these steps:
      <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
      «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
   1. If |permissionStatus| is not {{PermissionState/"granted"}},
-     reject |result| with a {{NotAllowedError}} and abort these steps.
+     reject |result| with a {{NotAllowedError}} and abort.
   1. TODO
 1. Return |result|.
 
@@ -722,12 +726,12 @@ To <dfn>create a new FileSystemWritableFileStream</dfn> given a [=file entry=] `
          |stream|.[=[[file]]=]'s [=query permission steps=] given
          «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
       1. If |permissionStatus| is not {{PermissionState/"granted"}},
-         reject |closeResult| with a {{NotAllowedError}} and abort these steps.
+         reject |closeResult| with a {{NotAllowedError}} and abort.
       1. TODO: optional UA defined security checks
       1. Set |stream|.[=[[file]]=]'s [=file entry/binary data=] to |stream|.[=[[buffer]]=].
          If that throws an exception, reject |closeResult| with that exception and abort.
 
-         Note: it is expected that this atomically updates the contents of the file on disk
+         Note: It is expected that this atomically updates the contents of the file on disk
          being written to.
       1. [=/Resolve=] |closeResult| with `undefined`.
    1. Return |closeResult|.
@@ -752,7 +756,7 @@ runs these steps:
       |stream|.[=[[file]]=]'s [=query permission steps=] given
       «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
    1. If |permissionStatus| is not {{PermissionState/"granted"}},
-      reject |p| with a {{NotAllowedError}} and abort these steps.
+      reject |p| with a {{NotAllowedError}} and abort.
    1. Let |command| be |input|.{{WriteParams/type}} if |input| is a {{WriteParams}},
       and {{WriteCommandType/"write"}} otherwise.
    1. If |command| is {{WriteCommandType/"write"}}:
