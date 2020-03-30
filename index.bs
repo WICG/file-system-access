@@ -35,6 +35,11 @@ spec:webidl; type:dfn; text:resolve
 .domintro dt code {
     font-size: inherit;
 }
+.domintro::before {
+    content: 'For web developers (non-normative)';
+    text-transform: initial;
+
+}
 </style>
 
 # Introduction # {#introduction}
