@@ -12,7 +12,6 @@ Repository: wicg/native-file-system
 Indent: 2
 Complain About: accidental-2119 yes, missing-example-ids yes
 Markup Shorthands: css no, markdown yes
-Include Mdn Panels: no
 </pre>
 
 <pre class=link-defaults>
@@ -73,7 +72,7 @@ if it was returned by {{chooseFileSystemEntries()}} or {{getSystemDirectory()}},
 will have a parent in all other cases.
 
 [=/Entries=] can (but don't have to) be backed by files on the systems native file system,
-as such it is possible for the [=binary data=], [=modification timestamp=],
+so it is possible for the [=binary data=], [=modification timestamp=],
 and [=children=] of entries to be modified by applications outside of this specification.
 Exactly how external changes are reflected in the data structures defined by this specification,
 as well as how changes made to the data structures defined here are reflected externally
@@ -109,11 +108,6 @@ run the following steps:
 
 ## Permissions ## {#permissions}
 
-Note: By default entries inherit their permissions from their parent. If an entry doesn't
-have a parent, permissions are by default granted, and requesting permissions is a no-op.
-Entries returned by {{chooseFileSystemEntries()}} override these steps, providing stricter
-access control for those entries.
-
 Issue: Figure out some way to integrate this better with the permissions API [[permissions]],
 for example by making the entry be a part of the PermissionDescriptor.
 
@@ -122,7 +116,13 @@ An [=/entry=] |entry| has associated <dfn for=entry>query permission steps</dfn>
 which take a {{FileSystemHandlePermissionDescriptor}} and return a {{PermissionState}}.
 Unless specified otherwise, these steps are:
 1. Let |parent| be |entry|'s [=entry/parent=].
-1. If |parent| is null, return {{PermissionState/"granted"}}.
+1. Assert: |parent| is not null.
+
+   Note: [[#native-file-system-permissions]] overrides these steps for entries returned by
+   {{chooseFileSystemEntries()}}. Additionally [[#special-filesystem-concepts]] overrides
+   these steps for entries returned by {{FileSystemDirectoryHandle/getSystemDirectory()}}.
+   All other entries always have a parent.
+
 1. Return the result of running |parent|'s [=query permission steps=].
 
 Note: These steps return the current state synchronously, however these steps are only
@@ -381,18 +381,19 @@ The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method,
 
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
-  1. Run <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=request permission steps=] given
+  1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
+  1. Run |entry|'s [=request permission steps=] given
      «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
      If that throws an exception, [=reject=] |result| with that exception and abort.
   1. Let |permissionStatus| be the result of running
-     <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
+     |entry|'s [=query permission steps=] given
      «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
   1. If |permissionStatus| is not {{PermissionState/"granted"}},
      reject |result| with a {{NotAllowedError}} and abort.
   1. Let |stream| be the result of [=create a new FileSystemWritableFileStream|creating a new FileSystemWritableFileStream=]
-     for <b>[=this=]</b>'s [=FileSystemHandle/entry=].
+     for |entry|.
   1. If |options|.{{FileSystemCreateWritableOptions/keepExistingData}} is `true`:
-    1. Set |stream|.[=[[buffer]]=] to a copy of <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=file entry/binary data=].
+    1. Set |stream|.[=[[buffer]]=] to a copy of |entry|'s [=file entry/binary data=].
   1. [=/Resolve=] |result| with |stream|.
 1. Return |result|.
 
@@ -472,16 +473,17 @@ must run these steps:
 
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
+  1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
   1. If |options|.{{FileSystemGetFileOptions/create}} is `true`:
-    1. Run <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=request permission steps=] given
+    1. Run |entry|'s [=request permission steps=] given
        «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
        If that throws an exception, [=reject=] |result| with that exception and abort.
     1. Let |permissionStatus| be the result of running
-       <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
+       |entry|'s [=query permission steps=] given
        «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
   1. Otherwise:
     1. Let |permissionStatus| be the result of running
-       <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
+       |entry|'s [=query permission steps=] given
        «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]».
   1. If |permissionStatus| is not {{PermissionState/"granted"}},
      reject |result| with a {{NotAllowedError}} and abort.
@@ -517,16 +519,17 @@ invoked, must run these steps:
 
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
+  1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
   1. If |options|.{{FileSystemGetDirectoryOptions/create}} is `true`:
-    1. Run <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=request permission steps=] given
+    1. Run |entry|'s [=request permission steps=] given
        «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
        If that throws an exception, [=reject=] |result| with that exception and abort.
     1. Let |permissionStatus| be the result of running
-       <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
+       |entry|'s [=query permission steps=] given
        «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
   1. Else:
     1. Let |permissionStatus| be the result of running
-       <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
+       |entry|'s [=query permission steps=] given
        «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]».
   1. If |permissionStatus| is not {{PermissionState/"granted"}},
      reject |result| with a {{NotAllowedError}} and abort.
@@ -583,11 +586,12 @@ these steps:
 
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
-  1. Run <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=request permission steps=] given
+  1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
+  1. Run |entry|'s [=request permission steps=] given
      «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
      If that throws an exception, [=reject=] |result| with that exception.
   1. Let |permissionStatus| be the result of running
-     <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
+     |entry|'s [=query permission steps=] given
      «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
   1. If |permissionStatus| is not {{PermissionState/"granted"}},
      reject |result| with a {{NotAllowedError}} and abort.
@@ -710,11 +714,11 @@ Similarly, when piping a {{ReadableStream}} into a {{FileSystemWritableFileStrea
 </div>
 
 <div algorithm>
-To <dfn>create a new FileSystemWritableFileStream</dfn> given a [=file entry=] `file`, perform the following steps:
+To <dfn>create a new FileSystemWritableFileStream</dfn> given a [=file entry=] |file|, perform the following steps:
 
 1. Let |stream| be a new {{FileSystemWritableFileStream}}.
 1. Perform [$InitializeWritableStream$](|stream|)
-1. Set |stream|.[=FileSystemWritableFileStream/[[file]]=] to [=file entry=].
+1. Set |stream|.[=FileSystemWritableFileStream/[[file]]=] to |file|.
 1. Let |controller| be a new {{WritableStreamDefaultController}}.
 1. Let |startAlgorithm| be an algorithm that returns `undefined`.
 1. Let |writeAlgorithm| be an algorithm which takes a |chunk| argument
@@ -919,9 +923,9 @@ steps:
 
 </div>
 
-# Accessing native filesystem # {#native-filesystem}
+# Accessing Native File System # {#native-filesystem}
 
-## Permissions ## {#native-file-system-permissions}
+## Native File System Permissions ## {#native-file-system-permissions}
 
 <div algorithm>
 The <dfn>native file system query permission steps</dfn> for an [=/entry=] |entry|
@@ -959,7 +963,7 @@ given a {{FileSystemHandlePermissionDescriptor}} |descriptor| are:
 1. If the [=current global object=] is not a {{Window}},
    return.
 
-   Issue: Should this throw instead of return silently?
+   Issue: Should this throw instead of returning silently?
 
 1. If the [=current global object=] does not have [=transient activation=], throw a {{NotAllowedError}}.
 1. Let |environment| be the [=current settings object=].
@@ -974,7 +978,7 @@ given a {{FileSystemHandlePermissionDescriptor}} |descriptor| are:
    the same |entry| with «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]».
 
 Note: This is intentionally vague about the details of the permission UI and how the UA infers user intent.
-UAs <span class=allow-2119>should</span> be able to explore lots of UI within this framework.
+UAs <span class=allow-2119>should</span> be able to explore a variety of UI approaches within this framework.
 
 </div>
 
@@ -1069,7 +1073,7 @@ these steps:
 
 # Accessing special file systems # {#special-filesystems}
 
-## Concepts ## {#special-filesystem-concepts}
+## Special File System Concepts ## {#special-filesystem-concepts}
 
 A [=bucket=] contains a <dfn>sandboxed file system root</dfn>, a [=directory entry=].
 
@@ -1084,6 +1088,13 @@ matching the names of children of the [=sandboxed file system root=] exist.
 Note: In Chrome this [=sandboxed file system root=] refers to the same storage as the
 <a href="https://dev.w3.org/2009/dap/file-system/file-dir-sys.html#dfn-temporary">temporary
 file system</a> as used to be defined in [[file-system-api|File API: Directories and System]].
+
+<div algorithm="sandbox-query-permission">
+The [=sandboxed file system root=]'s [=query permission steps=] are the following:
+
+1. Return {{PermissionState/"granted"}}.
+
+</div>
 
 ## The {{FileSystemDirectoryHandle/getSystemDirectory()}} method ## {#api-getsystemdirectory}
 
