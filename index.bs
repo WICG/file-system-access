@@ -37,6 +37,8 @@ spec:webidl; type:dfn; text:resolve
 }
 .domintro::before {
     content: 'For web developers (non-normative)';
+    text-transform: initial;
+
 }
 </style>
 
