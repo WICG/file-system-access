@@ -66,8 +66,18 @@ data</dfn> and a <dfn for="file entry">modification timestamp</dfn>.
 A <dfn lt="directory|directory entry">directory entry</dfn> additionally consists of a [=/set=] of
 <dfn for="directory entry">children</dfn>, which are themselves [=/entries=]. Each member is either a [=/file=] or a [=directory=].
 
+An [=/entry=] |entry| should be [=list/contained=] in the [=children=] of at most one
+[=directory entry=], and that directory entry is also known as |entry|'s <dfn for=entry>parent</dfn>.
+An [=/entry=]'s [=entry/parent=] is null if no such directory entry exists.
+
+Note: Two different [=/entries=] can represent the same file or directory on disk, in which
+case it is possible for both entries to have a different parent, or for one entry to have a
+parent while the other entry does not have a parent. Typically an entry does not have a parent
+if it was returned by {{chooseFileSystemEntries()}} or {{getSystemDirectory()}}, and an entry
+will have a parent in all other cases.
+
 [=/Entries=] can (but don't have to) be backed by files on the systems native file system,
-as such it is possible for the [=binary data=], [=modification timestamp=],
+so it is possible for the [=binary data=], [=modification timestamp=],
 and [=children=] of entries to be modified by applications outside of this specification.
 Exactly how external changes are reflected in the data structures defined by this specification,
 as well as how changes made to the data structures defined here are reflected externally
@@ -86,7 +96,7 @@ run the following steps:
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
   1. If |child| is [=the same as=] |root|,
-     [=/resolve=] |result| with an empty list, and abort these substeps.
+     [=/resolve=] |result| with an empty list, and abort.
   1. Let |childPromises| be « ».
   1. [=set/For each=] |entry| of |root|'s [=FileSystemHandle/entry=]'s [=children=]:
     1. Let |p| be the result of [=entry/resolving=] |child| relative to |entry|.
@@ -99,6 +109,42 @@ run the following steps:
     1. If |result| hasn't been resolved yet, [=/resolve=] |result| with `null`.
 1. Return |result|.
 
+</div>
+
+## Permissions ## {#permissions}
+
+Issue: Figure out some way to integrate this better with the permissions API [[permissions]],
+for example by making the entry be a part of the PermissionDescriptor.
+
+<div algorithm>
+An [=/entry=] |entry| has associated <dfn for=entry>query permission steps</dfn>,
+which take a {{FileSystemHandlePermissionDescriptor}} and return a {{PermissionState}}.
+Unless specified otherwise, these steps are:
+1. Let |parent| be |entry|'s [=entry/parent=].
+1. Assert: |parent| is not null.
+
+   Note: [[#native-file-system-permissions]] overrides these steps for entries returned by
+   {{chooseFileSystemEntries()}}. Additionally [[#special-filesystem-concepts]] overrides
+   these steps for entries returned by {{FileSystemDirectoryHandle/getSystemDirectory()}}.
+   All other entries always have a parent.
+
+1. Return the result of running |parent|'s [=query permission steps=].
+
+Note: These steps return the current state synchronously, however these steps are only
+invoked from "in parallel" sections of algorithms, so this doesn't have to be implemented
+in a synchronous manner.
+</div>
+
+<div algorithm>
+An [=/entry=] |entry| also has associated <dfn for=entry>request permission steps</dfn>,
+which take a {{FileSystemHandlePermissionDescriptor}}.
+Unless specified otherwise, these steps are:
+1. Let |parent| be |entry|'s [=entry/parent=].
+1. If |parent| is not null, run |parent|'s [=request permission steps=].
+
+Note: These steps do not return anything. However as a result of executing the request
+permission steps for an entry the permission state for that entry (and other entries)
+can be updated, and the new state can be queried by executing the query permission steps.
 </div>
 
 ## The {{FileSystemHandle}} interface ## {#api-filesystemhandle}
@@ -121,8 +167,8 @@ interface FileSystemHandle {
 };
 </xmp>
 
-A {{FileSystemHandle}} object represents a [=/entry=]. Each {{FileSystemHandle}} object is assocaited
-with a <dfn for=FileSystemHandle>entry</dfn> (an [=/entry=]). Multiple separate objects implementing
+A {{FileSystemHandle}} object represents an [=/entry=]. Each {{FileSystemHandle}} object is associated
+with an <dfn for=FileSystemHandle>entry</dfn> (an [=/entry=]). Multiple separate objects implementing
 the {{FileSystemHandle}} interface can all be associated with the same [=/entry=] simultaneously.
 
 <div algorithm="serialization steps">
@@ -220,7 +266,11 @@ Issue(119): the currently described API here assumes a model where it is not pos
 <div algorithm>
 The <dfn method for=FileSystemHandle>queryPermission(|descriptor|)</dfn> method, when invoked, must run these steps:
 
-1. TODO
+1. Let |result| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+  1. [=/Resolve=] |result| with the result of running
+     <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given |descriptor|.
+1. Return |result|.
 
 </div>
 
@@ -247,7 +297,13 @@ The <dfn method for=FileSystemHandle>queryPermission(|descriptor|)</dfn> method,
 <div algorithm>
 The <dfn method for=FileSystemHandle>requestPermission(|descriptor|)</dfn> method, when invoked, must run these steps:
 
-1. TODO
+1. Let |result| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+  1. Run <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=request permission steps=] given |descriptor|.
+     If that throws an exception, [=reject=] |result| with that exception and abort.
+  1. [=/Resolve=] |result| with the result of running
+     <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given |descriptor|.
+1. Return |result|.
 
 </div>
 
@@ -285,7 +341,15 @@ In Chrome 82 they are.
 <div algorithm>
 The <dfn method for=FileSystemFileHandle>getFile()</dfn> method, when invoked, must run these steps:
 
-1. TODO
+1. Let |result| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+  1. Let |permissionStatus| be the result of running
+     <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
+     «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]».
+  1. If |permissionStatus| is not {{PermissionState/"granted"}},
+     reject |result| with a {{NotAllowedError}} and abort.
+  1. TODO
+1. Return |result|.
 
 </div>
 
@@ -320,12 +384,23 @@ modifications to existing large files.
 <div algorithm>
 The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method, when invoked, must run these steps:
 
-1. Issue: TODO: Check permissions.
-1. Let |stream| be the result of [=create a new FileSystemWritableFileStream|creating a new FileSystemWritableFileStream=]
-   for <b>[=this=]</b>'s [=FileSystemHandle/entry=].
-1. If |options|.{{FileSystemCreateWritableOptions/keepExistingData}} is `true`:
-   1. Set |stream|.[=[[buffer]]=] to a copy of <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=file entry/binary data=].
-1. Return [=a promise resolved with=] |stream|.
+1. Let |result| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+  1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
+  1. Run |entry|'s [=request permission steps=] given
+     «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
+     If that throws an exception, [=reject=] |result| with that exception and abort.
+  1. Let |permissionStatus| be the result of running
+     |entry|'s [=query permission steps=] given
+     «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
+  1. If |permissionStatus| is not {{PermissionState/"granted"}},
+     reject |result| with a {{NotAllowedError}} and abort.
+  1. Let |stream| be the result of [=create a new FileSystemWritableFileStream|creating a new FileSystemWritableFileStream=]
+     for |entry|.
+  1. If |options|.{{FileSystemCreateWritableOptions/keepExistingData}} is `true`:
+    1. Set |stream|.[=[[buffer]]=] to a copy of |entry|'s [=file entry/binary data=].
+  1. [=/Resolve=] |result| with |stream|.
+1. Return |result|.
 
 </div>
 
@@ -401,7 +476,24 @@ iterable itself?
 The <dfn method for=FileSystemDirectoryHandle>getFile(|name|, |options|)</dfn> method, when invoked,
 must run these steps:
 
-1. TODO
+1. Let |result| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+  1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
+  1. If |options|.{{FileSystemGetFileOptions/create}} is `true`:
+    1. Run |entry|'s [=request permission steps=] given
+       «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
+       If that throws an exception, [=reject=] |result| with that exception and abort.
+    1. Let |permissionStatus| be the result of running
+       |entry|'s [=query permission steps=] given
+       «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
+  1. Otherwise:
+    1. Let |permissionStatus| be the result of running
+       |entry|'s [=query permission steps=] given
+       «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]».
+  1. If |permissionStatus| is not {{PermissionState/"granted"}},
+     reject |result| with a {{NotAllowedError}} and abort.
+  1. TODO
+1. Return |result|.
 
 </div>
 
@@ -430,7 +522,24 @@ must run these steps:
 The <dfn method for=FileSystemDirectoryHandle>getDirectory(|name|, |options|)</dfn> method, when
 invoked, must run these steps:
 
-1. TODO
+1. Let |result| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+  1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
+  1. If |options|.{{FileSystemGetDirectoryOptions/create}} is `true`:
+    1. Run |entry|'s [=request permission steps=] given
+       «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
+       If that throws an exception, [=reject=] |result| with that exception and abort.
+    1. Let |permissionStatus| be the result of running
+       |entry|'s [=query permission steps=] given
+       «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
+  1. Else:
+    1. Let |permissionStatus| be the result of running
+       |entry|'s [=query permission steps=] given
+       «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]».
+  1. If |permissionStatus| is not {{PermissionState/"granted"}},
+     reject |result| with a {{NotAllowedError}} and abort.
+  1. TODO
+1. Return |result|.
 
 </div>
 
@@ -445,7 +554,15 @@ invoked, must run these steps:
 The <dfn method for=FileSystemDirectoryHandle>getEntries()</dfn> method, when invoked, must run
 these steps:
 
-1. TODO
+1. Let |result| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+  1. Let |permissionStatus| be the result of running
+     <b>[=this=]</b>'s [=FileSystemHandle/entry=]'s [=query permission steps=] given
+     «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]».
+  1. If |permissionStatus| is not {{PermissionState/"granted"}},
+     reject |result| with a {{NotAllowedError}} and abort.
+  1. TODO
+1. Return |result|.
 
 </div>
 
@@ -472,7 +589,20 @@ these steps:
 The <dfn method for=FileSystemDirectoryHandle>removeEntry(|name|, |options|)</dfn> method, when invoked, must run
 these steps:
 
-1. TODO
+1. Let |result| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+  1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
+  1. Run |entry|'s [=request permission steps=] given
+     «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
+     If that throws an exception, [=reject=] |result| with that exception.
+  1. Let |permissionStatus| be the result of running
+     |entry|'s [=query permission steps=] given
+     «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
+  1. If |permissionStatus| is not {{PermissionState/"granted"}},
+     reject |result| with a {{NotAllowedError}} and abort.
+  1. TODO
+1. Return |result|.
+
 
 </div>
 
@@ -589,23 +719,31 @@ Similarly, when piping a {{ReadableStream}} into a {{FileSystemWritableFileStrea
 </div>
 
 <div algorithm>
-To <dfn>create a new FileSystemWritableFileStream</dfn> given a [=file entry=] `file`, perform the following steps:
+To <dfn>create a new FileSystemWritableFileStream</dfn> given a [=file entry=] |file|, perform the following steps:
 
 1. Let |stream| be a new {{FileSystemWritableFileStream}}.
 1. Perform [$InitializeWritableStream$](|stream|)
-1. Set |stream|.[=FileSystemWritableFileStream/[[file]]=] to [=file entry=].
+1. Set |stream|.[=FileSystemWritableFileStream/[[file]]=] to |file|.
 1. Let |controller| be a new {{WritableStreamDefaultController}}.
 1. Let |startAlgorithm| be an algorithm that returns `undefined`.
 1. Let |writeAlgorithm| be an algorithm which takes a |chunk| argument
    and returns the result of running the [=write a chunk=] algorithm with |stream| and |chunk|.
 1. Let |closeAlgorithm| be the following steps:
-   1. Issue: TODO: Check permissions.
-   1. Set |stream|.[=[[file]]=]'s [=file entry/binary data=] to |stream|.[=[[buffer]]=].
-      If that throws an exception, return [=a promise rejected with=] that exception.
+   1. Let |closeResult| be [=a new promise=].
+   1. Run the following steps [=in parallel=]:
+      1. Let |permissionStatus| be the result of running
+         |stream|.[=[[file]]=]'s [=query permission steps=] given
+         «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
+      1. If |permissionStatus| is not {{PermissionState/"granted"}},
+         reject |closeResult| with a {{NotAllowedError}} and abort.
+      1. TODO: optional UA defined security checks
+      1. Set |stream|.[=[[file]]=]'s [=file entry/binary data=] to |stream|.[=[[buffer]]=].
+         If that throws an exception, reject |closeResult| with that exception and abort.
 
-      Note: it is expected that this atomically updates the contents of the file on disk
-      being written to.
-   1. Return [=a promise resolved with=] `undefined`.
+         Note: It is expected that this atomically updates the contents of the file on disk
+         being written to.
+      1. [=/Resolve=] |closeResult| with `undefined`.
+   1. Return |closeResult|.
 1. Let |abortAlgorithm| be an algorithm that returns [=a promise resolved with=] `undefined`.
 1. Let |highWaterMark| be 1.
 1. Let |sizeAlgorithm| be an algorithm that returns `1`.
@@ -623,7 +761,11 @@ runs these steps:
    If this throws an exception, then return [=a promise rejected with=] that exception.
 1. Let |p| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
-   1. Issue: TODO: Check permissions.
+   1. Let |permissionStatus| be the result of running
+      |stream|.[=[[file]]=]'s [=query permission steps=] given
+      «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
+   1. If |permissionStatus| is not {{PermissionState/"granted"}},
+      reject |p| with a {{NotAllowedError}} and abort.
    1. Let |command| be |input|.{{WriteParams/type}} if |input| is a {{WriteParams}},
       and {{WriteCommandType/"write"}} otherwise.
    1. If |command| is {{WriteCommandType/"write"}}:
@@ -786,7 +928,64 @@ steps:
 
 </div>
 
-# Accessing native filesystem # {#native-filesystem}
+# Accessing Native File System # {#native-filesystem}
+
+## Native File System Permissions ## {#native-file-system-permissions}
+
+<div algorithm>
+The <dfn>native file system query permission steps</dfn> for an [=/entry=] |entry|
+given a {{FileSystemHandlePermissionDescriptor}} |descriptor| are:
+
+1. If |descriptor|.{{FileSystemHandlePermissionDescriptor/writable}} is true:
+   1. Let |readState| be the result of running the [=query permission steps=] for |entry|
+      given «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]».
+   1. If |readState| is not {{PermissionState/"granted"}}, return |readState|.
+1. Let |settings| be the [=current settings object=].
+1. If there was a previous invocation of this algorithm for the same |entry|, |descriptor|
+   and |settings|, returning |previousResult|, and the UA has not received
+   [=new information about the user's intent=] since that invocation, return |previousResult|.
+1. Return whichever of the following options most accurately reflects the user's
+   intent for the calling algorithm:
+   <dl class="switch">
+     : succeed without prompting the user
+     :: {{PermissionState/"granted"}}
+
+     : show the user a prompt to decide whether to succeed
+     :: {{PermissionState/"prompt"}}
+
+     : fail without prompting the user
+     :: {{PermissionState/"denied"}}
+   </dl>
+
+</div>
+
+<div algorithm>
+The <dfn>native file system request permission steps</dfn> for an [=/entry=] |entry|
+given a {{FileSystemHandlePermissionDescriptor}} |descriptor| are:
+
+1. Let |status| be the result of running the [=query permission steps=] for |entry| given |descriptor|.
+1. If |status| is not {{PermissionState/"prompt"}} return.
+1. If the [=current global object=] is not a {{Window}},
+   return.
+
+   Issue: Should this throw instead of returning silently?
+
+1. If the [=current global object=] does not have [=transient activation=], throw a {{NotAllowedError}}.
+1. Let |environment| be the [=current settings object=].
+1. If |environment|'s [=environment settings object/origin=] is not [=same origin=] with |environment|'s [=top-level origin=],
+   throw a {{NotAllowedError}}.
+1. Display a prompt to the user requesting access as described by |descriptor| to |entry|.
+1. Wait for the user to accept or reject the prompt.
+   The user's interaction may provide [=new information about the user's intent=]
+   for this |descriptor| and |entry|.
+   Additionally if |descriptor|.{{FileSystemHandlePermissionDescriptor/writable}} is true,
+   the user's interaction may also provide [=new information about the user's intent=] for
+   the same |entry| with «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]».
+
+Note: This is intentionally vague about the details of the permission UI and how the UA infers user intent.
+UAs <span class=allow-2119>should</span> be able to explore a variety of UI approaches within this framework.
+
+</div>
 
 ## The {{Window/chooseFileSystemEntries()}} method ## {#api-choosefilesystementries}
 
@@ -872,13 +1071,14 @@ these steps:
 
    Issue: There must be a better way to express this "no third-party iframes" constraint.
 
-1. TODO
+1. TODO (Use the [=native file system query permission steps=] and
+   [=native file system request permission steps=] in the returned entries).
 
 </div>
 
 # Accessing special file systems # {#special-filesystems}
 
-## Concepts ## {#special-filesystem-concepts}
+## Special File System Concepts ## {#special-filesystem-concepts}
 
 A [=bucket=] contains a <dfn>sandboxed file system root</dfn>, a [=directory entry=].
 
@@ -893,6 +1093,13 @@ matching the names of children of the [=sandboxed file system root=] exist.
 Note: In Chrome this [=sandboxed file system root=] refers to the same storage as the
 <a href="https://dev.w3.org/2009/dap/file-system/file-dir-sys.html#dfn-temporary">temporary
 file system</a> as used to be defined in [[file-system-api|File API: Directories and System]].
+
+<div algorithm="sandbox-query-permission">
+The [=sandboxed file system root=]'s [=query permission steps=] are the following:
+
+1. Return {{PermissionState/"granted"}}.
+
+</div>
 
 ## The {{FileSystemDirectoryHandle/getSystemDirectory()}} method ## {#api-getsystemdirectory}
 
