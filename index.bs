@@ -959,6 +959,19 @@ given a {{FileSystemHandlePermissionDescriptor}} |descriptor| are:
 
 </div>
 
+The fact that the user picked the specific files returned by {{chooseFileSystemEntries()}} in a prompt
+should be treated by the user agent as the user intending to grant read access to the website
+for the returned files. As such, at the time the promise returned by {{chooseFileSystemEntries()}}
+resolves, the [=query permission steps=] for the returned entries
+given «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]»
+should return {{PermissionState/"granted"}}.
+
+Additionally for calls to {{chooseFileSystemEntries}} with
+{{ChooseFileSystemEntriesOptions/type}}={{ChooseFileSystemEntriesType/"save-file"}},
+the [=query permission steps=] for the returned entries
+given «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]»
+should also return {{PermissionState/"granted"}}.
+
 <div algorithm>
 The <dfn>native file system request permission steps</dfn> for an [=/entry=] |entry|
 given a {{FileSystemHandlePermissionDescriptor}} |descriptor| are:
@@ -1053,9 +1066,17 @@ partial interface Window {
      files will be included in the file types the dialog lets the user select.
 </div>
 
+Issue(25): Should this return an array, even when multiple=false? And related questions,
+should this be one method that can return either files or directories depending on the
+passed in options, or separate file and directory methods?
+
 <div algorithm>
 The <dfn method for=Window>chooseFileSystemEntries(|options|)</dfn> method, when invoked, must run
 these steps:
+
+1. If |options|.{{ChooseFileSystemEntriesOptions/type}} is {{ChooseFileSystemEntriesType/"save-file"}}
+   and |options|.{{ChooseFileSystemEntriesOptions/multiple}} is true,
+   return [=a promise rejected with=] a {{TypeError}}.
 
 1. Let |environment| be the [=current settings object=].
 
@@ -1066,13 +1087,114 @@ these steps:
 
 1. Let |top-level context| be |browsing context|'s [=top-level browsing context=].
 
-1. If |environment|'s [=environment settings object/origin=] is not [=same origin=] with |browsing context|'s [=top-level browsing context=]'s [=active document=]'s  [=/origin=],
+1. If |environment|'s [=environment settings object/origin=] is not [=same origin=] with |top-level context|'s [=active document=]'s  [=/origin=],
    return [=a promise rejected with=] a {{SecurityError}}.
 
-   Issue: There must be a better way to express this "no third-party iframes" constraint.
+1. If the [=current global object=] does not have [=transient activation=], throw a {{SecurityError}}.
 
-1. TODO (Use the [=native file system query permission steps=] and
-   [=native file system request permission steps=] in the returned entries).
+   Issue: Should this be {{SecurityError}} or {{NotAllowedError}}
+   (and same question for the request permission steps checking for user activation)?
+
+1. Let |p| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+
+  1. Optionally, wait until any prior execution of this algorithm has terminated.
+
+  1. If |options|.{{ChooseFileSystemEntriesOptions/type}} is {{ChooseFileSystemEntriesType/"open-directory"}}:
+    1. Display a prompt to the user requesting that the user specify some diretorries.
+       If |options|.{{ChooseFileSystemEntriesOptions/multiple}} is false, there must be no more than one directory selected;
+       otherwise any number may be selected.
+
+       Note: Chrome currently ignores the {{ChooseFileSystemEntriesOptions/multiple}} option
+       in combination with {{ChooseFileSystemEntriesType/"open-directory"}}. It always only
+       lets the user select a single directory.
+
+       Note: {{ChooseFileSystemEntriesType/"open-directory"}} also ignores the {{ChooseFileSystemEntriesOptions/accepts}}
+       and {{ChooseFileSystemEntriesOptions/excludeAcceptAllOption}} options.
+
+  1. Otherwise:
+    1. Let |accepts options| be a empty [=/list=] of [=pairs=].
+    1. [=list/For each=] |accept| of |options|.{{ChooseFileSystemEntriesOptions/accepts}}:
+      1. If |accept|.{{ChooseFileSystemEntriesOptionsAccepts/mimeTypes}} is empty and
+         |accept|.{{ChooseFileSystemEntriesOptionsAccepts/extensions}} is empty, [=continue=].
+      1. Let |description| be |accept|.{{ChooseFileSystemEntriesOptionsAccepts/description}}.
+      1. Let |filter| be the following steps, given a |filename| (a [=string=]), and a |type| (a [=MIME type=]).
+        1. [=list/For each=] |extension| of |accept|.{{ChooseFileSystemEntriesOptionsAccepts/extensions}}:
+          1. If |filename| ends with "." followed by |extension|, return `true`.
+        1. [=list/For each=] |typeString| of |accept|.{{ChooseFileSystemEntriesOptionsAccepts/mimeTypes}}:
+          1. Let |parsedType| be the result of [=parse a MIME type=] with |typeString|.
+          1. If |type| matches |parsedType|, return `true`.
+
+             Issue: The previous two steps are not correct. We do want to allow things like "image/*" as well,
+             which are not valid for the [=parse a MIME type=] algorithm. Also we need to specify what it
+             means for types to "match". So figure out a better way of writing this.
+
+             Issue(133): In general we need to better define how mime types are used here.
+        1. Return `false`.
+
+      1. If |description| is an empty string, set |description| to some user understandable string describing |filter|.
+      1. [=list/Append=] |description|/|filter| to |accepts options|.
+
+    1. If either |accepts options| is [=list/empty=], or |options|.{{ChooseFileSystemEntriesOptions/excludeAcceptAllOption}} is `false`:
+      1. Let |description| be a user understandable string describing "all files".
+      1. Let |filter| be an algorithm that returns `true`.
+      1. [=list/Append=] |description|/|filter| to |accepts options|.
+
+
+    1. Display a prompt to the user requesting that the user specify some files.
+       If |options|.{{ChooseFileSystemEntriesOptions/multiple}} is false, there must be no more than one file selected;
+       otherwise any number may be selected.
+
+       The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
+       Exactly how this is implemented, and what this prompt looks like is left up to the user agent.
+
+       If |options|.{{ChooseFileSystemEntriesOptions/type}} is {{ChooseFileSystemEntriesType/"save-file"}},
+       the displayed prompt should make it clear that the websites wants to write to the selected file.
+
+  1. Wait for the user to have made their selection.
+
+  1. If the user dismissed the prompt without making a selection,
+     [=/reject=] |p| with an {{AbortError}} and abort.
+
+     Issue(84): Should this resolve with `undefined` instead?
+
+  1. Let |entries| be a [=/list=] of [=/entries=] representing the selected files or directories.
+  1. Let |result| be a empty [=/list=].
+
+  1. [=list/For each=] |entry| of |entries|:
+    1. If |entry| is deemed to sensitive or dangerous to be exposed to this website by the user agent:
+      1. Inform the user that the selected files or directories can't be exposed to this website.
+      1. At the discretion of the user agent,
+         either go back to the beginning of these [=in parallel=] steps,
+         or [=/reject=] |p| with an {{AbortError}} and abort.
+
+    1. Set |entry|'s [=query permission steps=] to the [=native file system query permission steps=].
+    1. Set |entry|'s [=request permission steps=] to the [=native file system request permission steps=].
+
+    1. If |options|.{{ChooseFileSystemEntriesOptions/type}} is {{ChooseFileSystemEntriesType/"open-directory"}}:
+      1. Add a new {{FileSystemDirectoryHandle}} associated with |entry| to |result|.
+    1. Otherwise:
+      1. Add a new {{FileSystemFileHandle}} associated with |entry| to |result|.
+
+  1. If |options|.{{ChooseFileSystemEntriesOptions/type}} is {{ChooseFileSystemEntriesType/"save-file"}}:
+    1. [=Assert=]: |entries|'s [=list/size=] is 1.
+    1. Set |entries|[0]'s [=binary data=] to an empty [=byte sequence=].
+
+  1. Perform the <a spec=html>activation notification</a> steps in |browsing context|.
+
+     Note: This lets a website immediately perform operations on the returned handles that
+     might require user activation, such as requesting more permissions.
+
+     Issue(89): Rather than requiring the website to prompt separately for a writable directory,
+     we should provide some kind of API to request a writable directory in one step.
+
+  1. If |options|.{{ChooseFileSystemEntriesOptions/multiple}} is true:
+    1. [=/Resolve=] |p| with |result|.
+  1. Otherwise:
+    1. [=Assert=]: |result|'s [=list/size=] is 1.
+    1. [=/Resolve=] |p| with |result|[0].
+
+1. Return |p|.
 
 </div>
 
