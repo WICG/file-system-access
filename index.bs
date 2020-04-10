@@ -488,6 +488,14 @@ must run these steps:
 
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
+  1. If |name| is an empty string, [=/reject=] |result| with a {{TypeError}} and abort.
+  1. If |name| contains '/' or any other character used as path separator on the underlying
+     platform,  [=/reject=] |result| with a {{TypeError}} and abort.
+
+     Note: This means that '\' is not allowed in names on Windows, but might be allowed on
+     other operating systems.
+  1. If |name| is "." or "..", [=/reject=] |result| with a {{TypeError}} and abort.
+
   1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
   1. If |options|.{{FileSystemGetFileOptions/create}} is `true`:
     1. Run |entry|'s [=request permission steps=] given
@@ -515,6 +523,8 @@ must run these steps:
   1. Set |child|'s [=binary data=] to an empty [=byte sequence=].
   1. Set |child|'s [=modification timestamp=] to the current time.
   1. [=set/Append=] |child| to |entry|'s [=directory entry/children=].
+  1. If creating |child| in the underlying file system failed throws an exception,
+     [=/reject=] |result| with that exception and abort.
   1. [=/Resolve=] |result| with a new {{FileSystemFileHandle}} whose [=FileSystemHandle/entry=] is |child|.
 1. Return |result|.
 
@@ -547,6 +557,14 @@ invoked, must run these steps:
 
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
+  1. If |name| is an empty string, [=/reject=] |result| with a {{TypeError}} and abort.
+  1. If |name| contains '/' or any other character used as path separator on the underlying
+     platform,  [=/reject=] |result| with a {{TypeError}} and abort.
+
+     Note: This means that '\' is not allowed in names on Windows, but might be allowed on
+     other operating systems.
+  1. If |name| is "." or "..", [=/reject=] |result| with a {{TypeError}} and abort.
+
   1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
   1. If |options|.{{FileSystemGetDirectoryOptions/create}} is `true`:
     1. Run |entry|'s [=request permission steps=] given
@@ -573,6 +591,8 @@ invoked, must run these steps:
   1. Set |child|'s [=entry/name=] to |name|.
   1. Set |child|'s [=directory entry/children=] to an empty [=/set=].
   1. [=set/Append=] |child| to |entry|'s [=directory entry/children=].
+  1. If creating |child| in the underlying file system failed throws an exception,
+     [=/reject=] |result| with that exception and abort.
   1. [=/Resolve=] |result| with a new {{FileSystemDirectoryHandle}} whose [=FileSystemHandle/entry=] is |child|.
 1. Return |result|.
 
@@ -629,6 +649,14 @@ these steps:
 
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
+  1. If |name| is an empty string, [=/reject=] |result| with a {{TypeError}} and abort.
+  1. If |name| contains '/' or any other character used as path separator on the underlying
+     platform,  [=/reject=] |result| with a {{TypeError}} and abort.
+
+     Note: This means that '\' is not allowed in names on Windows, but might be allowed on
+     other operating systems.
+  1. If |name| is "." or "..", [=/reject=] |result| with a {{TypeError}} and abort.
+
   1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
   1. Run |entry|'s [=request permission steps=] given
      «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]».
@@ -645,6 +673,8 @@ these steps:
         1. If |child|'s [=directory entry/children=] is not [=set/is empty|empty=] and |options|.{{FileSystemRemoveOptions/recursive}} is `false`:
           1. [=/Reject=] |result| with an {{InvalidModificationError}} and abort.
       1. [=set/Remove=] |child| from |entry|'s [=directory entry/children=].
+      1. If removing |child| in the underlying file system failed throws an exception,
+         [=/reject=] |result| with that exception and abort.
       1. [=/Resolve=] |result| with `undefined`.
   1. [=/Reject=] |result| with a {{NotFoundError}}.
 1. Return |result|.
