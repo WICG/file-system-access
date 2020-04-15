@@ -1085,9 +1085,7 @@ these steps:
 
 1. Let |browsing context| be |environment|'s [=responsible browsing context=].
 
-1. Let |top-level context| be |browsing context|'s [=top-level browsing context=].
-
-1. If |environment|'s [=environment settings object/origin=] is not [=same origin=] with |top-level context|'s [=active document=]'s  [=/origin=],
+1. If |environment|'s [=environment settings object/origin=] is not [=same origin=] with |environment|'s [=top-level origin=],
    return [=a promise rejected with=] a {{SecurityError}}.
 
 1. If the [=current global object=] does not have [=transient activation=], throw a {{SecurityError}}.
@@ -1101,7 +1099,7 @@ these steps:
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
   1. If |options|.{{ChooseFileSystemEntriesOptions/type}} is {{ChooseFileSystemEntriesType/"open-directory"}}:
-    1. Display a prompt to the user requesting that the user specify some diretorries.
+    1. Display a prompt to the user requesting that the user specify some directories.
        If |options|.{{ChooseFileSystemEntriesOptions/multiple}} is false, there must be no more than one directory selected;
        otherwise any number may be selected.
 
@@ -1149,7 +1147,7 @@ these steps:
        Exactly how this is implemented, and what this prompt looks like is left up to the user agent.
 
        If |options|.{{ChooseFileSystemEntriesOptions/type}} is {{ChooseFileSystemEntriesType/"save-file"}},
-       the displayed prompt should make it clear that the websites wants to write to the selected file.
+       the displayed prompt should make it clear that the website wants to write to the selected file.
 
   1. Wait for the user to have made their selection.
 
@@ -1162,7 +1160,7 @@ these steps:
   1. Let |result| be a empty [=/list=].
 
   1. [=list/For each=] |entry| of |entries|:
-    1. If |entry| is deemed to sensitive or dangerous to be exposed to this website by the user agent:
+    1. If |entry| is deemed too sensitive or dangerous to be exposed to this website by the user agent:
       1. Inform the user that the selected files or directories can't be exposed to this website.
       1. At the discretion of the user agent,
          either go back to the beginning of these [=in parallel=] steps,
