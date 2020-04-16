@@ -1236,7 +1236,7 @@ these steps:
   1. Let |result| be a empty [=/list=].
 
   1. [=list/For each=] |entry| of |entries|:
-    1. If |entry| is deemed too sensitive or dangerous to be exposed to this website by the user agent:
+    1. If |entry| is deemed [=too sensitive or dangerous=] to be exposed to this website by the user agent:
       1. Inform the user that the selected files or directories can't be exposed to this website.
       1. At the discretion of the user agent,
          either go back to the beginning of these [=in parallel=] steps,
@@ -1367,6 +1367,19 @@ harder to accidentally give access to a directory that contains particularly sen
 must be taken to strike the right balance between restricting what the API can access while still
 having the API be useful. After all, this API intentionally lets the user use websites to interact
 with some of their most private personal data.
+
+Examples of directories that user agents might want to restrict as being
+<dfn>too sensitive or dangerous</dfn> include:
+
+* The directory or directories containing the user agent itself.
+* Directories where the user agent stores [=site storage=].
+* Directories containing system files (such as `C:\Windows` on Windows).
+* Directories such as `/dev/`, `/sys`, and `/proc` on Linux that would give access to low-level devices.
+* A user's entire "home" directory.
+  Individual files and directories inside the home directory should still be allowed,
+  but user agents should not generally let users give blanket access to the entire directory.
+* The default directory for downloads, if the user agent has such a thing.
+  Individual files inside the directory again should be allowed, but the whole directory would risk leaking more data than a user realizes.
 
 ## Websites trying to use this API for tracking. ## {#privacy-tracking}
 
