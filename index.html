@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version b76f9052, updated Mon Apr 13 16:17:21 2020 -0700" name="generator">
+  <meta content="Bikeshed version bb42a6af, updated Thu Apr 16 07:15:51 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="b5e23dbb82db2fb6bb6d32438a8ab652d40abec9" name="document-revision">
+  <meta content="2ae925bcef8cce28a8a0505180665216cab1bd9e" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1501,7 +1501,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-04-15">15 April 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-04-16">16 April 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2951,7 +2951,7 @@ these steps:
         <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate⑦">For each</a> <var>entry</var> of <var>entries</var>:</p>
         <ol>
          <li data-md>
-          <p>If <var>entry</var> is deemed too sensitive or dangerous to be exposed to this website by the user agent:</p>
+          <p>If <var>entry</var> is deemed <a data-link-type="dfn" href="#too-sensitive-or-dangerous" id="ref-for-too-sensitive-or-dangerous">too sensitive or dangerous</a> to be exposed to this website by the user agent:</p>
           <ol>
            <li data-md>
             <p>Inform the user that the selected files or directories can’t be exposed to this website.</p>
@@ -3089,6 +3089,24 @@ harder to accidentally give access to a directory that contains particularly sen
 must be taken to strike the right balance between restricting what the API can access while still
 having the API be useful. After all, this API intentionally lets the user use websites to interact
 with some of their most private personal data.</p>
+   <p>Examples of directories that user agents might want to restrict as being <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="too-sensitive-or-dangerous">too sensitive or dangerous</dfn> include:</p>
+   <ul>
+    <li data-md>
+     <p>The directory or directories containing the user agent itself.</p>
+    <li data-md>
+     <p>Directories where the user agent stores <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#site-storage" id="ref-for-site-storage">site storage</a>.</p>
+    <li data-md>
+     <p>Directories containing system files (such as <code>C:\Windows</code> on Windows).</p>
+    <li data-md>
+     <p>Directories such as <code>/dev/</code>, <code>/sys</code>, and <code>/proc</code> on Linux that would give access to low-level devices.</p>
+    <li data-md>
+     <p>A user’s entire "home" directory.
+Individual files and directories inside the home directory should still be allowed,
+but user agents should not generally let users give blanket access to the entire directory.</p>
+    <li data-md>
+     <p>The default directory for downloads, if the user agent has such a thing.
+Individual files inside the directory again should be allowed, but the whole directory would risk leaking more data than a user realizes.</p>
+   </ul>
    <h3 class="heading settled" data-level="5.2" id="privacy-tracking"><span class="secno">5.2. </span><span class="content">Websites trying to use this API for tracking.</span><a class="self-link" href="#privacy-tracking"></a></h3>
    <p>This API could be used by websites to track the user across clearing browsing
 data. This is because, in contrast with existing file access APIs, user agents are
@@ -3370,6 +3388,7 @@ appropriate.</p>
    <li><a href="#dom-writeparams-size">size</a><span>, in §2.6</span>
    <li><a href="#enumdef-systemdirectorytype">SystemDirectoryType</a><span>, in §4.2</span>
    <li><a href="#entry-the-same-as">the same as</a><span>, in §2.1</span>
+   <li><a href="#too-sensitive-or-dangerous">too sensitive or dangerous</a><span>, in §5.1</span>
    <li><a href="#dom-writecommandtype-truncate">"truncate"</a><span>, in §2.6</span>
    <li><a href="#dom-filesystemwritablefilestream-truncate">truncate(size)</a><span>, in §2.6.3</span>
    <li>
@@ -3744,6 +3763,12 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-bucket">4.1. Special File System Concepts</a> <a href="#ref-for-bucket①">(2)</a> <a href="#ref-for-bucket②">(3)</a>
     <li><a href="#ref-for-bucket③">4.2. The getSystemDirectory() method</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-site-storage">
+   <a href="https://storage.spec.whatwg.org/#site-storage">https://storage.spec.whatwg.org/#site-storage</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-site-storage">5.1. Users giving access to more, or more sensitive files than they intended.</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-site-storage-unit">
@@ -4124,6 +4149,7 @@ appropriate.</p>
     <a data-link-type="biblio">[STORAGE]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-bucket" style="color:initial">bucket</span>
+     <li><span class="dfn-paneled" id="term-for-site-storage" style="color:initial">site storage</span>
      <li><span class="dfn-paneled" id="term-for-site-storage-unit" style="color:initial">site storage units</span>
     </ul>
    <li>
@@ -4981,6 +5007,12 @@ performance can be effected by safe browsing checks. <a href="https://github.com
     <li><a href="#ref-for-dom-filesystemdirectoryhandle-getsystemdirectory">2.1. Concepts</a>
     <li><a href="#ref-for-dom-filesystemdirectoryhandle-getsystemdirectory①">2.2. Permissions</a>
     <li><a href="#ref-for-dom-filesystemdirectoryhandle-getsystemdirectory②">4.2. The getSystemDirectory() method</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getsystemdirectory③">(2)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getsystemdirectory④">(3)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="too-sensitive-or-dangerous">
+   <b><a href="#too-sensitive-or-dangerous">#too-sensitive-or-dangerous</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-too-sensitive-or-dangerous">3.2. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
