@@ -129,7 +129,7 @@ for example by making the entry be a part of the PermissionDescriptor.
 <div algorithm>
 An [=/entry=] |entry| has associated <dfn for=entry>query permission steps</dfn>,
 which take a {{FileSystemHandlePermissionDescriptor}} |descriptor|
-and an optional [=environment settings object=] |settings|,
+and an [=environment settings object=] |settings|,
 and return a {{PermissionState}}.
 Unless specified otherwise, these steps are:
 1. Let |parent| be |entry|'s [=entry/parent=].
@@ -151,7 +151,7 @@ in a synchronous manner.
 <div algorithm>
 An [=/entry=] |entry| also has associated <dfn for=entry>request permission steps</dfn>,
 which take a {{FileSystemHandlePermissionDescriptor}} |descriptor|
-and an optional [=environment settings object=] |settings|.
+and an [=environment settings object=] |settings|.
 Unless specified otherwise, these steps are:
 1. Let |parent| be |entry|'s [=entry/parent=].
 1. If |parent| is not null, run |parent|'s [=request permission steps=]
@@ -1036,14 +1036,13 @@ steps:
 <div algorithm>
 The <dfn>native file system query permission steps</dfn> for an [=/entry=] |entry|
 given a {{FileSystemHandlePermissionDescriptor}} |descriptor|
-and an optional [=environment settings object=] |settings| are:
+and an [=environment settings object=] |settings| are:
 
 1. If |descriptor|.{{FileSystemHandlePermissionDescriptor/writable}} is true:
    1. Let |readState| be the result of running the [=query permission steps=] for |entry|
       given «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]»
       and |settings|.
    1. If |readState| is not {{PermissionState/"granted"}}, return |readState|.
-1. If |settings| wasn’t passed, set it to the [=current settings object=].
 1. If there was a previous invocation of this algorithm for the same |entry|, |descriptor|
    and |settings|, returning |previousResult|, and the UA has not received
    [=new information about the user's intent=] since that invocation, return |previousResult|.
@@ -1078,9 +1077,8 @@ should also return {{PermissionState/"granted"}}.
 <div algorithm>
 The <dfn>native file system request permission steps</dfn> for an [=/entry=] |entry|
 given a {{FileSystemHandlePermissionDescriptor}} |descriptor|
-and an optional [=environment settings object=] |settings| are:
+and an [=environment settings object=] |settings| are:
 
-1. If |settings| wasn’t passed, set it to the [=current settings object=].
 1. Let |status| be the result of running the [=query permission steps=] for |entry| given |descriptor| and |settings|.
 1. If |status| is not {{PermissionState/"prompt"}} return.
 1. Let |global| be |settings|'s [=environment settings object/global object=].
