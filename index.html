@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version bb42a6af, updated Thu Apr 16 07:15:51 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="2ae925bcef8cce28a8a0505180665216cab1bd9e" name="document-revision">
+  <meta content="827c3791374d132183b443a30f2f676864f7409c" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1701,7 +1701,8 @@ run the following steps:
 for example by making the entry be a part of the PermissionDescriptor.</p>
    <div class="algorithm" data-algorithm="query permission steps" data-algorithm-for="entry">
      An <a data-link-type="dfn" href="#entry" id="ref-for-entry⑨">entry</a> <var>entry</var> has associated <dfn class="dfn-paneled" data-dfn-for="entry" data-dfn-type="dfn" data-noexport id="entry-query-permission-steps">query permission steps</dfn>,
-which take a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor">FileSystemHandlePermissionDescriptor</a></code> and return a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#enumdef-permissionstate" id="ref-for-enumdef-permissionstate">PermissionState</a></code>.
+which take a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor">FileSystemHandlePermissionDescriptor</a></code> <var>descriptor</var> and an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object" id="ref-for-environment-settings-object">environment settings object</a> <var>settings</var>,
+and return a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#enumdef-permissionstate" id="ref-for-enumdef-permissionstate">PermissionState</a></code>.
 Unless specified otherwise, these steps are: 
     <ol>
      <li data-md>
@@ -1712,7 +1713,7 @@ Unless specified otherwise, these steps are:
  these steps for entries returned by <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getsystemdirectory" id="ref-for-dom-filesystemdirectoryhandle-getsystemdirectory①">getSystemDirectory()</a></code>.
  All other entries always have a parent.</p>
      <li data-md>
-      <p>Return the result of running <var>parent</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps">query permission steps</a>.</p>
+      <p>Return the result of running <var>parent</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps">query permission steps</a> given <var>descriptor</var> and <var>settings</var>.</p>
     </ol>
     <p class="note" role="note"><span>Note:</span> These steps return the current state synchronously, however these steps are only
 invoked from "in parallel" sections of algorithms, so this doesn’t have to be implemented
@@ -1720,13 +1721,13 @@ in a synchronous manner.</p>
    </div>
    <div class="algorithm" data-algorithm="request permission steps" data-algorithm-for="entry">
      An <a data-link-type="dfn" href="#entry" id="ref-for-entry①⓪">entry</a> <var>entry</var> also has associated <dfn class="dfn-paneled" data-dfn-for="entry" data-dfn-type="dfn" data-noexport id="entry-request-permission-steps">request permission steps</dfn>,
-which take a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor①">FileSystemHandlePermissionDescriptor</a></code>.
+which take a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor①">FileSystemHandlePermissionDescriptor</a></code> <var>descriptor</var> and an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object" id="ref-for-environment-settings-object①">environment settings object</a> <var>settings</var>.
 Unless specified otherwise, these steps are: 
     <ol>
      <li data-md>
       <p>Let <var>parent</var> be <var>entry</var>’s <a data-link-type="dfn" href="#entry-parent" id="ref-for-entry-parent②">parent</a>.</p>
      <li data-md>
-      <p>If <var>parent</var> is not null, run <var>parent</var>’s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps">request permission steps</a>.</p>
+      <p>If <var>parent</var> is not null, run <var>parent</var>’s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps">request permission steps</a> given <var>descriptor</var> and <var>settings</var>.</p>
     </ol>
     <p class="note" role="note"><span>Note:</span> These steps do not return anything. However as a result of executing the request
 permission steps for an entry the permission state for that entry (and other entries)
@@ -1853,7 +1854,7 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
       <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel②">in parallel</a>:</p>
       <ol>
        <li data-md>
-        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve⑤">Resolve</a> <var>result</var> with the result of running <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑧">entry</a>'s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①">query permission steps</a> given <var>descriptor</var>.</p>
+        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve⑤">Resolve</a> <var>result</var> with the result of running <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑧">entry</a>'s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①">query permission steps</a> given <var>descriptor</var> and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this③">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object②">relevant settings object</a>.</p>
       </ol>
      <li data-md>
       <p>Return <var>result</var>.</p>
@@ -1887,10 +1888,10 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
       <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel③">in parallel</a>:</p>
       <ol>
        <li data-md>
-        <p>Run <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this③">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑨">entry</a>'s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps①">request permission steps</a> given <var>descriptor</var>.
+        <p>Run <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this④">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑨">entry</a>'s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps①">request permission steps</a> given <var>descriptor</var> and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑤">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object③">relevant settings object</a>.
  If that throws an exception, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject">reject</a> <var>result</var> with that exception and abort.</p>
        <li data-md>
-        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve⑥">Resolve</a> <var>result</var> with the result of running <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this④">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⓪">entry</a>'s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps②">query permission steps</a> given <var>descriptor</var>.</p>
+        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve⑥">Resolve</a> <var>result</var> with the result of running <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑥">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⓪">entry</a>'s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps②">query permission steps</a> given <var>descriptor</var> and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑦">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object④">relevant settings object</a>.</p>
       </ol>
      <li data-md>
       <p>Return <var>result</var>.</p>
@@ -1929,10 +1930,11 @@ In Chrome 82 they are.</strong></p>
       <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel④">in parallel</a>:</p>
       <ol>
        <li data-md>
-        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑤">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①②">entry</a>.</p>
+        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑧">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①②">entry</a>.</p>
        <li data-md>
         <p>Let <var>permissionStatus</var> be the result of running <var>entry</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps③">query permission steps</a> given
- «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable④">writable</a></code>" → <code>false</code> ]».</p>
+ «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable④">writable</a></code>" → <code>false</code> ]»
+ and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑨">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object⑤">relevant settings object</a>.</p>
        <li data-md>
         <p>If <var>permissionStatus</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted">"granted"</a></code>,
  reject <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror">NotAllowedError</a></code> and abort.</p>
@@ -1989,19 +1991,21 @@ modifications to existing large files. <a href="https://github.com/wicg/native-f
       <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel⑤">in parallel</a>:</p>
       <ol>
        <li data-md>
-        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑥">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①③">entry</a>.</p>
+        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⓪">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①③">entry</a>.</p>
        <li data-md>
         <p>Run <var>entry</var>’s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps②">request permission steps</a> given
- «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable⑤">writable</a></code>" → <code>true</code> ]».
+ «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable⑤">writable</a></code>" → <code>true</code> ]»
+ and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①①">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object⑥">relevant settings object</a>.
  If that throws an exception, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject①">reject</a> <var>result</var> with that exception and abort.</p>
        <li data-md>
         <p>Let <var>permissionStatus</var> be the result of running <var>entry</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps④">query permission steps</a> given
- «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable⑥">writable</a></code>" → <code>true</code> ]».</p>
+ «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable⑥">writable</a></code>" → <code>true</code> ]»
+ and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①②">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object⑦">relevant settings object</a>.</p>
        <li data-md>
         <p>If <var>permissionStatus</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①">"granted"</a></code>,
  reject <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror①">NotAllowedError</a></code> and abort.</p>
        <li data-md>
-        <p>Let <var>stream</var> be the result of <a data-link-type="dfn" href="#create-a-new-filesystemwritablefilestream" id="ref-for-create-a-new-filesystemwritablefilestream">creating a new FileSystemWritableFileStream</a> for <var>entry</var>.</p>
+        <p>Let <var>stream</var> be the result of <a data-link-type="dfn" href="#create-a-new-filesystemwritablefilestream" id="ref-for-create-a-new-filesystemwritablefilestream">creating a new FileSystemWritableFileStream</a> for <var>entry</var> in <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①③">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-realm" id="ref-for-concept-relevant-realm①">relevant realm</a>.</p>
        <li data-md>
         <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystemcreatewritableoptions-keepexistingdata" id="ref-for-dom-filesystemcreatewritableoptions-keepexistingdata②">keepExistingData</a></code> is <code>true</code>:</p>
         <ol>
@@ -2085,24 +2089,27 @@ must run these steps:
        <li data-md>
         <p>If <var>name</var> is not a <a data-link-type="dfn" href="#valid-file-name" id="ref-for-valid-file-name①">valid file name</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②">reject</a> <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror">TypeError</a></code> and abort.</p>
        <li data-md>
-        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑦">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑤">entry</a>.</p>
+        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①④">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑤">entry</a>.</p>
        <li data-md>
         <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystemgetfileoptions-create" id="ref-for-dom-filesystemgetfileoptions-create③">create</a></code> is <code>true</code>:</p>
         <ol>
          <li data-md>
           <p>Run <var>entry</var>’s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps③">request permission steps</a> given
- «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable⑦">writable</a></code>" → <code>true</code> ]».
+ «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable⑦">writable</a></code>" → <code>true</code> ]»
+ and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⑤">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object⑧">relevant settings object</a>.
  If that throws an exception, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject③">reject</a> <var>result</var> with that exception and abort.</p>
          <li data-md>
           <p>Let <var>permissionStatus</var> be the result of running <var>entry</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps⑤">query permission steps</a> given
- «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable⑧">writable</a></code>" → <code>true</code> ]».</p>
+ «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable⑧">writable</a></code>" → <code>true</code> ]»
+ and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⑥">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object⑨">relevant settings object</a>.</p>
         </ol>
        <li data-md>
         <p>Otherwise:</p>
         <ol>
          <li data-md>
           <p>Let <var>permissionStatus</var> be the result of running <var>entry</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps⑥">query permission steps</a> given
- «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable⑨">writable</a></code>" → <code>false</code> ]».</p>
+ «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable⑨">writable</a></code>" → <code>false</code> ]»
+ and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⑦">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object①⓪">relevant settings object</a>.</p>
         </ol>
        <li data-md>
         <p>If <var>permissionStatus</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted②">"granted"</a></code>,
@@ -2180,24 +2187,27 @@ invoked, must run these steps:
        <li data-md>
         <p>If <var>name</var> is not a <a data-link-type="dfn" href="#valid-file-name" id="ref-for-valid-file-name②">valid file name</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject⑦">reject</a> <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①">TypeError</a></code> and abort.</p>
        <li data-md>
-        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑧">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑧">entry</a>.</p>
+        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⑧">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑧">entry</a>.</p>
        <li data-md>
         <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystemgetdirectoryoptions-create" id="ref-for-dom-filesystemgetdirectoryoptions-create③">create</a></code> is <code>true</code>:</p>
         <ol>
          <li data-md>
           <p>Run <var>entry</var>’s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps④">request permission steps</a> given
- «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①⓪">writable</a></code>" → <code>true</code> ]».
+ «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①⓪">writable</a></code>" → <code>true</code> ]»
+ and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⑨">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object①①">relevant settings object</a>.
  If that throws an exception, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject⑧">reject</a> <var>result</var> with that exception and abort.</p>
          <li data-md>
           <p>Let <var>permissionStatus</var> be the result of running <var>entry</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps⑦">query permission steps</a> given
- «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①①">writable</a></code>" → <code>true</code> ]».</p>
+ «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①①">writable</a></code>" → <code>true</code> ]»
+ and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②⓪">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object①②">relevant settings object</a>.</p>
         </ol>
        <li data-md>
         <p>Else:</p>
         <ol>
          <li data-md>
           <p>Let <var>permissionStatus</var> be the result of running <var>entry</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps⑧">query permission steps</a> given
- «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①②">writable</a></code>" → <code>false</code> ]».</p>
+ «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①②">writable</a></code>" → <code>false</code> ]»
+ and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②①">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object①③">relevant settings object</a>.</p>
         </ol>
        <li data-md>
         <p>If <var>permissionStatus</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted③">"granted"</a></code>,
@@ -2261,10 +2271,11 @@ these steps:
       <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel⑧">in parallel</a>:</p>
       <ol>
        <li data-md>
-        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑨">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②①">entry</a>.</p>
+        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②②">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②①">entry</a>.</p>
        <li data-md>
         <p>Let <var>permissionStatus</var> be the result of running <var>entry</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps⑨">query permission steps</a> given
- «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①③">writable</a></code>" → <code>false</code> ]».</p>
+ «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①③">writable</a></code>" → <code>false</code> ]»
+ and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②③">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object①④">relevant settings object</a>.</p>
        <li data-md>
         <p>If <var>permissionStatus</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted④">"granted"</a></code>,
  reject <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror④">NotAllowedError</a></code> and abort.</p>
@@ -2305,14 +2316,16 @@ these steps:
        <li data-md>
         <p>If <var>name</var> is not a <a data-link-type="dfn" href="#valid-file-name" id="ref-for-valid-file-name③">valid file name</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject①②">reject</a> <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror②">TypeError</a></code> and abort.</p>
        <li data-md>
-        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⓪">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②②">entry</a>.</p>
+        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②④">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②②">entry</a>.</p>
        <li data-md>
         <p>Run <var>entry</var>’s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps⑤">request permission steps</a> given
- «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①④">writable</a></code>" → <code>true</code> ]».
+ «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①④">writable</a></code>" → <code>true</code> ]»
+ and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②⑤">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object①⑤">relevant settings object</a>.
  If that throws an exception, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject①③">reject</a> <var>result</var> with that exception.</p>
        <li data-md>
         <p>Let <var>permissionStatus</var> be the result of running <var>entry</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①⓪">query permission steps</a> given
- «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑤">writable</a></code>" → <code>true</code> ]».</p>
+ «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑤">writable</a></code>" → <code>true</code> ]»
+ and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②⑥">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object①⑥">relevant settings object</a>.</p>
        <li data-md>
         <p>If <var>permissionStatus</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted⑤">"granted"</a></code>,
  reject <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror⑤">NotAllowedError</a></code> and abort.</p>
@@ -2401,7 +2414,7 @@ these steps:
 </pre>
    </div>
    <div class="algorithm" data-algorithm="resolve(possibleDescendant)" data-algorithm-for="FileSystemDirectoryHandle"> The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export id="dom-filesystemdirectoryhandle-resolve"><code>resolve(<var>possibleDescendant</var>)</code></dfn> method,
-when invoked, must return the result of <a data-link-type="dfn" href="#entry-resolve" id="ref-for-entry-resolve①">resolving</a> <var>possibleDescendant</var>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②③">entry</a> relative to <a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①①">this</a>'s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②④">entry</a>. </div>
+when invoked, must return the result of <a data-link-type="dfn" href="#entry-resolve" id="ref-for-entry-resolve①">resolving</a> <var>possibleDescendant</var>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②③">entry</a> relative to <a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②⑦">this</a>'s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②④">entry</a>. </div>
    <h3 class="heading settled" data-level="2.6" id="api-filesystemwritablefilestream"><span class="secno">2.6. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream②">FileSystemWritableFileStream</a></code> interface</span><a class="self-link" href="#api-filesystemwritablefilestream"></a></h3>
 <pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-writecommandtype"><code><c- g>WriteCommandType</c-></code></dfn> {
   <dfn class="dfn-paneled idl-code" data-dfn-for="WriteCommandType" data-dfn-type="enum-value" data-export id="dom-writecommandtype-write"><code><c- s>"write"</c-></code></dfn>,
@@ -2445,10 +2458,10 @@ When using <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritab
     <p><code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#ws-get-writer" id="ref-for-ws-get-writer">getWriter()</a></code> returns an instance of <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#default-writer-class" id="ref-for-default-writer-class">WritableStreamDefaultWriter</a></code>.</p>
    </div>
    <div class="algorithm" data-algorithm="create a new FileSystemWritableFileStream">
-     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="create-a-new-filesystemwritablefilestream">create a new FileSystemWritableFileStream</dfn> given a <a data-link-type="dfn" href="#file" id="ref-for-file⑦">file entry</a> <var>file</var>, perform the following steps: 
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="create-a-new-filesystemwritablefilestream">create a new FileSystemWritableFileStream</dfn> given a <a data-link-type="dfn" href="#file" id="ref-for-file⑦">file entry</a> <var>file</var> in a <a data-link-type="dfn" href="https://tc39.github.io/ecma262/#realm" id="ref-for-realm">Realm</a> <var>realm</var>, perform the following steps: 
     <ol>
      <li data-md>
-      <p>Let <var>stream</var> be a new <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑨">FileSystemWritableFileStream</a></code>.</p>
+      <p>Let <var>stream</var> be a new <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑨">FileSystemWritableFileStream</a></code> in <var>realm</var>.</p>
      <li data-md>
       <p>Perform <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#initialize-writable-stream" id="ref-for-initialize-writable-stream">InitializeWritableStream</a>(<var>stream</var>)</p>
      <li data-md>
@@ -2470,7 +2483,8 @@ When using <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritab
         <ol>
          <li data-md>
           <p>Let <var>permissionStatus</var> be the result of running <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file①">[[file]]</a>'s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①①">query permission steps</a> given
- «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑥">writable</a></code>" → <code>true</code> ]».</p>
+ «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑥">writable</a></code>" → <code>true</code> ]»
+ and <var>stream</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object①⑦">relevant settings object</a>.</p>
          <li data-md>
           <p>If <var>permissionStatus</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted⑥">"granted"</a></code>,
  reject <var>closeResult</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror⑥">NotAllowedError</a></code> and abort.</p>
@@ -2514,7 +2528,8 @@ runs these steps:
       <ol>
        <li data-md>
         <p>Let <var>permissionStatus</var> be the result of running <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file③">[[file]]</a>'s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①②">query permission steps</a> given
-  «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑦">writable</a></code>" → <code>true</code> ]».</p>
+  «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑦">writable</a></code>" → <code>true</code> ]»
+ and <var>stream</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object①⑧">relevant settings object</a>.</p>
        <li data-md>
         <p>If <var>permissionStatus</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted⑦">"granted"</a></code>,
   reject <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror⑦">NotAllowedError</a></code> and abort.</p>
@@ -2654,7 +2669,7 @@ runs these steps:
 these steps: 
     <ol>
      <li data-md>
-      <p>Let <var>writer</var> be the result of calling <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer" id="ref-for-acquire-writable-stream-default-writer">AcquireWritableStreamDefaultWriter</a>(<b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①②">this</a></b>).</p>
+      <p>Let <var>writer</var> be the result of calling <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer" id="ref-for-acquire-writable-stream-default-writer">AcquireWritableStreamDefaultWriter</a>(<b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②⑧">this</a></b>).</p>
      <li data-md>
       <p>Let <var>result</var> be <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-write" id="ref-for-writable-stream-default-writer-write">WritableStreamDefaultWriterWrite</a>(<var>writer</var>, <var>data</var>).</p>
      <li data-md>
@@ -2676,7 +2691,7 @@ these steps:
 steps: 
     <ol>
      <li data-md>
-      <p>Let <var>writer</var> be the result of calling <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer" id="ref-for-acquire-writable-stream-default-writer①">AcquireWritableStreamDefaultWriter</a>(<b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①③">this</a></b>).</p>
+      <p>Let <var>writer</var> be the result of calling <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer" id="ref-for-acquire-writable-stream-default-writer①">AcquireWritableStreamDefaultWriter</a>(<b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②⑨">this</a></b>).</p>
      <li data-md>
       <p>Let <var>result</var> be <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-write" id="ref-for-writable-stream-default-writer-write①">WritableStreamDefaultWriterWrite</a>(<var>writer</var>, <code>{<code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type⑤">type</a></code>: <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-seek" id="ref-for-dom-writecommandtype-seek②">"seek"</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position⑥">position</a></code>: <var>position</var>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-size" id="ref-for-dom-writeparams-size③">size</a></code>: undefined, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-data" id="ref-for-dom-writeparams-data③">data</a></code>: undefined}</code>).</p>
      <li data-md>
@@ -2704,7 +2719,7 @@ steps:
 steps: 
     <ol>
      <li data-md>
-      <p>Let <var>writer</var> be the result of calling <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer" id="ref-for-acquire-writable-stream-default-writer②">AcquireWritableStreamDefaultWriter</a>(<b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①④">this</a></b>).</p>
+      <p>Let <var>writer</var> be the result of calling <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer" id="ref-for-acquire-writable-stream-default-writer②">AcquireWritableStreamDefaultWriter</a>(<b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this③⓪">this</a></b>).</p>
      <li data-md>
       <p>Let <var>result</var> be <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-write" id="ref-for-writable-stream-default-writer-write②">WritableStreamDefaultWriterWrite</a>(<var>writer</var>, <code>{<code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type⑥">type</a></code>: <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate④">"truncate"</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-size" id="ref-for-dom-writeparams-size④">size</a></code>: <var>size</var>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position⑦">position</a></code>: undefined, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-data" id="ref-for-dom-writeparams-data④">data</a></code>: undefined}</code>).</p>
      <li data-md>
@@ -2716,18 +2731,17 @@ steps:
    <h2 class="heading settled" data-level="3" id="native-filesystem"><span class="secno">3. </span><span class="content">Accessing Native File System</span><a class="self-link" href="#native-filesystem"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="native-file-system-permissions"><span class="secno">3.1. </span><span class="content">Native File System Permissions</span><a class="self-link" href="#native-file-system-permissions"></a></h3>
    <div class="algorithm" data-algorithm="native file system query permission steps">
-     The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="native-file-system-query-permission-steps">native file system query permission steps</dfn> for an <a data-link-type="dfn" href="#entry" id="ref-for-entry①④">entry</a> <var>entry</var> given a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor④">FileSystemHandlePermissionDescriptor</a></code> <var>descriptor</var> are: 
+     The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="native-file-system-query-permission-steps">native file system query permission steps</dfn> for an <a data-link-type="dfn" href="#entry" id="ref-for-entry①④">entry</a> <var>entry</var> given a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor④">FileSystemHandlePermissionDescriptor</a></code> <var>descriptor</var> and an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object" id="ref-for-environment-settings-object②">environment settings object</a> <var>settings</var> are: 
     <ol>
      <li data-md>
       <p>If <var>descriptor</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑧">writable</a></code> is true:</p>
       <ol>
        <li data-md>
-        <p>Let <var>readState</var> be the result of running the <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①③">query permission steps</a> for <var>entry</var> given «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑨">writable</a></code>" → <code>false</code> ]».</p>
+        <p>Let <var>readState</var> be the result of running the <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①③">query permission steps</a> for <var>entry</var> given «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑨">writable</a></code>" → <code>false</code> ]»
+  and <var>settings</var>.</p>
        <li data-md>
         <p>If <var>readState</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted⑧">"granted"</a></code>, return <var>readState</var>.</p>
       </ol>
-     <li data-md>
-      <p>Let <var>settings</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object" id="ref-for-current-settings-object">current settings object</a>.</p>
      <li data-md>
       <p>If there was a previous invocation of this algorithm for the same <var>entry</var>, <var>descriptor</var> and <var>settings</var>, returning <var>previousResult</var>, and the UA has not received <a data-link-type="dfn" href="https://w3c.github.io/permissions/#new-information-about-the-users-intent" id="ref-for-new-information-about-the-users-intent">new information about the user’s intent</a> since that invocation, return <var>previousResult</var>.</p>
      <li data-md>
@@ -2756,22 +2770,22 @@ the <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-ent
 given «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable②①">writable</a></code>" → <code>true</code> ]»
 should also return <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①①">"granted"</a></code>.</p>
    <div class="algorithm" data-algorithm="native file system request permission steps">
-     The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="native-file-system-request-permission-steps">native file system request permission steps</dfn> for an <a data-link-type="dfn" href="#entry" id="ref-for-entry①⑤">entry</a> <var>entry</var> given a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor⑤">FileSystemHandlePermissionDescriptor</a></code> <var>descriptor</var> are: 
+     The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="native-file-system-request-permission-steps">native file system request permission steps</dfn> for an <a data-link-type="dfn" href="#entry" id="ref-for-entry①⑤">entry</a> <var>entry</var> given a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor⑤">FileSystemHandlePermissionDescriptor</a></code> <var>descriptor</var> and an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object" id="ref-for-environment-settings-object③">environment settings object</a> <var>settings</var> are: 
     <ol>
      <li data-md>
-      <p>Let <var>status</var> be the result of running the <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①⑥">query permission steps</a> for <var>entry</var> given <var>descriptor</var>.</p>
+      <p>Let <var>status</var> be the result of running the <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①⑥">query permission steps</a> for <var>entry</var> given <var>descriptor</var> and <var>settings</var>.</p>
      <li data-md>
       <p>If <var>status</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-prompt" id="ref-for-dom-permissionstate-prompt①">"prompt"</a></code> return.</p>
      <li data-md>
-      <p>If the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object" id="ref-for-current-global-object">current global object</a> is not a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/window-object.html#window" id="ref-for-window">Window</a></code>,
+      <p>Let <var>global</var> be <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global" id="ref-for-concept-settings-object-global">global object</a>.</p>
+     <li data-md>
+      <p>If <var>global</var> is not a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/window-object.html#window" id="ref-for-window">Window</a></code>,
  return.</p>
       <p class="issue" id="issue-d65b4224"><a class="self-link" href="#issue-d65b4224"></a> Should this throw instead of returning silently?</p>
      <li data-md>
-      <p>If the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object" id="ref-for-current-global-object①">current global object</a> does not have <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation">transient activation</a>, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror⑧">NotAllowedError</a></code>.</p>
+      <p>If <var>global</var> does not have <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation">transient activation</a>, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror⑧">NotAllowedError</a></code>.</p>
      <li data-md>
-      <p>Let <var>environment</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object" id="ref-for-current-settings-object①">current settings object</a>.</p>
-     <li data-md>
-      <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin②">origin</a> is not <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#same-origin" id="ref-for-same-origin①">same origin</a> with <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#top-level-origin" id="ref-for-top-level-origin">top-level origin</a>,
+      <p>If <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin②">origin</a> is not <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#same-origin" id="ref-for-same-origin①">same origin</a> with <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#top-level-origin" id="ref-for-top-level-origin">top-level origin</a>,
  throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror⑨">NotAllowedError</a></code>.</p>
      <li data-md>
       <p>Display a prompt to the user requesting access as described by <var>descriptor</var> to <var>entry</var>.</p>
@@ -2847,17 +2861,17 @@ these steps:
       <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-type" id="ref-for-dom-choosefilesystementriesoptions-type②">type</a></code> is <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-save-file" id="ref-for-dom-choosefilesystementriestype-save-file②">"save-file"</a></code> and <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-multiple" id="ref-for-dom-choosefilesystementriesoptions-multiple③">multiple</a></code> is true,
  return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with①">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑥">TypeError</a></code>.</p>
      <li data-md>
-      <p>Let <var>environment</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object" id="ref-for-current-settings-object②">current settings object</a>.</p>
+      <p>Let <var>environment</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this③①">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object①⑨">relevant settings object</a>.</p>
      <li data-md>
       <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin③">origin</a> is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque" id="ref-for-concept-origin-opaque">opaque origin</a>,
  return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with②">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror">SecurityError</a></code>.</p>
      <li data-md>
-      <p>Let <var>browsing context</var> be <var>environment</var>’s <a data-link-type="dfn">responsible browsing context</a>.</p>
-     <li data-md>
       <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin④">origin</a> is not <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#same-origin" id="ref-for-same-origin②">same origin</a> with <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#top-level-origin" id="ref-for-top-level-origin①">top-level origin</a>,
  return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with③">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror①">SecurityError</a></code>.</p>
      <li data-md>
-      <p>If the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object" id="ref-for-current-global-object②">current global object</a> does not have <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation①">transient activation</a>, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror②">SecurityError</a></code>.</p>
+      <p>Let <var>global</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global" id="ref-for-concept-settings-object-global①">global object</a>.</p>
+     <li data-md>
+      <p>If <var>global</var> does not have <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation①">transient activation</a>, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror②">SecurityError</a></code>.</p>
       <p class="issue" id="issue-a33056c3"><a class="self-link" href="#issue-a33056c3"></a> Should this be <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror③">SecurityError</a></code> or <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror①⓪">NotAllowedError</a></code> (and same question for the request permission steps checking for user activation)?</p>
      <li data-md>
       <p>Let <var>p</var> be <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-new-promise" id="ref-for-a-new-promise①②">a new promise</a>.</p>
@@ -2986,7 +3000,7 @@ these steps:
           <p>Set <var>entries</var>[0]'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑤">binary data</a> to an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑧">byte sequence</a>.</p>
         </ol>
        <li data-md>
-        <p>Perform the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#activation-notification" id="ref-for-activation-notification">activation notification</a> steps in <var>browsing context</var>.</p>
+        <p>Perform the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#activation-notification" id="ref-for-activation-notification">activation notification</a> steps in <var>global</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/window-object.html#window-bc" id="ref-for-window-bc">browsing context</a>.</p>
         <p class="note" role="note"><span>Note:</span> This lets a website immediately perform operations on the returned handles that
  might require user activation, such as requesting more permissions.</p>
         <p class="issue" id="issue-923f3009"><a class="self-link" href="#issue-923f3009"></a> Rather than requiring the website to prompt separately for a writable directory,
@@ -3055,7 +3069,7 @@ than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-
 invoked, must run these steps: 
     <ol>
      <li data-md>
-      <p>Let <var>environment</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object" id="ref-for-current-settings-object③">current settings object</a>.</p>
+      <p>Let <var>environment</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object" id="ref-for-current-settings-object">current settings object</a>.</p>
      <li data-md>
       <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin⑤">origin</a> is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque" id="ref-for-concept-origin-opaque①">opaque origin</a>,
  return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with④">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror④">SecurityError</a></code>.</p>
@@ -3406,6 +3420,12 @@ appropriate.</p>
    <li><a href="#dom-filesystemwritablefilestream-write">write(data)</a><span>, in §2.6.1</span>
    <li><a href="#dictdef-writeparams">WriteParams</a><span>, in §2.6</span>
   </ul>
+  <aside class="dfn-panel" data-for="term-for-realm">
+   <a href="https://tc39.github.io/ecma262/#realm">https://tc39.github.io/ecma262/#realm</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-realm">2.6. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-utf-8-encode">
    <a href="https://encoding.spec.whatwg.org/#utf-8-encode">https://encoding.spec.whatwg.org/#utf-8-encode</a><b>Referenced in:</b>
    <ul>
@@ -3482,19 +3502,16 @@ appropriate.</p>
     <li><a href="#ref-for-activation-notification">3.2. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-current-global-object">
-   <a href="https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object">https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-window-bc">
+   <a href="https://html.spec.whatwg.org/multipage/window-object.html#window-bc">https://html.spec.whatwg.org/multipage/window-object.html#window-bc</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-current-global-object">3.1. Native File System Permissions</a> <a href="#ref-for-current-global-object①">(2)</a>
-    <li><a href="#ref-for-current-global-object②">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-window-bc">3.2. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-current-settings-object">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object">https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-current-settings-object">3.1. Native File System Permissions</a> <a href="#ref-for-current-settings-object①">(2)</a>
-    <li><a href="#ref-for-current-settings-object②">3.2. The chooseFileSystemEntries() method</a>
-    <li><a href="#ref-for-current-settings-object③">4.2. The getSystemDirectory() method</a>
+    <li><a href="#ref-for-current-settings-object">4.2. The getSystemDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-deserialization-steps">
@@ -3503,6 +3520,20 @@ appropriate.</p>
     <li><a href="#ref-for-deserialization-steps">2.3. The FileSystemHandle interface</a>
     <li><a href="#ref-for-deserialization-steps①">2.4. The FileSystemFileHandle interface</a>
     <li><a href="#ref-for-deserialization-steps②">2.5. The FileSystemDirectoryHandle interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-environment-settings-object">
+   <a href="https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object">https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-environment-settings-object">2.2. Permissions</a> <a href="#ref-for-environment-settings-object①">(2)</a>
+    <li><a href="#ref-for-environment-settings-object②">3.1. Native File System Permissions</a> <a href="#ref-for-environment-settings-object③">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-concept-settings-object-global">
+   <a href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global">https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-concept-settings-object-global">3.1. Native File System Permissions</a>
+    <li><a href="#ref-for-concept-settings-object-global①">3.2. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-in-parallel">
@@ -3548,12 +3579,23 @@ appropriate.</p>
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-realm">https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-realm</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-relevant-realm">2.3.1. The isSameEntry() method</a>
+    <li><a href="#ref-for-concept-relevant-realm①">2.4.2. The createWritable() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-relevant-settings-object">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object">https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-relevant-settings-object">2.3. The FileSystemHandle interface</a> <a href="#ref-for-relevant-settings-object①">(2)</a>
+    <li><a href="#ref-for-relevant-settings-object②">2.3.2. The queryPermission() method</a>
+    <li><a href="#ref-for-relevant-settings-object③">2.3.3. The requestPermission() method</a> <a href="#ref-for-relevant-settings-object④">(2)</a>
+    <li><a href="#ref-for-relevant-settings-object⑤">2.4.1. The getFile() method</a>
+    <li><a href="#ref-for-relevant-settings-object⑥">2.4.2. The createWritable() method</a> <a href="#ref-for-relevant-settings-object⑦">(2)</a>
+    <li><a href="#ref-for-relevant-settings-object⑧">2.5.1. The getFile() method</a> <a href="#ref-for-relevant-settings-object⑨">(2)</a> <a href="#ref-for-relevant-settings-object①⓪">(3)</a>
+    <li><a href="#ref-for-relevant-settings-object①①">2.5.2. The getDirectory() method</a> <a href="#ref-for-relevant-settings-object①②">(2)</a> <a href="#ref-for-relevant-settings-object①③">(3)</a>
+    <li><a href="#ref-for-relevant-settings-object①④">2.5.3. The getEntries() method</a>
+    <li><a href="#ref-for-relevant-settings-object①⑤">2.5.4. The removeEntry() method</a> <a href="#ref-for-relevant-settings-object①⑥">(2)</a>
+    <li><a href="#ref-for-relevant-settings-object①⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-relevant-settings-object①⑧">(2)</a>
+    <li><a href="#ref-for-relevant-settings-object①⑨">3.2. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-same-origin">
@@ -4033,18 +4075,19 @@ appropriate.</p>
    <a href="https://heycam.github.io/webidl/#this">https://heycam.github.io/webidl/#this</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-this">2.3.1. The isSameEntry() method</a> <a href="#ref-for-this①">(2)</a>
-    <li><a href="#ref-for-this②">2.3.2. The queryPermission() method</a>
-    <li><a href="#ref-for-this③">2.3.3. The requestPermission() method</a> <a href="#ref-for-this④">(2)</a>
-    <li><a href="#ref-for-this⑤">2.4.1. The getFile() method</a>
-    <li><a href="#ref-for-this⑥">2.4.2. The createWritable() method</a>
-    <li><a href="#ref-for-this⑦">2.5.1. The getFile() method</a>
-    <li><a href="#ref-for-this⑧">2.5.2. The getDirectory() method</a>
-    <li><a href="#ref-for-this⑨">2.5.3. The getEntries() method</a>
-    <li><a href="#ref-for-this①⓪">2.5.4. The removeEntry() method</a>
-    <li><a href="#ref-for-this①①">2.5.5. The resolve() method</a>
-    <li><a href="#ref-for-this①②">2.6.1. The write() method</a>
-    <li><a href="#ref-for-this①③">2.6.2. The seek() method</a>
-    <li><a href="#ref-for-this①④">2.6.3. The truncate() method</a>
+    <li><a href="#ref-for-this②">2.3.2. The queryPermission() method</a> <a href="#ref-for-this③">(2)</a>
+    <li><a href="#ref-for-this④">2.3.3. The requestPermission() method</a> <a href="#ref-for-this⑤">(2)</a> <a href="#ref-for-this⑥">(3)</a> <a href="#ref-for-this⑦">(4)</a>
+    <li><a href="#ref-for-this⑧">2.4.1. The getFile() method</a> <a href="#ref-for-this⑨">(2)</a>
+    <li><a href="#ref-for-this①⓪">2.4.2. The createWritable() method</a> <a href="#ref-for-this①①">(2)</a> <a href="#ref-for-this①②">(3)</a> <a href="#ref-for-this①③">(4)</a>
+    <li><a href="#ref-for-this①④">2.5.1. The getFile() method</a> <a href="#ref-for-this①⑤">(2)</a> <a href="#ref-for-this①⑥">(3)</a> <a href="#ref-for-this①⑦">(4)</a>
+    <li><a href="#ref-for-this①⑧">2.5.2. The getDirectory() method</a> <a href="#ref-for-this①⑨">(2)</a> <a href="#ref-for-this②⓪">(3)</a> <a href="#ref-for-this②①">(4)</a>
+    <li><a href="#ref-for-this②②">2.5.3. The getEntries() method</a> <a href="#ref-for-this②③">(2)</a>
+    <li><a href="#ref-for-this②④">2.5.4. The removeEntry() method</a> <a href="#ref-for-this②⑤">(2)</a> <a href="#ref-for-this②⑥">(3)</a>
+    <li><a href="#ref-for-this②⑦">2.5.5. The resolve() method</a>
+    <li><a href="#ref-for-this②⑧">2.6.1. The write() method</a>
+    <li><a href="#ref-for-this②⑨">2.6.2. The seek() method</a>
+    <li><a href="#ref-for-this③⓪">2.6.3. The truncate() method</a>
+    <li><a href="#ref-for-this③①">3.2. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-unsigned-long-long">
@@ -4067,6 +4110,11 @@ appropriate.</p>
   </aside>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
+   <li>
+    <a data-link-type="biblio">[ECMASCRIPT]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-realm" style="color:initial">realm</span>
+    </ul>
    <li>
     <a data-link-type="biblio">[ENCODING]</a> defines the following terms:
     <ul>
@@ -4094,9 +4142,11 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-serializable" style="color:initial">Serializable</span>
      <li><span class="dfn-paneled" id="term-for-window" style="color:initial">Window</span>
      <li><span class="dfn-paneled" id="term-for-activation-notification" style="color:initial">activation notification</span>
-     <li><span class="dfn-paneled" id="term-for-current-global-object" style="color:initial">current global object</span>
+     <li><span class="dfn-paneled" id="term-for-window-bc" style="color:initial">browsing context</span>
      <li><span class="dfn-paneled" id="term-for-current-settings-object" style="color:initial">current settings object</span>
      <li><span class="dfn-paneled" id="term-for-deserialization-steps" style="color:initial">deserialization steps</span>
+     <li><span class="dfn-paneled" id="term-for-environment-settings-object" style="color:initial">environment settings object</span>
+     <li><span class="dfn-paneled" id="term-for-concept-settings-object-global" style="color:initial">global object</span>
      <li><span class="dfn-paneled" id="term-for-in-parallel" style="color:initial">in parallel</span>
      <li><span class="dfn-paneled" id="term-for-event-messageerror" style="color:initial">messageerror</span>
      <li><span class="dfn-paneled" id="term-for-concept-origin-opaque" style="color:initial">opaque origin</span>
@@ -4199,6 +4249,8 @@ appropriate.</p>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
+   <dt id="biblio-ecmascript">[ECMASCRIPT]
+   <dd><a href="https://tc39.es/ecma262/">ECMAScript Language Specification</a>. URL: <a href="https://tc39.es/ecma262/">https://tc39.es/ecma262/</a>
    <dt id="biblio-encoding">[ENCODING]
    <dd>Anne van Kesteren. <a href="https://encoding.spec.whatwg.org/">Encoding Standard</a>. Living Standard. URL: <a href="https://encoding.spec.whatwg.org/">https://encoding.spec.whatwg.org/</a>
    <dt id="biblio-file-api">[FILE-API]
