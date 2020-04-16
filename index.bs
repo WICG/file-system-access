@@ -1375,9 +1375,11 @@ Examples of directories that user agents might want to restrict as being
 * Directories where the user agent stores [=site storage=].
 * Directories containing system files (such as `C:\Windows` on Windows).
 * Directories such as `/dev/`, `/sys`, and `/proc` on Linux that would give access to low-level devices.
-* A users entire "home" directory.
+* A user's entire "home" directory.
   Individual files and directories inside the home directory should still be allowed,
   but user agents should not generally let users give blanket access to the entire directory.
+* The default directory for downloads, if the user agent has such a thing.
+  Individual files inside the directory again should be allowed, but the whole directory would risk leaking more data than a user realizes.
 
 ## Websites trying to use this API for tracking. ## {#privacy-tracking}
 
