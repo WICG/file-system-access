@@ -48,11 +48,19 @@ urlPrefix: https://tc39.github.io/ecma262/; spec: ECMA-262
 
 *This section is non-normative.*
 
-TODO
-
 This provides similar functionality as earlier drafts of the
 [[file-system-api|File API: Directories and System]] as well as the
 [[entries-api|File and Directory Entries API]], but with a more modern API.
+
+TODO explain native file system access
+
+Additionally this API also makes it possible for websites to get access to some
+directory without having to first prompt the user for access. This helps to make
+it easier to write automated tests. It also enables use cases where a website
+wants to save data to disk before a user has picked a location to save to,
+without forcing the website to use a completely different storage mechanism
+with a different API for such files. The entry point for this is the
+{{getSandboxedFileSystem()}} method.
 
 # Files and Directories # {#files-and-directories}
 
@@ -83,7 +91,7 @@ An [=/entry=]'s [=entry/parent=] is null if no such directory entry exists.
 Note: Two different [=/entries=] can represent the same file or directory on disk, in which
 case it is possible for both entries to have a different parent, or for one entry to have a
 parent while the other entry does not have a parent. Typically an entry does not have a parent
-if it was returned by {{chooseFileSystemEntries()}} or {{getSystemDirectory()}}, and an entry
+if it was returned by {{chooseFileSystemEntries()}} or {{getSandboxedFileSystem()}}, and an entry
 will have a parent in all other cases.
 
 [=/Entries=] can (but don't have to) be backed by files on the systems native file system,
@@ -136,8 +144,8 @@ Unless specified otherwise, these steps are:
 1. Assert: |parent| is not null.
 
    Note: [[#native-file-system-permissions]] overrides these steps for entries returned by
-   {{chooseFileSystemEntries()}}. Additionally [[#special-filesystem-concepts]] overrides
-   these steps for entries returned by {{FileSystemDirectoryHandle/getSystemDirectory()}}.
+   {{chooseFileSystemEntries()}}. Additionally [[#sandboxed-filesystem-concepts]] overrides
+   these steps for entries returned by {{getSandboxedFileSystem()}}.
    All other entries always have a parent.
 
 1. Return the result of running |parent|'s [=query permission steps=]
@@ -1299,9 +1307,9 @@ these steps:
 
 </div>
 
-# Accessing special file systems # {#special-filesystems}
+# Accessing the Sandboxed File System # {#sandboxed-filesystem}
 
-## Special File System Concepts ## {#special-filesystem-concepts}
+## Sandboxed File System Concepts ## {#sandboxed-filesystem-concepts}
 
 A [=bucket=] contains a <dfn>sandboxed file system root</dfn>, a [=directory entry=].
 
@@ -1324,35 +1332,24 @@ The [=sandboxed file system root=]'s [=query permission steps=] are the followin
 
 </div>
 
-## The {{FileSystemDirectoryHandle/getSystemDirectory()}} method ## {#api-getsystemdirectory}
+## The {{getSandboxedFileSystem()}} method ## {#api-getsandboxedfilesystem}
 
 <xmp class=idl>
-enum SystemDirectoryType {
-  "sandbox"
-};
-
-dictionary GetSystemDirectoryOptions {
-  required SystemDirectoryType type;
-};
-
 [SecureContext]
-partial interface FileSystemDirectoryHandle {
-  static Promise<FileSystemDirectoryHandle> getSystemDirectory(GetSystemDirectoryOptions options);
+partial interface Window {
+  Promise<FileSystemDirectoryHandle> getSandboxedFileSystem();
 };
 </xmp>
 
+Advisement: In Chrome this functionality is currently exposed as `FileSystemDirectoryHandle.getSystemDirectory({type: "sandbox"})`.
+
 <div class="note domintro">
-  : |directoryHandle| = {{FileSystemDirectoryHandle}} .
-    {{FileSystemDirectoryHandle/getSystemDirectory()|getSystemDirectory}}({
-       {{GetSystemDirectoryOptions/type}}: {{SystemDirectoryType/"sandbox"}} })
-  :: Returns the sandboxed file system.
+  : |directoryHandle| = await window . {{getSandboxedFileSystem()}}
+  :: Returns the root directory of the sandboxed file system.
 </div>
 
-Issue(27): getSystemDirectory might not be the best name. Also perhaps should be on Window rather
-than on FileSystemDirectoryHandle.
-
 <div algorithm>
-The <dfn method for=FileSystemDirectoryHandle>getSystemDirectory(|options|)</dfn> method, when
+The <dfn method for=Window>getSandboxedFileSystem()</dfn> method, when
 invoked, must run these steps:
 
 1. Let |environment| be the [=current settings object=].
@@ -1360,7 +1357,6 @@ invoked, must run these steps:
 1. If |environment|'s [=environment settings object/origin=] is an [=opaque origin=],
    return [=a promise rejected with=] a {{SecurityError}}.
 
-1. [=Assert=]: |options|.{{GetSystemDirectoryOptions/type}} is {{SystemDirectoryType/"sandbox"}}.
 1. Let |storage| be |environment|'s [=environment settings object/origin=]'s [=site storage unit=].
 1. Let |bucket| be |storage|'s [=bucket=].
 1. Return [=a promise resolved with=] a new {{FileSystemDirectoryHandle}},
