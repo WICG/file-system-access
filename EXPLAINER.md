@@ -76,12 +76,12 @@ But even though we'd like to design the API to eventually enable all these use
 cases, initially we'd almost certainly be shipping a very limited API surface
 with limited capabilities.
 
-We also want to make it possible for websites to get access to some directory
-without having to first prompt the user for access. This helps to make
-it easier to write automated tests. It also enables use cases where a website
-wants to save data to disk before a user has picked a location to save to,
-without forcing the website to use a completely different storage mechanism
-with a different API for such files.
+Additionally we want to make it possible for websites to get access to some
+directory without having to first prompt the user for access. This enables use
+cases where a website wants to save data to disk before a user has picked a
+location to save to, without forcing the website to use a completely different
+storage mechanism with a different API for such files. It also makes it easier
+to write automated tests for code using this API.
 
 ## Non-goals
 
