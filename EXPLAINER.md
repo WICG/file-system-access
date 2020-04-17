@@ -28,6 +28,8 @@ In native applications, there are common file access patterns that we aim to add
 1. The files can be opened in any native or web applications concurrently
 1. Changes to the files on disk, made in any native or other web application, are accessible
 1. Access the files with the same access in future browsing sessions
+1. Create a new file in the editor
+1. Auto-save changes to the new file in a temporary location, even before the user has picked a file name/location
 
 ### Multi-file Editor
 1. Open a directory that contains many files and sub-directories, represented hierarchically
@@ -73,6 +75,13 @@ Some example applications of the API we would like to address:
 But even though we'd like to design the API to eventually enable all these use
 cases, initially we'd almost certainly be shipping a very limited API surface
 with limited capabilities.
+
+Additionally we want to make it possible for websites to get access to some
+directory without having to first prompt the user for access. This enables use
+cases where a website wants to save data to disk before a user has picked a
+location to save to, without forcing the website to use a completely different
+storage mechanism with a different API for such files. It also makes it easier
+to write automated tests for code using this API.
 
 ## Non-goals
 
@@ -189,7 +198,7 @@ request.onsuccess = function(e) {
 
     // Rejects if file is no longer writable, because the website no longer has
     // permission to write to it.
-    let file_writer = await ref.createWritable({createIfNotExists: true});
+    let file_writer = await ref.createWritable();
     // ... write to file_writer
 }
 ```
@@ -230,7 +239,7 @@ const file_ref = await dir_ref.getFile('foo.js');
 // Do something useful with the file.
 
 // Get a subdirectory.
-const subdir = await dir_ref.getDirectory('bla', {createIfNotExists: true});
+const subdir = await dir_ref.getDirectory('bla', {create: true});
 
 // No special API to create copies, but still possible to do so by using
 // available read and write APIs.
@@ -280,6 +289,27 @@ if (relative_path === null) {
     // Now |entry| will represent the same file on disk as |file_ref|.
     assert await entry.isSameEntry(file_ref) == true;
 }
+```
+
+To get access to a writable directory without having to ask the user for access,
+we also provide a "sandboxed" file system. Files in this directory are not
+exposed to native applications (or other web applications), but instead are
+private to the origin. Storage in this sandboxed file system is subject to
+quota restrictions and eviction measures like other web exposed storage mechanisms.
+
+```javascript
+const sandboxed_dir = await self.getSandboxedFileSystem();
+
+// The website can freely create files and directories in this directory.
+const cache_dir = await sandboxed_dir.getDirectory('cache', {create: true});
+for await (const entry of cache_dir.getEntries()) {
+    // Do something with entry.
+};
+
+const new_file = await sandboxed_dir.getFile('Untitled 1.txt', {create: true});
+const writer = await new_file.createWritable();
+writer.write("some data");
+await writer.close();
 ```
 
 And perhaps even possible to get access to certain "well-known" directories,
