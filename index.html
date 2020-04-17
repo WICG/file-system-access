@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version bb42a6af, updated Thu Apr 16 07:15:51 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="827c3791374d132183b443a30f2f676864f7409c" name="document-revision">
+  <meta content="a45806a42bc3aa3232cd6d466e87e7e3e1b5f2c2" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1501,7 +1501,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-04-16">16 April 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-04-17">17 April 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1582,10 +1582,10 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       <li><a href="#api-choosefilesystementries"><span class="secno">3.2</span> <span class="content">The <code class="idl"><span>chooseFileSystemEntries()</span></code> method</span></a>
      </ol>
     <li>
-     <a href="#special-filesystems"><span class="secno">4</span> <span class="content">Accessing special file systems</span></a>
+     <a href="#sandboxed-filesystem"><span class="secno">4</span> <span class="content">Accessing the Sandboxed File System</span></a>
      <ol class="toc">
-      <li><a href="#special-filesystem-concepts"><span class="secno">4.1</span> <span class="content">Special File System Concepts</span></a>
-      <li><a href="#api-getsystemdirectory"><span class="secno">4.2</span> <span class="content">The <code class="idl"><span>getSystemDirectory()</span></code> method</span></a>
+      <li><a href="#sandboxed-filesystem-concepts"><span class="secno">4.1</span> <span class="content">Sandboxed File System Concepts</span></a>
+      <li><a href="#api-getoriginprivatefilesystem"><span class="secno">4.2</span> <span class="content">The <code class="idl"><span>getOriginPrivateDirectory()</span></code> method</span></a>
      </ol>
     <li>
      <a href="#privacy-considerations"><span class="secno">5</span> <span class="content">Privacy Considerations</span></a>
@@ -1620,8 +1620,14 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
   <main>
    <h2 class="heading settled" data-level="1" id="introduction"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#introduction"></a></h2>
    <p><em>This section is non-normative.</em></p>
-   <p>TODO</p>
    <p>This provides similar functionality as earlier drafts of the <a data-link-type="biblio" href="#biblio-file-system-api">File API: Directories and System</a> as well as the <a data-link-type="biblio" href="#biblio-entries-api">File and Directory Entries API</a>, but with a more modern API.</p>
+   <p>TODO explain native file system access</p>
+   <p>Additionally this API also makes it possible for websites to get access to some
+directory without having to first prompt the user for access. This enables use
+cases where a website wants to save data to disk before a user has picked a
+location to save to, without forcing the website to use a completely different
+storage mechanism with a different API for such files. It also makes it easier
+to write automated tests for code using this API. The entry point for this is the <code class="idl"><a data-link-type="idl" href="#dom-window-getoriginprivatedirectory" id="ref-for-dom-window-getoriginprivatedirectory">getOriginPrivateDirectory()</a></code> method.</p>
    <h2 class="heading settled" data-level="2" id="files-and-directories"><span class="secno">2. </span><span class="content">Files and Directories</span><a class="self-link" href="#files-and-directories"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="concepts"><span class="secno">2.1. </span><span class="content">Concepts</span><a class="self-link" href="#concepts"></a></h3>
    <p>An <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="entry">entry</dfn> is either a <a data-link-type="dfn" href="#file" id="ref-for-file">file entry</a> or a <a data-link-type="dfn" href="#directory" id="ref-for-directory">directory entry</a>.</p>
@@ -1640,7 +1646,7 @@ An <a data-link-type="dfn" href="#entry" id="ref-for-entry③">entry</a>'s <a da
    <p class="note" role="note"><span>Note:</span> Two different <a data-link-type="dfn" href="#entry" id="ref-for-entry④">entries</a> can represent the same file or directory on disk, in which
 case it is possible for both entries to have a different parent, or for one entry to have a
 parent while the other entry does not have a parent. Typically an entry does not have a parent
-if it was returned by <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries">chooseFileSystemEntries()</a></code> or <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getsystemdirectory" id="ref-for-dom-filesystemdirectoryhandle-getsystemdirectory">getSystemDirectory()</a></code>, and an entry
+if it was returned by <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries">chooseFileSystemEntries()</a></code> or <code class="idl"><a data-link-type="idl" href="#dom-window-getoriginprivatedirectory" id="ref-for-dom-window-getoriginprivatedirectory①">getOriginPrivateDirectory()</a></code>, and an entry
 will have a parent in all other cases.</p>
    <p><a data-link-type="dfn" href="#entry" id="ref-for-entry⑤">Entries</a> can (but don’t have to) be backed by files on the systems native file system,
 so it is possible for the <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data">binary data</a>, <a data-link-type="dfn" href="#file-entry-modification-timestamp" id="ref-for-file-entry-modification-timestamp">modification timestamp</a>,
@@ -1709,8 +1715,8 @@ Unless specified otherwise, these steps are:
       <p>Let <var>parent</var> be <var>entry</var>’s <a data-link-type="dfn" href="#entry-parent" id="ref-for-entry-parent①">parent</a>.</p>
      <li data-md>
       <p class="assertion">Assert: <var>parent</var> is not null.</p>
-      <p class="note" role="note"><span>Note:</span> <a href="#native-file-system-permissions">§ 3.1 Native File System Permissions</a> overrides these steps for entries returned by <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries①">chooseFileSystemEntries()</a></code>. Additionally <a href="#special-filesystem-concepts">§ 4.1 Special File System Concepts</a> overrides
- these steps for entries returned by <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getsystemdirectory" id="ref-for-dom-filesystemdirectoryhandle-getsystemdirectory①">getSystemDirectory()</a></code>.
+      <p class="note" role="note"><span>Note:</span> <a href="#native-file-system-permissions">§ 3.1 Native File System Permissions</a> overrides these steps for entries returned by <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries①">chooseFileSystemEntries()</a></code>. Additionally <a href="#sandboxed-filesystem-concepts">§ 4.1 Sandboxed File System Concepts</a> overrides
+ these steps for entries returned by <code class="idl"><a data-link-type="idl" href="#dom-window-getoriginprivatedirectory" id="ref-for-dom-window-getoriginprivatedirectory②">getOriginPrivateDirectory()</a></code>.
  All other entries always have a parent.</p>
      <li data-md>
       <p>Return the result of running <var>parent</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps">query permission steps</a> given <var>descriptor</var> and <var>settings</var>.</p>
@@ -3024,8 +3030,8 @@ these steps:
       <p>Return <var>p</var>.</p>
     </ol>
    </div>
-   <h2 class="heading settled" data-level="4" id="special-filesystems"><span class="secno">4. </span><span class="content">Accessing special file systems</span><a class="self-link" href="#special-filesystems"></a></h2>
-   <h3 class="heading settled" data-level="4.1" id="special-filesystem-concepts"><span class="secno">4.1. </span><span class="content">Special File System Concepts</span><a class="self-link" href="#special-filesystem-concepts"></a></h3>
+   <h2 class="heading settled" data-level="4" id="sandboxed-filesystem"><span class="secno">4. </span><span class="content">Accessing the Sandboxed File System</span><a class="self-link" href="#sandboxed-filesystem"></a></h2>
+   <h3 class="heading settled" data-level="4.1" id="sandboxed-filesystem-concepts"><span class="secno">4.1. </span><span class="content">Sandboxed File System Concepts</span><a class="self-link" href="#sandboxed-filesystem-concepts"></a></h3>
    <p>A <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#bucket" id="ref-for-bucket">bucket</a> contains a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="sandboxed-file-system-root">sandboxed file system root</dfn>, a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑨">directory entry</a>.</p>
    <p>The <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root">sandboxed file system root</a> for one <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#bucket" id="ref-for-bucket①">bucket</a> must be completely separate from
 that of any other <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#bucket" id="ref-for-bucket②">bucket</a>.</p>
@@ -3041,31 +3047,22 @@ file system</a> as used to be defined in <a data-link-type="biblio" href="#bibli
       <p>Return <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①②">"granted"</a></code>.</p>
     </ol>
    </div>
-   <h3 class="heading settled" data-level="4.2" id="api-getsystemdirectory"><span class="secno">4.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getsystemdirectory" id="ref-for-dom-filesystemdirectoryhandle-getsystemdirectory②">getSystemDirectory()</a></code> method</span><a class="self-link" href="#api-getsystemdirectory"></a></h3>
-<pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-systemdirectorytype"><code><c- g>SystemDirectoryType</c-></code></dfn> {
-  <dfn class="dfn-paneled idl-code" data-dfn-for="SystemDirectoryType" data-dfn-type="enum-value" data-export id="dom-systemdirectorytype-sandbox"><code><c- s>"sandbox"</c-></code></dfn>
-};
-
-<c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-getsystemdirectoryoptions"><code><c- g>GetSystemDirectoryOptions</c-></code></dfn> {
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#enumdef-systemdirectorytype" id="ref-for-enumdef-systemdirectorytype"><c- n>SystemDirectoryType</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="GetSystemDirectoryOptions" data-dfn-type="dict-member" data-export data-type="SystemDirectoryType " id="dom-getsystemdirectoryoptions-type"><code><c- g>type</c-></code></dfn>;
-};
-
-[<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext⑤"><c- g>SecureContext</c-></a>]
-<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑨"><c- g>FileSystemDirectoryHandle</c-></a> {
-  <c- b>static</c-> <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①⓪"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getsystemdirectory" id="ref-for-dom-filesystemdirectoryhandle-getsystemdirectory③"><c- g>getSystemDirectory</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-getsystemdirectoryoptions" id="ref-for-dictdef-getsystemdirectoryoptions"><c- n>GetSystemDirectoryOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getSystemDirectory(options)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getsystemdirectory-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getsystemdirectory-options-options"></a></dfn>);
+   <h3 class="heading settled" data-level="4.2" id="api-getoriginprivatefilesystem"><span class="secno">4.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-window-getoriginprivatedirectory" id="ref-for-dom-window-getoriginprivatedirectory③">getOriginPrivateDirectory()</a></code> method</span><a class="self-link" href="#api-getoriginprivatefilesystem"></a></h3>
+<pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext⑤"><c- g>SecureContext</c-></a>]
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/window-object.html#window" id="ref-for-window②"><c- g>Window</c-></a> {
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑨"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-window-getoriginprivatedirectory" id="ref-for-dom-window-getoriginprivatedirectory④"><c- g>getOriginPrivateDirectory</c-></a>();
 };
 </pre>
+   <p><strong class="advisement"> In Chrome this functionality is currently exposed as <code>FileSystemDirectoryHandle.getSystemDirectory({type: "sandbox"})</code>.</strong></p>
    <div class="note domintro" role="note">
     <dl>
-     <dt data-md><var>directoryHandle</var> = <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①①">FileSystemDirectoryHandle</a></code> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getsystemdirectory" id="ref-for-dom-filesystemdirectoryhandle-getsystemdirectory④">getSystemDirectory</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-getsystemdirectoryoptions-type" id="ref-for-dom-getsystemdirectoryoptions-type">type</a></code>: <code class="idl"><a data-link-type="idl" href="#dom-systemdirectorytype-sandbox" id="ref-for-dom-systemdirectorytype-sandbox">"sandbox"</a></code> })
+     <dt data-md><var>directoryHandle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-getoriginprivatedirectory" id="ref-for-dom-window-getoriginprivatedirectory⑤">getOriginPrivateDirectory()</a></code>
      <dd data-md>
-      <p>Returns the sandboxed file system.</p>
+      <p>Returns the root directory of the sandboxed file system.</p>
     </dl>
    </div>
-   <p class="issue" id="issue-2a3d989a"><a class="self-link" href="#issue-2a3d989a"></a> getSystemDirectory might not be the best name. Also perhaps should be on Window rather
-than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-system/issues/27">&lt;https://github.com/wicg/native-file-system/issues/27></a></p>
-   <div class="algorithm" data-algorithm="getSystemDirectory(options)" data-algorithm-for="FileSystemDirectoryHandle">
-     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export id="dom-filesystemdirectoryhandle-getsystemdirectory"><code>getSystemDirectory(<var>options</var>)</code></dfn> method, when
+   <div class="algorithm" data-algorithm="getOriginPrivateDirectory()" data-algorithm-for="Window">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="Window" data-dfn-type="method" data-export id="dom-window-getoriginprivatedirectory"><code>getOriginPrivateDirectory()</code></dfn> method, when
 invoked, must run these steps: 
     <ol>
      <li data-md>
@@ -3074,13 +3071,11 @@ invoked, must run these steps:
       <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin⑤">origin</a> is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque" id="ref-for-concept-origin-opaque①">opaque origin</a>,
  return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with④">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror④">SecurityError</a></code>.</p>
      <li data-md>
-      <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert③">Assert</a>: <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-getsystemdirectoryoptions-type" id="ref-for-dom-getsystemdirectoryoptions-type①">type</a></code> is <code class="idl"><a data-link-type="idl" href="#dom-systemdirectorytype-sandbox" id="ref-for-dom-systemdirectorytype-sandbox①">"sandbox"</a></code>.</p>
-     <li data-md>
-      <p>Let <var>storage</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin⑥">origin</a>'s <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#site-storage-unit" id="ref-for-site-storage-unit">site storage unit</a>.</p>
+      <p>Let <var>storage</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin⑥">origin</a>'s <a data-link-type="dfn">site storage unit</a>.</p>
      <li data-md>
       <p>Let <var>bucket</var> be <var>storage</var>’s <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#bucket" id="ref-for-bucket③">bucket</a>.</p>
      <li data-md>
-      <p>Return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with①">a promise resolved with</a> a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①②">FileSystemDirectoryHandle</a></code>,
+      <p>Return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with①">a promise resolved with</a> a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①⓪">FileSystemDirectoryHandle</a></code>,
  whose associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②⑤">entry</a> is <var>bucket</var>’s <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root⑤">sandboxed file system root</a>.</p>
     </ol>
    </div>
@@ -3108,7 +3103,7 @@ with some of their most private personal data.</p>
     <li data-md>
      <p>The directory or directories containing the user agent itself.</p>
     <li data-md>
-     <p>Directories where the user agent stores <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#site-storage" id="ref-for-site-storage">site storage</a>.</p>
+     <p>Directories where the user agent stores <a data-link-type="dfn">site storage</a>.</p>
     <li data-md>
      <p>Directories containing system files (such as <code>C:\Windows</code> on Windows).</p>
     <li data-md>
@@ -3361,8 +3356,7 @@ appropriate.</p>
    <li><a href="#dom-filesystemfilehandle-getfile">getFile()</a><span>, in §2.4.1</span>
    <li><a href="#dom-filesystemdirectoryhandle-getfile">getFile(name)</a><span>, in §2.5.1</span>
    <li><a href="#dom-filesystemdirectoryhandle-getfile">getFile(name, options)</a><span>, in §2.5.1</span>
-   <li><a href="#dom-filesystemdirectoryhandle-getsystemdirectory">getSystemDirectory(options)</a><span>, in §4.2</span>
-   <li><a href="#dictdef-getsystemdirectoryoptions">GetSystemDirectoryOptions</a><span>, in §4.2</span>
+   <li><a href="#dom-window-getoriginprivatedirectory">getOriginPrivateDirectory()</a><span>, in §4.2</span>
    <li><a href="#dom-filesystemhandle-isdirectory">isDirectory</a><span>, in §2.3</span>
    <li><a href="#dom-filesystemhandle-isfile">isFile</a><span>, in §2.3</span>
    <li><a href="#dom-filesystemhandle-issameentry">isSameEntry(other)</a><span>, in §2.3.1</span>
@@ -3393,14 +3387,12 @@ appropriate.</p>
    <li><a href="#entry-request-permission-steps">request permission steps</a><span>, in §2.2</span>
    <li><a href="#entry-resolve">resolve</a><span>, in §2.1</span>
    <li><a href="#dom-filesystemdirectoryhandle-resolve">resolve(possibleDescendant)</a><span>, in §2.5.5</span>
-   <li><a href="#dom-systemdirectorytype-sandbox">"sandbox"</a><span>, in §4.2</span>
    <li><a href="#sandboxed-file-system-root">sandboxed file system root</a><span>, in §4.1</span>
    <li><a href="#dom-choosefilesystementriestype-save-file">"save-file"</a><span>, in §3.2</span>
    <li><a href="#dom-writecommandtype-seek">"seek"</a><span>, in §2.6</span>
    <li><a href="#filesystemwritablefilestream-seekoffset">[[seekOffset]]</a><span>, in §2.6</span>
    <li><a href="#dom-filesystemwritablefilestream-seek">seek(position)</a><span>, in §2.6.2</span>
    <li><a href="#dom-writeparams-size">size</a><span>, in §2.6</span>
-   <li><a href="#enumdef-systemdirectorytype">SystemDirectoryType</a><span>, in §4.2</span>
    <li><a href="#entry-the-same-as">the same as</a><span>, in §2.1</span>
    <li><a href="#too-sensitive-or-dangerous">too sensitive or dangerous</a><span>, in §5.1</span>
    <li><a href="#dom-writecommandtype-truncate">"truncate"</a><span>, in §2.6</span>
@@ -3409,7 +3401,6 @@ appropriate.</p>
     type
     <ul>
      <li><a href="#dom-choosefilesystementriesoptions-type">dict-member for ChooseFileSystemEntriesOptions</a><span>, in §3.2</span>
-     <li><a href="#dom-getsystemdirectoryoptions-type">dict-member for GetSystemDirectoryOptions</a><span>, in §4.2</span>
      <li><a href="#dom-writeparams-type">dict-member for WriteParams</a><span>, in §2.6</span>
     </ul>
    <li><a href="#valid-file-name">valid file name</a><span>, in §2.1</span>
@@ -3494,6 +3485,7 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-window">3.1. Native File System Permissions</a>
     <li><a href="#ref-for-window①">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-window②">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-activation-notification">
@@ -3511,7 +3503,7 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-current-settings-object">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object">https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-current-settings-object">4.2. The getSystemDirectory() method</a>
+    <li><a href="#ref-for-current-settings-object">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-deserialization-steps">
@@ -3563,7 +3555,7 @@ appropriate.</p>
    <a href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque">https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-origin-opaque">3.2. The chooseFileSystemEntries() method</a>
-    <li><a href="#ref-for-concept-origin-opaque①">4.2. The getSystemDirectory() method</a>
+    <li><a href="#ref-for-concept-origin-opaque①">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-settings-object-origin">
@@ -3572,7 +3564,7 @@ appropriate.</p>
     <li><a href="#ref-for-concept-settings-object-origin">2.3. The FileSystemHandle interface</a> <a href="#ref-for-concept-settings-object-origin①">(2)</a>
     <li><a href="#ref-for-concept-settings-object-origin②">3.1. Native File System Permissions</a>
     <li><a href="#ref-for-concept-settings-object-origin③">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-concept-settings-object-origin④">(2)</a>
-    <li><a href="#ref-for-concept-settings-object-origin⑤">4.2. The getSystemDirectory() method</a> <a href="#ref-for-concept-settings-object-origin⑥">(2)</a>
+    <li><a href="#ref-for-concept-settings-object-origin⑤">4.2. The getOriginPrivateDirectory() method</a> <a href="#ref-for-concept-settings-object-origin⑥">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-relevant-realm">
@@ -3648,7 +3640,6 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-assert">2.6. The FileSystemWritableFileStream interface</a>
     <li><a href="#ref-for-assert①">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-assert②">(2)</a>
-    <li><a href="#ref-for-assert③">4.2. The getSystemDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-byte-sequence">
@@ -3778,7 +3769,7 @@ appropriate.</p>
     <li><a href="#ref-for-dom-permissionstate-granted⑤">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-dom-permissionstate-granted⑥">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-permissionstate-granted⑦">(2)</a>
     <li><a href="#ref-for-dom-permissionstate-granted⑧">3.1. Native File System Permissions</a> <a href="#ref-for-dom-permissionstate-granted⑨">(2)</a> <a href="#ref-for-dom-permissionstate-granted①⓪">(3)</a> <a href="#ref-for-dom-permissionstate-granted①①">(4)</a>
-    <li><a href="#ref-for-dom-permissionstate-granted①②">4.1. Special File System Concepts</a>
+    <li><a href="#ref-for-dom-permissionstate-granted①②">4.1. Sandboxed File System Concepts</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-permissionstate-prompt">
@@ -3803,20 +3794,8 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-bucket">
    <a href="https://storage.spec.whatwg.org/#bucket">https://storage.spec.whatwg.org/#bucket</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-bucket">4.1. Special File System Concepts</a> <a href="#ref-for-bucket①">(2)</a> <a href="#ref-for-bucket②">(3)</a>
-    <li><a href="#ref-for-bucket③">4.2. The getSystemDirectory() method</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-site-storage">
-   <a href="https://storage.spec.whatwg.org/#site-storage">https://storage.spec.whatwg.org/#site-storage</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-site-storage">5.1. Users giving access to more, or more sensitive files than they intended.</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-site-storage-unit">
-   <a href="https://storage.spec.whatwg.org/#site-storage-unit">https://storage.spec.whatwg.org/#site-storage-unit</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-site-storage-unit">4.2. The getSystemDirectory() method</a>
+    <li><a href="#ref-for-bucket">4.1. Sandboxed File System Concepts</a> <a href="#ref-for-bucket①">(2)</a> <a href="#ref-for-bucket②">(3)</a>
+    <li><a href="#ref-for-bucket③">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-acquire-writable-stream-default-writer">
@@ -3954,14 +3933,14 @@ appropriate.</p>
     <li><a href="#ref-for-SecureContext②">2.5. The FileSystemDirectoryHandle interface</a>
     <li><a href="#ref-for-SecureContext③">2.6. The FileSystemWritableFileStream interface</a>
     <li><a href="#ref-for-SecureContext④">3.2. The chooseFileSystemEntries() method</a>
-    <li><a href="#ref-for-SecureContext⑤">4.2. The getSystemDirectory() method</a>
+    <li><a href="#ref-for-SecureContext⑤">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-securityerror">
    <a href="https://heycam.github.io/webidl/#securityerror">https://heycam.github.io/webidl/#securityerror</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-securityerror">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-securityerror①">(2)</a> <a href="#ref-for-securityerror②">(3)</a> <a href="#ref-for-securityerror③">(4)</a>
-    <li><a href="#ref-for-securityerror④">4.2. The getSystemDirectory() method</a>
+    <li><a href="#ref-for-securityerror④">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-exceptiondef-typeerror">
@@ -4012,14 +3991,14 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-a-promise-rejected-with">2.6. The FileSystemWritableFileStream interface</a>
     <li><a href="#ref-for-a-promise-rejected-with①">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-a-promise-rejected-with②">(2)</a> <a href="#ref-for-a-promise-rejected-with③">(3)</a>
-    <li><a href="#ref-for-a-promise-rejected-with④">4.2. The getSystemDirectory() method</a>
+    <li><a href="#ref-for-a-promise-rejected-with④">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-a-promise-resolved-with">
    <a href="https://heycam.github.io/webidl/#a-promise-resolved-with">https://heycam.github.io/webidl/#a-promise-resolved-with</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-a-promise-resolved-with">2.6. The FileSystemWritableFileStream interface</a>
-    <li><a href="#ref-for-a-promise-resolved-with①">4.2. The getSystemDirectory() method</a>
+    <li><a href="#ref-for-a-promise-resolved-with①">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-boolean">
@@ -4199,8 +4178,6 @@ appropriate.</p>
     <a data-link-type="biblio">[STORAGE]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-bucket" style="color:initial">bucket</span>
-     <li><span class="dfn-paneled" id="term-for-site-storage" style="color:initial">site storage</span>
-     <li><span class="dfn-paneled" id="term-for-site-storage-unit" style="color:initial">site storage units</span>
     </ul>
    <li>
     <a data-link-type="biblio">[STREAMS]</a> defines the following terms:
@@ -4376,17 +4353,9 @@ appropriate.</p>
         <a class="idl-code" data-link-type="method" href="#dom-window-choosefilesystementries"><c- g>chooseFileSystemEntries</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptions"><c- n>ChooseFileSystemEntriesOptions</c-></a> <a href="#dom-window-choosefilesystementries-options-options"><code><c- g>options</c-></code></a> = {});
 };
 
-<c- b>enum</c-> <a href="#enumdef-systemdirectorytype"><code><c- g>SystemDirectoryType</c-></code></a> {
-  <a href="#dom-systemdirectorytype-sandbox"><code><c- s>"sandbox"</c-></code></a>
-};
-
-<c- b>dictionary</c-> <a href="#dictdef-getsystemdirectoryoptions"><code><c- g>GetSystemDirectoryOptions</c-></code></a> {
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#enumdef-systemdirectorytype"><c- n>SystemDirectoryType</c-></a> <a data-type="SystemDirectoryType " href="#dom-getsystemdirectoryoptions-type"><code><c- g>type</c-></code></a>;
-};
-
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext"><c- g>SecureContext</c-></a>]
-<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#filesystemdirectoryhandle"><c- g>FileSystemDirectoryHandle</c-></a> {
-  <c- b>static</c-> <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getsystemdirectory"><c- g>getSystemDirectory</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-getsystemdirectoryoptions"><c- n>GetSystemDirectoryOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getsystemdirectory-options-options"><code><c- g>options</c-></code></a>);
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/window-object.html#window"><c- g>Window</c-></a> {
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-window-getoriginprivatedirectory"><c- g>getOriginPrivateDirectory</c-></a>();
 };
 
 </pre>
@@ -4433,8 +4402,6 @@ passed in options, or separate file and directory methods? <a href="https://gith
    <div class="issue"> Should this resolve with <code>undefined</code> instead? <a href="https://github.com/wicg/native-file-system/issues/84">&lt;https://github.com/wicg/native-file-system/issues/84></a><a href="#issue-5681994a"> ↵ </a></div>
    <div class="issue"> Rather than requiring the website to prompt separately for a writable directory,
  we should provide some kind of API to request a writable directory in one step. <a href="https://github.com/wicg/native-file-system/issues/89">&lt;https://github.com/wicg/native-file-system/issues/89></a><a href="#issue-923f3009"> ↵ </a></div>
-   <div class="issue"> getSystemDirectory might not be the best name. Also perhaps should be on Window rather
-than on FileSystemDirectoryHandle. <a href="https://github.com/wicg/native-file-system/issues/27">&lt;https://github.com/wicg/native-file-system/issues/27></a><a href="#issue-2a3d989a"> ↵ </a></div>
    <div class="issue"> "Atomic writes" attempts to make it explicit what this API can and can’t do, and how
 performance can be effected by safe browsing checks. <a href="https://github.com/wicg/native-file-system/issues/51">&lt;https://github.com/wicg/native-file-system/issues/51></a><a href="#issue-1f744509"> ↵ </a></div>
   </div>
@@ -4507,7 +4474,7 @@ performance can be effected by safe browsing checks. <a href="https://github.com
     <li><a href="#ref-for-directory⑥">2.5.1. The getFile() method</a>
     <li><a href="#ref-for-directory⑦">2.5.2. The getDirectory() method</a>
     <li><a href="#ref-for-directory⑧">2.5.4. The removeEntry() method</a>
-    <li><a href="#ref-for-directory⑨">4.1. Special File System Concepts</a>
+    <li><a href="#ref-for-directory⑨">4.1. Sandboxed File System Concepts</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="directory-entry-children">
@@ -4555,7 +4522,7 @@ performance can be effected by safe browsing checks. <a href="https://github.com
     <li><a href="#ref-for-entry-query-permission-steps①①">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-entry-query-permission-steps①②">(2)</a>
     <li><a href="#ref-for-entry-query-permission-steps①③">3.1. Native File System Permissions</a> <a href="#ref-for-entry-query-permission-steps①④">(2)</a> <a href="#ref-for-entry-query-permission-steps①⑤">(3)</a> <a href="#ref-for-entry-query-permission-steps①⑥">(4)</a>
     <li><a href="#ref-for-entry-query-permission-steps①⑦">3.2. The chooseFileSystemEntries() method</a>
-    <li><a href="#ref-for-entry-query-permission-steps①⑧">4.1. Special File System Concepts</a>
+    <li><a href="#ref-for-entry-query-permission-steps①⑧">4.1. Sandboxed File System Concepts</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="entry-request-permission-steps">
@@ -4619,7 +4586,7 @@ performance can be effected by safe browsing checks. <a href="https://github.com
     <li><a href="#ref-for-filesystemhandle-entry②①">2.5.3. The getEntries() method</a>
     <li><a href="#ref-for-filesystemhandle-entry②②">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-filesystemhandle-entry②③">2.5.5. The resolve() method</a> <a href="#ref-for-filesystemhandle-entry②④">(2)</a>
-    <li><a href="#ref-for-filesystemhandle-entry②⑤">4.2. The getSystemDirectory() method</a>
+    <li><a href="#ref-for-filesystemhandle-entry②⑤">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemhandle-isfile">
@@ -4744,7 +4711,7 @@ performance can be effected by safe browsing checks. <a href="https://github.com
     <li><a href="#ref-for-filesystemdirectoryhandle⑤">2.5.2. The getDirectory() method</a> <a href="#ref-for-filesystemdirectoryhandle⑥">(2)</a>
     <li><a href="#ref-for-filesystemdirectoryhandle⑦">2.5.3. The getEntries() method</a>
     <li><a href="#ref-for-filesystemdirectoryhandle⑧">3.2. The chooseFileSystemEntries() method</a>
-    <li><a href="#ref-for-filesystemdirectoryhandle⑨">4.2. The getSystemDirectory() method</a> <a href="#ref-for-filesystemdirectoryhandle①⓪">(2)</a> <a href="#ref-for-filesystemdirectoryhandle①①">(3)</a> <a href="#ref-for-filesystemdirectoryhandle①②">(4)</a>
+    <li><a href="#ref-for-filesystemdirectoryhandle⑨">4.2. The getOriginPrivateDirectory() method</a> <a href="#ref-for-filesystemdirectoryhandle①⓪">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemdirectoryhandle-getfile">
@@ -5025,40 +4992,17 @@ performance can be effected by safe browsing checks. <a href="https://github.com
   <aside class="dfn-panel" data-for="sandboxed-file-system-root">
    <b><a href="#sandboxed-file-system-root">#sandboxed-file-system-root</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-sandboxed-file-system-root">4.1. Special File System Concepts</a> <a href="#ref-for-sandboxed-file-system-root①">(2)</a> <a href="#ref-for-sandboxed-file-system-root②">(3)</a> <a href="#ref-for-sandboxed-file-system-root③">(4)</a> <a href="#ref-for-sandboxed-file-system-root④">(5)</a>
-    <li><a href="#ref-for-sandboxed-file-system-root⑤">4.2. The getSystemDirectory() method</a>
+    <li><a href="#ref-for-sandboxed-file-system-root">4.1. Sandboxed File System Concepts</a> <a href="#ref-for-sandboxed-file-system-root①">(2)</a> <a href="#ref-for-sandboxed-file-system-root②">(3)</a> <a href="#ref-for-sandboxed-file-system-root③">(4)</a> <a href="#ref-for-sandboxed-file-system-root④">(5)</a>
+    <li><a href="#ref-for-sandboxed-file-system-root⑤">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="enumdef-systemdirectorytype">
-   <b><a href="#enumdef-systemdirectorytype">#enumdef-systemdirectorytype</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-window-getoriginprivatedirectory">
+   <b><a href="#dom-window-getoriginprivatedirectory">#dom-window-getoriginprivatedirectory</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-enumdef-systemdirectorytype">4.2. The getSystemDirectory() method</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-systemdirectorytype-sandbox">
-   <b><a href="#dom-systemdirectorytype-sandbox">#dom-systemdirectorytype-sandbox</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-systemdirectorytype-sandbox">4.2. The getSystemDirectory() method</a> <a href="#ref-for-dom-systemdirectorytype-sandbox①">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dictdef-getsystemdirectoryoptions">
-   <b><a href="#dictdef-getsystemdirectoryoptions">#dictdef-getsystemdirectoryoptions</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dictdef-getsystemdirectoryoptions">4.2. The getSystemDirectory() method</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-getsystemdirectoryoptions-type">
-   <b><a href="#dom-getsystemdirectoryoptions-type">#dom-getsystemdirectoryoptions-type</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-getsystemdirectoryoptions-type">4.2. The getSystemDirectory() method</a> <a href="#ref-for-dom-getsystemdirectoryoptions-type①">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-filesystemdirectoryhandle-getsystemdirectory">
-   <b><a href="#dom-filesystemdirectoryhandle-getsystemdirectory">#dom-filesystemdirectoryhandle-getsystemdirectory</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getsystemdirectory">2.1. Concepts</a>
-    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getsystemdirectory①">2.2. Permissions</a>
-    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getsystemdirectory②">4.2. The getSystemDirectory() method</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getsystemdirectory③">(2)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getsystemdirectory④">(3)</a>
+    <li><a href="#ref-for-dom-window-getoriginprivatedirectory">1. Introduction</a>
+    <li><a href="#ref-for-dom-window-getoriginprivatedirectory①">2.1. Concepts</a>
+    <li><a href="#ref-for-dom-window-getoriginprivatedirectory②">2.2. Permissions</a>
+    <li><a href="#ref-for-dom-window-getoriginprivatedirectory③">4.2. The getOriginPrivateDirectory() method</a> <a href="#ref-for-dom-window-getoriginprivatedirectory④">(2)</a> <a href="#ref-for-dom-window-getoriginprivatedirectory⑤">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="too-sensitive-or-dangerous">
