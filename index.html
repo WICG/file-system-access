@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version bb42a6af, updated Thu Apr 16 07:15:51 2020 -0700" name="generator">
+  <meta content="Bikeshed version 34b5d8b0, updated Mon Apr 20 13:04:45 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="a45806a42bc3aa3232cd6d466e87e7e3e1b5f2c2" name="document-revision">
+  <meta content="de41e459961bbfe3ff3acc41e2befeaa3514e7d6" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1501,7 +1501,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-04-17">17 April 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-04-21">21 April 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -3071,7 +3071,7 @@ invoked, must run these steps:
       <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin⑤">origin</a> is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque" id="ref-for-concept-origin-opaque①">opaque origin</a>,
  return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with④">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror④">SecurityError</a></code>.</p>
      <li data-md>
-      <p>Let <var>storage</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin⑥">origin</a>'s <a data-link-type="dfn">site storage unit</a>.</p>
+      <p>Let <var>storage</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin⑥">origin</a>'s <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#site-storage-unit" id="ref-for-site-storage-unit">storage unit</a>.</p>
      <li data-md>
       <p>Let <var>bucket</var> be <var>storage</var>’s <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#bucket" id="ref-for-bucket③">bucket</a>.</p>
      <li data-md>
@@ -3103,7 +3103,7 @@ with some of their most private personal data.</p>
     <li data-md>
      <p>The directory or directories containing the user agent itself.</p>
     <li data-md>
-     <p>Directories where the user agent stores <a data-link-type="dfn">site storage</a>.</p>
+     <p>Directories where the user agent stores <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#site-storage" id="ref-for-site-storage">website storage</a>.</p>
     <li data-md>
      <p>Directories containing system files (such as <code>C:\Windows</code> on Windows).</p>
     <li data-md>
@@ -3798,6 +3798,18 @@ appropriate.</p>
     <li><a href="#ref-for-bucket③">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-site-storage">
+   <a href="https://storage.spec.whatwg.org/#site-storage">https://storage.spec.whatwg.org/#site-storage</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-site-storage">5.1. Users giving access to more, or more sensitive files than they intended.</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-site-storage-unit">
+   <a href="https://storage.spec.whatwg.org/#site-storage-unit">https://storage.spec.whatwg.org/#site-storage-unit</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-site-storage-unit">4.2. The getOriginPrivateDirectory() method</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-acquire-writable-stream-default-writer">
    <a href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer">https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer</a><b>Referenced in:</b>
    <ul>
@@ -4178,6 +4190,8 @@ appropriate.</p>
     <a data-link-type="biblio">[STORAGE]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-bucket" style="color:initial">bucket</span>
+     <li><span class="dfn-paneled" id="term-for-site-storage" style="color:initial">storage</span>
+     <li><span class="dfn-paneled" id="term-for-site-storage-unit" style="color:initial">storage units</span>
     </ul>
    <li>
     <a data-link-type="biblio">[STREAMS]</a> defines the following terms:
