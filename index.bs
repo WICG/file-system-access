@@ -1357,7 +1357,7 @@ invoked, must run these steps:
 1. If |environment|'s [=environment settings object/origin=] is an [=opaque origin=],
    return [=a promise rejected with=] a {{SecurityError}}.
 
-1. Let |storage| be |environment|'s [=environment settings object/origin=]'s [=site storage unit=].
+1. Let |storage| be |environment|'s [=environment settings object/origin=]'s [=storage unit=].
 1. Let |bucket| be |storage|'s [=bucket=].
 1. Return [=a promise resolved with=] a new {{FileSystemDirectoryHandle}},
    whose associated [=FileSystemHandle/entry=] is |bucket|'s [=sandboxed file system root=].
@@ -1395,7 +1395,7 @@ Examples of directories that user agents might want to restrict as being
 <dfn>too sensitive or dangerous</dfn> include:
 
 * The directory or directories containing the user agent itself.
-* Directories where the user agent stores [=site storage=].
+* Directories where the user agent stores [=storage|website storage=].
 * Directories containing system files (such as `C:\Windows` on Windows).
 * Directories such as `/dev/`, `/sys`, and `/proc` on Linux that would give access to low-level devices.
 * A user's entire "home" directory.
