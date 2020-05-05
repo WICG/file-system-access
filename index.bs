@@ -890,9 +890,10 @@ in a [=/Realm=] |realm|, perform the following steps:
          and |stream|'s [=relevant settings object=].
       1. If |permissionStatus| is not {{PermissionState/"granted"}},
          reject |closeResult| with a {{NotAllowedError}} and abort.
-      1. TODO: optional UA defined security checks
+      1. Perform user agent-specific [=malware scans and safe browsing checks=].
+         If these checks fail, [=/reject=] |closeResult| with an {{AbortError}} and abort.
       1. Set |stream|.[=[[file]]=]'s [=file entry/binary data=] to |stream|.[=[[buffer]]=].
-         If that throws an exception, reject |closeResult| with that exception and abort.
+         If that throws an exception, [=/reject=] |closeResult| with that exception and abort.
 
          Note: It is expected that this atomically updates the contents of the file on disk
          being written to.
@@ -1493,12 +1494,9 @@ hand files that are already executable likely remain that way, even after the fi
 through this API). Furthermore user agents are encouraged to apply things like Mark-of-the-Web to
 files created or modified by this API.
 
-Finally, user agents are encouraged to verify the contents of files modified by this API via malware
-scans and safe browsing checks, unless some kind of external strong trust relation already exists.
+Finally, user agents are encouraged to verify the contents of files modified by this API via <dfn>malware
+scans and safe browsing checks</dfn>, unless some kind of external strong trust relation already exists.
 This of course has effects on the performance characteristics of this API.
-
-Issue(51): "Atomic writes" attempts to make it explicit what this API can and can't do, and how
-performance can be effected by safe browsing checks.
 
 ## Ransomware attacks ## {#security-ransomware}
 
