@@ -844,7 +844,7 @@ in a [=/Realm=] |realm|, perform the following steps:
          and |stream|'s [=relevant settings object=].
       1. If |permissionStatus| is not {{PermissionState/"granted"}},
          reject |closeResult| with a {{NotAllowedError}} and abort.
-      1. Perform any [=malware scans and safe browsing checks=] the user agent might want to do.
+      1. Perform user agent-specific [=malware scans and safe browsing checks=].
          If these checks fail, [=/reject=] |closeResult| with an {{AbortError}} and abort.
       1. Set |stream|.[=[[file]]=]'s [=file entry/binary data=] to |stream|.[=[[buffer]]=].
          If that throws an exception, [=/reject=] |closeResult| with that exception and abort.
