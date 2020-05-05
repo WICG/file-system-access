@@ -230,8 +230,9 @@ if (!dir_ref) {
     return;
 }
 // Read directory contents.
-for await (const entry of dir_ref.getEntries()) {
+for await (const [name, entry] of dir_ref) {
     // entry is a FileSystemFileHandle or a FileSystemDirectoryHandle.
+    // name is equal to entry.name
 }
 
 // Get a specific file.
@@ -302,7 +303,7 @@ const sandboxed_dir = await self.getSandboxedFileSystem();
 
 // The website can freely create files and directories in this directory.
 const cache_dir = await sandboxed_dir.getDirectory('cache', {create: true});
-for await (const entry of cache_dir.getEntries()) {
+for await (const entry of cache_dir.values()) {
     // Do something with entry.
 };
 
@@ -318,7 +319,7 @@ similar. Could still include some kind of permission prompt if needed.
 
 ```javascript
 const font_dir = await FileSystemDirectoryHandle.getSystemDirectory({type: 'fonts'});
-for await (const entry of font_dir.getEntries()) {
+for await (const entry of font_dir.values()) {
     // Use font entry.
 };
 ```
