@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 4be3a54e, updated Mon May 4 06:47:10 2020 -0700" name="generator">
+  <meta content="Bikeshed version b945a0a8, updated Thu May 14 16:19:50 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="7773684f160a2e9cbcdbc82535c21b8c1103d7f6" name="document-revision">
+  <meta content="5e09cfbf0bc494a124b81f911bf5e348fa5638d7" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1501,7 +1501,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-05-05">5 May 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-05-15">15 May 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1956,7 +1956,7 @@ In Chrome 82 they are.</strong></p>
         <p>Initialize the value of <var>f</var>’s <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/FileAPI/#dfn-lastModified" id="ref-for-dfn-lastModified">lastModified</a></code> attribute to <var>entry</var>’s <a data-link-type="dfn" href="#file-entry-modification-timestamp" id="ref-for-file-entry-modification-timestamp①">modification timestamp</a>.</p>
        <li data-md>
         <p>Initialize the value of <var>f</var>’s <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/FileAPI/#dfn-type" id="ref-for-dfn-type">type</a></code> attribute to an implementation defined value, based on for example <var>entry</var>’s <a data-link-type="dfn" href="#entry-name" id="ref-for-entry-name④">name</a> and/or its file extension.</p>
-        <p class="issue" id="issue-bf239c75"><a class="self-link" href="#issue-bf239c75"></a> The reading and snapshotting behvario needs to be better specified in the <a data-link-type="biblio" href="#biblio-file-api">[FILE-API]</a> spec,
+        <p class="issue" id="issue-1fb8bcae"><a class="self-link" href="#issue-1fb8bcae"></a> The reading and snapshotting behavior needs to be better specified in the <a data-link-type="biblio" href="#biblio-file-api">[FILE-API]</a> spec,
  for now this is kind of hand-wavy.</p>
        <li data-md>
         <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve⑦">Resolve</a> <var>result</var> with <var>f</var>.</p>
@@ -4441,8 +4441,8 @@ for example by making the entry be a part of the PermissionDescriptor.<a href="#
     write-only handle. I.e. it is not possible to have or request write access without also having
     read access. There definitely are use cases for write-only handles (e.g. directory downloads),
     so we might have to reconsider this. <a href="https://github.com/wicg/native-file-system/issues/119">&lt;https://github.com/wicg/native-file-system/issues/119></a><a href="#issue-c3f1b283"> ↵ </a></div>
-   <div class="issue"> The reading and snapshotting behvario needs to be better specified in the <a data-link-type="biblio" href="#biblio-file-api">[FILE-API]</a> spec,
- for now this is kind of hand-wavy.<a href="#issue-bf239c75"> ↵ </a></div>
+   <div class="issue"> The reading and snapshotting behavior needs to be better specified in the <a data-link-type="biblio" href="#biblio-file-api">[FILE-API]</a> spec,
+ for now this is kind of hand-wavy.<a href="#issue-1fb8bcae"> ↵ </a></div>
    <div class="issue"> There has been some discussion around and desire for a "inPlace" mode for createWritable
 (where changes will be written to the actual underlying file as they are written to the writer, for
 example to support in-place modification of large files or things like databases). This is not
