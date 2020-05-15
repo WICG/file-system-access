@@ -383,7 +383,7 @@ The <dfn method for=FileSystemFileHandle>getFile()</dfn> method, when invoked, m
   1. Initialize the value of |f|'s {{File/lastModified}} attribute to |entry|'s [=file entry/modification timestamp=].
   1. Initialize the value of |f|'s {{Blob/type}} attribute to an implementation defined value, based on for example |entry|'s [=entry/name=] and/or its file extension.
 
-     Issue: The reading and snapshotting behvario needs to be better specified in the [[FILE-API]] spec,
+     Issue: The reading and snapshotting behavior needs to be better specified in the [[FILE-API]] spec,
      for now this is kind of hand-wavy.
   1. [=/Resolve=] |result| with |f|.
 1. Return |result|.
