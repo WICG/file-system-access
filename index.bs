@@ -1383,7 +1383,7 @@ The [=sandboxed file system root=]'s [=query permission steps=] are the followin
 
 <xmp class=idl>
 [SecureContext]
-partial interface Window {
+partial interface mixin WindowOrWorkerGlobalScope {
   Promise<FileSystemDirectoryHandle> getOriginPrivateDirectory();
 };
 </xmp>
@@ -1396,7 +1396,7 @@ Advisement: In Chrome this functionality is currently exposed as `FileSystemDire
 </div>
 
 <div algorithm>
-The <dfn method for=Window>getOriginPrivateDirectory()</dfn> method, when
+The <dfn method for=WindowOrWorkerGlobalScope>getOriginPrivateDirectory()</dfn> method, when
 invoked, must run these steps:
 
 1. Let |environment| be the [=current settings object=].
