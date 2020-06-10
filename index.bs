@@ -91,8 +91,8 @@ An [=/entry=]'s [=entry/parent=] is null if no such directory entry exists.
 Note: Two different [=/entries=] can represent the same file or directory on disk, in which
 case it is possible for both entries to have a different parent, or for one entry to have a
 parent while the other entry does not have a parent. Typically an entry does not have a parent
-if it was returned by {{chooseFileSystemEntries()}} or {{getOriginPrivateDirectory()}}, and an entry
-will have a parent in all other cases.
+if it was returned by {{getOriginPrivateDirectory()}} or one of the [=native file system entry points=],
+and an entry will have a parent in all other cases.
 
 [=/Entries=] can (but don't have to) be backed by files on the systems native file system,
 so it is possible for the [=binary data=], [=modification timestamp=],
@@ -144,7 +144,7 @@ Unless specified otherwise, these steps are:
 1. Assert: |parent| is not null.
 
    Note: [[#native-file-system-permissions]] overrides these steps for entries returned by
-   {{chooseFileSystemEntries()}}. Additionally [[#sandboxed-filesystem-concepts]] overrides
+   the [=native file system entry points=]. Additionally [[#sandboxed-filesystem-concepts]] overrides
    these steps for entries returned by {{getOriginPrivateDirectory()}}.
    All other entries always have a parent.
 
@@ -273,7 +273,7 @@ Issue(119): the currently described API here assumes a model where it is not pos
      the website will have to call {{FileSystemHandle/requestPermission()}} before any
      operations on the handle can be done. If this returns `"denied"` any operations will reject.
 
-     Usually handles returned by {{chooseFileSystemEntries}} will initially return `"granted"` for
+     Usually handles returned by the [=native file system entry points=] will initially return `"granted"` for
      their read permission state, however other than through the user revoking permission, a handle
      retrieved from IndexedDB is also likely to return `"prompt"`.
 
@@ -1086,6 +1086,38 @@ steps:
 
 # Accessing Native File System # {#native-filesystem}
 
+<xmp class=idl>
+dictionary FilePickerAcceptType {
+    USVString description;
+    record<USVString, sequence<USVString>> accept;
+};
+
+dictionary FilePickerOptions {
+    sequence<FilePickerAcceptType> types;
+    boolean excludeAcceptAllOption = false;
+};
+
+dictionary OpenFilePickerOptions : FilePickerOptions {
+    boolean multiple = false;
+};
+
+dictionary SaveFilePickerOptions : FilePickerOptions {
+};
+
+dictionary DirectoryPickerOptions {
+};
+
+[SecureContext]
+partial interface Window {
+    Promise<sequence<FileSystemFileHandle>> showFilePicker(optional OpenFilePickerOptions options = {});
+    Promise<FileSystemFileHandle> showSaveFilePicker(optional SaveFilePickerOptions options = {});
+    Promise<FileSystemDirectoryHandle> showDirectoryPicker(optional DirectoryPickerOptions options = {});
+};
+</xmp>
+
+The {{showFilePicker()}}, {{showSaveFilePicker()}} and {{showDirectoryPicker()}} methods
+are together known as the <dfn>native file system entry points</dfn>.
+
 ## Native File System Permissions ## {#native-file-system-permissions}
 
 <div algorithm>
@@ -1116,15 +1148,14 @@ and an [=environment settings object=] |settings| are:
 
 </div>
 
-The fact that the user picked the specific files returned by {{chooseFileSystemEntries()}} in a prompt
+The fact that the user picked the specific files returned by the [=native file system entry points=] in a prompt
 should be treated by the user agent as the user intending to grant read access to the website
-for the returned files. As such, at the time the promise returned by {{chooseFileSystemEntries()}}
+for the returned files. As such, at the time the promise returned by one of the [=native file system entry points=]
 resolves, the [=query permission steps=] for the returned entries
 given «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]»
 should return {{PermissionState/"granted"}}.
 
-Additionally for calls to {{chooseFileSystemEntries}} with
-{{ChooseFileSystemEntriesOptions/type}}={{ChooseFileSystemEntriesType/"save-file"}},
+Additionally for calls to {{showSaveFilePicker}
 the [=query permission steps=] for the returned entries
 given «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `true`&nbsp;]»
 should also return {{PermissionState/"granted"}}.
@@ -1158,85 +1189,8 @@ UAs <span class=allow-2119>should</span> be able to explore a variety of UI appr
 
 </div>
 
-## The {{Window/chooseFileSystemEntries()}} method ## {#api-choosefilesystementries}
-
-<xmp class=idl>
-enum ChooseFileSystemEntriesType { "open-file", "save-file", "open-directory" };
-
-dictionary ChooseFileSystemEntriesOptionsAccepts {
-  USVString description;
-  sequence<USVString> mimeTypes;
-  sequence<USVString> extensions;
-};
-
-dictionary ChooseFileSystemEntriesOptions {
-    ChooseFileSystemEntriesType type = "open-file";
-    boolean multiple = false;
-    sequence<ChooseFileSystemEntriesOptionsAccepts> accepts;
-    boolean excludeAcceptAllOption = false;
-};
-
-[SecureContext]
-partial interface Window {
-    Promise<(FileSystemHandle or sequence<FileSystemHandle>)>
-        chooseFileSystemEntries(optional ChooseFileSystemEntriesOptions options = {});
-};
-</xmp>
-
-<div class="note domintro">
-  : |result| = await window . {{Window/chooseFileSystemEntries()|chooseFileSystemEntries}}(|options|)
-  :: Shows a file picker dialog to the user and returns handles for the selected files or
-     directories.
-
-     The |options| argument sets options that influence the behavior of the shown file picker.
-
-     |options|.{{ChooseFileSystemEntriesOptions/type}} specifies the type of the entry the website
-     wants the user to pick.
-     When set to {{ChooseFileSystemEntriesType/"open-file"}} (the default), the user can select only
-     existing files.
-     When set to {{ChooseFileSystemEntriesType/"save-file"}} the dialog will additionally let the
-     user select files that don't yet exist, and if the user selects a file that does exist already,
-     its contents will be cleared before the handle is returned to the website.
-     Finally when set to {{ChooseFileSystemEntriesType/"open-directory"}}, the dialog will let the
-     user select directories instead of files.
-
-     If |options|.{{ChooseFileSystemEntriesOptions/multiple}} is false (or absent) the user can
-     only select a single file, and the |result| will be a single {{FileSystemHandle}}. If on the
-     other hand |options|.{{ChooseFileSystemEntriesOptions/multiple}} is true, the dialog can let
-     the user select more than one file, and |result| will be an array of {{FileSystemHandle}}
-     instances (even if the user did select a single file, if
-     {{ChooseFileSystemEntriesOptions/multiple}} is true this will be returned as a single-element
-     array).
-
-     Finally |options|.{{ChooseFileSystemEntriesOptions/accepts}} and
-     |options|.{{ChooseFileSystemEntriesOptions/excludeAcceptAllOption}} specify the types of files
-     the dialog will let the user select. Each entry in
-     |options|.{{ChooseFileSystemEntriesOptions/accepts}} describes a single type of file,
-     consisting of a {{ChooseFileSystemEntriesOptionsAccepts/description}}, zero or more
-     {{ChooseFileSystemEntriesOptionsAccepts/mimeTypes}} and zero or more
-     {{ChooseFileSystemEntriesOptionsAccepts/extensions}}. Options with no valid
-     {{ChooseFileSystemEntriesOptionsAccepts/mimeTypes}} and no
-     {{ChooseFileSystemEntriesOptionsAccepts/extensions}} are invalid and are ignored. If no
-     {{ChooseFileSystemEntriesOptionsAccepts/description}} is provided one will be generated.
-
-     If |options|.{{ChooseFileSystemEntriesOptions/excludeAcceptAllOption}} is true, or if no valid
-     entries exist in |options|.{{ChooseFileSystemEntriesOptions/accepts}}, an option matching all
-     files will be included in the file types the dialog lets the user select.
-</div>
-
-Issue(25): Should this return an array, even when multiple=false? And related questions,
-should this be one method that can return either files or directories depending on the
-passed in options, or separate file and directory methods?
-
 <div algorithm>
-The <dfn method for=Window>chooseFileSystemEntries(|options|)</dfn> method, when invoked, must run
-these steps:
-
-1. If |options|.{{ChooseFileSystemEntriesOptions/type}} is {{ChooseFileSystemEntriesType/"save-file"}}
-   and |options|.{{ChooseFileSystemEntriesOptions/multiple}} is true,
-   return [=a promise rejected with=] a {{TypeError}}.
-
-1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
+To verify that an |environment| <dfn>is allowed to show a file picker</dfn>, run these steps:
 
 1. If |environment|'s [=environment settings object/origin=] is an [=opaque origin=],
    return [=a promise rejected with=] a {{SecurityError}}.
@@ -1252,69 +1206,52 @@ these steps:
    Issue: Should this be {{SecurityError}} or {{NotAllowedError}}
    (and same question for the request permission steps checking for user activation)?
 
+</div>
+
+## The {{showFilePicker()}} method ## {#api-showfilepicker}
+
+<div class="note domintro">
+  : [ |handle| ] = await window . {{showFilePicker()}}
+  : [ |handle| ] = await window . {{showFilePicker()|showFilePicker}}({ {{OpenFilePickerOptions/multiple}}: false })
+  :: Shows a file picker that lets a user select a single existing file, returning a handle for
+    the selected file.
+
+  : handles = await window . {{showFilePicker()|showFilePicker}}({ {{OpenFilePickerOptions/multiple}}: true })
+  :: Shows a file picker that lets a user select multiple existing files, returning handles for
+    the selected files.
+
+    Additional options can be passed to {{showFilePicker()}} to indicate the types of files
+    the website wants the user to select. See [[#api-filpickeroptions-types]] for details.
+</div>
+
+<div algorithm>
+The <dfn method for=Window>showFilePicker(|options|)</dfn> method, when invoked, must run
+these steps:
+
+1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
+
+1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
+1. Let |global| be |environment|'s [=environment settings object/global object=].
+1. Verify that |environment| [=is allowed to show a file picker=].
+
 1. Let |p| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
 
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
-  1. If |options|.{{ChooseFileSystemEntriesOptions/type}} is {{ChooseFileSystemEntriesType/"open-directory"}}:
-    1. Display a prompt to the user requesting that the user specify some directories.
-       If |options|.{{ChooseFileSystemEntriesOptions/multiple}} is false, there must be no more than one directory selected;
-       otherwise any number may be selected.
+  1. Display a prompt to the user requesting that the user pick some files.
+     If |options|.{{OpenFilePickerOptions/multiple}} is false, there must be no more than one file selected;
+     otherwise any number may be selected.
 
-       Note: Chrome currently ignores the {{ChooseFileSystemEntriesOptions/multiple}} option
-       in combination with {{ChooseFileSystemEntriesType/"open-directory"}}. It always only
-       lets the user select a single directory.
-
-       Note: {{ChooseFileSystemEntriesType/"open-directory"}} also ignores the {{ChooseFileSystemEntriesOptions/accepts}}
-       and {{ChooseFileSystemEntriesOptions/excludeAcceptAllOption}} options.
-
-  1. Otherwise:
-    1. Let |accepts options| be a empty [=/list=] of [=pairs=].
-    1. [=list/For each=] |accept| of |options|.{{ChooseFileSystemEntriesOptions/accepts}}:
-      1. If |accept|.{{ChooseFileSystemEntriesOptionsAccepts/mimeTypes}} is empty and
-         |accept|.{{ChooseFileSystemEntriesOptionsAccepts/extensions}} is empty, [=continue=].
-      1. Let |description| be |accept|.{{ChooseFileSystemEntriesOptionsAccepts/description}}.
-      1. Let |filter| be the following steps, given a |filename| (a [=string=]), and a |type| (a [=MIME type=]).
-        1. [=list/For each=] |extension| of |accept|.{{ChooseFileSystemEntriesOptionsAccepts/extensions}}:
-          1. If |filename| ends with "." followed by |extension|, return `true`.
-        1. [=list/For each=] |typeString| of |accept|.{{ChooseFileSystemEntriesOptionsAccepts/mimeTypes}}:
-          1. Let |parsedType| be the result of [=parse a MIME type=] with |typeString|.
-          1. If |type| matches |parsedType|, return `true`.
-
-             Issue: The previous two steps are not correct. We do want to allow things like "image/*" as well,
-             which are not valid for the [=parse a MIME type=] algorithm. Also we need to specify what it
-             means for types to "match". So figure out a better way of writing this.
-
-             Issue(133): In general we need to better define how mime types are used here.
-        1. Return `false`.
-
-      1. If |description| is an empty string, set |description| to some user understandable string describing |filter|.
-      1. [=list/Append=] |description|/|filter| to |accepts options|.
-
-    1. If either |accepts options| is [=list/empty=], or |options|.{{ChooseFileSystemEntriesOptions/excludeAcceptAllOption}} is `false`:
-      1. Let |description| be a user understandable string describing "all files".
-      1. Let |filter| be an algorithm that returns `true`.
-      1. [=list/Append=] |description|/|filter| to |accepts options|.
-
-    1. Display a prompt to the user requesting that the user specify some files.
-       If |options|.{{ChooseFileSystemEntriesOptions/multiple}} is false, there must be no more than one file selected;
-       otherwise any number may be selected.
-
-       The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
-       Exactly how this is implemented, and what this prompt looks like is left up to the user agent.
-
-       If |options|.{{ChooseFileSystemEntriesOptions/type}} is {{ChooseFileSystemEntriesType/"save-file"}},
-       the displayed prompt should make it clear that the website wants to write to the selected file.
+     The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
+     Exactly how this is implemented, and what this prompt looks like is left up to the user agent.
 
   1. Wait for the user to have made their selection.
 
   1. If the user dismissed the prompt without making a selection,
      [=/reject=] |p| with an {{AbortError}} and abort.
 
-     Issue(84): Should this resolve with `undefined` instead?
-
-  1. Let |entries| be a [=/list=] of [=/entries=] representing the selected files or directories.
+  1. Let |entries| be a [=/list=] of [=file entries=] representing the selected files or directories.
   1. Let |result| be a empty [=/list=].
 
   1. [=list/For each=] |entry| of |entries|:
@@ -1327,14 +1264,260 @@ these steps:
     1. Set |entry|'s [=query permission steps=] to the [=native file system query permission steps=].
     1. Set |entry|'s [=request permission steps=] to the [=native file system request permission steps=].
 
-    1. If |options|.{{ChooseFileSystemEntriesOptions/type}} is {{ChooseFileSystemEntriesType/"open-directory"}}:
-      1. Add a new {{FileSystemDirectoryHandle}} associated with |entry| to |result|.
-    1. Otherwise:
-      1. Add a new {{FileSystemFileHandle}} associated with |entry| to |result|.
+    1. Add a new {{FileSystemFileHandle}} associated with |entry| to |result|.
 
-  1. If |options|.{{ChooseFileSystemEntriesOptions/type}} is {{ChooseFileSystemEntriesType/"save-file"}}:
-    1. [=Assert=]: |entries|'s [=list/size=] is 1.
-    1. Set |entries|[0]'s [=binary data=] to an empty [=byte sequence=].
+  1. Perform the <a spec=html>activation notification</a> steps in |global|'s [=Window/browsing context=].
+
+     Note: This lets a website immediately perform operations on the returned handles that
+     might require user activation, such as requesting more permissions.
+
+  1. [=/Resolve=] |p| with |result|.
+
+1. Return |p|.
+
+</div>
+
+## The {{Window/showSaveFilePicker()}} method ## {#api-showsavefilepicker}
+
+<div class="note domintro">
+  : |handle| = await window . {{showSaveFilePicker()|showSaveFilePicker}}( |options| )
+  :: Shows a file picker that lets a user select a single file, returning a handle for
+    the selected file. The selected file does not have to exist already. If the selected
+    file does not exist a new empty file is created before this method returns, otherwise
+    the existing file is cleared before this method returned.
+
+    Additional |options| can be passed to {{showSaveFilePicker()}} to indicate the types of files
+    the website wants the user to select. See [[#api-filpickeroptions-types]] for details.
+</div>
+
+<div algorithm>
+The <dfn method for=Window>showSaveFilePicker(|options|)</dfn> method, when invoked, must run
+these steps:
+
+1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
+
+1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
+1. Let |global| be |environment|'s [=environment settings object/global object=].
+1. Verify that |environment| [=is allowed to show a file picker=].
+
+1. Let |p| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+
+  1. Optionally, wait until any prior execution of this algorithm has terminated.
+
+  1. Display a prompt to the user requesting that the user pick exactly one file.
+
+     The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
+     Exactly how this is implemented, and what this prompt looks like is left up to the user agent.
+
+  1. Wait for the user to have made their selection.
+
+  1. If the user dismissed the prompt without making a selection,
+     [=/reject=] |p| with an {{AbortError}} and abort.
+
+  1. Let |entry| be a [=file entry=] representing the selected file.
+
+  1. If |entry| is deemed [=too sensitive or dangerous=] to be exposed to this website by the user agent:
+    1. Inform the user that the selected files or directories can't be exposed to this website.
+    1. At the discretion of the user agent,
+       either go back to the beginning of these [=in parallel=] steps,
+       or [=/reject=] |p| with an {{AbortError}} and abort.
+
+  1. Set |entry|'s [=query permission steps=] to the [=native file system query permission steps=].
+  1. Set |entry|'s [=request permission steps=] to the [=native file system request permission steps=].
+
+  1. Set |entry|'s [=binary data=] to an empty [=byte sequence=].
+
+  1. Set |result| to a new {{FileSystemFileHandle}} associated with |entry|.
+
+  1. Perform the <a spec=html>activation notification</a> steps in |global|'s [=Window/browsing context=].
+
+     Note: This lets a website immediately perform operations on the returned handles that
+     might require user activation, such as requesting more permissions.
+
+  1. [=/Resolve=] |p| with |result|.
+
+1. Return |p|.
+
+</div>
+
+## {{FilePickerOptions}}.{{FilePickerOptions/types}} ## {#api-filpickeroptions-types}
+
+<div class="note domintro">
+The {{showFilePicker(options)}} and {{showSaveFilePicker(options)}} methods accept a
+{{FilePickerOptions}} argument, which lets the website specify the types of files
+the file picker will let the user select.
+
+Each entry in {{FilePickerOptions/types}} specifies a single user selectable option
+for filtering the files displayed in the file picker.
+
+Each option consists of an <span class=allow-2119>optional</span> {{FilePickerAcceptType/description}}
+and a number of MIME types and extensions (specified as a mapping of
+MIME type to a list of extensions). If no description is provided one will be generated.
+
+In addition to complete MIME types, "*" can be used as the subtype of a MIME type to match
+for example all image formats with "image/*".
+
+Websites <span class=allow-2119>should</span> always provide both MIME types and file
+extensions for each option. On platforms that only use file extensions to describe file types
+user agents can match on the extensions, while on platforms that don't use extensions,
+user agents can match on MIME type.
+
+By default the file picker will also include an option to not apply any filter,
+letting the user select any file. Set {{excludeAcceptAllOption}} to `true` to not
+include this option in the file picker.
+
+For example , the following options will let the user pick one of three different filter.
+One for text files (either plain text or HTML), one for images, and a third one that doesn't apply
+any filter and lets the user select any file.
+
+<pre class=example id="filepickeroptions-example1" highlight=js>
+const options = {
+  <l>{{FilePickerOptions/types}}</l>: [
+    {
+      <l>{{FilePickerAcceptType/description}}</l>: 'Text Files',
+      <l>{{FilePickerAcceptType/accept}}</l>: {
+        'text/plain': ['txt', 'text'],
+        'text/html': ['html', 'htm']
+      }
+    },
+    {
+      <l>{{FilePickerAcceptType/description}}</l>: 'Images',
+      <l>{{FilePickerAcceptType/accept}}</l>: {
+        'image/*': ['png', 'gif', 'jpeg', 'jpg']
+      }
+    }
+  ],
+};
+</pre>
+
+On the other hand, the following example will only let the user select SVG files. The dialog
+will not show an option to not apply any filters.
+
+<pre class=example id="filepickeroptions-example2" highlight=js>
+const options = {
+  <l>{{FilePickerOptions/types}}</l>: [
+    {
+      <l>{{FilePickerAcceptType/accept}}</l>: {
+        'image/svg+xml': 'svg',
+      }
+    },
+  ],
+  <l>{{FilePickerOptions/excludeAcceptAllOption}}</l>: true
+};
+</pre>
+
+</div>
+
+<div algorithm>
+To <dfn>process accept types</dfn>, given {{FilePickerOptions}} |options|,
+run these steps:
+
+1. Let |accepts options| be a empty [=/list=] of [=pairs=].
+1. [=list/For each=] |type| of |options|.{{FilePickerOptions/types}}:
+  1. Let |description| be |type|.{{FilePickerAcceptType/description}}.
+  1. [=map/For each=] |type string| → |extensions| of |type|.{{FilePickerAcceptType/accept}}:
+    1. Let |parsedType| be the result of [=parse a MIME filter=] with |typeString|.
+    1. If |parsedType| is failure, throw a {{TypeError}}.
+
+  1. Let |filter| be the following steps, given a |filename| (a [=string=]), and a |type| (a [=MIME type=]):
+    1. [=map/For each=] |type string| → |extensions| of |type|.{{FilePickerAcceptType/accept}}:
+      1. Let |parsedType| be the result of [=parse a MIME filter=] with |typeString|.
+      1. If |parsedType|'s [=MIME type/subtype=] is "*":
+        1. If |parsedType|'s [=MIME type/type=] is "*", return `true`.
+        1. If |parsedType|'s [=MIME type/type=] is |type|'s [=MIME type/type=], return `true`.
+      1. |parsedType|'s [=MIME type/essence=] is |type|'s [=MIME type/essence=], return `true`.
+      1. [=list/For each=] |extension| of |extensions|:
+        1. If |filename| ends with "." followed by |extension|, return `true`.
+    1. Return `false`.
+
+  1. If |description| is an empty string,
+    set |description| to some user understandable string describing |filter|.
+
+  1. [=list/Append=] |description|/|filter| to |accepts options|.
+
+1. If either |accepts options| is [=list/empty=],
+  or |options|.{{FilePickerOptions/excludeAcceptAllOption}} is `false`:
+  1. Let |description| be a user understandable string describing "all files".
+    1. Let |filter| be an algorithm that returns `true`.
+    1. [=list/Append=] |description|/|filter| to |accepts options|.
+
+1. If |accepts options| is empty, throw a {{TypeError}}.
+
+1. Return |accepts options|.
+
+</div>
+
+<div algorithm>
+To <dfn>parse a MIME filter</dfn>, given a string |input|, run these steps:
+
+1. Remove any leading and trailing [=HTTP whitespace=] from |input|.
+1. Let |position| be a [=position variable=] for |input|,
+   initially pointing at the start of |input|.
+1. Let |type| be the result of [=collecting a sequence of code points=] that are
+   not U+002F (/) from |input|, given |position|.
+1. If |type| is the empty string or is not equal to "*" and does not solely contain
+   <l spec=mimesniff>[=HTTP token code points=]</l>, then return failure.
+1. If |position| is past the end of |input|, then return failure.
+1. Advance |position| by 1. (This skips past U+002F (/).).
+1. Let |subtype| be the result of [=collecting a sequence of code points=] that are
+   not U+003B (;) from |input| given |position|.
+1. Remove any trailing [=HTTP whitespace=] from |subtype|.
+1. If |subtype| is the empty string or is not equal to "*" and does not solely contain
+   <l spec=mimesniff>[=HTTP token code points=]</l>, then return failure.
+1. If |type| is "*" and |subtype| is not "*", then return failure.
+1. Let |mimeType| be a new [=MIME type record=]
+   whose [=MIME type/type=] is |type|, in [=ASCII lowercase=],
+   and [=MIME type/subtype=] is |subtype|, in [=ASCII lowercase=].
+1. If |position| is not past the end of |input|, then return failure.
+1. Return |mimeType|.
+
+Issue: This is a slightly modified version of [=parse a MIME type=].
+The difference being that this also accepts types like image/* and */*
+Figure out some way to unify these.
+
+</div>
+
+## The {{Window/showDirectoryPicker()}} method ## {#api-showdirectorypicker}
+
+<div class="note domintro">
+  : |handle| = await window . {{Window/showDirectoryPicker()}}
+  :: Shows a directory picker that lets the user select a single directory, returning a handle for
+    the selected directory.
+</div>
+
+<div algorithm>
+The <dfn method for=Window>showDirectoryPicker(<var ignore>options</var>)</dfn> method, when invoked, must run
+these steps:
+
+1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
+1. Let |global| be |environment|'s [=environment settings object/global object=].
+1. Verify that |environment| [=is allowed to show a file picker=].
+
+1. Let |p| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+
+  1. Optionally, wait until any prior execution of this algorithm has terminated.
+
+  1. Display a prompt to the user requesting that the user pick a directory.
+
+  1. Wait for the user to have made their selection.
+
+  1. If the user dismissed the prompt without making a selection,
+     [=/reject=] |p| with an {{AbortError}} and abort.
+
+  1. Let |entry| be a [=directory entry=] representing the selected directory.
+
+  1. If |entry| is deemed [=too sensitive or dangerous=] to be exposed to this website by the user agent:
+    1. Inform the user that the selected files or directories can't be exposed to this website.
+    1. At the discretion of the user agent,
+       either go back to the beginning of these [=in parallel=] steps,
+       or [=/reject=] |p| with an {{AbortError}} and abort.
+
+  1. Set |entry|'s [=query permission steps=] to the [=native file system query permission steps=].
+  1. Set |entry|'s [=request permission steps=] to the [=native file system request permission steps=].
+
+  1. Set |result| to a new {{FileSystemDirectoryHandle}} associated with |entry|.
 
   1. Perform the <a spec=html>activation notification</a> steps in |global|'s [=Window/browsing context=].
 
@@ -1344,11 +1527,7 @@ these steps:
      Issue(89): Rather than requiring the website to prompt separately for a writable directory,
      we should provide some kind of API to request a writable directory in one step.
 
-  1. If |options|.{{ChooseFileSystemEntriesOptions/multiple}} is true:
-    1. [=/Resolve=] |p| with |result|.
-  1. Otherwise:
-    1. [=Assert=]: |result|'s [=list/size=] is 1.
-    1. [=/Resolve=] |p| with |result|[0].
+  1. [=/Resolve=] |p| with |result|.
 
 1. Return |p|.
 
@@ -1473,7 +1652,7 @@ Clearing browsing data is expected to revoke all permissions as well.
 
 In third-party contexts (e.g. an iframe whose origin does not match that of the top-level frame)
 websites can't gain access to data they don't already have access to. This includes both getting
-access to new files or directories via the {{chooseFileSystemEntries}} API, as well as requesting
+access to new files or directories via the [=native file system entry points=], as well as requesting
 more permissions to existing handles via the {{requestPermission}} API.
 
 Handles can also only be post-messaged to same-origin destinations. Attempts to send a handle to
