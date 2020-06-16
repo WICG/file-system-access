@@ -1417,12 +1417,13 @@ run these steps:
 1. [=list/For each=] |type| of |options|.{{FilePickerOptions/types}}:
   1. Let |description| be |type|.{{FilePickerAcceptType/description}}.
   1. [=map/For each=] |type string| → |extensions| of |type|.{{FilePickerAcceptType/accept}}:
-    1. Let |parsedType| be the result of [=parse a MIME filter=] with |typeString|.
+    1. Let |parsedType| be the result of [=parse a MIME type=] with |typeString|.
     1. If |parsedType| is failure, throw a {{TypeError}}.
+    1. If |parsedType|'s [=MIME type/parameters=] are not empty, throw a {{TypeError}}.
 
   1. Let |filter| be the following steps, given a |filename| (a [=string=]), and a |type| (a [=MIME type=]):
     1. [=map/For each=] |type string| → |extensions| of |type|.{{FilePickerAcceptType/accept}}:
-      1. Let |parsedType| be the result of [=parse a MIME filter=] with |typeString|.
+    1. Let |parsedType| be the result of [=parse a MIME type=] with |typeString|.
       1. If |parsedType|'s [=MIME type/subtype=] is "*":
         1. If |parsedType|'s [=MIME type/type=] is "*", return `true`.
         1. If |parsedType|'s [=MIME type/type=] is |type|'s [=MIME type/type=], return `true`.
@@ -1445,36 +1446,6 @@ run these steps:
 1. If |accepts options| is empty, throw a {{TypeError}}.
 
 1. Return |accepts options|.
-
-</div>
-
-<div algorithm>
-To <dfn>parse a MIME filter</dfn>, given a string |input|, run these steps:
-
-1. Remove any leading and trailing [=HTTP whitespace=] from |input|.
-1. Let |position| be a [=position variable=] for |input|,
-   initially pointing at the start of |input|.
-1. Let |type| be the result of [=collecting a sequence of code points=] that are
-   not U+002F (/) from |input|, given |position|.
-1. If |type| is the empty string or is not equal to "*" and does not solely contain
-   <l spec=mimesniff>[=HTTP token code points=]</l>, then return failure.
-1. If |position| is past the end of |input|, then return failure.
-1. Advance |position| by 1. (This skips past U+002F (/).).
-1. Let |subtype| be the result of [=collecting a sequence of code points=] that are
-   not U+003B (;) from |input| given |position|.
-1. Remove any trailing [=HTTP whitespace=] from |subtype|.
-1. If |subtype| is the empty string or is not equal to "*" and does not solely contain
-   <l spec=mimesniff>[=HTTP token code points=]</l>, then return failure.
-1. If |type| is "*" and |subtype| is not "*", then return failure.
-1. Let |mimeType| be a new [=MIME type record=]
-   whose [=MIME type/type=] is |type|, in [=ASCII lowercase=],
-   and [=MIME type/subtype=] is |subtype|, in [=ASCII lowercase=].
-1. If |position| is not past the end of |input|, then return failure.
-1. Return |mimeType|.
-
-Issue: This is a slightly modified version of [=parse a MIME type=].
-The difference being that this also accepts types like image/* and */*
-Figure out some way to unify these.
 
 </div>
 
