@@ -1118,6 +1118,9 @@ partial interface Window {
 The {{showOpenFilePicker()}}, {{showSaveFilePicker()}} and {{showDirectoryPicker()}} methods
 are together known as the <dfn>native file system handle factories</dfn>.
 
+Advisement: In Chrome this is currently implemented as a `chooseFileSystemEntries` method.
+Starting in Chrome 85 these new methods will also become available.
+
 ## Native File System Permissions ## {#native-file-system-permissions}
 
 <div algorithm>
