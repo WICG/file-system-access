@@ -94,18 +94,9 @@ this new API might integrate with drag&drop and `<input type=file>`.
 
 ```javascript
 // Show a file picker to open a file.
-const file_ref = await self.chooseFileSystemEntries({
-    type: 'openFile',
-    multiple: false, // If true, returns an array rather than a single handle.
-
-    // If true, the resulting file reference won't be writable. Note that there
-    // is no guarantee that the resulting file reference will be writable when
-    // readOnly is set to false. Both filesystem level permissions as well as
-    // browser UI/user intent might result in a file reference that isn't usable
-    // for writing, even if the website asked for a writable reference.
-    readOnly: false,
-
-    accepts: [{description: 'Images', extensions: ['jpg', 'gif', 'png']}],
+const [file_ref] = await self.showOpenFilePicker({
+    multiple: false,
+    types: [{description: 'Images', accept: {'image/*': ['jpg', 'gif', 'png']}}],
     suggestedStartLocation: 'pictures-library'
 });
 if (!file_ref) {
@@ -161,7 +152,7 @@ request.onerror = function(e) { console.log(e); }
 request.onsuccess = function(e) { db = e.target.result; }
 
 // Show file picker UI.
-const file_ref = await self.chooseFileSystemEntries();
+const [file_ref] = await self.showOpenFilePicker();
 
 if (file_ref) {
     // Save the reference to open the file later.
@@ -224,7 +215,7 @@ navigator.serviceWorker.addEventListener('message', e => {
 Also possible to get access to an entire directory.
 
 ```javascript
-const dir_ref = await self.chooseFileSystemEntries({type: 'openDirectory'});
+const dir_ref = await self.showDirectoryPicker();
 if (!dir_ref) {
     // User cancelled, or otherwise failed to open a directory.
     return;
@@ -265,11 +256,11 @@ file or saving to a new file.
 
 ```javascript
 // Assume we at some point got a valid directory handle.
-const dir_ref = await self.chooseFileSystemEntries({type: 'openDirectory'});
+const dir_ref = await self.showDirectoryPicker();
 if (!dir_ref) return;
 
 // Now get a file reference by showing another file picker:
-const file_ref = await self.chooseFileSystemEntries({type: 'openFile'});
+const file_ref = await self.showOpenFilePicker();
 if (!file_ref) {
     // User cancelled, or otherwise failed to open a file.
     return;
