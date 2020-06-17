@@ -1109,13 +1109,13 @@ dictionary DirectoryPickerOptions {
 
 [SecureContext]
 partial interface Window {
-    Promise<sequence<FileSystemFileHandle>> showFilePicker(optional OpenFilePickerOptions options = {});
+    Promise<sequence<FileSystemFileHandle>> showOpenFilePicker(optional OpenFilePickerOptions options = {});
     Promise<FileSystemFileHandle> showSaveFilePicker(optional SaveFilePickerOptions options = {});
     Promise<FileSystemDirectoryHandle> showDirectoryPicker(optional DirectoryPickerOptions options = {});
 };
 </xmp>
 
-The {{showFilePicker()}}, {{showSaveFilePicker()}} and {{showDirectoryPicker()}} methods
+The {{showOpenFilePicker()}}, {{showSaveFilePicker()}} and {{showDirectoryPicker()}} methods
 are together known as the <dfn>native file system entry points</dfn>.
 
 ## Native File System Permissions ## {#native-file-system-permissions}
@@ -1208,24 +1208,24 @@ To verify that an |environment| <dfn>is allowed to show a file picker</dfn>, run
 
 </div>
 
-## The {{showFilePicker()}} method ## {#api-showfilepicker}
+## The {{showOpenFilePicker()}} method ## {#api-showopenfilepicker}
 
 <div class="note domintro">
-  : [ |handle| ] = await window . {{showFilePicker()}}
-  : [ |handle| ] = await window . {{showFilePicker()|showFilePicker}}({ {{OpenFilePickerOptions/multiple}}: false })
+  : [ |handle| ] = await window . {{showOpenFilePicker()}}
+  : [ |handle| ] = await window . {{showOpenFilePicker()|showOpenFilePicker}}({ {{OpenFilePickerOptions/multiple}}: false })
   :: Shows a file picker that lets a user select a single existing file, returning a handle for
     the selected file.
 
-  : handles = await window . {{showFilePicker()|showFilePicker}}({ {{OpenFilePickerOptions/multiple}}: true })
+  : handles = await window . {{showOpenFilePicker()|showOpenFilePicker}}({ {{OpenFilePickerOptions/multiple}}: true })
   :: Shows a file picker that lets a user select multiple existing files, returning handles for
     the selected files.
 
-    Additional options can be passed to {{showFilePicker()}} to indicate the types of files
+    Additional options can be passed to {{showOpenFilePicker()}} to indicate the types of files
     the website wants the user to select. See [[#api-filpickeroptions-types]] for details.
 </div>
 
 <div algorithm>
-The <dfn method for=Window>showFilePicker(|options|)</dfn> method, when invoked, must run
+The <dfn method for=Window>showOpenFilePicker(|options|)</dfn> method, when invoked, must run
 these steps:
 
 1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
@@ -1344,7 +1344,7 @@ these steps:
 ## {{FilePickerOptions}}.{{FilePickerOptions/types}} ## {#api-filpickeroptions-types}
 
 <div class="note domintro">
-The {{showFilePicker(options)}} and {{showSaveFilePicker(options)}} methods accept a
+The {{showOpenFilePicker(options)}} and {{showSaveFilePicker(options)}} methods accept a
 {{FilePickerOptions}} argument, which lets the website specify the types of files
 the file picker will let the user select.
 
