@@ -1175,7 +1175,7 @@ Possible extra rowspan handling
 		   1. When table < content column, centers table in column.
 		   2. When content < table < available, left-aligns.
 		   3. When table > available, fills available + scroll bar.
-		*/ 
+		*/
 		display: grid;
 		grid-template-columns: minmax(0, 50em);
 	}
@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version e05d91be, updated Tue May 26 09:03:21 2020 -0700" name="generator">
+  <meta content="Bikeshed version 76c0936a, updated Fri Jun 12 19:44:53 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="9f209a416dded701c0dad8ae388941ea05b81f06" name="document-revision">
+  <meta content="b1b9ce234e9348cde544608753d8eafd06adaa53" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1501,7 +1501,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-05-28">28 May 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-06-17">17 June 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1579,7 +1579,10 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <a href="#native-filesystem"><span class="secno">3</span> <span class="content">Accessing Native File System</span></a>
      <ol class="toc">
       <li><a href="#native-file-system-permissions"><span class="secno">3.1</span> <span class="content">Native File System Permissions</span></a>
-      <li><a href="#api-choosefilesystementries"><span class="secno">3.2</span> <span class="content">The <code class="idl"><span>chooseFileSystemEntries()</span></code> method</span></a>
+      <li><a href="#api-showopenfilepicker"><span class="secno">3.2</span> <span class="content">The <code class="idl"><span>showOpenFilePicker()</span></code> method</span></a>
+      <li><a href="#api-showsavefilepicker"><span class="secno">3.3</span> <span class="content">The <code class="idl"><span>showSaveFilePicker()</span></code> method</span></a>
+      <li><a href="#api-filpickeroptions-types"><span class="secno">3.4</span> <span class="content"><code class="idl"><span>FilePickerOptions</span></code>.<code class="idl"><span>types</span></code></span></a>
+      <li><a href="#api-showdirectorypicker"><span class="secno">3.5</span> <span class="content">The <code class="idl"><span>showDirectoryPicker()</span></code> method</span></a>
      </ol>
     <li>
      <a href="#sandboxed-filesystem"><span class="secno">4</span> <span class="content">Accessing the Sandboxed File System</span></a>
@@ -1646,8 +1649,8 @@ An <a data-link-type="dfn" href="#entry" id="ref-for-entry③">entry</a>'s <a da
    <p class="note" role="note"><span>Note:</span> Two different <a data-link-type="dfn" href="#entry" id="ref-for-entry④">entries</a> can represent the same file or directory on disk, in which
 case it is possible for both entries to have a different parent, or for one entry to have a
 parent while the other entry does not have a parent. Typically an entry does not have a parent
-if it was returned by <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries">chooseFileSystemEntries()</a></code> or <code class="idl"><a data-link-type="idl" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory①">getOriginPrivateDirectory()</a></code>, and an entry
-will have a parent in all other cases.</p>
+if it was returned by <code class="idl"><a data-link-type="idl" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory①">getOriginPrivateDirectory()</a></code> or one of the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories">native file system handle factories</a>,
+and an entry will have a parent in all other cases.</p>
    <p><a data-link-type="dfn" href="#entry" id="ref-for-entry⑤">Entries</a> can (but don’t have to) be backed by files on the systems native file system,
 so it is possible for the <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data">binary data</a>, <a data-link-type="dfn" href="#file-entry-modification-timestamp" id="ref-for-file-entry-modification-timestamp">modification timestamp</a>,
 and <a data-link-type="dfn" href="#directory-entry-children" id="ref-for-directory-entry-children①">children</a> of entries to be modified by applications outside of this specification.
@@ -1715,7 +1718,8 @@ Unless specified otherwise, these steps are:
       <p>Let <var>parent</var> be <var>entry</var>’s <a data-link-type="dfn" href="#entry-parent" id="ref-for-entry-parent①">parent</a>.</p>
      <li data-md>
       <p class="assertion">Assert: <var>parent</var> is not null.</p>
-      <p class="note" role="note"><span>Note:</span> <a href="#native-file-system-permissions">§ 3.1 Native File System Permissions</a> overrides these steps for entries returned by <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries①">chooseFileSystemEntries()</a></code>. Additionally <a href="#sandboxed-filesystem-concepts">§ 4.1 Sandboxed File System Concepts</a> overrides
+      <p class="note" role="note"><span>Note:</span> <a href="#native-file-system-permissions">§ 3.1 Native File System Permissions</a> overrides these steps for entries returned by
+ the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories①">native file system handle factories</a>. Additionally <a href="#sandboxed-filesystem-concepts">§ 4.1 Sandboxed File System Concepts</a> overrides
  these steps for entries returned by <code class="idl"><a data-link-type="idl" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory②">getOriginPrivateDirectory()</a></code>.
  All other entries always have a parent.</p>
      <li data-md>
@@ -1839,7 +1843,7 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
      <dd data-md>
       <p>Queries the current state of the read permission of this handle. If this returns <code>"prompt"</code> the website will have to call <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission①">requestPermission()</a></code> before any
  operations on the handle can be done. If this returns <code>"denied"</code> any operations will reject.</p>
-      <p>Usually handles returned by <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries②">chooseFileSystemEntries</a></code> will initially return <code>"granted"</code> for
+      <p>Usually handles returned by the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories②">native file system handle factories</a> will initially return <code>"granted"</code> for
  their read permission state, however other than through the user revoking permission, a handle
  retrieved from IndexedDB is also likely to return <code>"prompt"</code>.</p>
      <dt data-md><var>status</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission④">queryPermission</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①">writable</a></code> = true })
@@ -2487,7 +2491,7 @@ when invoked, must return the result of <a data-link-type="dfn" href="#entry-res
 <c- b>typedef</c-> (<a class="n" data-link-type="idl-name" href="https://heycam.github.io/webidl/#BufferSource" id="ref-for-BufferSource①"><c- n>BufferSource</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-Blob" id="ref-for-dfn-Blob①"><c- n>Blob</c-></a> <c- b>or</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑦"><c- b>USVString</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="#dictdef-writeparams" id="ref-for-dictdef-writeparams"><c- n>WriteParams</c-></a>) <dfn class="dfn-paneled idl-code" data-dfn-type="typedef" data-export id="typedefdef-filesystemwritechunktype"><code><c- g>FileSystemWriteChunkType</c-></code></dfn>;
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed③"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->), <a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext③"><c- g>SecureContext</c-></a>]
-<c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemwritablefilestream"><code><c- g>FileSystemWritableFileStream</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#ws-class" id="ref-for-ws-class"><c- n>WritableStream</c-></a> {
+<c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemwritablefilestream"><code><c- g>FileSystemWritableFileStream</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#writablestream" id="ref-for-writablestream"><c- n>WritableStream</c-></a> {
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write"><c- g>write</c-></a>(<a class="n" data-link-type="idl-name" href="#typedefdef-filesystemwritechunktype" id="ref-for-typedefdef-filesystemwritechunktype"><c- n>FileSystemWriteChunkType</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemWritableFileStream/write(data)" data-dfn-type="argument" data-export id="dom-filesystemwritablefilestream-write-data-data"><code><c- g>data</c-></code><a class="self-link" href="#dom-filesystemwritablefilestream-write-data-data"></a></dfn>);
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-seek" id="ref-for-dom-filesystemwritablefilestream-seek"><c- g>seek</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long②"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemWritableFileStream/seek(position)" data-dfn-type="argument" data-export id="dom-filesystemwritablefilestream-seek-position-position"><code><c- g>position</c-></code><a class="self-link" href="#dom-filesystemwritablefilestream-seek-position-position"></a></dfn>);
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-truncate" id="ref-for-dom-filesystemwritablefilestream-truncate"><c- g>truncate</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long③"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemWritableFileStream/truncate(size)" data-dfn-type="argument" data-export id="dom-filesystemwritablefilestream-truncate-size-size"><code><c- g>size</c-></code><a class="self-link" href="#dom-filesystemwritablefilestream-truncate-size-size"></a></dfn>);
@@ -2502,7 +2506,7 @@ algorithms, so even though operations on it seem sync, implementations can imple
    <p>A <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑤">FileSystemWritableFileStream</a></code> has an associated <dfn class="dfn-paneled" data-dfn-for="FileSystemWritableFileStream" data-dfn-type="dfn" data-noexport id="filesystemwritablefilestream-seekoffset">[[seekOffset]]</dfn> (a number).
 It is initially 0.</p>
    <div class="note domintro" role="note">
-     A <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑥">FileSystemWritableFileStream</a></code> object is a <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#ws-class" id="ref-for-ws-class①">WritableStream</a></code> object with additional
+     A <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑥">FileSystemWritableFileStream</a></code> object is a <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#writablestream" id="ref-for-writablestream①">WritableStream</a></code> object with additional
 convenience methods, which operates on a single file on disk. 
     <p>Upon creation, an underlying sink will have been created and the stream will be usable.
 All operations executed on the stream are queuable and producers will be able to respond to backpressure.</p>
@@ -2510,7 +2514,7 @@ All operations executed on the stream are queuable and producers will be able to
     <p>The <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑦">FileSystemWritableFileStream</a></code> has a file position cursor initialized at byte offset 0 from the top of the file.
 When using <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write①">write()</a></code> or by using WritableStream capabilities through the <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#default-writer-write" id="ref-for-default-writer-write①">WritableStreamDefaultWriter’s write()</a></code> method, this position will be advanced based on the number of bytes written through the stream object.</p>
     <p>Similarly, when piping a <code class="idl"><a data-link-type="idl" href="https://fetch.spec.whatwg.org/#concept-readablestream" id="ref-for-concept-readablestream">ReadableStream</a></code> into a <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑧">FileSystemWritableFileStream</a></code> object, this position is updated with the number of bytes that passed through the stream.</p>
-    <p><code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#ws-get-writer" id="ref-for-ws-get-writer">getWriter()</a></code> returns an instance of <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#default-writer-class" id="ref-for-default-writer-class">WritableStreamDefaultWriter</a></code>.</p>
+    <p><code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#ws-get-writer" id="ref-for-ws-get-writer">getWriter()</a></code> returns an instance of <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#writablestreamdefaultwriter" id="ref-for-writablestreamdefaultwriter">WritableStreamDefaultWriter</a></code>.</p>
    </div>
    <div class="algorithm" data-algorithm="create a new FileSystemWritableFileStream">
      To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="create-a-new-filesystemwritablefilestream">create a new FileSystemWritableFileStream</dfn> given a <a data-link-type="dfn" href="#file" id="ref-for-file⑧">file entry</a> <var>file</var> in a <a data-link-type="dfn" href="https://tc39.github.io/ecma262/#realm" id="ref-for-realm">Realm</a> <var>realm</var>, perform the following steps: 
@@ -2522,7 +2526,7 @@ When using <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritab
      <li data-md>
       <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file">[[file]]</a> to <var>file</var>.</p>
      <li data-md>
-      <p>Let <var>controller</var> be a new <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#ws-default-controller-class" id="ref-for-ws-default-controller-class">WritableStreamDefaultController</a></code>.</p>
+      <p>Let <var>controller</var> be a new <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#writablestreamdefaultcontroller" id="ref-for-writablestreamdefaultcontroller">WritableStreamDefaultController</a></code>.</p>
      <li data-md>
       <p>Let <var>startAlgorithm</var> be an algorithm that returns <code>undefined</code>.</p>
      <li data-md>
@@ -2785,6 +2789,37 @@ steps:
     </ol>
    </div>
    <h2 class="heading settled" data-level="3" id="native-filesystem"><span class="secno">3. </span><span class="content">Accessing Native File System</span><a class="self-link" href="#native-filesystem"></a></h2>
+<pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filepickeraccepttype"><code><c- g>FilePickerAcceptType</c-></code></dfn> {
+    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑨"><c- b>USVString</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FilePickerAcceptType" data-dfn-type="dict-member" data-export data-type="USVString " id="dom-filepickeraccepttype-description"><code><c- g>description</c-></code></dfn>;
+    <c- b>record</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①⓪"><c- b>USVString</c-></a>, <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①①"><c- b>USVString</c-></a>>> <dfn class="dfn-paneled idl-code" data-dfn-for="FilePickerAcceptType" data-dfn-type="dict-member" data-export data-type="record<USVString, sequence<USVString>> " id="dom-filepickeraccepttype-accept"><code><c- g>accept</c-></code></dfn>;
+};
+
+<c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filepickeroptions"><code><c- g>FilePickerOptions</c-></code></dfn> {
+    <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-filepickeraccepttype" id="ref-for-dictdef-filepickeraccepttype"><c- n>FilePickerAcceptType</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FilePickerOptions" data-dfn-type="dict-member" data-export data-type="sequence<FilePickerAcceptType> " id="dom-filepickeroptions-types"><code><c- g>types</c-></code></dfn>;
+    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑧"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FilePickerOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filepickeroptions-excludeacceptalloption"><code><c- g>excludeAcceptAllOption</c-></code></dfn> = <c- b>false</c->;
+};
+
+<c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-openfilepickeroptions"><code><c- g>OpenFilePickerOptions</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="#dictdef-filepickeroptions" id="ref-for-dictdef-filepickeroptions"><c- n>FilePickerOptions</c-></a> {
+    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑨"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="OpenFilePickerOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-openfilepickeroptions-multiple"><code><c- g>multiple</c-></code></dfn> = <c- b>false</c->;
+};
+
+<c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-savefilepickeroptions"><code><c- g>SaveFilePickerOptions</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="#dictdef-filepickeroptions" id="ref-for-dictdef-filepickeroptions①"><c- n>FilePickerOptions</c-></a> {
+};
+
+<c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-directorypickeroptions"><code><c- g>DirectoryPickerOptions</c-></code></dfn> {
+};
+
+[<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext④"><c- g>SecureContext</c-></a>]
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/window-object.html#window" id="ref-for-window"><c- g>Window</c-></a> {
+    <c- b>Promise</c->&lt;<c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle⑧"><c- n>FileSystemFileHandle</c-></a>>> <a class="idl-code" data-link-type="method" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker"><c- g>showOpenFilePicker</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-openfilepickeroptions" id="ref-for-dictdef-openfilepickeroptions"><c- n>OpenFilePickerOptions</c-></a> <dfn class="idl-code" data-dfn-for="Window/showOpenFilePicker(options), Window/showOpenFilePicker()" data-dfn-type="argument" data-export id="dom-window-showopenfilepicker-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-window-showopenfilepicker-options-options"></a></dfn> = {});
+    <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle⑨"><c- n>FileSystemFileHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker"><c- g>showSaveFilePicker</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-savefilepickeroptions" id="ref-for-dictdef-savefilepickeroptions"><c- n>SaveFilePickerOptions</c-></a> <dfn class="idl-code" data-dfn-for="Window/showSaveFilePicker(options), Window/showSaveFilePicker()" data-dfn-type="argument" data-export id="dom-window-showsavefilepicker-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-window-showsavefilepicker-options-options"></a></dfn> = {});
+    <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①⓪"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-window-showdirectorypicker" id="ref-for-dom-window-showdirectorypicker"><c- g>showDirectoryPicker</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-directorypickeroptions" id="ref-for-dictdef-directorypickeroptions"><c- n>DirectoryPickerOptions</c-></a> <dfn class="idl-code" data-dfn-for="Window/showDirectoryPicker(options), Window/showDirectoryPicker()" data-dfn-type="argument" data-export id="dom-window-showdirectorypicker-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-window-showdirectorypicker-options-options"></a></dfn> = {});
+};
+</pre>
+   <p>The <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker①">showOpenFilePicker()</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker①">showSaveFilePicker()</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-window-showdirectorypicker" id="ref-for-dom-window-showdirectorypicker①">showDirectoryPicker()</a></code> methods
+are together known as the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="native-file-system-handle-factories">native file system handle factories</dfn>.</p>
+   <p><strong class="advisement"> In Chrome this is currently implemented as a <code>chooseFileSystemEntries</code> method.
+Starting in Chrome 85 these new methods will also become available.</strong></p>
    <h3 class="heading settled" data-level="3.1" id="native-file-system-permissions"><span class="secno">3.1. </span><span class="content">Native File System Permissions</span><a class="self-link" href="#native-file-system-permissions"></a></h3>
    <div class="algorithm" data-algorithm="native file system query permission steps">
      The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="native-file-system-query-permission-steps">native file system query permission steps</dfn> for an <a data-link-type="dfn" href="#entry" id="ref-for-entry①⑤">entry</a> <var>entry</var> given a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor④">FileSystemHandlePermissionDescriptor</a></code> <var>descriptor</var> and an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object" id="ref-for-environment-settings-object②">environment settings object</a> <var>settings</var> are: 
@@ -2816,12 +2851,12 @@ steps:
       </dl>
     </ol>
    </div>
-   <p>The fact that the user picked the specific files returned by <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries③">chooseFileSystemEntries()</a></code> in a prompt
+   <p>The fact that the user picked the specific files returned by the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories③">native file system handle factories</a> in a prompt
 should be treated by the user agent as the user intending to grant read access to the website
-for the returned files. As such, at the time the promise returned by <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries④">chooseFileSystemEntries()</a></code> resolves, the <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①⑤">query permission steps</a> for the returned entries
+for the returned files. As such, at the time the promise returned by one of the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories④">native file system handle factories</a> resolves, the <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①⑤">query permission steps</a> for the returned entries
 given «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable②①">writable</a></code>" → <code>false</code> ]»
 should return <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①①">"granted"</a></code>.</p>
-   <p>Additionally for calls to <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries⑤">chooseFileSystemEntries</a></code> with <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-type" id="ref-for-dom-choosefilesystementriesoptions-type">type</a></code>=<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-save-file" id="ref-for-dom-choosefilesystementriestype-save-file">"save-file"</a></code>,
+   <p>Additionally for calls to {{showSaveFilePicker}
 the <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①⑥">query permission steps</a> for the returned entries
 given «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable②②">writable</a></code>" → <code>true</code> ]»
 should also return <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①②">"granted"</a></code>.</p>
@@ -2835,13 +2870,13 @@ should also return <code class="idl"><a data-link-type="idl" href="https://w3c.g
      <li data-md>
       <p>Let <var>global</var> be <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global" id="ref-for-concept-settings-object-global">global object</a>.</p>
      <li data-md>
-      <p>If <var>global</var> is not a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/window-object.html#window" id="ref-for-window">Window</a></code>,
+      <p>If <var>global</var> is not a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/window-object.html#window" id="ref-for-window①">Window</a></code>,
  return.</p>
       <p class="issue" id="issue-d65b4224"><a class="self-link" href="#issue-d65b4224"></a> Should this throw instead of returning silently?</p>
      <li data-md>
       <p>If <var>global</var> does not have <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation">transient activation</a>, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror⑨">NotAllowedError</a></code>.</p>
      <li data-md>
-      <p>If <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin②">origin</a> is not <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#same-origin" id="ref-for-same-origin①">same origin</a> with <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#top-level-origin" id="ref-for-top-level-origin">top-level origin</a>,
+      <p>If <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin②">origin</a> is not <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#same-origin" id="ref-for-same-origin①">same origin</a> with <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin" id="ref-for-concept-environment-top-level-origin">top-level origin</a>,
  throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror①⓪">NotAllowedError</a></code>.</p>
      <li data-md>
       <p>Display a prompt to the user requesting access as described by <var>descriptor</var> to <var>entry</var>.</p>
@@ -2855,80 +2890,50 @@ should also return <code class="idl"><a data-link-type="idl" href="https://w3c.g
     <p class="note" role="note"><span>Note:</span> This is intentionally vague about the details of the permission UI and how the UA infers user intent.
 UAs <span class="allow-2119">should</span> be able to explore a variety of UI approaches within this framework.</p>
    </div>
-   <h3 class="heading settled" data-level="3.2" id="api-choosefilesystementries"><span class="secno">3.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries⑥">chooseFileSystemEntries()</a></code> method</span><a class="self-link" href="#api-choosefilesystementries"></a></h3>
-<pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-choosefilesystementriestype"><code><c- g>ChooseFileSystemEntriesType</c-></code></dfn> { <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-open-file"><code><c- s>"open-file"</c-></code></dfn>, <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-save-file"><code><c- s>"save-file"</c-></code></dfn>, <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesType" data-dfn-type="enum-value" data-export id="dom-choosefilesystementriestype-open-directory"><code><c- s>"open-directory"</c-></code></dfn> };
-
-<c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-choosefilesystementriesoptionsaccepts"><code><c- g>ChooseFileSystemEntriesOptionsAccepts</c-></code></dfn> {
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑨"><c- b>USVString</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="USVString " id="dom-choosefilesystementriesoptionsaccepts-description"><code><c- g>description</c-></code></dfn>;
-  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①⓪"><c- b>USVString</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="sequence<USVString> " id="dom-choosefilesystementriesoptionsaccepts-mimetypes"><code><c- g>mimeTypes</c-></code></dfn>;
-  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①①"><c- b>USVString</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptionsAccepts" data-dfn-type="dict-member" data-export data-type="sequence<USVString> " id="dom-choosefilesystementriesoptionsaccepts-extensions"><code><c- g>extensions</c-></code></dfn>;
-};
-
-<c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-choosefilesystementriesoptions"><code><c- g>ChooseFileSystemEntriesOptions</c-></code></dfn> {
-    <a class="n" data-link-type="idl-name" href="#enumdef-choosefilesystementriestype" id="ref-for-enumdef-choosefilesystementriestype"><c- n>ChooseFileSystemEntriesType</c-></a> <dfn class="dfn-paneled idl-code" data-default="&quot;open-file&quot;" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="ChooseFileSystemEntriesType " id="dom-choosefilesystementriesoptions-type"><code><c- g>type</c-></code></dfn> = "open-file";
-    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑧"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-choosefilesystementriesoptions-multiple"><code><c- g>multiple</c-></code></dfn> = <c- b>false</c->;
-    <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptionsaccepts" id="ref-for-dictdef-choosefilesystementriesoptionsaccepts"><c- n>ChooseFileSystemEntriesOptionsAccepts</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="sequence<ChooseFileSystemEntriesOptionsAccepts> " id="dom-choosefilesystementriesoptions-accepts"><code><c- g>accepts</c-></code></dfn>;
-    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑨"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="ChooseFileSystemEntriesOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-choosefilesystementriesoptions-excludeacceptalloption"><code><c- g>excludeAcceptAllOption</c-></code></dfn> = <c- b>false</c->;
-};
-
-[<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext④"><c- g>SecureContext</c-></a>]
-<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/window-object.html#window" id="ref-for-window①"><c- g>Window</c-></a> {
-    <c- b>Promise</c->&lt;(<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①②"><c- n>FileSystemHandle</c-></a> <c- b>or</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①③"><c- n>FileSystemHandle</c-></a>>)>
-        <a class="idl-code" data-link-type="method" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries⑦"><c- g>chooseFileSystemEntries</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptions" id="ref-for-dictdef-choosefilesystementriesoptions"><c- n>ChooseFileSystemEntriesOptions</c-></a> <dfn class="idl-code" data-dfn-for="Window/chooseFileSystemEntries(options), Window/chooseFileSystemEntries()" data-dfn-type="argument" data-export id="dom-window-choosefilesystementries-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-window-choosefilesystementries-options-options"></a></dfn> = {});
-};
-</pre>
-   <div class="note domintro" role="note">
-    <dl>
-     <dt data-md><var>result</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries⑧">chooseFileSystemEntries</a></code>(<var>options</var>)
-     <dd data-md>
-      <p>Shows a file picker dialog to the user and returns handles for the selected files or
- directories.</p>
-      <p>The <var>options</var> argument sets options that influence the behavior of the shown file picker.</p>
-      <p><var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-type" id="ref-for-dom-choosefilesystementriesoptions-type①">type</a></code> specifies the type of the entry the website
- wants the user to pick.
- When set to <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-open-file" id="ref-for-dom-choosefilesystementriestype-open-file">"open-file"</a></code> (the default), the user can select only
- existing files.
- When set to <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-save-file" id="ref-for-dom-choosefilesystementriestype-save-file①">"save-file"</a></code> the dialog will additionally let the
- user select files that don’t yet exist, and if the user selects a file that does exist already,
- its contents will be cleared before the handle is returned to the website.
- Finally when set to <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-open-directory" id="ref-for-dom-choosefilesystementriestype-open-directory">"open-directory"</a></code>, the dialog will let the
- user select directories instead of files.</p>
-      <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-multiple" id="ref-for-dom-choosefilesystementriesoptions-multiple">multiple</a></code> is false (or absent) the user can
- only select a single file, and the <var>result</var> will be a single <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle①④">FileSystemHandle</a></code>. If on the
- other hand <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-multiple" id="ref-for-dom-choosefilesystementriesoptions-multiple①">multiple</a></code> is true, the dialog can let
- the user select more than one file, and <var>result</var> will be an array of <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle①⑤">FileSystemHandle</a></code> instances (even if the user did select a single file, if <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-multiple" id="ref-for-dom-choosefilesystementriesoptions-multiple②">multiple</a></code> is true this will be returned as a single-element
- array).</p>
-      <p>Finally <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-accepts" id="ref-for-dom-choosefilesystementriesoptions-accepts">accepts</a></code> and <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-excludeacceptalloption" id="ref-for-dom-choosefilesystementriesoptions-excludeacceptalloption">excludeAcceptAllOption</a></code> specify the types of files
- the dialog will let the user select. Each entry in <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-accepts" id="ref-for-dom-choosefilesystementriesoptions-accepts①">accepts</a></code> describes a single type of file,
- consisting of a <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-description" id="ref-for-dom-choosefilesystementriesoptionsaccepts-description">description</a></code>, zero or more <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-mimetypes" id="ref-for-dom-choosefilesystementriesoptionsaccepts-mimetypes">mimeTypes</a></code> and zero or more <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-extensions" id="ref-for-dom-choosefilesystementriesoptionsaccepts-extensions">extensions</a></code>. Options with no valid <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-mimetypes" id="ref-for-dom-choosefilesystementriesoptionsaccepts-mimetypes①">mimeTypes</a></code> and no <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-extensions" id="ref-for-dom-choosefilesystementriesoptionsaccepts-extensions①">extensions</a></code> are invalid and are ignored. If no <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-description" id="ref-for-dom-choosefilesystementriesoptionsaccepts-description①">description</a></code> is provided one will be generated.</p>
-      <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-excludeacceptalloption" id="ref-for-dom-choosefilesystementriesoptions-excludeacceptalloption①">excludeAcceptAllOption</a></code> is true, or if no valid
- entries exist in <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-accepts" id="ref-for-dom-choosefilesystementriesoptions-accepts②">accepts</a></code>, an option matching all
- files will be included in the file types the dialog lets the user select.</p>
-    </dl>
-   </div>
-   <p class="issue" id="issue-a843e054"><a class="self-link" href="#issue-a843e054"></a> Should this return an array, even when multiple=false? And related questions,
-should this be one method that can return either files or directories depending on the
-passed in options, or separate file and directory methods? <a href="https://github.com/wicg/native-file-system/issues/25">&lt;https://github.com/wicg/native-file-system/issues/25></a></p>
-   <div class="algorithm" data-algorithm="chooseFileSystemEntries(options)" data-algorithm-for="Window">
-     The <dfn class="dfn-paneled idl-code" data-dfn-for="Window" data-dfn-type="method" data-export data-lt="chooseFileSystemEntries(options)|chooseFileSystemEntries()" id="dom-window-choosefilesystementries"><code>chooseFileSystemEntries(<var>options</var>)</code></dfn> method, when invoked, must run
-these steps: 
+   <div class="algorithm" data-algorithm="is allowed to show a file picker">
+     To verify that an <var>environment</var> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="is-allowed-to-show-a-file-picker">is allowed to show a file picker</dfn>, run these steps: 
     <ol>
      <li data-md>
-      <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-type" id="ref-for-dom-choosefilesystementriesoptions-type②">type</a></code> is <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-save-file" id="ref-for-dom-choosefilesystementriestype-save-file②">"save-file"</a></code> and <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-multiple" id="ref-for-dom-choosefilesystementriesoptions-multiple③">multiple</a></code> is true,
- return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with①">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑥">TypeError</a></code>.</p>
-     <li data-md>
-      <p>Let <var>environment</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this③①">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object②⓪">relevant settings object</a>.</p>
-     <li data-md>
       <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin③">origin</a> is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque" id="ref-for-concept-origin-opaque">opaque origin</a>,
- return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with②">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror">SecurityError</a></code>.</p>
+ return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with①">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror">SecurityError</a></code>.</p>
      <li data-md>
-      <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin④">origin</a> is not <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#same-origin" id="ref-for-same-origin②">same origin</a> with <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#top-level-origin" id="ref-for-top-level-origin①">top-level origin</a>,
- return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with③">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror①">SecurityError</a></code>.</p>
+      <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin④">origin</a> is not <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#same-origin" id="ref-for-same-origin②">same origin</a> with <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin" id="ref-for-concept-environment-top-level-origin①">top-level origin</a>,
+ return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with②">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror①">SecurityError</a></code>.</p>
      <li data-md>
       <p>Let <var>global</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global" id="ref-for-concept-settings-object-global①">global object</a>.</p>
      <li data-md>
       <p>If <var>global</var> does not have <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation①">transient activation</a>, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror②">SecurityError</a></code>.</p>
       <p class="issue" id="issue-a33056c3"><a class="self-link" href="#issue-a33056c3"></a> Should this be <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror③">SecurityError</a></code> or <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror" id="ref-for-notallowederror①①">NotAllowedError</a></code> (and same question for the request permission steps checking for user activation)?</p>
+    </ol>
+   </div>
+   <h3 class="heading settled" data-level="3.2" id="api-showopenfilepicker"><span class="secno">3.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker②">showOpenFilePicker()</a></code> method</span><a class="self-link" href="#api-showopenfilepicker"></a></h3>
+   <div class="note domintro" role="note">
+    <dl>
+     <dt data-md>[ <var>handle</var> ] = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker③">showOpenFilePicker()</a></code>
+     <dt data-md>[ <var>handle</var> ] = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker④">showOpenFilePicker</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-openfilepickeroptions-multiple" id="ref-for-dom-openfilepickeroptions-multiple">multiple</a></code>: false })
+     <dd data-md>
+      <p>Shows a file picker that lets a user select a single existing file, returning a handle for
+the selected file.</p>
+     <dt data-md>handles = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker⑤">showOpenFilePicker</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-openfilepickeroptions-multiple" id="ref-for-dom-openfilepickeroptions-multiple①">multiple</a></code>: true })
+     <dd data-md>
+      <p>Shows a file picker that lets a user select multiple existing files, returning handles for
+the selected files.</p>
+      <p>Additional options can be passed to <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker⑥">showOpenFilePicker()</a></code> to indicate the types of files
+the website wants the user to select. See <a href="#api-filpickeroptions-types">§ 3.4 FilePickerOptions.types</a> for details.</p>
+    </dl>
+   </div>
+   <div class="algorithm" data-algorithm="showOpenFilePicker(options)" data-algorithm-for="Window">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="Window" data-dfn-type="method" data-export data-lt="showOpenFilePicker(options)|showOpenFilePicker()" id="dom-window-showopenfilepicker"><code>showOpenFilePicker(<var>options</var>)</code></dfn> method, when invoked, must run
+these steps: 
+    <ol>
+     <li data-md>
+      <p>Let <var>accepts options</var> be the result of <a data-link-type="dfn" href="#process-accept-types" id="ref-for-process-accept-types">processing accept types</a> given <var>options</var>.</p>
+     <li data-md>
+      <p>Let <var>environment</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this③①">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object②⓪">relevant settings object</a>.</p>
+     <li data-md>
+      <p>Let <var>global</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global" id="ref-for-concept-settings-object-global②">global object</a>.</p>
+     <li data-md>
+      <p>Verify that <var>environment</var> <a data-link-type="dfn" href="#is-allowed-to-show-a-file-picker" id="ref-for-is-allowed-to-show-a-file-picker">is allowed to show a file picker</a>.</p>
      <li data-md>
       <p>Let <var>p</var> be <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-new-promise" id="ref-for-a-new-promise①②">a new promise</a>.</p>
      <li data-md>
@@ -2937,88 +2942,21 @@ these steps:
        <li data-md>
         <p>Optionally, wait until any prior execution of this algorithm has terminated.</p>
        <li data-md>
-        <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-type" id="ref-for-dom-choosefilesystementriesoptions-type③">type</a></code> is <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-open-directory" id="ref-for-dom-choosefilesystementriestype-open-directory①">"open-directory"</a></code>:</p>
-        <ol>
-         <li data-md>
-          <p>Display a prompt to the user requesting that the user specify some directories.
- If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-multiple" id="ref-for-dom-choosefilesystementriesoptions-multiple④">multiple</a></code> is false, there must be no more than one directory selected;
+        <p>Display a prompt to the user requesting that the user pick some files.
+ If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-openfilepickeroptions-multiple" id="ref-for-dom-openfilepickeroptions-multiple②">multiple</a></code> is false, there must be no more than one file selected;
  otherwise any number may be selected.</p>
-          <p class="note" role="note"><span>Note:</span> Chrome currently ignores the <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-multiple" id="ref-for-dom-choosefilesystementriesoptions-multiple⑤">multiple</a></code> option
- in combination with <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-open-directory" id="ref-for-dom-choosefilesystementriestype-open-directory②">"open-directory"</a></code>. It always only
- lets the user select a single directory.</p>
-          <p class="note" role="note"><span>Note:</span> <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-open-directory" id="ref-for-dom-choosefilesystementriestype-open-directory③">"open-directory"</a></code> also ignores the <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-accepts" id="ref-for-dom-choosefilesystementriesoptions-accepts③">accepts</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-excludeacceptalloption" id="ref-for-dom-choosefilesystementriesoptions-excludeacceptalloption②">excludeAcceptAllOption</a></code> options.</p>
-        </ol>
-       <li data-md>
-        <p>Otherwise:</p>
-        <ol>
-         <li data-md>
-          <p>Let <var>accepts options</var> be a empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list">list</a> of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#pair" id="ref-for-pair">pairs</a>.</p>
-         <li data-md>
-          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate④">For each</a> <var>accept</var> of <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-accepts" id="ref-for-dom-choosefilesystementriesoptions-accepts④">accepts</a></code>:</p>
-          <ol>
-           <li data-md>
-            <p>If <var>accept</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-mimetypes" id="ref-for-dom-choosefilesystementriesoptionsaccepts-mimetypes②">mimeTypes</a></code> is empty and <var>accept</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-extensions" id="ref-for-dom-choosefilesystementriesoptionsaccepts-extensions②">extensions</a></code> is empty, <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#iteration-continue" id="ref-for-iteration-continue">continue</a>.</p>
-           <li data-md>
-            <p>Let <var>description</var> be <var>accept</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-description" id="ref-for-dom-choosefilesystementriesoptionsaccepts-description②">description</a></code>.</p>
-           <li data-md>
-            <p>Let <var>filter</var> be the following steps, given a <var>filename</var> (a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string②">string</a>), and a <var>type</var> (a <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#mime-type" id="ref-for-mime-type">MIME type</a>).</p>
-            <ol>
-             <li data-md>
-              <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate⑤">For each</a> <var>extension</var> of <var>accept</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-extensions" id="ref-for-dom-choosefilesystementriesoptionsaccepts-extensions③">extensions</a></code>:</p>
-              <ol>
-               <li data-md>
-                <p>If <var>filename</var> ends with "." followed by <var>extension</var>, return <code>true</code>.</p>
-              </ol>
-             <li data-md>
-              <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate⑥">For each</a> <var>typeString</var> of <var>accept</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptionsaccepts-mimetypes" id="ref-for-dom-choosefilesystementriesoptionsaccepts-mimetypes③">mimeTypes</a></code>:</p>
-              <ol>
-               <li data-md>
-                <p>Let <var>parsedType</var> be the result of <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#parse-a-mime-type" id="ref-for-parse-a-mime-type">parse a MIME type</a> with <var>typeString</var>.</p>
-               <li data-md>
-                <p>If <var>type</var> matches <var>parsedType</var>, return <code>true</code>.</p>
-                <p class="issue" id="issue-7a5e3c00"><a class="self-link" href="#issue-7a5e3c00"></a> The previous two steps are not correct. We do want to allow things like "image/*" as well,
- which are not valid for the <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#parse-a-mime-type" id="ref-for-parse-a-mime-type①">parse a MIME type</a> algorithm. Also we need to specify what it
- means for types to "match". So figure out a better way of writing this.</p>
-                <p class="issue" id="issue-3aab0654"><a class="self-link" href="#issue-3aab0654"></a> In general we need to better define how mime types are used here. <a href="https://github.com/wicg/native-file-system/issues/133">&lt;https://github.com/wicg/native-file-system/issues/133></a></p>
-              </ol>
-             <li data-md>
-              <p>Return <code>false</code>.</p>
-            </ol>
-           <li data-md>
-            <p>If <var>description</var> is an empty string, set <var>description</var> to some user understandable string describing <var>filter</var>.</p>
-           <li data-md>
-            <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-append" id="ref-for-list-append①">Append</a> <var>description</var>/<var>filter</var> to <var>accepts options</var>.</p>
-          </ol>
-         <li data-md>
-          <p>If either <var>accepts options</var> is <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-empty" id="ref-for-list-empty">empty</a>, or <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-excludeacceptalloption" id="ref-for-dom-choosefilesystementriesoptions-excludeacceptalloption③">excludeAcceptAllOption</a></code> is <code>false</code>:</p>
-          <ol>
-           <li data-md>
-            <p>Let <var>description</var> be a user understandable string describing "all files".</p>
-           <li data-md>
-            <p>Let <var>filter</var> be an algorithm that returns <code>true</code>.</p>
-           <li data-md>
-            <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-append" id="ref-for-list-append②">Append</a> <var>description</var>/<var>filter</var> to <var>accepts options</var>.</p>
-          </ol>
-         <li data-md>
-          <p>Display a prompt to the user requesting that the user specify some files.
- If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-multiple" id="ref-for-dom-choosefilesystementriesoptions-multiple⑥">multiple</a></code> is false, there must be no more than one file selected;
- otherwise any number may be selected.</p>
-          <p>The displayed prompt should let the user pick one of the <var>accepts options</var> to filter the list of displayed files.
+        <p>The displayed prompt should let the user pick one of the <var>accepts options</var> to filter the list of displayed files.
  Exactly how this is implemented, and what this prompt looks like is left up to the user agent.</p>
-          <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-type" id="ref-for-dom-choosefilesystementriesoptions-type④">type</a></code> is <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-save-file" id="ref-for-dom-choosefilesystementriestype-save-file③">"save-file"</a></code>,
- the displayed prompt should make it clear that the website wants to write to the selected file.</p>
-        </ol>
        <li data-md>
         <p>Wait for the user to have made their selection.</p>
        <li data-md>
         <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②③">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror①">AbortError</a></code> and abort.</p>
-        <p class="issue" id="issue-5681994a"><a class="self-link" href="#issue-5681994a"></a> Should this resolve with <code>undefined</code> instead? <a href="https://github.com/wicg/native-file-system/issues/84">&lt;https://github.com/wicg/native-file-system/issues/84></a></p>
        <li data-md>
-        <p>Let <var>entries</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list①">list</a> of <a data-link-type="dfn" href="#entry" id="ref-for-entry①⑦">entries</a> representing the selected files or directories.</p>
+        <p>Let <var>entries</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list">list</a> of <a data-link-type="dfn" href="#file" id="ref-for-file⑨">file entries</a> representing the selected files or directories.</p>
        <li data-md>
-        <p>Let <var>result</var> be a empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list②">list</a>.</p>
+        <p>Let <var>result</var> be a empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list①">list</a>.</p>
        <li data-md>
-        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate⑦">For each</a> <var>entry</var> of <var>entries</var>:</p>
+        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate④">For each</a> <var>entry</var> of <var>entries</var>:</p>
         <ol>
          <li data-md>
           <p>If <var>entry</var> is deemed <a data-link-type="dfn" href="#too-sensitive-or-dangerous" id="ref-for-too-sensitive-or-dangerous">too sensitive or dangerous</a> to be exposed to this website by the user agent:</p>
@@ -3035,46 +2973,274 @@ these steps:
          <li data-md>
           <p>Set <var>entry</var>’s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps⑥">request permission steps</a> to the <a data-link-type="dfn" href="#native-file-system-request-permission-steps" id="ref-for-native-file-system-request-permission-steps">native file system request permission steps</a>.</p>
          <li data-md>
-          <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-type" id="ref-for-dom-choosefilesystementriesoptions-type⑤">type</a></code> is <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-open-directory" id="ref-for-dom-choosefilesystementriestype-open-directory④">"open-directory"</a></code>:</p>
-          <ol>
-           <li data-md>
-            <p>Add a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①⓪">FileSystemDirectoryHandle</a></code> associated with <var>entry</var> to <var>result</var>.</p>
-          </ol>
-         <li data-md>
-          <p>Otherwise:</p>
-          <ol>
-           <li data-md>
-            <p>Add a new <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle⑧">FileSystemFileHandle</a></code> associated with <var>entry</var> to <var>result</var>.</p>
-          </ol>
-        </ol>
-       <li data-md>
-        <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-type" id="ref-for-dom-choosefilesystementriesoptions-type⑥">type</a></code> is <code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriestype-save-file" id="ref-for-dom-choosefilesystementriestype-save-file④">"save-file"</a></code>:</p>
-        <ol>
-         <li data-md>
-          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert①">Assert</a>: <var>entries</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size">size</a> is 1.</p>
-         <li data-md>
-          <p>Set <var>entries</var>[0]'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑤">binary data</a> to an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑧">byte sequence</a>.</p>
+          <p>Add a new <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle①⓪">FileSystemFileHandle</a></code> associated with <var>entry</var> to <var>result</var>.</p>
         </ol>
        <li data-md>
         <p>Perform the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#activation-notification" id="ref-for-activation-notification">activation notification</a> steps in <var>global</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/window-object.html#window-bc" id="ref-for-window-bc">browsing context</a>.</p>
         <p class="note" role="note"><span>Note:</span> This lets a website immediately perform operations on the returned handles that
  might require user activation, such as requesting more permissions.</p>
+       <li data-md>
+        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve②⓪">Resolve</a> <var>p</var> with <var>result</var>.</p>
+      </ol>
+     <li data-md>
+      <p>Return <var>p</var>.</p>
+    </ol>
+   </div>
+   <h3 class="heading settled" data-level="3.3" id="api-showsavefilepicker"><span class="secno">3.3. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker②">showSaveFilePicker()</a></code> method</span><a class="self-link" href="#api-showsavefilepicker"></a></h3>
+   <div class="note domintro" role="note">
+    <dl>
+     <dt data-md><var>handle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker③">showSaveFilePicker</a></code>( <var>options</var> )
+     <dd data-md>
+      <p>Shows a file picker that lets a user select a single file, returning a handle for
+the selected file. The selected file does not have to exist already. If the selected
+file does not exist a new empty file is created before this method returns, otherwise
+the existing file is cleared before this method returned.</p>
+      <p>Additional <var>options</var> can be passed to <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker④">showSaveFilePicker()</a></code> to indicate the types of files
+the website wants the user to select. See <a href="#api-filpickeroptions-types">§ 3.4 FilePickerOptions.types</a> for details.</p>
+    </dl>
+   </div>
+   <div class="algorithm" data-algorithm="showSaveFilePicker(options)" data-algorithm-for="Window">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="Window" data-dfn-type="method" data-export data-lt="showSaveFilePicker(options)|showSaveFilePicker()" id="dom-window-showsavefilepicker"><code>showSaveFilePicker(<var>options</var>)</code></dfn> method, when invoked, must run
+these steps: 
+    <ol>
+     <li data-md>
+      <p>Let <var>accepts options</var> be the result of <a data-link-type="dfn" href="#process-accept-types" id="ref-for-process-accept-types①">processing accept types</a> given <var>options</var>.</p>
+     <li data-md>
+      <p>Let <var>environment</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this③②">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object②①">relevant settings object</a>.</p>
+     <li data-md>
+      <p>Let <var>global</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global" id="ref-for-concept-settings-object-global③">global object</a>.</p>
+     <li data-md>
+      <p>Verify that <var>environment</var> <a data-link-type="dfn" href="#is-allowed-to-show-a-file-picker" id="ref-for-is-allowed-to-show-a-file-picker①">is allowed to show a file picker</a>.</p>
+     <li data-md>
+      <p>Let <var>p</var> be <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-new-promise" id="ref-for-a-new-promise①③">a new promise</a>.</p>
+     <li data-md>
+      <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel①③">in parallel</a>:</p>
+      <ol>
+       <li data-md>
+        <p>Optionally, wait until any prior execution of this algorithm has terminated.</p>
+       <li data-md>
+        <p>Display a prompt to the user requesting that the user pick exactly one file.</p>
+        <p>The displayed prompt should let the user pick one of the <var>accepts options</var> to filter the list of displayed files.
+ Exactly how this is implemented, and what this prompt looks like is left up to the user agent.</p>
+       <li data-md>
+        <p>Wait for the user to have made their selection.</p>
+       <li data-md>
+        <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⑤">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror③">AbortError</a></code> and abort.</p>
+       <li data-md>
+        <p>Let <var>entry</var> be a <a data-link-type="dfn" href="#file" id="ref-for-file①⓪">file entry</a> representing the selected file.</p>
+       <li data-md>
+        <p>If <var>entry</var> is deemed <a data-link-type="dfn" href="#too-sensitive-or-dangerous" id="ref-for-too-sensitive-or-dangerous①">too sensitive or dangerous</a> to be exposed to this website by the user agent:</p>
+        <ol>
+         <li data-md>
+          <p>Inform the user that the selected files or directories can’t be exposed to this website.</p>
+         <li data-md>
+          <p>At the discretion of the user agent,
+ either go back to the beginning of these <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel①④">in parallel</a> steps,
+ or <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⑥">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror④">AbortError</a></code> and abort.</p>
+        </ol>
+       <li data-md>
+        <p>Set <var>entry</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①⑨">query permission steps</a> to the <a data-link-type="dfn" href="#native-file-system-query-permission-steps" id="ref-for-native-file-system-query-permission-steps①">native file system query permission steps</a>.</p>
+       <li data-md>
+        <p>Set <var>entry</var>’s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps⑦">request permission steps</a> to the <a data-link-type="dfn" href="#native-file-system-request-permission-steps" id="ref-for-native-file-system-request-permission-steps①">native file system request permission steps</a>.</p>
+       <li data-md>
+        <p>Set <var>entry</var>’s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑤">binary data</a> to an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑧">byte sequence</a>.</p>
+       <li data-md>
+        <p>Set <var>result</var> to a new <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle①①">FileSystemFileHandle</a></code> associated with <var>entry</var>.</p>
+       <li data-md>
+        <p>Perform the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#activation-notification" id="ref-for-activation-notification①">activation notification</a> steps in <var>global</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/window-object.html#window-bc" id="ref-for-window-bc①">browsing context</a>.</p>
+        <p class="note" role="note"><span>Note:</span> This lets a website immediately perform operations on the returned handles that
+ might require user activation, such as requesting more permissions.</p>
+       <li data-md>
+        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve②①">Resolve</a> <var>p</var> with <var>result</var>.</p>
+      </ol>
+     <li data-md>
+      <p>Return <var>p</var>.</p>
+    </ol>
+   </div>
+   <h3 class="heading settled" data-level="3.4" id="api-filpickeroptions-types"><span class="secno">3.4. </span><span class="content"><code class="idl"><a data-link-type="idl" href="#dictdef-filepickeroptions" id="ref-for-dictdef-filepickeroptions②">FilePickerOptions</a></code>.<code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-types" id="ref-for-dom-filepickeroptions-types">types</a></code></span><a class="self-link" href="#api-filpickeroptions-types"></a></h3>
+   <div class="note domintro" role="note">
+     The <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker⑦">showOpenFilePicker(options)</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker⑤">showSaveFilePicker(options)</a></code> methods accept a <code class="idl"><a data-link-type="idl" href="#dictdef-filepickeroptions" id="ref-for-dictdef-filepickeroptions③">FilePickerOptions</a></code> argument, which lets the website specify the types of files
+the file picker will let the user select. 
+    <p>Each entry in <code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-types" id="ref-for-dom-filepickeroptions-types①">types</a></code> specifies a single user selectable option
+for filtering the files displayed in the file picker.</p>
+    <p>Each option consists of an <span class="allow-2119">optional</span> <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-description" id="ref-for-dom-filepickeraccepttype-description">description</a></code> and a number of MIME types and extensions (specified as a mapping of
+MIME type to a list of extensions). If no description is provided one will be generated.</p>
+    <p>In addition to complete MIME types, "<em>" can be used as the subtype of a MIME type to match
+for example all image formats with "image/</em>".</p>
+    <p>Websites <span class="allow-2119">should</span> always provide both MIME types and file
+extensions for each option. On platforms that only use file extensions to describe file types
+user agents can match on the extensions, while on platforms that don’t use extensions,
+user agents can match on MIME type.</p>
+    <p>By default the file picker will also include an option to not apply any filter,
+letting the user select any file. Set <code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-excludeacceptalloption" id="ref-for-dom-filepickeroptions-excludeacceptalloption">excludeAcceptAllOption</a></code> to <code>true</code> to not
+include this option in the file picker.</p>
+    <p>For example , the following options will let the user pick one of three different filter.
+One for text files (either plain text or HTML), one for images, and a third one that doesn’t apply
+any filter and lets the user select any file.</p>
+<pre class="example highlight" id="filepickeroptions-example1"><a class="self-link" href="#filepickeroptions-example1"></a><c- kr>const</c-> options <c- o>=</c-> <c- p>{</c->
+  <code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-types" id="ref-for-dom-filepickeroptions-types②">types</a></code><c- o>:</c-> <c- p>[</c->
+    <c- p>{</c->
+      <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-description" id="ref-for-dom-filepickeraccepttype-description①">description</a></code><c- o>:</c-> <c- t>'Text Files'</c-><c- p>,</c->
+      <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept">accept</a></code><c- o>:</c-> <c- p>{</c->
+        <c- t>'text/plain'</c-><c- o>:</c-> <c- p>[</c-><c- t>'txt'</c-><c- p>,</c-> <c- t>'text'</c-><c- p>],</c->
+        <c- t>'text/html'</c-><c- o>:</c-> <c- p>[</c-><c- t>'html'</c-><c- p>,</c-> <c- t>'htm'</c-><c- p>]</c->
+      <c- p>}</c->
+    <c- p>},</c->
+    <c- p>{</c->
+      <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-description" id="ref-for-dom-filepickeraccepttype-description②">description</a></code><c- o>:</c-> <c- t>'Images'</c-><c- p>,</c->
+      <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept①">accept</a></code><c- o>:</c-> <c- p>{</c->
+        <c- t>'image/*'</c-><c- o>:</c-> <c- p>[</c-><c- t>'png'</c-><c- p>,</c-> <c- t>'gif'</c-><c- p>,</c-> <c- t>'jpeg'</c-><c- p>,</c-> <c- t>'jpg'</c-><c- p>]</c->
+      <c- p>}</c->
+    <c- p>}</c->
+  <c- p>],</c->
+<c- p>};</c->
+</pre>
+    <p>On the other hand, the following example will only let the user select SVG files. The dialog
+will not show an option to not apply any filters.</p>
+<pre class="example highlight" id="filepickeroptions-example2"><a class="self-link" href="#filepickeroptions-example2"></a><c- kr>const</c-> options <c- o>=</c-> <c- p>{</c->
+  <code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-types" id="ref-for-dom-filepickeroptions-types③">types</a></code><c- o>:</c-> <c- p>[</c->
+    <c- p>{</c->
+      <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept②">accept</a></code><c- o>:</c-> <c- p>{</c->
+        <c- t>'image/svg+xml'</c-><c- o>:</c-> <c- t>'svg'</c-><c- p>,</c->
+      <c- p>}</c->
+    <c- p>},</c->
+  <c- p>],</c->
+  <code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-excludeacceptalloption" id="ref-for-dom-filepickeroptions-excludeacceptalloption①">excludeAcceptAllOption</a></code><c- o>:</c-> <c- kc>true</c->
+<c- p>};</c->
+</pre>
+   </div>
+   <div class="algorithm" data-algorithm="process accept types">
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="process-accept-types">process accept types</dfn>, given <code class="idl"><a data-link-type="idl" href="#dictdef-filepickeroptions" id="ref-for-dictdef-filepickeroptions④">FilePickerOptions</a></code> <var>options</var>,
+run these steps: 
+    <ol>
+     <li data-md>
+      <p>Let <var>accepts options</var> be a empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list②">list</a> of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#pair" id="ref-for-pair">pairs</a>.</p>
+     <li data-md>
+      <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate⑤">For each</a> <var>type</var> of <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-types" id="ref-for-dom-filepickeroptions-types④">types</a></code>:</p>
+      <ol>
+       <li data-md>
+        <p>Let <var>description</var> be <var>type</var>.<code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-description" id="ref-for-dom-filepickeraccepttype-description③">description</a></code>.</p>
+       <li data-md>
+        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-iterate" id="ref-for-map-iterate">For each</a> <var>type string</var> → <var>extensions</var> of <var>type</var>.<code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept③">accept</a></code>:</p>
+        <ol>
+         <li data-md>
+          <p>Let <var>parsedType</var> be the result of <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#parse-a-mime-type" id="ref-for-parse-a-mime-type">parse a MIME type</a> with <var>typeString</var>.</p>
+         <li data-md>
+          <p>If <var>parsedType</var> is failure, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑥">TypeError</a></code>.</p>
+         <li data-md>
+          <p>If <var>parsedType</var>’s <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#parameters" id="ref-for-parameters">parameters</a> are not empty, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑦">TypeError</a></code>.</p>
+        </ol>
+       <li data-md>
+        <p>Let <var>filter</var> be the following steps, given a <var>filename</var> (a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string②">string</a>), and a <var>type</var> (a <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#mime-type" id="ref-for-mime-type">MIME type</a>):</p>
+        <ol>
+         <li data-md>
+          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-iterate" id="ref-for-map-iterate①">For each</a> <var>type string</var> → <var>extensions</var> of <var>type</var>.<code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept④">accept</a></code>:</p>
+         <li data-md>
+          <p>Let <var>parsedType</var> be the result of <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#parse-a-mime-type" id="ref-for-parse-a-mime-type①">parse a MIME type</a> with <var>typeString</var>.</p>
+          <ol>
+           <li data-md>
+            <p>If <var>parsedType</var>’s <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#subtype" id="ref-for-subtype">subtype</a> is "*":</p>
+            <ol>
+             <li data-md>
+              <p>If <var>parsedType</var>’s <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#type" id="ref-for-type">type</a> is "*", return <code>true</code>.</p>
+             <li data-md>
+              <p>If <var>parsedType</var>’s <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#type" id="ref-for-type①">type</a> is <var>type</var>’s <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#type" id="ref-for-type②">type</a>, return <code>true</code>.</p>
+            </ol>
+           <li data-md>
+            <p><var>parsedType</var>’s <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#mime-type-essence" id="ref-for-mime-type-essence">essence</a> is <var>type</var>’s <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#mime-type-essence" id="ref-for-mime-type-essence①">essence</a>, return <code>true</code>.</p>
+           <li data-md>
+            <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate⑥">For each</a> <var>extension</var> of <var>extensions</var>:</p>
+            <ol>
+             <li data-md>
+              <p>If <var>filename</var> ends with "." followed by <var>extension</var>, return <code>true</code>.</p>
+            </ol>
+          </ol>
+         <li data-md>
+          <p>Return <code>false</code>.</p>
+        </ol>
+       <li data-md>
+        <p>If <var>description</var> is an empty string,
+set <var>description</var> to some user understandable string describing <var>filter</var>.</p>
+       <li data-md>
+        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-append" id="ref-for-list-append①">Append</a> <var>description</var>/<var>filter</var> to <var>accepts options</var>.</p>
+      </ol>
+     <li data-md>
+      <p>If either <var>accepts options</var> is <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-empty" id="ref-for-list-empty">empty</a>,
+or <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-excludeacceptalloption" id="ref-for-dom-filepickeroptions-excludeacceptalloption②">excludeAcceptAllOption</a></code> is <code>false</code>:</p>
+      <ol>
+       <li data-md>
+        <p>Let <var>description</var> be a user understandable string describing "all files".</p>
+        <ol>
+         <li data-md>
+          <p>Let <var>filter</var> be an algorithm that returns <code>true</code>.</p>
+         <li data-md>
+          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-append" id="ref-for-list-append②">Append</a> <var>description</var>/<var>filter</var> to <var>accepts options</var>.</p>
+        </ol>
+      </ol>
+     <li data-md>
+      <p>If <var>accepts options</var> is empty, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑧">TypeError</a></code>.</p>
+     <li data-md>
+      <p>Return <var>accepts options</var>.</p>
+    </ol>
+   </div>
+   <h3 class="heading settled" data-level="3.5" id="api-showdirectorypicker"><span class="secno">3.5. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-window-showdirectorypicker" id="ref-for-dom-window-showdirectorypicker②">showDirectoryPicker()</a></code> method</span><a class="self-link" href="#api-showdirectorypicker"></a></h3>
+   <div class="note domintro" role="note">
+    <dl>
+     <dt data-md><var>handle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showdirectorypicker" id="ref-for-dom-window-showdirectorypicker③">showDirectoryPicker()</a></code>
+     <dd data-md>
+      <p>Shows a directory picker that lets the user select a single directory, returning a handle for
+the selected directory.</p>
+    </dl>
+   </div>
+   <div class="algorithm" data-algorithm="showDirectoryPicker(options)" data-algorithm-for="Window">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="Window" data-dfn-type="method" data-export data-lt="showDirectoryPicker(options)|showDirectoryPicker()" id="dom-window-showdirectorypicker"><code>showDirectoryPicker(<var>options</var>)</code></dfn> method, when invoked, must run
+these steps: 
+    <ol>
+     <li data-md>
+      <p>Let <var>environment</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this③③">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object②②">relevant settings object</a>.</p>
+     <li data-md>
+      <p>Let <var>global</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global" id="ref-for-concept-settings-object-global④">global object</a>.</p>
+     <li data-md>
+      <p>Verify that <var>environment</var> <a data-link-type="dfn" href="#is-allowed-to-show-a-file-picker" id="ref-for-is-allowed-to-show-a-file-picker②">is allowed to show a file picker</a>.</p>
+     <li data-md>
+      <p>Let <var>p</var> be <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-new-promise" id="ref-for-a-new-promise①④">a new promise</a>.</p>
+     <li data-md>
+      <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel①⑤">in parallel</a>:</p>
+      <ol>
+       <li data-md>
+        <p>Optionally, wait until any prior execution of this algorithm has terminated.</p>
+       <li data-md>
+        <p>Display a prompt to the user requesting that the user pick a directory.</p>
+       <li data-md>
+        <p>Wait for the user to have made their selection.</p>
+       <li data-md>
+        <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⑦">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror⑤">AbortError</a></code> and abort.</p>
+       <li data-md>
+        <p>Let <var>entry</var> be a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑨">directory entry</a> representing the selected directory.</p>
+       <li data-md>
+        <p>If <var>entry</var> is deemed <a data-link-type="dfn" href="#too-sensitive-or-dangerous" id="ref-for-too-sensitive-or-dangerous②">too sensitive or dangerous</a> to be exposed to this website by the user agent:</p>
+        <ol>
+         <li data-md>
+          <p>Inform the user that the selected files or directories can’t be exposed to this website.</p>
+         <li data-md>
+          <p>At the discretion of the user agent,
+ either go back to the beginning of these <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel①⑥">in parallel</a> steps,
+ or <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⑧">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror⑥">AbortError</a></code> and abort.</p>
+        </ol>
+       <li data-md>
+        <p>Set <var>entry</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps②⓪">query permission steps</a> to the <a data-link-type="dfn" href="#native-file-system-query-permission-steps" id="ref-for-native-file-system-query-permission-steps②">native file system query permission steps</a>.</p>
+       <li data-md>
+        <p>Set <var>entry</var>’s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps⑧">request permission steps</a> to the <a data-link-type="dfn" href="#native-file-system-request-permission-steps" id="ref-for-native-file-system-request-permission-steps②">native file system request permission steps</a>.</p>
+       <li data-md>
+        <p>Set <var>result</var> to a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①①">FileSystemDirectoryHandle</a></code> associated with <var>entry</var>.</p>
+       <li data-md>
+        <p>Perform the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#activation-notification" id="ref-for-activation-notification②">activation notification</a> steps in <var>global</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/window-object.html#window-bc" id="ref-for-window-bc②">browsing context</a>.</p>
+        <p class="note" role="note"><span>Note:</span> This lets a website immediately perform operations on the returned handles that
+ might require user activation, such as requesting more permissions.</p>
         <p class="issue" id="issue-923f3009"><a class="self-link" href="#issue-923f3009"></a> Rather than requiring the website to prompt separately for a writable directory,
  we should provide some kind of API to request a writable directory in one step. <a href="https://github.com/wicg/native-file-system/issues/89">&lt;https://github.com/wicg/native-file-system/issues/89></a></p>
        <li data-md>
-        <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-choosefilesystementriesoptions-multiple" id="ref-for-dom-choosefilesystementriesoptions-multiple⑦">multiple</a></code> is true:</p>
-        <ol>
-         <li data-md>
-          <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve②⓪">Resolve</a> <var>p</var> with <var>result</var>.</p>
-        </ol>
-       <li data-md>
-        <p>Otherwise:</p>
-        <ol>
-         <li data-md>
-          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#assert" id="ref-for-assert②">Assert</a>: <var>result</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size①">size</a> is 1.</p>
-         <li data-md>
-          <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve②①">Resolve</a> <var>p</var> with <var>result</var>[0].</p>
-        </ol>
+        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve②②">Resolve</a> <var>p</var> with <var>result</var>.</p>
       </ol>
      <li data-md>
       <p>Return <var>p</var>.</p>
@@ -3082,7 +3248,7 @@ these steps:
    </div>
    <h2 class="heading settled" data-level="4" id="sandboxed-filesystem"><span class="secno">4. </span><span class="content">Accessing the Sandboxed File System</span><a class="self-link" href="#sandboxed-filesystem"></a></h2>
    <h3 class="heading settled" data-level="4.1" id="sandboxed-filesystem-concepts"><span class="secno">4.1. </span><span class="content">Sandboxed File System Concepts</span><a class="self-link" href="#sandboxed-filesystem-concepts"></a></h3>
-   <p>A <a data-link-type="dfn">bucket</a> contains a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="sandboxed-file-system-root">sandboxed file system root</dfn>, a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑨">directory entry</a>.</p>
+   <p>A <a data-link-type="dfn">bucket</a> contains a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="sandboxed-file-system-root">sandboxed file system root</dfn>, a <a data-link-type="dfn" href="#directory" id="ref-for-directory①⓪">directory entry</a>.</p>
    <p>The <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root">sandboxed file system root</a> for one <a data-link-type="dfn">bucket</a> must be completely separate from
 that of any other <a data-link-type="dfn">bucket</a>.</p>
    <p class="note" role="note"><span>Note:</span> While user agents will typically implement this by persisting the contents of this <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root①">sandboxed file system root</a> to disk, it is not intended that the contents are easily
@@ -3091,7 +3257,7 @@ matching the names of children of the <a data-link-type="dfn" href="#sandboxed-f
    <p class="note" role="note"><span>Note:</span> In Chrome this <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root③">sandboxed file system root</a> refers to the same storage as the <a href="https://dev.w3.org/2009/dap/file-system/file-dir-sys.html#dfn-temporary">temporary
 file system</a> as used to be defined in <a data-link-type="biblio" href="#biblio-file-system-api">File API: Directories and System</a>.</p>
    <div class="algorithm" data-algorithm="sandbox-query-permission">
-     The <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root④">sandboxed file system root</a>'s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①⑨">query permission steps</a> are the following: 
+     The <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root④">sandboxed file system root</a>'s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps②①">query permission steps</a> are the following: 
     <ol>
      <li data-md>
       <p>Return <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①③">"granted"</a></code>.</p>
@@ -3100,7 +3266,7 @@ file system</a> as used to be defined in <a data-link-type="biblio" href="#bibli
    <h3 class="heading settled" data-level="4.2" id="api-getoriginprivatefilesystem"><span class="secno">4.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory③">getOriginPrivateDirectory()</a></code> method</span><a class="self-link" href="#api-getoriginprivatefilesystem"></a></h3>
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext⑤"><c- g>SecureContext</c-></a>]
 <c- b>partial</c-> <c- b>interface</c-> <c- b>mixin</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/webappapis.html#windoworworkerglobalscope" id="ref-for-windoworworkerglobalscope"><c- g>WindowOrWorkerGlobalScope</c-></a> {
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①①"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory④"><c- g>getOriginPrivateDirectory</c-></a>();
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①②"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory④"><c- g>getOriginPrivateDirectory</c-></a>();
 };
 </pre>
    <p><strong class="advisement"> In Chrome this functionality is currently exposed as <code>FileSystemDirectoryHandle.getSystemDirectory({type: "sandbox"})</code>.</strong></p>
@@ -3119,13 +3285,13 @@ invoked, must run these steps:
       <p>Let <var>environment</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object" id="ref-for-current-settings-object">current settings object</a>.</p>
      <li data-md>
       <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin⑤">origin</a> is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque" id="ref-for-concept-origin-opaque①">opaque origin</a>,
- return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with④">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror④">SecurityError</a></code>.</p>
+ return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with③">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror④">SecurityError</a></code>.</p>
      <li data-md>
       <p>Let <var>storage</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin⑥">origin</a>'s <a data-link-type="dfn">storage unit</a>.</p>
      <li data-md>
       <p>Let <var>bucket</var> be <var>storage</var>’s <a data-link-type="dfn">bucket</a>.</p>
      <li data-md>
-      <p>Return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with①">a promise resolved with</a> a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①②">FileSystemDirectoryHandle</a></code>,
+      <p>Return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with①">a promise resolved with</a> a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①③">FileSystemDirectoryHandle</a></code>,
  whose associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②⑥">entry</a> is <var>bucket</var>’s <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root⑤">sandboxed file system root</a>.</p>
     </ol>
    </div>
@@ -3183,7 +3349,7 @@ Clearing browsing data is expected to revoke all permissions as well.</p>
    <h3 class="heading settled" data-level="5.3" id="privacy-third-party"><span class="secno">5.3. </span><span class="content">First-party vs third-party contexts.</span><a class="self-link" href="#privacy-third-party"></a></h3>
    <p>In third-party contexts (e.g. an iframe whose origin does not match that of the top-level frame)
 websites can’t gain access to data they don’t already have access to. This includes both getting
-access to new files or directories via the <code class="idl"><a data-link-type="idl" href="#dom-window-choosefilesystementries" id="ref-for-dom-window-choosefilesystementries⑨">chooseFileSystemEntries</a></code> API, as well as requesting
+access to new files or directories via the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories⑤">native file system handle factories</a>, as well as requesting
 more permissions to existing handles via the <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission⑦">requestPermission</a></code> API.</p>
    <p>Handles can also only be post-messaged to same-origin destinations. Attempts to send a handle to
 a cross-origin destination will result in a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/indices.html#event-messageerror" id="ref-for-event-messageerror">messageerror</a></code> event.</p>
@@ -3355,15 +3521,10 @@ appropriate.</p>
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#dom-choosefilesystementriesoptions-accepts">accepts</a><span>, in §3.2</span>
+   <li><a href="#dom-filepickeraccepttype-accept">accept</a><span>, in §3</span>
    <li><a href="#file-entry-binary-data">binary data</a><span>, in §2.1</span>
    <li><a href="#filesystemwritablefilestream-buffer">[[buffer]]</a><span>, in §2.6</span>
    <li><a href="#directory-entry-children">children</a><span>, in §2.1</span>
-   <li><a href="#dom-window-choosefilesystementries">chooseFileSystemEntries()</a><span>, in §3.2</span>
-   <li><a href="#dom-window-choosefilesystementries">chooseFileSystemEntries(options)</a><span>, in §3.2</span>
-   <li><a href="#dictdef-choosefilesystementriesoptions">ChooseFileSystemEntriesOptions</a><span>, in §3.2</span>
-   <li><a href="#dictdef-choosefilesystementriesoptionsaccepts">ChooseFileSystemEntriesOptionsAccepts</a><span>, in §3.2</span>
-   <li><a href="#enumdef-choosefilesystementriestype">ChooseFileSystemEntriesType</a><span>, in §3.2</span>
    <li>
     create
     <ul>
@@ -3374,20 +3535,22 @@ appropriate.</p>
    <li><a href="#dom-filesystemfilehandle-createwritable">createWritable()</a><span>, in §2.4.2</span>
    <li><a href="#dom-filesystemfilehandle-createwritable">createWritable(options)</a><span>, in §2.4.2</span>
    <li><a href="#dom-writeparams-data">data</a><span>, in §2.6</span>
-   <li><a href="#dom-choosefilesystementriesoptionsaccepts-description">description</a><span>, in §3.2</span>
+   <li><a href="#dom-filepickeraccepttype-description">description</a><span>, in §3</span>
    <li><a href="#directory">directory</a><span>, in §2.1</span>
    <li><a href="#directory">directory entry</a><span>, in §2.1</span>
+   <li><a href="#dictdef-directorypickeroptions">DirectoryPickerOptions</a><span>, in §3</span>
    <li>
     entry
     <ul>
      <li><a href="#entry">definition of</a><span>, in §2.1</span>
      <li><a href="#filesystemhandle-entry">dfn for FileSystemHandle</a><span>, in §2.3</span>
     </ul>
-   <li><a href="#dom-choosefilesystementriesoptions-excludeacceptalloption">excludeAcceptAllOption</a><span>, in §3.2</span>
-   <li><a href="#dom-choosefilesystementriesoptionsaccepts-extensions">extensions</a><span>, in §3.2</span>
+   <li><a href="#dom-filepickeroptions-excludeacceptalloption">excludeAcceptAllOption</a><span>, in §3</span>
    <li><a href="#filesystemwritablefilestream-file">[[file]]</a><span>, in §2.6</span>
    <li><a href="#file">file</a><span>, in §2.1</span>
    <li><a href="#file">file entry</a><span>, in §2.1</span>
+   <li><a href="#dictdef-filepickeraccepttype">FilePickerAcceptType</a><span>, in §3</span>
+   <li><a href="#dictdef-filepickeroptions">FilePickerOptions</a><span>, in §3</span>
    <li><a href="#dictdef-filesystemcreatewritableoptions">FileSystemCreateWritableOptions</a><span>, in §2.4</span>
    <li><a href="#filesystemdirectoryhandle">FileSystemDirectoryHandle</a><span>, in §2.5</span>
    <li><a href="#filesystemfilehandle">FileSystemFileHandle</a><span>, in §2.4</span>
@@ -3404,27 +3567,28 @@ appropriate.</p>
    <li><a href="#dom-filesystemdirectoryhandle-getfile">getFile(name)</a><span>, in §2.5.2</span>
    <li><a href="#dom-filesystemdirectoryhandle-getfile">getFile(name, options)</a><span>, in §2.5.2</span>
    <li><a href="#dom-windoworworkerglobalscope-getoriginprivatedirectory">getOriginPrivateDirectory()</a><span>, in §4.2</span>
+   <li><a href="#is-allowed-to-show-a-file-picker">is allowed to show a file picker</a><span>, in §3.1</span>
    <li><a href="#dom-filesystemhandle-isdirectory">isDirectory</a><span>, in §2.3</span>
    <li><a href="#dom-filesystemhandle-isfile">isFile</a><span>, in §2.3</span>
    <li><a href="#dom-filesystemhandle-issameentry">isSameEntry(other)</a><span>, in §2.3.1</span>
    <li><a href="#dom-filesystemcreatewritableoptions-keepexistingdata">keepExistingData</a><span>, in §2.4</span>
    <li><a href="#malware-scans-and-safe-browsing-checks">malware scans and safe browsing checks</a><span>, in §6.1</span>
-   <li><a href="#dom-choosefilesystementriesoptionsaccepts-mimetypes">mimeTypes</a><span>, in §3.2</span>
    <li><a href="#file-entry-modification-timestamp">modification timestamp</a><span>, in §2.1</span>
-   <li><a href="#dom-choosefilesystementriesoptions-multiple">multiple</a><span>, in §3.2</span>
+   <li><a href="#dom-openfilepickeroptions-multiple">multiple</a><span>, in §3</span>
    <li>
     name
     <ul>
      <li><a href="#dom-filesystemhandle-name">attribute for FileSystemHandle</a><span>, in §2.3</span>
      <li><a href="#entry-name">dfn for entry</a><span>, in §2.1</span>
     </ul>
+   <li><a href="#native-file-system-handle-factories">native file system handle factories</a><span>, in §3</span>
    <li><a href="#native-file-system-query-permission-steps">native file system query permission steps</a><span>, in §3.1</span>
    <li><a href="#native-file-system-request-permission-steps">native file system request permission steps</a><span>, in §3.1</span>
-   <li><a href="#dom-choosefilesystementriestype-open-directory">"open-directory"</a><span>, in §3.2</span>
-   <li><a href="#dom-choosefilesystementriestype-open-file">"open-file"</a><span>, in §3.2</span>
+   <li><a href="#dictdef-openfilepickeroptions">OpenFilePickerOptions</a><span>, in §3</span>
    <li><a href="#entry-parent">parent</a><span>, in §2.1</span>
    <li><a href="#filesystemdirectoryhandle-iterator-past-results">past results</a><span>, in §2.5.1</span>
    <li><a href="#dom-writeparams-position">position</a><span>, in §2.6</span>
+   <li><a href="#process-accept-types">process accept types</a><span>, in §3.4</span>
    <li><a href="#dom-filesystemhandle-querypermission">queryPermission()</a><span>, in §2.3.2</span>
    <li><a href="#dom-filesystemhandle-querypermission">queryPermission(descriptor)</a><span>, in §2.3.2</span>
    <li><a href="#entry-query-permission-steps">query permission steps</a><span>, in §2.2</span>
@@ -3437,21 +3601,23 @@ appropriate.</p>
    <li><a href="#entry-resolve">resolve</a><span>, in §2.1</span>
    <li><a href="#dom-filesystemdirectoryhandle-resolve">resolve(possibleDescendant)</a><span>, in §2.5.5</span>
    <li><a href="#sandboxed-file-system-root">sandboxed file system root</a><span>, in §4.1</span>
-   <li><a href="#dom-choosefilesystementriestype-save-file">"save-file"</a><span>, in §3.2</span>
+   <li><a href="#dictdef-savefilepickeroptions">SaveFilePickerOptions</a><span>, in §3</span>
    <li><a href="#dom-writecommandtype-seek">"seek"</a><span>, in §2.6</span>
    <li><a href="#filesystemwritablefilestream-seekoffset">[[seekOffset]]</a><span>, in §2.6</span>
    <li><a href="#dom-filesystemwritablefilestream-seek">seek(position)</a><span>, in §2.6.2</span>
+   <li><a href="#dom-window-showdirectorypicker">showDirectoryPicker()</a><span>, in §3.5</span>
+   <li><a href="#dom-window-showdirectorypicker">showDirectoryPicker(options)</a><span>, in §3.5</span>
+   <li><a href="#dom-window-showopenfilepicker">showOpenFilePicker()</a><span>, in §3.2</span>
+   <li><a href="#dom-window-showopenfilepicker">showOpenFilePicker(options)</a><span>, in §3.2</span>
+   <li><a href="#dom-window-showsavefilepicker">showSaveFilePicker()</a><span>, in §3.3</span>
+   <li><a href="#dom-window-showsavefilepicker">showSaveFilePicker(options)</a><span>, in §3.3</span>
    <li><a href="#dom-writeparams-size">size</a><span>, in §2.6</span>
    <li><a href="#entry-the-same-as">the same as</a><span>, in §2.1</span>
    <li><a href="#too-sensitive-or-dangerous">too sensitive or dangerous</a><span>, in §5.1</span>
    <li><a href="#dom-writecommandtype-truncate">"truncate"</a><span>, in §2.6</span>
    <li><a href="#dom-filesystemwritablefilestream-truncate">truncate(size)</a><span>, in §2.6.3</span>
-   <li>
-    type
-    <ul>
-     <li><a href="#dom-choosefilesystementriesoptions-type">dict-member for ChooseFileSystemEntriesOptions</a><span>, in §3.2</span>
-     <li><a href="#dom-writeparams-type">dict-member for WriteParams</a><span>, in §2.6</span>
-    </ul>
+   <li><a href="#dom-writeparams-type">type</a><span>, in §2.6</span>
+   <li><a href="#dom-filepickeroptions-types">types</a><span>, in §3</span>
    <li><a href="#valid-file-name">valid file name</a><span>, in §2.1</span>
    <li><a href="#dom-filesystemhandlepermissiondescriptor-writable">writable</a><span>, in §2.3</span>
    <li><a href="#dom-writecommandtype-write">"write"</a><span>, in §2.6</span>
@@ -3532,8 +3698,8 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-window">
    <a href="https://html.spec.whatwg.org/multipage/window-object.html#window">https://html.spec.whatwg.org/multipage/window-object.html#window</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-window">3.1. Native File System Permissions</a>
-    <li><a href="#ref-for-window①">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-window">3. Accessing Native File System</a>
+    <li><a href="#ref-for-window①">3.1. Native File System Permissions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-windoworworkerglobalscope">
@@ -3545,13 +3711,17 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-activation-notification">
    <a href="https://html.spec.whatwg.org/multipage/interaction.html#activation-notification">https://html.spec.whatwg.org/multipage/interaction.html#activation-notification</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-activation-notification">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-activation-notification">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-activation-notification①">3.3. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-activation-notification②">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-window-bc">
    <a href="https://html.spec.whatwg.org/multipage/window-object.html#window-bc">https://html.spec.whatwg.org/multipage/window-object.html#window-bc</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-window-bc">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-window-bc">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-window-bc①">3.3. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-window-bc②">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-current-settings-object">
@@ -3578,8 +3748,10 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-concept-settings-object-global">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global">https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-settings-object-global">3.1. Native File System Permissions</a>
-    <li><a href="#ref-for-concept-settings-object-global①">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-concept-settings-object-global">3.1. Native File System Permissions</a> <a href="#ref-for-concept-settings-object-global①">(2)</a>
+    <li><a href="#ref-for-concept-settings-object-global②">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-concept-settings-object-global③">3.3. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-concept-settings-object-global④">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-in-parallel">
@@ -3595,7 +3767,9 @@ appropriate.</p>
     <li><a href="#ref-for-in-parallel⑦">2.5.3. The getDirectory() method</a>
     <li><a href="#ref-for-in-parallel⑧">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-in-parallel⑨">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-in-parallel①⓪">(2)</a>
-    <li><a href="#ref-for-in-parallel①①">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-in-parallel①②">(2)</a>
+    <li><a href="#ref-for-in-parallel①①">3.2. The showOpenFilePicker() method</a> <a href="#ref-for-in-parallel①②">(2)</a>
+    <li><a href="#ref-for-in-parallel①③">3.3. The showSaveFilePicker() method</a> <a href="#ref-for-in-parallel①④">(2)</a>
+    <li><a href="#ref-for-in-parallel①⑤">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-in-parallel①⑥">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-event-messageerror">
@@ -3607,7 +3781,7 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-concept-origin-opaque">
    <a href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque">https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-origin-opaque">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-concept-origin-opaque">3.1. Native File System Permissions</a>
     <li><a href="#ref-for-concept-origin-opaque①">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
@@ -3615,8 +3789,7 @@ appropriate.</p>
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin">https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-settings-object-origin">2.3. The FileSystemHandle interface</a> <a href="#ref-for-concept-settings-object-origin①">(2)</a>
-    <li><a href="#ref-for-concept-settings-object-origin②">3.1. Native File System Permissions</a>
-    <li><a href="#ref-for-concept-settings-object-origin③">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-concept-settings-object-origin④">(2)</a>
+    <li><a href="#ref-for-concept-settings-object-origin②">3.1. Native File System Permissions</a> <a href="#ref-for-concept-settings-object-origin③">(2)</a> <a href="#ref-for-concept-settings-object-origin④">(3)</a>
     <li><a href="#ref-for-concept-settings-object-origin⑤">4.2. The getOriginPrivateDirectory() method</a> <a href="#ref-for-concept-settings-object-origin⑥">(2)</a>
    </ul>
   </aside>
@@ -3640,15 +3813,16 @@ appropriate.</p>
     <li><a href="#ref-for-relevant-settings-object①③">2.5.3. The getDirectory() method</a> <a href="#ref-for-relevant-settings-object①④">(2)</a> <a href="#ref-for-relevant-settings-object①⑤">(3)</a>
     <li><a href="#ref-for-relevant-settings-object①⑥">2.5.4. The removeEntry() method</a> <a href="#ref-for-relevant-settings-object①⑦">(2)</a>
     <li><a href="#ref-for-relevant-settings-object①⑧">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-relevant-settings-object①⑨">(2)</a>
-    <li><a href="#ref-for-relevant-settings-object②⓪">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-relevant-settings-object②⓪">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-relevant-settings-object②①">3.3. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-relevant-settings-object②②">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-same-origin">
    <a href="https://html.spec.whatwg.org/multipage/origin.html#same-origin">https://html.spec.whatwg.org/multipage/origin.html#same-origin</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-same-origin">2.3. The FileSystemHandle interface</a>
-    <li><a href="#ref-for-same-origin①">3.1. Native File System Permissions</a>
-    <li><a href="#ref-for-same-origin②">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-same-origin①">3.1. Native File System Permissions</a> <a href="#ref-for-same-origin②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-serializable-objects">
@@ -3667,18 +3841,16 @@ appropriate.</p>
     <li><a href="#ref-for-serialization-steps②">2.5. The FileSystemDirectoryHandle interface</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-top-level-origin">
-   <a href="https://html.spec.whatwg.org/multipage/webappapis.html#top-level-origin">https://html.spec.whatwg.org/multipage/webappapis.html#top-level-origin</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-concept-environment-top-level-origin">
+   <a href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin">https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-top-level-origin">3.1. Native File System Permissions</a>
-    <li><a href="#ref-for-top-level-origin①">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-concept-environment-top-level-origin">3.1. Native File System Permissions</a> <a href="#ref-for-concept-environment-top-level-origin①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-transient-activation">
    <a href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation">https://html.spec.whatwg.org/multipage/interaction.html#transient-activation</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-transient-activation">3.1. Native File System Permissions</a>
-    <li><a href="#ref-for-transient-activation①">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-transient-activation">3.1. Native File System Permissions</a> <a href="#ref-for-transient-activation①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-set-append">
@@ -3693,7 +3865,6 @@ appropriate.</p>
    <a href="https://infra.spec.whatwg.org/#assert">https://infra.spec.whatwg.org/#assert</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-assert">2.6. The FileSystemWritableFileStream interface</a>
-    <li><a href="#ref-for-assert①">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-assert②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-byte-sequence">
@@ -3701,19 +3872,13 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-byte-sequence">2.5.2. The getFile() method</a>
     <li><a href="#ref-for-byte-sequence①">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-byte-sequence②">(2)</a> <a href="#ref-for-byte-sequence③">(3)</a> <a href="#ref-for-byte-sequence④">(4)</a> <a href="#ref-for-byte-sequence⑤">(5)</a> <a href="#ref-for-byte-sequence⑥">(6)</a> <a href="#ref-for-byte-sequence⑦">(7)</a>
-    <li><a href="#ref-for-byte-sequence⑧">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-byte-sequence⑧">3.3. The showSaveFilePicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-list-contain">
    <a href="https://infra.spec.whatwg.org/#list-contain">https://infra.spec.whatwg.org/#list-contain</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-list-contain">2.1. Concepts</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-iteration-continue">
-   <a href="https://infra.spec.whatwg.org/#iteration-continue">https://infra.spec.whatwg.org/#iteration-continue</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-iteration-continue">3.2. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-javascript-string-convert">
@@ -3725,17 +3890,13 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-list-empty">
    <a href="https://infra.spec.whatwg.org/#list-empty">https://infra.spec.whatwg.org/#list-empty</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-list-empty">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-list-empty">3.4. FilePickerOptions.types</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-list-iterate">
-   <a href="https://infra.spec.whatwg.org/#list-iterate">https://infra.spec.whatwg.org/#list-iterate</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-map-iterate">
+   <a href="https://infra.spec.whatwg.org/#map-iterate">https://infra.spec.whatwg.org/#map-iterate</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-list-iterate">2.1. Concepts</a>
-    <li><a href="#ref-for-list-iterate①">2.5.2. The getFile() method</a>
-    <li><a href="#ref-for-list-iterate②">2.5.3. The getDirectory() method</a>
-    <li><a href="#ref-for-list-iterate③">2.5.4. The removeEntry() method</a>
-    <li><a href="#ref-for-list-iterate④">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-list-iterate⑤">(2)</a> <a href="#ref-for-list-iterate⑥">(3)</a> <a href="#ref-for-list-iterate⑦">(4)</a>
+    <li><a href="#ref-for-map-iterate">3.4. FilePickerOptions.types</a> <a href="#ref-for-map-iterate①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-list-is-empty">
@@ -3753,13 +3914,14 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-list">
    <a href="https://infra.spec.whatwg.org/#list">https://infra.spec.whatwg.org/#list</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-list">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-list①">(2)</a> <a href="#ref-for-list②">(3)</a>
+    <li><a href="#ref-for-list">3.2. The showOpenFilePicker() method</a> <a href="#ref-for-list①">(2)</a>
+    <li><a href="#ref-for-list②">3.4. FilePickerOptions.types</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-pair">
    <a href="https://infra.spec.whatwg.org/#pair">https://infra.spec.whatwg.org/#pair</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-pair">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-pair">3.4. FilePickerOptions.types</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-list-prepend">
@@ -3782,29 +3944,47 @@ appropriate.</p>
     <li><a href="#ref-for-ordered-set②">2.5.3. The getDirectory() method</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-list-size">
-   <a href="https://infra.spec.whatwg.org/#list-size">https://infra.spec.whatwg.org/#list-size</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-list-size">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-list-size①">(2)</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-string">
    <a href="https://infra.spec.whatwg.org/#string">https://infra.spec.whatwg.org/#string</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-string">2.1. Concepts</a> <a href="#ref-for-string①">(2)</a>
-    <li><a href="#ref-for-string②">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-string②">3.4. FilePickerOptions.types</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-mime-type-essence">
+   <a href="https://mimesniff.spec.whatwg.org/#mime-type-essence">https://mimesniff.spec.whatwg.org/#mime-type-essence</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-mime-type-essence">3.4. FilePickerOptions.types</a> <a href="#ref-for-mime-type-essence①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-mime-type">
    <a href="https://mimesniff.spec.whatwg.org/#mime-type">https://mimesniff.spec.whatwg.org/#mime-type</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-mime-type">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-mime-type">3.4. FilePickerOptions.types</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-parameters">
+   <a href="https://mimesniff.spec.whatwg.org/#parameters">https://mimesniff.spec.whatwg.org/#parameters</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-parameters">3.4. FilePickerOptions.types</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-parse-a-mime-type">
    <a href="https://mimesniff.spec.whatwg.org/#parse-a-mime-type">https://mimesniff.spec.whatwg.org/#parse-a-mime-type</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-parse-a-mime-type">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-parse-a-mime-type①">(2)</a>
+    <li><a href="#ref-for-parse-a-mime-type">3.4. FilePickerOptions.types</a> <a href="#ref-for-parse-a-mime-type①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-subtype">
+   <a href="https://mimesniff.spec.whatwg.org/#subtype">https://mimesniff.spec.whatwg.org/#subtype</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-subtype">3.4. FilePickerOptions.types</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-type">
+   <a href="https://mimesniff.spec.whatwg.org/#type">https://mimesniff.spec.whatwg.org/#type</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-type">3.4. FilePickerOptions.types</a> <a href="#ref-for-type①">(2)</a> <a href="#ref-for-type②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-permissionstate-denied">
@@ -3866,22 +4046,22 @@ appropriate.</p>
     <li><a href="#ref-for-set-up-writable-stream-default-controller">2.6. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-ws-class">
-   <a href="https://streams.spec.whatwg.org/#ws-class">https://streams.spec.whatwg.org/#ws-class</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-writablestream">
+   <a href="https://streams.spec.whatwg.org/#writablestream">https://streams.spec.whatwg.org/#writablestream</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-ws-class">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-ws-class①">(2)</a>
+    <li><a href="#ref-for-writablestream">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-writablestream①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-ws-default-controller-class">
-   <a href="https://streams.spec.whatwg.org/#ws-default-controller-class">https://streams.spec.whatwg.org/#ws-default-controller-class</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-writablestreamdefaultcontroller">
+   <a href="https://streams.spec.whatwg.org/#writablestreamdefaultcontroller">https://streams.spec.whatwg.org/#writablestreamdefaultcontroller</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-ws-default-controller-class">2.6. The FileSystemWritableFileStream interface</a>
+    <li><a href="#ref-for-writablestreamdefaultcontroller">2.6. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-default-writer-class">
-   <a href="https://streams.spec.whatwg.org/#default-writer-class">https://streams.spec.whatwg.org/#default-writer-class</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-writablestreamdefaultwriter">
+   <a href="https://streams.spec.whatwg.org/#writablestreamdefaultwriter">https://streams.spec.whatwg.org/#writablestreamdefaultwriter</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-default-writer-class">2.6. The FileSystemWritableFileStream interface</a>
+    <li><a href="#ref-for-writablestreamdefaultwriter">2.6. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-writable-stream-default-writer-release">
@@ -3916,7 +4096,9 @@ appropriate.</p>
    <a href="https://heycam.github.io/webidl/#aborterror">https://heycam.github.io/webidl/#aborterror</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-aborterror">2.6. The FileSystemWritableFileStream interface</a>
-    <li><a href="#ref-for-aborterror①">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-aborterror②">(2)</a>
+    <li><a href="#ref-for-aborterror①">3.2. The showOpenFilePicker() method</a> <a href="#ref-for-aborterror②">(2)</a>
+    <li><a href="#ref-for-aborterror③">3.3. The showSaveFilePicker() method</a> <a href="#ref-for-aborterror④">(2)</a>
+    <li><a href="#ref-for-aborterror⑤">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-aborterror⑥">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-BufferSource">
@@ -3962,8 +4144,7 @@ appropriate.</p>
     <li><a href="#ref-for-notallowederror⑤">2.5.3. The getDirectory() method</a>
     <li><a href="#ref-for-notallowederror⑥">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-notallowederror⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-notallowederror⑧">(2)</a>
-    <li><a href="#ref-for-notallowederror⑨">3.1. Native File System Permissions</a> <a href="#ref-for-notallowederror①⓪">(2)</a>
-    <li><a href="#ref-for-notallowederror①①">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-notallowederror⑨">3.1. Native File System Permissions</a> <a href="#ref-for-notallowederror①⓪">(2)</a> <a href="#ref-for-notallowederror①①">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-notfounderror">
@@ -3981,14 +4162,14 @@ appropriate.</p>
     <li><a href="#ref-for-SecureContext①">2.4. The FileSystemFileHandle interface</a>
     <li><a href="#ref-for-SecureContext②">2.5. The FileSystemDirectoryHandle interface</a>
     <li><a href="#ref-for-SecureContext③">2.6. The FileSystemWritableFileStream interface</a>
-    <li><a href="#ref-for-SecureContext④">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-SecureContext④">3. Accessing Native File System</a>
     <li><a href="#ref-for-SecureContext⑤">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-securityerror">
    <a href="https://heycam.github.io/webidl/#securityerror">https://heycam.github.io/webidl/#securityerror</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-securityerror">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-securityerror①">(2)</a> <a href="#ref-for-securityerror②">(3)</a> <a href="#ref-for-securityerror③">(4)</a>
+    <li><a href="#ref-for-securityerror">3.1. Native File System Permissions</a> <a href="#ref-for-securityerror①">(2)</a> <a href="#ref-for-securityerror②">(3)</a> <a href="#ref-for-securityerror③">(4)</a>
     <li><a href="#ref-for-securityerror④">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
@@ -3999,7 +4180,7 @@ appropriate.</p>
     <li><a href="#ref-for-exceptiondef-typeerror①">2.5.3. The getDirectory() method</a>
     <li><a href="#ref-for-exceptiondef-typeerror②">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-exceptiondef-typeerror③">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-exceptiondef-typeerror④">(2)</a> <a href="#ref-for-exceptiondef-typeerror⑤">(3)</a>
-    <li><a href="#ref-for-exceptiondef-typeerror⑥">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-exceptiondef-typeerror⑥">3.4. FilePickerOptions.types</a> <a href="#ref-for-exceptiondef-typeerror⑦">(2)</a> <a href="#ref-for-exceptiondef-typeerror⑧">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-typemismatcherror">
@@ -4015,7 +4196,7 @@ appropriate.</p>
     <li><a href="#ref-for-idl-USVString">2.3. The FileSystemHandle interface</a>
     <li><a href="#ref-for-idl-USVString①">2.5. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-idl-USVString②">(2)</a> <a href="#ref-for-idl-USVString③">(3)</a> <a href="#ref-for-idl-USVString④">(4)</a> <a href="#ref-for-idl-USVString⑤">(5)</a>
     <li><a href="#ref-for-idl-USVString⑥">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-idl-USVString⑦">(2)</a> <a href="#ref-for-idl-USVString⑧">(3)</a>
-    <li><a href="#ref-for-idl-USVString⑨">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-idl-USVString①⓪">(2)</a> <a href="#ref-for-idl-USVString①①">(3)</a>
+    <li><a href="#ref-for-idl-USVString⑨">3. Accessing Native File System</a> <a href="#ref-for-idl-USVString①⓪">(2)</a> <a href="#ref-for-idl-USVString①①">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-a-new-promise">
@@ -4032,15 +4213,17 @@ appropriate.</p>
     <li><a href="#ref-for-a-new-promise⑧">2.5.3. The getDirectory() method</a>
     <li><a href="#ref-for-a-new-promise⑨">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-a-new-promise①⓪">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-a-new-promise①①">(2)</a>
-    <li><a href="#ref-for-a-new-promise①②">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-a-new-promise①②">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-a-new-promise①③">3.3. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-a-new-promise①④">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-a-promise-rejected-with">
    <a href="https://heycam.github.io/webidl/#a-promise-rejected-with">https://heycam.github.io/webidl/#a-promise-rejected-with</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-a-promise-rejected-with">2.6. The FileSystemWritableFileStream interface</a>
-    <li><a href="#ref-for-a-promise-rejected-with①">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-a-promise-rejected-with②">(2)</a> <a href="#ref-for-a-promise-rejected-with③">(3)</a>
-    <li><a href="#ref-for-a-promise-rejected-with④">4.2. The getOriginPrivateDirectory() method</a>
+    <li><a href="#ref-for-a-promise-rejected-with①">3.1. Native File System Permissions</a> <a href="#ref-for-a-promise-rejected-with②">(2)</a>
+    <li><a href="#ref-for-a-promise-rejected-with③">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-a-promise-resolved-with">
@@ -4062,7 +4245,7 @@ appropriate.</p>
     <li><a href="#ref-for-idl-boolean">2.3. The FileSystemHandle interface</a> <a href="#ref-for-idl-boolean①">(2)</a> <a href="#ref-for-idl-boolean②">(3)</a> <a href="#ref-for-idl-boolean③">(4)</a>
     <li><a href="#ref-for-idl-boolean④">2.4. The FileSystemFileHandle interface</a>
     <li><a href="#ref-for-idl-boolean⑤">2.5. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-idl-boolean⑥">(2)</a> <a href="#ref-for-idl-boolean⑦">(3)</a>
-    <li><a href="#ref-for-idl-boolean⑧">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-idl-boolean⑨">(2)</a>
+    <li><a href="#ref-for-idl-boolean⑧">3. Accessing Native File System</a> <a href="#ref-for-idl-boolean⑨">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dfn-get-buffer-source-copy">
@@ -4086,7 +4269,9 @@ appropriate.</p>
     <li><a href="#ref-for-reject⑦">2.5.3. The getDirectory() method</a> <a href="#ref-for-reject⑧">(2)</a> <a href="#ref-for-reject⑨">(3)</a> <a href="#ref-for-reject①⓪">(4)</a> <a href="#ref-for-reject①①">(5)</a>
     <li><a href="#ref-for-reject①②">2.5.4. The removeEntry() method</a> <a href="#ref-for-reject①③">(2)</a> <a href="#ref-for-reject①④">(3)</a> <a href="#ref-for-reject①⑤">(4)</a> <a href="#ref-for-reject①⑥">(5)</a>
     <li><a href="#ref-for-reject①⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-reject①⑧">(2)</a> <a href="#ref-for-reject①⑨">(3)</a> <a href="#ref-for-reject②⓪">(4)</a> <a href="#ref-for-reject②①">(5)</a> <a href="#ref-for-reject②②">(6)</a>
-    <li><a href="#ref-for-reject②③">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-reject②④">(2)</a>
+    <li><a href="#ref-for-reject②③">3.2. The showOpenFilePicker() method</a> <a href="#ref-for-reject②④">(2)</a>
+    <li><a href="#ref-for-reject②⑤">3.3. The showSaveFilePicker() method</a> <a href="#ref-for-reject②⑥">(2)</a>
+    <li><a href="#ref-for-reject②⑦">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-reject②⑧">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-resolve">
@@ -4103,7 +4288,9 @@ appropriate.</p>
     <li><a href="#ref-for-resolve①③">2.5.3. The getDirectory() method</a> <a href="#ref-for-resolve①④">(2)</a>
     <li><a href="#ref-for-resolve①⑤">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-resolve①⑥">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-resolve①⑦">(2)</a> <a href="#ref-for-resolve①⑧">(3)</a> <a href="#ref-for-resolve①⑨">(4)</a>
-    <li><a href="#ref-for-resolve②⓪">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-resolve②①">(2)</a>
+    <li><a href="#ref-for-resolve②⓪">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-resolve②①">3.3. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-resolve②②">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-this">
@@ -4122,7 +4309,9 @@ appropriate.</p>
     <li><a href="#ref-for-this②⑧">2.6.1. The write() method</a>
     <li><a href="#ref-for-this②⑨">2.6.2. The seek() method</a>
     <li><a href="#ref-for-this③⓪">2.6.3. The truncate() method</a>
-    <li><a href="#ref-for-this③①">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-this③①">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-this③②">3.3. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-this③③">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-unsigned-long-long">
@@ -4192,7 +4381,7 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-same-origin" style="color:initial">same origin</span>
      <li><span class="dfn-paneled" id="term-for-serializable-objects" style="color:initial">serializable objects</span>
      <li><span class="dfn-paneled" id="term-for-serialization-steps" style="color:initial">serialization steps</span>
-     <li><span class="dfn-paneled" id="term-for-top-level-origin" style="color:initial">top-level origin</span>
+     <li><span class="dfn-paneled" id="term-for-concept-environment-top-level-origin" style="color:initial">top-level origin</span>
      <li><span class="dfn-paneled" id="term-for-transient-activation" style="color:initial">transient activation</span>
     </ul>
    <li>
@@ -4202,10 +4391,9 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-assert" style="color:initial">assert</span>
      <li><span class="dfn-paneled" id="term-for-byte-sequence" style="color:initial">byte sequence</span>
      <li><span class="dfn-paneled" id="term-for-list-contain" style="color:initial">contain</span>
-     <li><span class="dfn-paneled" id="term-for-iteration-continue" style="color:initial">continue</span>
      <li><span class="dfn-paneled" id="term-for-javascript-string-convert" style="color:initial">convert</span>
      <li><span class="dfn-paneled" id="term-for-list-empty" style="color:initial">empty</span>
-     <li><span class="dfn-paneled" id="term-for-list-iterate" style="color:initial">for each</span>
+     <li><span class="dfn-paneled" id="term-for-map-iterate" style="color:initial">for each <small>(for map)</small></span>
      <li><span class="dfn-paneled" id="term-for-list-is-empty" style="color:initial">is empty</span>
      <li><span class="dfn-paneled" id="term-for-byte-sequence-length" style="color:initial">length</span>
      <li><span class="dfn-paneled" id="term-for-list" style="color:initial">list</span>
@@ -4213,14 +4401,17 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-list-prepend" style="color:initial">prepend</span>
      <li><span class="dfn-paneled" id="term-for-list-remove" style="color:initial">remove</span>
      <li><span class="dfn-paneled" id="term-for-ordered-set" style="color:initial">set</span>
-     <li><span class="dfn-paneled" id="term-for-list-size" style="color:initial">size</span>
      <li><span class="dfn-paneled" id="term-for-string" style="color:initial">string</span>
     </ul>
    <li>
     <a data-link-type="biblio">[MIMESNIFF]</a> defines the following terms:
     <ul>
+     <li><span class="dfn-paneled" id="term-for-mime-type-essence" style="color:initial">essence</span>
      <li><span class="dfn-paneled" id="term-for-mime-type" style="color:initial">mime type</span>
+     <li><span class="dfn-paneled" id="term-for-parameters" style="color:initial">parameters</span>
      <li><span class="dfn-paneled" id="term-for-parse-a-mime-type" style="color:initial">parse a mime type</span>
+     <li><span class="dfn-paneled" id="term-for-subtype" style="color:initial">subtype</span>
+     <li><span class="dfn-paneled" id="term-for-type" style="color:initial">type</span>
     </ul>
    <li>
     <a data-link-type="biblio">[permissions]</a> defines the following terms:
@@ -4237,13 +4428,13 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-acquire-writable-stream-default-writer" style="color:initial">AcquireWritableStreamDefaultWriter</span>
      <li><span class="dfn-paneled" id="term-for-initialize-writable-stream" style="color:initial">InitializeWritableStream</span>
      <li><span class="dfn-paneled" id="term-for-set-up-writable-stream-default-controller" style="color:initial">SetUpWritableStreamDefaultController</span>
-     <li><span class="dfn-paneled" id="term-for-ws-class" style="color:initial">WritableStream</span>
-     <li><span class="dfn-paneled" id="term-for-ws-default-controller-class" style="color:initial">WritableStreamDefaultController</span>
-     <li><span class="dfn-paneled" id="term-for-default-writer-class" style="color:initial">WritableStreamDefaultWriter</span>
+     <li><span class="dfn-paneled" id="term-for-writablestream" style="color:initial">WritableStream</span>
+     <li><span class="dfn-paneled" id="term-for-writablestreamdefaultcontroller" style="color:initial">WritableStreamDefaultController</span>
+     <li><span class="dfn-paneled" id="term-for-writablestreamdefaultwriter" style="color:initial">WritableStreamDefaultWriter</span>
      <li><span class="dfn-paneled" id="term-for-writable-stream-default-writer-release" style="color:initial">WritableStreamDefaultWriterRelease</span>
      <li><span class="dfn-paneled" id="term-for-writable-stream-default-writer-write" style="color:initial">WritableStreamDefaultWriterWrite</span>
      <li><span class="dfn-paneled" id="term-for-ws-get-writer" style="color:initial">getWriter()</span>
-     <li><span class="dfn-paneled" id="term-for-default-writer-write" style="color:initial">write(chunk)</span>
+     <li><span class="dfn-paneled" id="term-for-default-writer-write" style="color:initial">write()</span>
     </ul>
    <li>
     <a data-link-type="biblio">[WebIDL]</a> defines the following terms:
@@ -4376,31 +4567,37 @@ appropriate.</p>
 <c- b>typedef</c-> (<a class="n" data-link-type="idl-name" href="https://heycam.github.io/webidl/#BufferSource"><c- n>BufferSource</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="https://w3c.github.io/FileAPI/#dfn-Blob"><c- n>Blob</c-></a> <c- b>or</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a> <c- b>or</c-> <a class="n" data-link-type="idl-name" href="#dictdef-writeparams"><c- n>WriteParams</c-></a>) <a href="#typedefdef-filesystemwritechunktype"><code><c- g>FileSystemWriteChunkType</c-></code></a>;
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->), <a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext"><c- g>SecureContext</c-></a>]
-<c- b>interface</c-> <a href="#filesystemwritablefilestream"><code><c- g>FileSystemWritableFileStream</c-></code></a> : <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#ws-class"><c- n>WritableStream</c-></a> {
+<c- b>interface</c-> <a href="#filesystemwritablefilestream"><code><c- g>FileSystemWritableFileStream</c-></code></a> : <a class="n" data-link-type="idl-name" href="https://streams.spec.whatwg.org/#writablestream"><c- n>WritableStream</c-></a> {
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-write"><c- g>write</c-></a>(<a class="n" data-link-type="idl-name" href="#typedefdef-filesystemwritechunktype"><c- n>FileSystemWriteChunkType</c-></a> <a href="#dom-filesystemwritablefilestream-write-data-data"><code><c- g>data</c-></code></a>);
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-seek"><c- g>seek</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a href="#dom-filesystemwritablefilestream-seek-position-position"><code><c- g>position</c-></code></a>);
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-truncate"><c- g>truncate</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long-long"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a href="#dom-filesystemwritablefilestream-truncate-size-size"><code><c- g>size</c-></code></a>);
 };
 
-<c- b>enum</c-> <a href="#enumdef-choosefilesystementriestype"><code><c- g>ChooseFileSystemEntriesType</c-></code></a> { <a href="#dom-choosefilesystementriestype-open-file"><code><c- s>"open-file"</c-></code></a>, <a href="#dom-choosefilesystementriestype-save-file"><code><c- s>"save-file"</c-></code></a>, <a href="#dom-choosefilesystementriestype-open-directory"><code><c- s>"open-directory"</c-></code></a> };
-
-<c- b>dictionary</c-> <a href="#dictdef-choosefilesystementriesoptionsaccepts"><code><c- g>ChooseFileSystemEntriesOptionsAccepts</c-></code></a> {
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a> <a data-type="USVString " href="#dom-choosefilesystementriesoptionsaccepts-description"><code><c- g>description</c-></code></a>;
-  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a>> <a data-type="sequence<USVString> " href="#dom-choosefilesystementriesoptionsaccepts-mimetypes"><code><c- g>mimeTypes</c-></code></a>;
-  <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a>> <a data-type="sequence<USVString> " href="#dom-choosefilesystementriesoptionsaccepts-extensions"><code><c- g>extensions</c-></code></a>;
+<c- b>dictionary</c-> <a href="#dictdef-filepickeraccepttype"><code><c- g>FilePickerAcceptType</c-></code></a> {
+    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a> <a data-type="USVString " href="#dom-filepickeraccepttype-description"><code><c- g>description</c-></code></a>;
+    <c- b>record</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a>, <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a>>> <a data-type="record<USVString, sequence<USVString>> " href="#dom-filepickeraccepttype-accept"><code><c- g>accept</c-></code></a>;
 };
 
-<c- b>dictionary</c-> <a href="#dictdef-choosefilesystementriesoptions"><code><c- g>ChooseFileSystemEntriesOptions</c-></code></a> {
-    <a class="n" data-link-type="idl-name" href="#enumdef-choosefilesystementriestype"><c- n>ChooseFileSystemEntriesType</c-></a> <a data-default="&quot;open-file&quot;" data-type="ChooseFileSystemEntriesType " href="#dom-choosefilesystementriesoptions-type"><code><c- g>type</c-></code></a> = "open-file";
-    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-choosefilesystementriesoptions-multiple"><code><c- g>multiple</c-></code></a> = <c- b>false</c->;
-    <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptionsaccepts"><c- n>ChooseFileSystemEntriesOptionsAccepts</c-></a>> <a data-type="sequence<ChooseFileSystemEntriesOptionsAccepts> " href="#dom-choosefilesystementriesoptions-accepts"><code><c- g>accepts</c-></code></a>;
-    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-choosefilesystementriesoptions-excludeacceptalloption"><code><c- g>excludeAcceptAllOption</c-></code></a> = <c- b>false</c->;
+<c- b>dictionary</c-> <a href="#dictdef-filepickeroptions"><code><c- g>FilePickerOptions</c-></code></a> {
+    <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-filepickeraccepttype"><c- n>FilePickerAcceptType</c-></a>> <a data-type="sequence<FilePickerAcceptType> " href="#dom-filepickeroptions-types"><code><c- g>types</c-></code></a>;
+    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-filepickeroptions-excludeacceptalloption"><code><c- g>excludeAcceptAllOption</c-></code></a> = <c- b>false</c->;
+};
+
+<c- b>dictionary</c-> <a href="#dictdef-openfilepickeroptions"><code><c- g>OpenFilePickerOptions</c-></code></a> : <a class="n" data-link-type="idl-name" href="#dictdef-filepickeroptions"><c- n>FilePickerOptions</c-></a> {
+    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-openfilepickeroptions-multiple"><code><c- g>multiple</c-></code></a> = <c- b>false</c->;
+};
+
+<c- b>dictionary</c-> <a href="#dictdef-savefilepickeroptions"><code><c- g>SaveFilePickerOptions</c-></code></a> : <a class="n" data-link-type="idl-name" href="#dictdef-filepickeroptions"><c- n>FilePickerOptions</c-></a> {
+};
+
+<c- b>dictionary</c-> <a href="#dictdef-directorypickeroptions"><code><c- g>DirectoryPickerOptions</c-></code></a> {
 };
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext"><c- g>SecureContext</c-></a>]
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/window-object.html#window"><c- g>Window</c-></a> {
-    <c- b>Promise</c->&lt;(<a class="n" data-link-type="idl-name" href="#filesystemhandle"><c- n>FileSystemHandle</c-></a> <c- b>or</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemhandle"><c- n>FileSystemHandle</c-></a>>)>
-        <a class="idl-code" data-link-type="method" href="#dom-window-choosefilesystementries"><c- g>chooseFileSystemEntries</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-choosefilesystementriesoptions"><c- n>ChooseFileSystemEntriesOptions</c-></a> <a href="#dom-window-choosefilesystementries-options-options"><code><c- g>options</c-></code></a> = {});
+    <c- b>Promise</c->&lt;<c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemfilehandle"><c- n>FileSystemFileHandle</c-></a>>> <a class="idl-code" data-link-type="method" href="#dom-window-showopenfilepicker"><c- g>showOpenFilePicker</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-openfilepickeroptions"><c- n>OpenFilePickerOptions</c-></a> <a href="#dom-window-showopenfilepicker-options-options"><code><c- g>options</c-></code></a> = {});
+    <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemfilehandle"><c- n>FileSystemFileHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-window-showsavefilepicker"><c- g>showSaveFilePicker</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-savefilepickeroptions"><c- n>SaveFilePickerOptions</c-></a> <a href="#dom-window-showsavefilepicker-options-options"><code><c- g>options</c-></code></a> = {});
+    <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-window-showdirectorypicker"><c- g>showDirectoryPicker</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-directorypickeroptions"><c- n>DirectoryPickerOptions</c-></a> <a href="#dom-window-showdirectorypicker-options-options"><code><c- g>options</c-></code></a> = {});
 };
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext"><c- g>SecureContext</c-></a>]
@@ -4440,15 +4637,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
    <div class="issue"> Not clear if this should reject, and if it does, is this really the right error type?
  Chrome’s implementation is actually inconsistent about this rejecting or not.<a href="#issue-9aa12629"> ↵ </a></div>
    <div class="issue"> Should this throw instead of returning silently?<a href="#issue-d65b4224"> ↵ </a></div>
-   <div class="issue"> Should this return an array, even when multiple=false? And related questions,
-should this be one method that can return either files or directories depending on the
-passed in options, or separate file and directory methods? <a href="https://github.com/wicg/native-file-system/issues/25">&lt;https://github.com/wicg/native-file-system/issues/25></a><a href="#issue-a843e054"> ↵ </a></div>
    <div class="issue"> Should this be <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror">SecurityError</a></code> or <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror">NotAllowedError</a></code> (and same question for the request permission steps checking for user activation)?<a href="#issue-a33056c3"> ↵ </a></div>
-   <div class="issue"> The previous two steps are not correct. We do want to allow things like "image/*" as well,
- which are not valid for the <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#parse-a-mime-type">parse a MIME type</a> algorithm. Also we need to specify what it
- means for types to "match". So figure out a better way of writing this.<a href="#issue-7a5e3c00"> ↵ </a></div>
-   <div class="issue"> In general we need to better define how mime types are used here. <a href="https://github.com/wicg/native-file-system/issues/133">&lt;https://github.com/wicg/native-file-system/issues/133></a><a href="#issue-3aab0654"> ↵ </a></div>
-   <div class="issue"> Should this resolve with <code>undefined</code> instead? <a href="https://github.com/wicg/native-file-system/issues/84">&lt;https://github.com/wicg/native-file-system/issues/84></a><a href="#issue-5681994a"> ↵ </a></div>
    <div class="issue"> Rather than requiring the website to prompt separately for a writable directory,
  we should provide some kind of API to request a writable directory in one step. <a href="https://github.com/wicg/native-file-system/issues/89">&lt;https://github.com/wicg/native-file-system/issues/89></a><a href="#issue-923f3009"> ↵ </a></div>
   </div>
@@ -4460,7 +4649,6 @@ passed in options, or separate file and directory methods? <a href="https://gith
     <li><a href="#ref-for-entry①①">2.3. The FileSystemHandle interface</a> <a href="#ref-for-entry①②">(2)</a> <a href="#ref-for-entry①③">(3)</a>
     <li><a href="#ref-for-entry①④">2.5.1. Directory iteration</a>
     <li><a href="#ref-for-entry①⑤">3.1. Native File System Permissions</a> <a href="#ref-for-entry①⑥">(2)</a>
-    <li><a href="#ref-for-entry①⑦">3.2. The chooseFileSystemEntries() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="entry-name">
@@ -4494,6 +4682,8 @@ passed in options, or separate file and directory methods? <a href="https://gith
     <li><a href="#ref-for-file⑤">2.5.2. The getFile() method</a>
     <li><a href="#ref-for-file⑥">2.5.3. The getDirectory() method</a>
     <li><a href="#ref-for-file⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-file⑧">(2)</a>
+    <li><a href="#ref-for-file⑨">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-file①⓪">3.3. The showSaveFilePicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="file-entry-binary-data">
@@ -4504,7 +4694,7 @@ passed in options, or separate file and directory methods? <a href="https://gith
     <li><a href="#ref-for-file-entry-binary-data②">2.4.2. The createWritable() method</a>
     <li><a href="#ref-for-file-entry-binary-data③">2.5.2. The getFile() method</a>
     <li><a href="#ref-for-file-entry-binary-data④">2.6. The FileSystemWritableFileStream interface</a>
-    <li><a href="#ref-for-file-entry-binary-data⑤">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-file-entry-binary-data⑤">3.3. The showSaveFilePicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="file-entry-modification-timestamp">
@@ -4524,7 +4714,8 @@ passed in options, or separate file and directory methods? <a href="https://gith
     <li><a href="#ref-for-directory⑥">2.5.2. The getFile() method</a>
     <li><a href="#ref-for-directory⑦">2.5.3. The getDirectory() method</a>
     <li><a href="#ref-for-directory⑧">2.5.4. The removeEntry() method</a>
-    <li><a href="#ref-for-directory⑨">4.1. Sandboxed File System Concepts</a>
+    <li><a href="#ref-for-directory⑨">3.5. The showDirectoryPicker() method</a>
+    <li><a href="#ref-for-directory①⓪">4.1. Sandboxed File System Concepts</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="directory-entry-children">
@@ -4572,8 +4763,10 @@ passed in options, or separate file and directory methods? <a href="https://gith
     <li><a href="#ref-for-entry-query-permission-steps①①">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-entry-query-permission-steps①②">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-entry-query-permission-steps①③">(2)</a>
     <li><a href="#ref-for-entry-query-permission-steps①④">3.1. Native File System Permissions</a> <a href="#ref-for-entry-query-permission-steps①⑤">(2)</a> <a href="#ref-for-entry-query-permission-steps①⑥">(3)</a> <a href="#ref-for-entry-query-permission-steps①⑦">(4)</a>
-    <li><a href="#ref-for-entry-query-permission-steps①⑧">3.2. The chooseFileSystemEntries() method</a>
-    <li><a href="#ref-for-entry-query-permission-steps①⑨">4.1. Sandboxed File System Concepts</a>
+    <li><a href="#ref-for-entry-query-permission-steps①⑧">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-entry-query-permission-steps①⑨">3.3. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-entry-query-permission-steps②⓪">3.5. The showDirectoryPicker() method</a>
+    <li><a href="#ref-for-entry-query-permission-steps②①">4.1. Sandboxed File System Concepts</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="entry-request-permission-steps">
@@ -4585,7 +4778,9 @@ passed in options, or separate file and directory methods? <a href="https://gith
     <li><a href="#ref-for-entry-request-permission-steps③">2.5.2. The getFile() method</a>
     <li><a href="#ref-for-entry-request-permission-steps④">2.5.3. The getDirectory() method</a>
     <li><a href="#ref-for-entry-request-permission-steps⑤">2.5.4. The removeEntry() method</a>
-    <li><a href="#ref-for-entry-request-permission-steps⑥">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-entry-request-permission-steps⑥">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-entry-request-permission-steps⑦">3.3. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-entry-request-permission-steps⑧">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-filesystemhandlepermissiondescriptor">
@@ -4617,7 +4812,6 @@ passed in options, or separate file and directory methods? <a href="https://gith
     <li><a href="#ref-for-filesystemhandle">2.3. The FileSystemHandle interface</a> <a href="#ref-for-filesystemhandle①">(2)</a> <a href="#ref-for-filesystemhandle②">(3)</a> <a href="#ref-for-filesystemhandle③">(4)</a> <a href="#ref-for-filesystemhandle④">(5)</a> <a href="#ref-for-filesystemhandle⑤">(6)</a>
     <li><a href="#ref-for-filesystemhandle⑥">2.4. The FileSystemFileHandle interface</a> <a href="#ref-for-filesystemhandle⑦">(2)</a>
     <li><a href="#ref-for-filesystemhandle⑧">2.5. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-filesystemhandle⑨">(2)</a> <a href="#ref-for-filesystemhandle①⓪">(3)</a> <a href="#ref-for-filesystemhandle①①">(4)</a>
-    <li><a href="#ref-for-filesystemhandle①②">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-filesystemhandle①③">(2)</a> <a href="#ref-for-filesystemhandle①④">(3)</a> <a href="#ref-for-filesystemhandle①⑤">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="filesystemhandle-entry">
@@ -4701,7 +4895,9 @@ passed in options, or separate file and directory methods? <a href="https://gith
     <li><a href="#ref-for-filesystemfilehandle④">2.5. The FileSystemDirectoryHandle interface</a>
     <li><a href="#ref-for-filesystemfilehandle⑤">2.5.1. Directory iteration</a>
     <li><a href="#ref-for-filesystemfilehandle⑥">2.5.2. The getFile() method</a> <a href="#ref-for-filesystemfilehandle⑦">(2)</a>
-    <li><a href="#ref-for-filesystemfilehandle⑧">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-filesystemfilehandle⑧">3. Accessing Native File System</a> <a href="#ref-for-filesystemfilehandle⑨">(2)</a>
+    <li><a href="#ref-for-filesystemfilehandle①⓪">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-filesystemfilehandle①①">3.3. The showSaveFilePicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemfilehandle-getfile">
@@ -4762,8 +4958,9 @@ passed in options, or separate file and directory methods? <a href="https://gith
     <li><a href="#ref-for-filesystemdirectoryhandle①">2.5. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-filesystemdirectoryhandle②">(2)</a> <a href="#ref-for-filesystemdirectoryhandle③">(3)</a> <a href="#ref-for-filesystemdirectoryhandle④">(4)</a>
     <li><a href="#ref-for-filesystemdirectoryhandle⑤">2.5.1. Directory iteration</a> <a href="#ref-for-filesystemdirectoryhandle⑥">(2)</a> <a href="#ref-for-filesystemdirectoryhandle⑦">(3)</a>
     <li><a href="#ref-for-filesystemdirectoryhandle⑧">2.5.3. The getDirectory() method</a> <a href="#ref-for-filesystemdirectoryhandle⑨">(2)</a>
-    <li><a href="#ref-for-filesystemdirectoryhandle①⓪">3.2. The chooseFileSystemEntries() method</a>
-    <li><a href="#ref-for-filesystemdirectoryhandle①①">4.2. The getOriginPrivateDirectory() method</a> <a href="#ref-for-filesystemdirectoryhandle①②">(2)</a>
+    <li><a href="#ref-for-filesystemdirectoryhandle①⓪">3. Accessing Native File System</a>
+    <li><a href="#ref-for-filesystemdirectoryhandle①①">3.5. The showDirectoryPicker() method</a>
+    <li><a href="#ref-for-filesystemdirectoryhandle①②">4.2. The getOriginPrivateDirectory() method</a> <a href="#ref-for-filesystemdirectoryhandle①③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="filesystemdirectoryhandle-iterator-past-results">
@@ -4937,107 +5134,129 @@ passed in options, or separate file and directory methods? <a href="https://gith
     <li><a href="#ref-for-dom-filesystemwritablefilestream-truncate①">2.6.3. The truncate() method</a> <a href="#ref-for-dom-filesystemwritablefilestream-truncate②">(2)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="dictdef-filepickeraccepttype">
+   <b><a href="#dictdef-filepickeraccepttype">#dictdef-filepickeraccepttype</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dictdef-filepickeraccepttype">3. Accessing Native File System</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-filepickeraccepttype-description">
+   <b><a href="#dom-filepickeraccepttype-description">#dom-filepickeraccepttype-description</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-filepickeraccepttype-description">3.4. FilePickerOptions.types</a> <a href="#ref-for-dom-filepickeraccepttype-description①">(2)</a> <a href="#ref-for-dom-filepickeraccepttype-description②">(3)</a> <a href="#ref-for-dom-filepickeraccepttype-description③">(4)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-filepickeraccepttype-accept">
+   <b><a href="#dom-filepickeraccepttype-accept">#dom-filepickeraccepttype-accept</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-filepickeraccepttype-accept">3.4. FilePickerOptions.types</a> <a href="#ref-for-dom-filepickeraccepttype-accept①">(2)</a> <a href="#ref-for-dom-filepickeraccepttype-accept②">(3)</a> <a href="#ref-for-dom-filepickeraccepttype-accept③">(4)</a> <a href="#ref-for-dom-filepickeraccepttype-accept④">(5)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dictdef-filepickeroptions">
+   <b><a href="#dictdef-filepickeroptions">#dictdef-filepickeroptions</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dictdef-filepickeroptions">3. Accessing Native File System</a> <a href="#ref-for-dictdef-filepickeroptions①">(2)</a>
+    <li><a href="#ref-for-dictdef-filepickeroptions②">3.4. FilePickerOptions.types</a> <a href="#ref-for-dictdef-filepickeroptions③">(2)</a> <a href="#ref-for-dictdef-filepickeroptions④">(3)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-filepickeroptions-types">
+   <b><a href="#dom-filepickeroptions-types">#dom-filepickeroptions-types</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-filepickeroptions-types">3.4. FilePickerOptions.types</a> <a href="#ref-for-dom-filepickeroptions-types①">(2)</a> <a href="#ref-for-dom-filepickeroptions-types②">(3)</a> <a href="#ref-for-dom-filepickeroptions-types③">(4)</a> <a href="#ref-for-dom-filepickeroptions-types④">(5)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-filepickeroptions-excludeacceptalloption">
+   <b><a href="#dom-filepickeroptions-excludeacceptalloption">#dom-filepickeroptions-excludeacceptalloption</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-filepickeroptions-excludeacceptalloption">3.4. FilePickerOptions.types</a> <a href="#ref-for-dom-filepickeroptions-excludeacceptalloption①">(2)</a> <a href="#ref-for-dom-filepickeroptions-excludeacceptalloption②">(3)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dictdef-openfilepickeroptions">
+   <b><a href="#dictdef-openfilepickeroptions">#dictdef-openfilepickeroptions</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dictdef-openfilepickeroptions">3. Accessing Native File System</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-openfilepickeroptions-multiple">
+   <b><a href="#dom-openfilepickeroptions-multiple">#dom-openfilepickeroptions-multiple</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-openfilepickeroptions-multiple">3.2. The showOpenFilePicker() method</a> <a href="#ref-for-dom-openfilepickeroptions-multiple①">(2)</a> <a href="#ref-for-dom-openfilepickeroptions-multiple②">(3)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dictdef-savefilepickeroptions">
+   <b><a href="#dictdef-savefilepickeroptions">#dictdef-savefilepickeroptions</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dictdef-savefilepickeroptions">3. Accessing Native File System</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dictdef-directorypickeroptions">
+   <b><a href="#dictdef-directorypickeroptions">#dictdef-directorypickeroptions</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dictdef-directorypickeroptions">3. Accessing Native File System</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="native-file-system-handle-factories">
+   <b><a href="#native-file-system-handle-factories">#native-file-system-handle-factories</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-native-file-system-handle-factories">2.1. Concepts</a>
+    <li><a href="#ref-for-native-file-system-handle-factories①">2.2. Permissions</a>
+    <li><a href="#ref-for-native-file-system-handle-factories②">2.3.2. The queryPermission() method</a>
+    <li><a href="#ref-for-native-file-system-handle-factories③">3.1. Native File System Permissions</a> <a href="#ref-for-native-file-system-handle-factories④">(2)</a>
+    <li><a href="#ref-for-native-file-system-handle-factories⑤">5.3. First-party vs third-party contexts.</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="native-file-system-query-permission-steps">
    <b><a href="#native-file-system-query-permission-steps">#native-file-system-query-permission-steps</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-native-file-system-query-permission-steps">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-native-file-system-query-permission-steps">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-native-file-system-query-permission-steps①">3.3. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-native-file-system-query-permission-steps②">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="native-file-system-request-permission-steps">
    <b><a href="#native-file-system-request-permission-steps">#native-file-system-request-permission-steps</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-native-file-system-request-permission-steps">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-native-file-system-request-permission-steps">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-native-file-system-request-permission-steps①">3.3. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-native-file-system-request-permission-steps②">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="enumdef-choosefilesystementriestype">
-   <b><a href="#enumdef-choosefilesystementriestype">#enumdef-choosefilesystementriestype</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="is-allowed-to-show-a-file-picker">
+   <b><a href="#is-allowed-to-show-a-file-picker">#is-allowed-to-show-a-file-picker</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-enumdef-choosefilesystementriestype">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-is-allowed-to-show-a-file-picker">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-is-allowed-to-show-a-file-picker①">3.3. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-is-allowed-to-show-a-file-picker②">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-choosefilesystementriestype-open-file">
-   <b><a href="#dom-choosefilesystementriestype-open-file">#dom-choosefilesystementriestype-open-file</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-window-showopenfilepicker">
+   <b><a href="#dom-window-showopenfilepicker">#dom-window-showopenfilepicker</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-choosefilesystementriestype-open-file">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-dom-window-showopenfilepicker">3. Accessing Native File System</a> <a href="#ref-for-dom-window-showopenfilepicker①">(2)</a>
+    <li><a href="#ref-for-dom-window-showopenfilepicker②">3.2. The showOpenFilePicker() method</a> <a href="#ref-for-dom-window-showopenfilepicker③">(2)</a> <a href="#ref-for-dom-window-showopenfilepicker④">(3)</a> <a href="#ref-for-dom-window-showopenfilepicker⑤">(4)</a> <a href="#ref-for-dom-window-showopenfilepicker⑥">(5)</a>
+    <li><a href="#ref-for-dom-window-showopenfilepicker⑦">3.4. FilePickerOptions.types</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-choosefilesystementriestype-save-file">
-   <b><a href="#dom-choosefilesystementriestype-save-file">#dom-choosefilesystementriestype-save-file</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-window-showsavefilepicker">
+   <b><a href="#dom-window-showsavefilepicker">#dom-window-showsavefilepicker</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-choosefilesystementriestype-save-file">3.1. Native File System Permissions</a>
-    <li><a href="#ref-for-dom-choosefilesystementriestype-save-file①">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-dom-choosefilesystementriestype-save-file②">(2)</a> <a href="#ref-for-dom-choosefilesystementriestype-save-file③">(3)</a> <a href="#ref-for-dom-choosefilesystementriestype-save-file④">(4)</a>
+    <li><a href="#ref-for-dom-window-showsavefilepicker">3. Accessing Native File System</a> <a href="#ref-for-dom-window-showsavefilepicker①">(2)</a>
+    <li><a href="#ref-for-dom-window-showsavefilepicker②">3.3. The showSaveFilePicker() method</a> <a href="#ref-for-dom-window-showsavefilepicker③">(2)</a> <a href="#ref-for-dom-window-showsavefilepicker④">(3)</a>
+    <li><a href="#ref-for-dom-window-showsavefilepicker⑤">3.4. FilePickerOptions.types</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-choosefilesystementriestype-open-directory">
-   <b><a href="#dom-choosefilesystementriestype-open-directory">#dom-choosefilesystementriestype-open-directory</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="process-accept-types">
+   <b><a href="#process-accept-types">#process-accept-types</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-choosefilesystementriestype-open-directory">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-dom-choosefilesystementriestype-open-directory①">(2)</a> <a href="#ref-for-dom-choosefilesystementriestype-open-directory②">(3)</a> <a href="#ref-for-dom-choosefilesystementriestype-open-directory③">(4)</a> <a href="#ref-for-dom-choosefilesystementriestype-open-directory④">(5)</a>
+    <li><a href="#ref-for-process-accept-types">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-process-accept-types①">3.3. The showSaveFilePicker() method</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dictdef-choosefilesystementriesoptionsaccepts">
-   <b><a href="#dictdef-choosefilesystementriesoptionsaccepts">#dictdef-choosefilesystementriesoptionsaccepts</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-window-showdirectorypicker">
+   <b><a href="#dom-window-showdirectorypicker">#dom-window-showdirectorypicker</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dictdef-choosefilesystementriesoptionsaccepts">3.2. The chooseFileSystemEntries() method</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-choosefilesystementriesoptionsaccepts-description">
-   <b><a href="#dom-choosefilesystementriesoptionsaccepts-description">#dom-choosefilesystementriesoptionsaccepts-description</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-choosefilesystementriesoptionsaccepts-description">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-dom-choosefilesystementriesoptionsaccepts-description①">(2)</a> <a href="#ref-for-dom-choosefilesystementriesoptionsaccepts-description②">(3)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-choosefilesystementriesoptionsaccepts-mimetypes">
-   <b><a href="#dom-choosefilesystementriesoptionsaccepts-mimetypes">#dom-choosefilesystementriesoptionsaccepts-mimetypes</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-choosefilesystementriesoptionsaccepts-mimetypes">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-dom-choosefilesystementriesoptionsaccepts-mimetypes①">(2)</a> <a href="#ref-for-dom-choosefilesystementriesoptionsaccepts-mimetypes②">(3)</a> <a href="#ref-for-dom-choosefilesystementriesoptionsaccepts-mimetypes③">(4)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-choosefilesystementriesoptionsaccepts-extensions">
-   <b><a href="#dom-choosefilesystementriesoptionsaccepts-extensions">#dom-choosefilesystementriesoptionsaccepts-extensions</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-choosefilesystementriesoptionsaccepts-extensions">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-dom-choosefilesystementriesoptionsaccepts-extensions①">(2)</a> <a href="#ref-for-dom-choosefilesystementriesoptionsaccepts-extensions②">(3)</a> <a href="#ref-for-dom-choosefilesystementriesoptionsaccepts-extensions③">(4)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dictdef-choosefilesystementriesoptions">
-   <b><a href="#dictdef-choosefilesystementriesoptions">#dictdef-choosefilesystementriesoptions</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dictdef-choosefilesystementriesoptions">3.2. The chooseFileSystemEntries() method</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-choosefilesystementriesoptions-type">
-   <b><a href="#dom-choosefilesystementriesoptions-type">#dom-choosefilesystementriesoptions-type</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-choosefilesystementriesoptions-type">3.1. Native File System Permissions</a>
-    <li><a href="#ref-for-dom-choosefilesystementriesoptions-type①">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-dom-choosefilesystementriesoptions-type②">(2)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-type③">(3)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-type④">(4)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-type⑤">(5)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-type⑥">(6)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-choosefilesystementriesoptions-multiple">
-   <b><a href="#dom-choosefilesystementriesoptions-multiple">#dom-choosefilesystementriesoptions-multiple</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-choosefilesystementriesoptions-multiple">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-dom-choosefilesystementriesoptions-multiple①">(2)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-multiple②">(3)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-multiple③">(4)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-multiple④">(5)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-multiple⑤">(6)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-multiple⑥">(7)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-multiple⑦">(8)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-choosefilesystementriesoptions-accepts">
-   <b><a href="#dom-choosefilesystementriesoptions-accepts">#dom-choosefilesystementriesoptions-accepts</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-choosefilesystementriesoptions-accepts">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-dom-choosefilesystementriesoptions-accepts①">(2)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-accepts②">(3)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-accepts③">(4)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-accepts④">(5)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-choosefilesystementriesoptions-excludeacceptalloption">
-   <b><a href="#dom-choosefilesystementriesoptions-excludeacceptalloption">#dom-choosefilesystementriesoptions-excludeacceptalloption</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-choosefilesystementriesoptions-excludeacceptalloption">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-dom-choosefilesystementriesoptions-excludeacceptalloption①">(2)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-excludeacceptalloption②">(3)</a> <a href="#ref-for-dom-choosefilesystementriesoptions-excludeacceptalloption③">(4)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-window-choosefilesystementries">
-   <b><a href="#dom-window-choosefilesystementries">#dom-window-choosefilesystementries</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-window-choosefilesystementries">2.1. Concepts</a>
-    <li><a href="#ref-for-dom-window-choosefilesystementries①">2.2. Permissions</a>
-    <li><a href="#ref-for-dom-window-choosefilesystementries②">2.3.2. The queryPermission() method</a>
-    <li><a href="#ref-for-dom-window-choosefilesystementries③">3.1. Native File System Permissions</a> <a href="#ref-for-dom-window-choosefilesystementries④">(2)</a> <a href="#ref-for-dom-window-choosefilesystementries⑤">(3)</a>
-    <li><a href="#ref-for-dom-window-choosefilesystementries⑥">3.2. The chooseFileSystemEntries() method</a> <a href="#ref-for-dom-window-choosefilesystementries⑦">(2)</a> <a href="#ref-for-dom-window-choosefilesystementries⑧">(3)</a>
-    <li><a href="#ref-for-dom-window-choosefilesystementries⑨">5.3. First-party vs third-party contexts.</a>
+    <li><a href="#ref-for-dom-window-showdirectorypicker">3. Accessing Native File System</a> <a href="#ref-for-dom-window-showdirectorypicker①">(2)</a>
+    <li><a href="#ref-for-dom-window-showdirectorypicker②">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-dom-window-showdirectorypicker③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="sandboxed-file-system-root">
@@ -5059,7 +5278,9 @@ passed in options, or separate file and directory methods? <a href="https://gith
   <aside class="dfn-panel" data-for="too-sensitive-or-dangerous">
    <b><a href="#too-sensitive-or-dangerous">#too-sensitive-or-dangerous</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-too-sensitive-or-dangerous">3.2. The chooseFileSystemEntries() method</a>
+    <li><a href="#ref-for-too-sensitive-or-dangerous">3.2. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-too-sensitive-or-dangerous①">3.3. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-too-sensitive-or-dangerous②">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="malware-scans-and-safe-browsing-checks">
