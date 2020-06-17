@@ -91,7 +91,7 @@ An [=/entry=]'s [=entry/parent=] is null if no such directory entry exists.
 Note: Two different [=/entries=] can represent the same file or directory on disk, in which
 case it is possible for both entries to have a different parent, or for one entry to have a
 parent while the other entry does not have a parent. Typically an entry does not have a parent
-if it was returned by {{getOriginPrivateDirectory()}} or one of the [=native file system entry points=],
+if it was returned by {{getOriginPrivateDirectory()}} or one of the [=native file system handle factories=],
 and an entry will have a parent in all other cases.
 
 [=/Entries=] can (but don't have to) be backed by files on the systems native file system,
@@ -144,7 +144,7 @@ Unless specified otherwise, these steps are:
 1. Assert: |parent| is not null.
 
    Note: [[#native-file-system-permissions]] overrides these steps for entries returned by
-   the [=native file system entry points=]. Additionally [[#sandboxed-filesystem-concepts]] overrides
+   the [=native file system handle factories=]. Additionally [[#sandboxed-filesystem-concepts]] overrides
    these steps for entries returned by {{getOriginPrivateDirectory()}}.
    All other entries always have a parent.
 
@@ -273,7 +273,7 @@ Issue(119): the currently described API here assumes a model where it is not pos
      the website will have to call {{FileSystemHandle/requestPermission()}} before any
      operations on the handle can be done. If this returns `"denied"` any operations will reject.
 
-     Usually handles returned by the [=native file system entry points=] will initially return `"granted"` for
+     Usually handles returned by the [=native file system handle factories=] will initially return `"granted"` for
      their read permission state, however other than through the user revoking permission, a handle
      retrieved from IndexedDB is also likely to return `"prompt"`.
 
@@ -1116,7 +1116,7 @@ partial interface Window {
 </xmp>
 
 The {{showOpenFilePicker()}}, {{showSaveFilePicker()}} and {{showDirectoryPicker()}} methods
-are together known as the <dfn>native file system entry points</dfn>.
+are together known as the <dfn>native file system handle factories</dfn>.
 
 ## Native File System Permissions ## {#native-file-system-permissions}
 
@@ -1148,9 +1148,9 @@ and an [=environment settings object=] |settings| are:
 
 </div>
 
-The fact that the user picked the specific files returned by the [=native file system entry points=] in a prompt
+The fact that the user picked the specific files returned by the [=native file system handle factories=] in a prompt
 should be treated by the user agent as the user intending to grant read access to the website
-for the returned files. As such, at the time the promise returned by one of the [=native file system entry points=]
+for the returned files. As such, at the time the promise returned by one of the [=native file system handle factories=]
 resolves, the [=query permission steps=] for the returned entries
 given «[&nbsp;"{{FileSystemHandlePermissionDescriptor/writable}}" → `false`&nbsp;]»
 should return {{PermissionState/"granted"}}.
@@ -1623,7 +1623,7 @@ Clearing browsing data is expected to revoke all permissions as well.
 
 In third-party contexts (e.g. an iframe whose origin does not match that of the top-level frame)
 websites can't gain access to data they don't already have access to. This includes both getting
-access to new files or directories via the [=native file system entry points=], as well as requesting
+access to new files or directories via the [=native file system handle factories=], as well as requesting
 more permissions to existing handles via the {{requestPermission}} API.
 
 Handles can also only be post-messaged to same-origin destinations. Attempts to send a handle to
