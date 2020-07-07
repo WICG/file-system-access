@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 04c91f0f, updated Mon Jun 29 08:51:04 2020 +0200" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="7f778b0428d2b348285848ce71d9ff3dea599704" name="document-revision">
+  <meta content="fa242ddde40ebe3fe6a835dd05206408564d56df" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1562,8 +1562,8 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
        <a href="#api-filesystemdirectoryhandle"><span class="secno">2.5</span> <span class="content">The <code class="idl"><span>FileSystemDirectoryHandle</span></code> interface</span></a>
        <ol class="toc">
         <li><a href="#api-filesystemdirectoryhandle-asynciterable"><span class="secno">2.5.1</span> <span class="content">Directory iteration</span></a>
-        <li><a href="#api-filesystemdirectoryhandle-getfile"><span class="secno">2.5.2</span> <span class="content">The <code class="idl"><span>getFile()</span></code> method</span></a>
-        <li><a href="#api-filesystemdirectoryhandle-getdirectory"><span class="secno">2.5.3</span> <span class="content">The <code class="idl"><span>getDirectory()</span></code> method</span></a>
+        <li><a href="#api-filesystemdirectoryhandle-getfilehandle"><span class="secno">2.5.2</span> <span class="content">The <code class="idl"><span>getFileHandle()</span></code> method</span></a>
+        <li><a href="#api-filesystemdirectoryhandle-getdirectoryhandle"><span class="secno">2.5.3</span> <span class="content">The <code class="idl"><span>getDirectoryHandle()</span></code> method</span></a>
         <li><a href="#api-filesystemdirectoryhandle-removeentry"><span class="secno">2.5.4</span> <span class="content">The <code class="idl"><span>removeEntry()</span></code> method</span></a>
         <li><a href="#api-filesystemdirectoryhandle-resolve"><span class="secno">2.5.5</span> <span class="content">The <code class="idl"><span>resolve()</span></code> method</span></a>
        </ol>
@@ -2046,8 +2046,8 @@ modifications to existing large files. <a href="https://github.com/wicg/native-f
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemdirectoryhandle"><code><c- g>FileSystemDirectoryHandle</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑧"><c- n>FileSystemHandle</c-></a> {
   <c- b>async</c-> <c- b>iterable</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①"><c- b>USVString</c-></a>, <a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle⑨"><c- n>FileSystemHandle</c-></a>>;
 
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle④"><c- n>FileSystemFileHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile"><c- g>getFile</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString②"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getFile(name, options), FileSystemDirectoryHandle/getFile(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getfile-name-options-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getfile-name-options-name"></a></dfn>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetfileoptions" id="ref-for-dictdef-filesystemgetfileoptions"><c- n>FileSystemGetFileOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getFile(name, options), FileSystemDirectoryHandle/getFile(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getfile-name-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getfile-name-options-options"></a></dfn> = {});
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle②"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory"><c- g>getDirectory</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString③"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getDirectory(name, options), FileSystemDirectoryHandle/getDirectory(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getdirectory-name-options-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getdirectory-name-options-name"></a></dfn>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetdirectoryoptions" id="ref-for-dictdef-filesystemgetdirectoryoptions"><c- n>FileSystemGetDirectoryOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getDirectory(name, options), FileSystemDirectoryHandle/getDirectory(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getdirectory-name-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getdirectory-name-options-options"></a></dfn> = {});
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle④"><c- n>FileSystemFileHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getfilehandle" id="ref-for-dom-filesystemdirectoryhandle-getfilehandle"><c- g>getFileHandle</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString②"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getFileHandle(name, options), FileSystemDirectoryHandle/getFileHandle(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getfilehandle-name-options-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getfilehandle-name-options-name"></a></dfn>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetfileoptions" id="ref-for-dictdef-filesystemgetfileoptions"><c- n>FileSystemGetFileOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getFileHandle(name, options), FileSystemDirectoryHandle/getFileHandle(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getfilehandle-name-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getfilehandle-name-options-options"></a></dfn> = {});
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle②"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getdirectoryhandle" id="ref-for-dom-filesystemdirectoryhandle-getdirectoryhandle"><c- g>getDirectoryHandle</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString③"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getDirectoryHandle(name, options), FileSystemDirectoryHandle/getDirectoryHandle(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getdirectoryhandle-name-options-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getdirectoryhandle-name-options-name"></a></dfn>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetdirectoryoptions" id="ref-for-dictdef-filesystemgetdirectoryoptions"><c- n>FileSystemGetDirectoryOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/getDirectoryHandle(name, options), FileSystemDirectoryHandle/getDirectoryHandle(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-getdirectoryhandle-name-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-getdirectoryhandle-name-options-options"></a></dfn> = {});
 
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-removeentry" id="ref-for-dom-filesystemdirectoryhandle-removeentry"><c- g>removeEntry</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString④"><c- b>USVString</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/removeEntry(name, options), FileSystemDirectoryHandle/removeEntry(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-removeentry-name-options-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-removeentry-name-options-name"></a></dfn>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemremoveoptions" id="ref-for-dictdef-filesystemremoveoptions"><c- n>FileSystemRemoveOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/removeEntry(name, options), FileSystemDirectoryHandle/removeEntry(name)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-removeentry-name-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-removeentry-name-options-options"></a></dfn> = {});
 
@@ -2058,11 +2058,8 @@ modifications to existing large files. <a href="https://github.com/wicg/native-f
    <p><code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle④">FileSystemDirectoryHandle</a></code> objects are <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/structured-data.html#serializable-objects" id="ref-for-serializable-objects②">serializable objects</a>. Their <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/structured-data.html#serialization-steps" id="ref-for-serialization-steps②">serialization steps</a> and <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/structured-data.html#deserialization-steps" id="ref-for-deserialization-steps②">deserialization steps</a> are the same as those for <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle①①">FileSystemHandle</a></code>.</p>
    <p><strong class="advisement"> In the Origin Trial as available in Chrome 78, these objects are not yet serializable.
 In Chrome 82 they are.</strong></p>
-   <p class="issue" id="issue-a4e7d3b2"><a class="self-link" href="#issue-a4e7d3b2"></a> Should we have separate getFile and getDirectory methods, or just a single getChild/getEntry
-method?</p>
-   <p class="issue" id="issue-6152e539"><a class="self-link" href="#issue-6152e539"></a> Having getFile methods in both FileSystemDirectoryHandle and FileSystemFileHandle, but
-with very different behavior might be confusing? Perhaps rename at least one of them (but see also
-previous issue). <a href="https://github.com/wicg/native-file-system/issues/98">&lt;https://github.com/wicg/native-file-system/issues/98></a></p>
+   <p><strong class="advisement"> In Chrome versions upto Chrome 85 <code>getFileHandle</code> and <code>getDirectoryHandle</code> where
+called <code>getFile</code> and <code>getDirectory</code> instead.</strong></p>
    <h4 class="heading settled" data-level="2.5.1" id="api-filesystemdirectoryhandle-asynciterable"><span class="secno">2.5.1. </span><span class="content">Directory iteration</span><a class="self-link" href="#api-filesystemdirectoryhandle-asynciterable"></a></h4>
    <div class="note domintro" role="note">
     <dl>
@@ -2149,15 +2146,15 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
       <p>Return <var>promise</var>.</p>
     </ol>
    </div>
-   <h4 class="heading settled" data-level="2.5.2" id="api-filesystemdirectoryhandle-getfile"><span class="secno">2.5.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile①">getFile()</a></code> method</span><a class="self-link" href="#api-filesystemdirectoryhandle-getfile"></a></h4>
+   <h4 class="heading settled" data-level="2.5.2" id="api-filesystemdirectoryhandle-getfilehandle"><span class="secno">2.5.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfilehandle" id="ref-for-dom-filesystemdirectoryhandle-getfilehandle①">getFileHandle()</a></code> method</span><a class="self-link" href="#api-filesystemdirectoryhandle-getfilehandle"></a></h4>
    <div class="note domintro" role="note">
     <dl>
-     <dt data-md><var>fileHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile②">getFile</a></code>(<var>name</var>)
-     <dt data-md><var>fileHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile③">getFile</a></code>(<var>name</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetfileoptions-create" id="ref-for-dom-filesystemgetfileoptions-create">create</a></code>: false })
+     <dt data-md><var>fileHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfilehandle" id="ref-for-dom-filesystemdirectoryhandle-getfilehandle②">getFileHandle</a></code>(<var>name</var>)
+     <dt data-md><var>fileHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfilehandle" id="ref-for-dom-filesystemdirectoryhandle-getfilehandle③">getFileHandle</a></code>(<var>name</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetfileoptions-create" id="ref-for-dom-filesystemgetfileoptions-create">create</a></code>: false })
      <dd data-md>
       <p>Returns a handle for a file named <var>name</var> in the directory represented by <var>directoryHandle</var>. If
  no such file exists, this rejects.</p>
-     <dt data-md><var>fileHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfile" id="ref-for-dom-filesystemdirectoryhandle-getfile④">getFile</a></code>(<var>name</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetfileoptions-create" id="ref-for-dom-filesystemgetfileoptions-create①">create</a></code>: true })
+     <dt data-md><var>fileHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfilehandle" id="ref-for-dom-filesystemdirectoryhandle-getfilehandle④">getFileHandle</a></code>(<var>name</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetfileoptions-create" id="ref-for-dom-filesystemgetfileoptions-create①">create</a></code>: true })
      <dd data-md>
       <p>Returns a handle for a file named <var>name</var> in the directory represented by <var>directoryHandle</var>. If
  no such file exists, this creates a new file. If no file with named <var>name</var> can be created this
@@ -2170,8 +2167,8 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
  with <code>{ <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetfileoptions-create" id="ref-for-dom-filesystemgetfileoptions-create②">create</a></code>: false }</code>.</p>
     </dl>
    </div>
-   <div class="algorithm" data-algorithm="getFile(name, options)" data-algorithm-for="FileSystemDirectoryHandle">
-     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export data-lt="getFile(name, options)|getFile(name)" id="dom-filesystemdirectoryhandle-getfile"><code>getFile(<var>name</var>, <var>options</var>)</code></dfn> method, when invoked,
+   <div class="algorithm" data-algorithm="getFileHandle(name, options)" data-algorithm-for="FileSystemDirectoryHandle">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export data-lt="getFileHandle(name, options)|getFileHandle(name)" id="dom-filesystemdirectoryhandle-getfilehandle"><code>getFileHandle(<var>name</var>, <var>options</var>)</code></dfn> method, when invoked,
 must run these steps: 
     <ol>
      <li data-md>
@@ -2249,14 +2246,14 @@ must run these steps:
       <p>Return <var>result</var>.</p>
     </ol>
    </div>
-   <h4 class="heading settled" data-level="2.5.3" id="api-filesystemdirectoryhandle-getdirectory"><span class="secno">2.5.3. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory①">getDirectory()</a></code> method</span><a class="self-link" href="#api-filesystemdirectoryhandle-getdirectory"></a></h4>
+   <h4 class="heading settled" data-level="2.5.3" id="api-filesystemdirectoryhandle-getdirectoryhandle"><span class="secno">2.5.3. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getdirectoryhandle" id="ref-for-dom-filesystemdirectoryhandle-getdirectoryhandle①">getDirectoryHandle()</a></code> method</span><a class="self-link" href="#api-filesystemdirectoryhandle-getdirectoryhandle"></a></h4>
    <div class="note domintro" role="note">
     <dl>
-     <dt data-md><var>subdirHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory②">getDirectory</a></code>(<var>name</var>)
-     <dt data-md><var>subdirHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory③">getDirectory</a></code>(<var>name</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetdirectoryoptions-create" id="ref-for-dom-filesystemgetdirectoryoptions-create">create</a></code>: false })
+     <dt data-md><var>subdirHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getdirectoryhandle" id="ref-for-dom-filesystemdirectoryhandle-getdirectoryhandle②">getDirectoryHandle</a></code>(<var>name</var>)
+     <dt data-md><var>subdirHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getdirectoryhandle" id="ref-for-dom-filesystemdirectoryhandle-getdirectoryhandle③">getDirectoryHandle</a></code>(<var>name</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetdirectoryoptions-create" id="ref-for-dom-filesystemgetdirectoryoptions-create">create</a></code>: false })
      <dd data-md>
       <p>Returns a handle for a directory named <var>name</var> in the directory represented by <var>directoryHandle</var>. If no such directory exists, this rejects.</p>
-     <dt data-md><var>subdirHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getdirectory" id="ref-for-dom-filesystemdirectoryhandle-getdirectory④">getDirectory</a></code>(<var>name</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetdirectoryoptions-create" id="ref-for-dom-filesystemgetdirectoryoptions-create①">create</a></code>: true })
+     <dt data-md><var>subdirHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getdirectoryhandle" id="ref-for-dom-filesystemdirectoryhandle-getdirectoryhandle④">getDirectoryHandle</a></code>(<var>name</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetdirectoryoptions-create" id="ref-for-dom-filesystemgetdirectoryoptions-create①">create</a></code>: true })
      <dd data-md>
       <p>Returns a handle for a directory named <var>name</var> in the directory represented by <var>directoryHandle</var>. If no such directory exists, this creates a new directory. If creating the
  directory failed, this rejects. Creation can fail because there already is a file with the same
@@ -2268,8 +2265,8 @@ must run these steps:
  with <code>{ <code class="idl"><a data-link-type="idl" href="#dom-filesystemgetdirectoryoptions-create" id="ref-for-dom-filesystemgetdirectoryoptions-create②">create</a></code>: false }</code>.</p>
     </dl>
    </div>
-   <div class="algorithm" data-algorithm="getDirectory(name, options)" data-algorithm-for="FileSystemDirectoryHandle">
-     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export data-lt="getDirectory(name, options)|getDirectory(name)" id="dom-filesystemdirectoryhandle-getdirectory"><code>getDirectory(<var>name</var>, <var>options</var>)</code></dfn> method, when
+   <div class="algorithm" data-algorithm="getDirectoryHandle(name, options)" data-algorithm-for="FileSystemDirectoryHandle">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export data-lt="getDirectoryHandle(name, options)|getDirectoryHandle(name)" id="dom-filesystemdirectoryhandle-getdirectoryhandle"><code>getDirectoryHandle(<var>name</var>, <var>options</var>)</code></dfn> method, when
 invoked, must run these steps: 
     <ol>
      <li data-md>
@@ -3561,11 +3558,11 @@ appropriate.</p>
    <li><a href="#dictdef-filesystemremoveoptions">FileSystemRemoveOptions</a><span>, in §2.5</span>
    <li><a href="#filesystemwritablefilestream">FileSystemWritableFileStream</a><span>, in §2.6</span>
    <li><a href="#typedefdef-filesystemwritechunktype">FileSystemWriteChunkType</a><span>, in §2.6</span>
-   <li><a href="#dom-filesystemdirectoryhandle-getdirectory">getDirectory(name)</a><span>, in §2.5.3</span>
-   <li><a href="#dom-filesystemdirectoryhandle-getdirectory">getDirectory(name, options)</a><span>, in §2.5.3</span>
+   <li><a href="#dom-filesystemdirectoryhandle-getdirectoryhandle">getDirectoryHandle(name)</a><span>, in §2.5.3</span>
+   <li><a href="#dom-filesystemdirectoryhandle-getdirectoryhandle">getDirectoryHandle(name, options)</a><span>, in §2.5.3</span>
    <li><a href="#dom-filesystemfilehandle-getfile">getFile()</a><span>, in §2.4.1</span>
-   <li><a href="#dom-filesystemdirectoryhandle-getfile">getFile(name)</a><span>, in §2.5.2</span>
-   <li><a href="#dom-filesystemdirectoryhandle-getfile">getFile(name, options)</a><span>, in §2.5.2</span>
+   <li><a href="#dom-filesystemdirectoryhandle-getfilehandle">getFileHandle(name)</a><span>, in §2.5.2</span>
+   <li><a href="#dom-filesystemdirectoryhandle-getfilehandle">getFileHandle(name, options)</a><span>, in §2.5.2</span>
    <li><a href="#dom-windoworworkerglobalscope-getoriginprivatedirectory">getOriginPrivateDirectory()</a><span>, in §4.2</span>
    <li><a href="#is-allowed-to-show-a-file-picker">is allowed to show a file picker</a><span>, in §3.1</span>
    <li><a href="#dom-filesystemhandle-isdirectory">isDirectory</a><span>, in §2.3</span>
@@ -3757,8 +3754,8 @@ appropriate.</p>
     <li><a href="#ref-for-in-parallel③">2.3.3. The requestPermission() method</a>
     <li><a href="#ref-for-in-parallel④">2.4.1. The getFile() method</a>
     <li><a href="#ref-for-in-parallel⑤">2.4.2. The createWritable() method</a>
-    <li><a href="#ref-for-in-parallel⑥">2.5.2. The getFile() method</a>
-    <li><a href="#ref-for-in-parallel⑦">2.5.3. The getDirectory() method</a>
+    <li><a href="#ref-for-in-parallel⑥">2.5.2. The getFileHandle() method</a>
+    <li><a href="#ref-for-in-parallel⑦">2.5.3. The getDirectoryHandle() method</a>
     <li><a href="#ref-for-in-parallel⑧">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-in-parallel⑨">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-in-parallel①⓪">(2)</a>
     <li><a href="#ref-for-in-parallel①①">3.2. The showOpenFilePicker() method</a> <a href="#ref-for-in-parallel①②">(2)</a>
@@ -3803,8 +3800,8 @@ appropriate.</p>
     <li><a href="#ref-for-relevant-settings-object⑤">2.4.1. The getFile() method</a>
     <li><a href="#ref-for-relevant-settings-object⑥">2.4.2. The createWritable() method</a> <a href="#ref-for-relevant-settings-object⑦">(2)</a>
     <li><a href="#ref-for-relevant-settings-object⑧">2.5.1. Directory iteration</a> <a href="#ref-for-relevant-settings-object⑨">(2)</a>
-    <li><a href="#ref-for-relevant-settings-object①⓪">2.5.2. The getFile() method</a> <a href="#ref-for-relevant-settings-object①①">(2)</a> <a href="#ref-for-relevant-settings-object①②">(3)</a>
-    <li><a href="#ref-for-relevant-settings-object①③">2.5.3. The getDirectory() method</a> <a href="#ref-for-relevant-settings-object①④">(2)</a> <a href="#ref-for-relevant-settings-object①⑤">(3)</a>
+    <li><a href="#ref-for-relevant-settings-object①⓪">2.5.2. The getFileHandle() method</a> <a href="#ref-for-relevant-settings-object①①">(2)</a> <a href="#ref-for-relevant-settings-object①②">(3)</a>
+    <li><a href="#ref-for-relevant-settings-object①③">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-relevant-settings-object①④">(2)</a> <a href="#ref-for-relevant-settings-object①⑤">(3)</a>
     <li><a href="#ref-for-relevant-settings-object①⑥">2.5.4. The removeEntry() method</a> <a href="#ref-for-relevant-settings-object①⑦">(2)</a>
     <li><a href="#ref-for-relevant-settings-object①⑧">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-relevant-settings-object①⑨">(2)</a>
     <li><a href="#ref-for-relevant-settings-object②⓪">3.2. The showOpenFilePicker() method</a>
@@ -3851,8 +3848,8 @@ appropriate.</p>
    <a href="https://infra.spec.whatwg.org/#set-append">https://infra.spec.whatwg.org/#set-append</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-set-append">2.5.1. Directory iteration</a>
-    <li><a href="#ref-for-set-append①">2.5.2. The getFile() method</a>
-    <li><a href="#ref-for-set-append②">2.5.3. The getDirectory() method</a>
+    <li><a href="#ref-for-set-append①">2.5.2. The getFileHandle() method</a>
+    <li><a href="#ref-for-set-append②">2.5.3. The getDirectoryHandle() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-assert">
@@ -3864,7 +3861,7 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-byte-sequence">
    <a href="https://infra.spec.whatwg.org/#byte-sequence">https://infra.spec.whatwg.org/#byte-sequence</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-byte-sequence">2.5.2. The getFile() method</a>
+    <li><a href="#ref-for-byte-sequence">2.5.2. The getFileHandle() method</a>
     <li><a href="#ref-for-byte-sequence①">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-byte-sequence②">(2)</a> <a href="#ref-for-byte-sequence③">(3)</a> <a href="#ref-for-byte-sequence④">(4)</a> <a href="#ref-for-byte-sequence⑤">(5)</a> <a href="#ref-for-byte-sequence⑥">(6)</a> <a href="#ref-for-byte-sequence⑦">(7)</a>
     <li><a href="#ref-for-byte-sequence⑧">3.3. The showSaveFilePicker() method</a>
    </ul>
@@ -3935,7 +3932,7 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-ordered-set">2.1. Concepts</a>
     <li><a href="#ref-for-ordered-set①">2.5.1. Directory iteration</a>
-    <li><a href="#ref-for-ordered-set②">2.5.3. The getDirectory() method</a>
+    <li><a href="#ref-for-ordered-set②">2.5.3. The getDirectoryHandle() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-string">
@@ -3993,8 +3990,8 @@ appropriate.</p>
     <li><a href="#ref-for-dom-permissionstate-granted">2.4.1. The getFile() method</a>
     <li><a href="#ref-for-dom-permissionstate-granted①">2.4.2. The createWritable() method</a>
     <li><a href="#ref-for-dom-permissionstate-granted②">2.5.1. Directory iteration</a> <a href="#ref-for-dom-permissionstate-granted③">(2)</a>
-    <li><a href="#ref-for-dom-permissionstate-granted④">2.5.2. The getFile() method</a>
-    <li><a href="#ref-for-dom-permissionstate-granted⑤">2.5.3. The getDirectory() method</a>
+    <li><a href="#ref-for-dom-permissionstate-granted④">2.5.2. The getFileHandle() method</a>
+    <li><a href="#ref-for-dom-permissionstate-granted⑤">2.5.3. The getDirectoryHandle() method</a>
     <li><a href="#ref-for-dom-permissionstate-granted⑥">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-dom-permissionstate-granted⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-permissionstate-granted⑧">(2)</a>
     <li><a href="#ref-for-dom-permissionstate-granted⑨">3.1. Native File System Permissions</a> <a href="#ref-for-dom-permissionstate-granted①⓪">(2)</a> <a href="#ref-for-dom-permissionstate-granted①①">(3)</a> <a href="#ref-for-dom-permissionstate-granted①②">(4)</a>
@@ -4134,8 +4131,8 @@ appropriate.</p>
     <li><a href="#ref-for-notallowederror">2.4.1. The getFile() method</a>
     <li><a href="#ref-for-notallowederror①">2.4.2. The createWritable() method</a>
     <li><a href="#ref-for-notallowederror②">2.5.1. Directory iteration</a> <a href="#ref-for-notallowederror③">(2)</a>
-    <li><a href="#ref-for-notallowederror④">2.5.2. The getFile() method</a>
-    <li><a href="#ref-for-notallowederror⑤">2.5.3. The getDirectory() method</a>
+    <li><a href="#ref-for-notallowederror④">2.5.2. The getFileHandle() method</a>
+    <li><a href="#ref-for-notallowederror⑤">2.5.3. The getDirectoryHandle() method</a>
     <li><a href="#ref-for-notallowederror⑥">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-notallowederror⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-notallowederror⑧">(2)</a>
     <li><a href="#ref-for-notallowederror⑨">3.1. Native File System Permissions</a> <a href="#ref-for-notallowederror①⓪">(2)</a> <a href="#ref-for-notallowederror①①">(3)</a>
@@ -4144,8 +4141,8 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-notfounderror">
    <a href="https://heycam.github.io/webidl/#notfounderror">https://heycam.github.io/webidl/#notfounderror</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-notfounderror">2.5.2. The getFile() method</a>
-    <li><a href="#ref-for-notfounderror①">2.5.3. The getDirectory() method</a>
+    <li><a href="#ref-for-notfounderror">2.5.2. The getFileHandle() method</a>
+    <li><a href="#ref-for-notfounderror①">2.5.3. The getDirectoryHandle() method</a>
     <li><a href="#ref-for-notfounderror②">2.5.4. The removeEntry() method</a>
    </ul>
   </aside>
@@ -4170,8 +4167,8 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-exceptiondef-typeerror">
    <a href="https://heycam.github.io/webidl/#exceptiondef-typeerror">https://heycam.github.io/webidl/#exceptiondef-typeerror</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-exceptiondef-typeerror">2.5.2. The getFile() method</a>
-    <li><a href="#ref-for-exceptiondef-typeerror①">2.5.3. The getDirectory() method</a>
+    <li><a href="#ref-for-exceptiondef-typeerror">2.5.2. The getFileHandle() method</a>
+    <li><a href="#ref-for-exceptiondef-typeerror①">2.5.3. The getDirectoryHandle() method</a>
     <li><a href="#ref-for-exceptiondef-typeerror②">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-exceptiondef-typeerror③">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-exceptiondef-typeerror④">(2)</a> <a href="#ref-for-exceptiondef-typeerror⑤">(3)</a>
     <li><a href="#ref-for-exceptiondef-typeerror⑥">3.4. FilePickerOptions.types</a> <a href="#ref-for-exceptiondef-typeerror⑦">(2)</a> <a href="#ref-for-exceptiondef-typeerror⑧">(3)</a>
@@ -4180,8 +4177,8 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-typemismatcherror">
    <a href="https://heycam.github.io/webidl/#typemismatcherror">https://heycam.github.io/webidl/#typemismatcherror</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-typemismatcherror">2.5.2. The getFile() method</a>
-    <li><a href="#ref-for-typemismatcherror①">2.5.3. The getDirectory() method</a>
+    <li><a href="#ref-for-typemismatcherror">2.5.2. The getFileHandle() method</a>
+    <li><a href="#ref-for-typemismatcherror①">2.5.3. The getDirectoryHandle() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-USVString">
@@ -4203,8 +4200,8 @@ appropriate.</p>
     <li><a href="#ref-for-a-new-promise④">2.4.1. The getFile() method</a>
     <li><a href="#ref-for-a-new-promise⑤">2.4.2. The createWritable() method</a>
     <li><a href="#ref-for-a-new-promise⑥">2.5.1. Directory iteration</a>
-    <li><a href="#ref-for-a-new-promise⑦">2.5.2. The getFile() method</a>
-    <li><a href="#ref-for-a-new-promise⑧">2.5.3. The getDirectory() method</a>
+    <li><a href="#ref-for-a-new-promise⑦">2.5.2. The getFileHandle() method</a>
+    <li><a href="#ref-for-a-new-promise⑧">2.5.3. The getDirectoryHandle() method</a>
     <li><a href="#ref-for-a-new-promise⑨">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-a-new-promise①⓪">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-a-new-promise①①">(2)</a>
     <li><a href="#ref-for-a-new-promise①②">3.2. The showOpenFilePicker() method</a>
@@ -4259,8 +4256,8 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-reject">2.3.3. The requestPermission() method</a>
     <li><a href="#ref-for-reject①">2.4.2. The createWritable() method</a>
-    <li><a href="#ref-for-reject②">2.5.2. The getFile() method</a> <a href="#ref-for-reject③">(2)</a> <a href="#ref-for-reject④">(3)</a> <a href="#ref-for-reject⑤">(4)</a> <a href="#ref-for-reject⑥">(5)</a>
-    <li><a href="#ref-for-reject⑦">2.5.3. The getDirectory() method</a> <a href="#ref-for-reject⑧">(2)</a> <a href="#ref-for-reject⑨">(3)</a> <a href="#ref-for-reject①⓪">(4)</a> <a href="#ref-for-reject①①">(5)</a>
+    <li><a href="#ref-for-reject②">2.5.2. The getFileHandle() method</a> <a href="#ref-for-reject③">(2)</a> <a href="#ref-for-reject④">(3)</a> <a href="#ref-for-reject⑤">(4)</a> <a href="#ref-for-reject⑥">(5)</a>
+    <li><a href="#ref-for-reject⑦">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-reject⑧">(2)</a> <a href="#ref-for-reject⑨">(3)</a> <a href="#ref-for-reject①⓪">(4)</a> <a href="#ref-for-reject①①">(5)</a>
     <li><a href="#ref-for-reject①②">2.5.4. The removeEntry() method</a> <a href="#ref-for-reject①③">(2)</a> <a href="#ref-for-reject①④">(3)</a> <a href="#ref-for-reject①⑤">(4)</a> <a href="#ref-for-reject①⑥">(5)</a>
     <li><a href="#ref-for-reject①⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-reject①⑧">(2)</a> <a href="#ref-for-reject①⑨">(3)</a> <a href="#ref-for-reject②⓪">(4)</a> <a href="#ref-for-reject②①">(5)</a> <a href="#ref-for-reject②②">(6)</a>
     <li><a href="#ref-for-reject②③">3.2. The showOpenFilePicker() method</a> <a href="#ref-for-reject②④">(2)</a>
@@ -4278,8 +4275,8 @@ appropriate.</p>
     <li><a href="#ref-for-resolve⑦">2.4.1. The getFile() method</a>
     <li><a href="#ref-for-resolve⑧">2.4.2. The createWritable() method</a>
     <li><a href="#ref-for-resolve⑨">2.5.1. Directory iteration</a> <a href="#ref-for-resolve①⓪">(2)</a>
-    <li><a href="#ref-for-resolve①①">2.5.2. The getFile() method</a> <a href="#ref-for-resolve①②">(2)</a>
-    <li><a href="#ref-for-resolve①③">2.5.3. The getDirectory() method</a> <a href="#ref-for-resolve①④">(2)</a>
+    <li><a href="#ref-for-resolve①①">2.5.2. The getFileHandle() method</a> <a href="#ref-for-resolve①②">(2)</a>
+    <li><a href="#ref-for-resolve①③">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-resolve①④">(2)</a>
     <li><a href="#ref-for-resolve①⑤">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-resolve①⑥">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-resolve①⑦">(2)</a> <a href="#ref-for-resolve①⑧">(3)</a> <a href="#ref-for-resolve①⑨">(4)</a>
     <li><a href="#ref-for-resolve②⓪">3.2. The showOpenFilePicker() method</a>
@@ -4296,8 +4293,8 @@ appropriate.</p>
     <li><a href="#ref-for-this⑧">2.4.1. The getFile() method</a> <a href="#ref-for-this⑨">(2)</a>
     <li><a href="#ref-for-this①⓪">2.4.2. The createWritable() method</a> <a href="#ref-for-this①①">(2)</a> <a href="#ref-for-this①②">(3)</a> <a href="#ref-for-this①③">(4)</a>
     <li><a href="#ref-for-this①④">2.5.1. Directory iteration</a> <a href="#ref-for-this①⑤">(2)</a>
-    <li><a href="#ref-for-this①⑥">2.5.2. The getFile() method</a> <a href="#ref-for-this①⑦">(2)</a> <a href="#ref-for-this①⑧">(3)</a> <a href="#ref-for-this①⑨">(4)</a>
-    <li><a href="#ref-for-this②⓪">2.5.3. The getDirectory() method</a> <a href="#ref-for-this②①">(2)</a> <a href="#ref-for-this②②">(3)</a> <a href="#ref-for-this②③">(4)</a>
+    <li><a href="#ref-for-this①⑥">2.5.2. The getFileHandle() method</a> <a href="#ref-for-this①⑦">(2)</a> <a href="#ref-for-this①⑧">(3)</a> <a href="#ref-for-this①⑨">(4)</a>
+    <li><a href="#ref-for-this②⓪">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-this②①">(2)</a> <a href="#ref-for-this②②">(3)</a> <a href="#ref-for-this②③">(4)</a>
     <li><a href="#ref-for-this②④">2.5.4. The removeEntry() method</a> <a href="#ref-for-this②⑤">(2)</a> <a href="#ref-for-this②⑥">(3)</a>
     <li><a href="#ref-for-this②⑦">2.5.5. The resolve() method</a>
     <li><a href="#ref-for-this②⑧">2.6.1. The write() method</a>
@@ -4530,8 +4527,8 @@ appropriate.</p>
 <c- b>interface</c-> <a href="#filesystemdirectoryhandle"><code><c- g>FileSystemDirectoryHandle</c-></code></a> : <a class="n" data-link-type="idl-name" href="#filesystemhandle"><c- n>FileSystemHandle</c-></a> {
   <c- b>async</c-> <c- b>iterable</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a>, <a class="n" data-link-type="idl-name" href="#filesystemhandle"><c- n>FileSystemHandle</c-></a>>;
 
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemfilehandle"><c- n>FileSystemFileHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getfile"><c- g>getFile</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a> <a href="#dom-filesystemdirectoryhandle-getfile-name-options-name"><code><c- g>name</c-></code></a>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetfileoptions"><c- n>FileSystemGetFileOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getfile-name-options-options"><code><c- g>options</c-></code></a> = {});
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getdirectory"><c- g>getDirectory</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a> <a href="#dom-filesystemdirectoryhandle-getdirectory-name-options-name"><code><c- g>name</c-></code></a>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetdirectoryoptions"><c- n>FileSystemGetDirectoryOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getdirectory-name-options-options"><code><c- g>options</c-></code></a> = {});
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemfilehandle"><c- n>FileSystemFileHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getfilehandle"><c- g>getFileHandle</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a> <a href="#dom-filesystemdirectoryhandle-getfilehandle-name-options-name"><code><c- g>name</c-></code></a>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetfileoptions"><c- n>FileSystemGetFileOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getfilehandle-name-options-options"><code><c- g>options</c-></code></a> = {});
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-getdirectoryhandle"><c- g>getDirectoryHandle</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a> <a href="#dom-filesystemdirectoryhandle-getdirectoryhandle-name-options-name"><code><c- g>name</c-></code></a>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemgetdirectoryoptions"><c- n>FileSystemGetDirectoryOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-getdirectoryhandle-name-options-options"><code><c- g>options</c-></code></a> = {});
 
   <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-removeentry"><c- g>removeEntry</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a> <a href="#dom-filesystemdirectoryhandle-removeentry-name-options-name"><code><c- g>name</c-></code></a>, <c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemremoveoptions"><c- n>FileSystemRemoveOptions</c-></a> <a href="#dom-filesystemdirectoryhandle-removeentry-name-options-options"><code><c- g>options</c-></code></a> = {});
 
@@ -4611,11 +4608,6 @@ example to support in-place modification of large files or things like databases
 currently implemented in Chrome. Implementing this is currently blocked on figuring out how to
 combine the desire to run malware checks with the desire to let websites make fast in-place
 modifications to existing large files. <a href="https://github.com/wicg/native-file-system/issues/67">&lt;https://github.com/wicg/native-file-system/issues/67></a><a href="#issue-0693bc11"> ↵ </a></div>
-   <div class="issue"> Should we have separate getFile and getDirectory methods, or just a single getChild/getEntry
-method?<a href="#issue-a4e7d3b2"> ↵ </a></div>
-   <div class="issue"> Having getFile methods in both FileSystemDirectoryHandle and FileSystemFileHandle, but
-with very different behavior might be confusing? Perhaps rename at least one of them (but see also
-previous issue). <a href="https://github.com/wicg/native-file-system/issues/98">&lt;https://github.com/wicg/native-file-system/issues/98></a><a href="#issue-6152e539"> ↵ </a></div>
    <div class="issue"> In the future we might want to add arguments to the async iterable declaration to
 support for example recursive iteration. <a href="https://github.com/wicg/native-file-system/issues/173">&lt;https://github.com/wicg/native-file-system/issues/173></a><a href="#issue-cce0bb28"> ↵ </a></div>
    <div class="issue"> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/native-file-system/issues/68">&lt;https://github.com/wicg/native-file-system/issues/68></a><a href="#issue-721a33e4"> ↵ </a></div>
@@ -4645,8 +4637,8 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-entry-name①">2.3. The FileSystemHandle interface</a> <a href="#ref-for-entry-name②">(2)</a>
     <li><a href="#ref-for-entry-name③">2.4.1. The getFile() method</a> <a href="#ref-for-entry-name④">(2)</a>
     <li><a href="#ref-for-entry-name⑤">2.5.1. Directory iteration</a> <a href="#ref-for-entry-name⑥">(2)</a> <a href="#ref-for-entry-name⑦">(3)</a>
-    <li><a href="#ref-for-entry-name⑧">2.5.2. The getFile() method</a> <a href="#ref-for-entry-name⑨">(2)</a>
-    <li><a href="#ref-for-entry-name①⓪">2.5.3. The getDirectory() method</a> <a href="#ref-for-entry-name①①">(2)</a>
+    <li><a href="#ref-for-entry-name⑧">2.5.2. The getFileHandle() method</a> <a href="#ref-for-entry-name⑨">(2)</a>
+    <li><a href="#ref-for-entry-name①⓪">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-entry-name①①">(2)</a>
     <li><a href="#ref-for-entry-name①②">2.5.4. The removeEntry() method</a>
    </ul>
   </aside>
@@ -4654,8 +4646,8 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
    <b><a href="#valid-file-name">#valid-file-name</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-valid-file-name">2.1. Concepts</a>
-    <li><a href="#ref-for-valid-file-name①">2.5.2. The getFile() method</a>
-    <li><a href="#ref-for-valid-file-name②">2.5.3. The getDirectory() method</a>
+    <li><a href="#ref-for-valid-file-name①">2.5.2. The getFileHandle() method</a>
+    <li><a href="#ref-for-valid-file-name②">2.5.3. The getDirectoryHandle() method</a>
     <li><a href="#ref-for-valid-file-name③">2.5.4. The removeEntry() method</a>
    </ul>
   </aside>
@@ -4666,8 +4658,8 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-file②">2.3. The FileSystemHandle interface</a>
     <li><a href="#ref-for-file③">2.4. The FileSystemFileHandle interface</a>
     <li><a href="#ref-for-file④">2.5.1. Directory iteration</a>
-    <li><a href="#ref-for-file⑤">2.5.2. The getFile() method</a>
-    <li><a href="#ref-for-file⑥">2.5.3. The getDirectory() method</a>
+    <li><a href="#ref-for-file⑤">2.5.2. The getFileHandle() method</a>
+    <li><a href="#ref-for-file⑥">2.5.3. The getDirectoryHandle() method</a>
     <li><a href="#ref-for-file⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-file⑧">(2)</a>
     <li><a href="#ref-for-file⑨">3.2. The showOpenFilePicker() method</a>
     <li><a href="#ref-for-file①⓪">3.3. The showSaveFilePicker() method</a>
@@ -4679,7 +4671,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-file-entry-binary-data">2.1. Concepts</a>
     <li><a href="#ref-for-file-entry-binary-data①">2.4.1. The getFile() method</a>
     <li><a href="#ref-for-file-entry-binary-data②">2.4.2. The createWritable() method</a>
-    <li><a href="#ref-for-file-entry-binary-data③">2.5.2. The getFile() method</a>
+    <li><a href="#ref-for-file-entry-binary-data③">2.5.2. The getFileHandle() method</a>
     <li><a href="#ref-for-file-entry-binary-data④">2.6. The FileSystemWritableFileStream interface</a>
     <li><a href="#ref-for-file-entry-binary-data⑤">3.3. The showSaveFilePicker() method</a>
    </ul>
@@ -4689,7 +4681,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
    <ul>
     <li><a href="#ref-for-file-entry-modification-timestamp">2.1. Concepts</a>
     <li><a href="#ref-for-file-entry-modification-timestamp①">2.4.1. The getFile() method</a>
-    <li><a href="#ref-for-file-entry-modification-timestamp②">2.5.2. The getFile() method</a>
+    <li><a href="#ref-for-file-entry-modification-timestamp②">2.5.2. The getFileHandle() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="directory">
@@ -4698,8 +4690,8 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-directory">2.1. Concepts</a> <a href="#ref-for-directory①">(2)</a> <a href="#ref-for-directory②">(3)</a> <a href="#ref-for-directory③">(4)</a>
     <li><a href="#ref-for-directory④">2.3. The FileSystemHandle interface</a>
     <li><a href="#ref-for-directory⑤">2.5. The FileSystemDirectoryHandle interface</a>
-    <li><a href="#ref-for-directory⑥">2.5.2. The getFile() method</a>
-    <li><a href="#ref-for-directory⑦">2.5.3. The getDirectory() method</a>
+    <li><a href="#ref-for-directory⑥">2.5.2. The getFileHandle() method</a>
+    <li><a href="#ref-for-directory⑦">2.5.3. The getDirectoryHandle() method</a>
     <li><a href="#ref-for-directory⑧">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-directory⑨">3.5. The showDirectoryPicker() method</a>
     <li><a href="#ref-for-directory①⓪">4.1. Sandboxed File System Concepts</a>
@@ -4710,8 +4702,8 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
    <ul>
     <li><a href="#ref-for-directory-entry-children">2.1. Concepts</a> <a href="#ref-for-directory-entry-children①">(2)</a> <a href="#ref-for-directory-entry-children②">(3)</a>
     <li><a href="#ref-for-directory-entry-children③">2.5.1. Directory iteration</a>
-    <li><a href="#ref-for-directory-entry-children④">2.5.2. The getFile() method</a> <a href="#ref-for-directory-entry-children⑤">(2)</a>
-    <li><a href="#ref-for-directory-entry-children⑥">2.5.3. The getDirectory() method</a> <a href="#ref-for-directory-entry-children⑦">(2)</a> <a href="#ref-for-directory-entry-children⑧">(3)</a>
+    <li><a href="#ref-for-directory-entry-children④">2.5.2. The getFileHandle() method</a> <a href="#ref-for-directory-entry-children⑤">(2)</a>
+    <li><a href="#ref-for-directory-entry-children⑥">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-directory-entry-children⑦">(2)</a> <a href="#ref-for-directory-entry-children⑧">(3)</a>
     <li><a href="#ref-for-directory-entry-children⑨">2.5.4. The removeEntry() method</a> <a href="#ref-for-directory-entry-children①⓪">(2)</a> <a href="#ref-for-directory-entry-children①①">(3)</a>
    </ul>
   </aside>
@@ -4745,8 +4737,8 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-entry-query-permission-steps③">2.4.1. The getFile() method</a>
     <li><a href="#ref-for-entry-query-permission-steps④">2.4.2. The createWritable() method</a>
     <li><a href="#ref-for-entry-query-permission-steps⑤">2.5.1. Directory iteration</a> <a href="#ref-for-entry-query-permission-steps⑥">(2)</a>
-    <li><a href="#ref-for-entry-query-permission-steps⑦">2.5.2. The getFile() method</a> <a href="#ref-for-entry-query-permission-steps⑧">(2)</a>
-    <li><a href="#ref-for-entry-query-permission-steps⑨">2.5.3. The getDirectory() method</a> <a href="#ref-for-entry-query-permission-steps①⓪">(2)</a>
+    <li><a href="#ref-for-entry-query-permission-steps⑦">2.5.2. The getFileHandle() method</a> <a href="#ref-for-entry-query-permission-steps⑧">(2)</a>
+    <li><a href="#ref-for-entry-query-permission-steps⑨">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-entry-query-permission-steps①⓪">(2)</a>
     <li><a href="#ref-for-entry-query-permission-steps①①">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-entry-query-permission-steps①②">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-entry-query-permission-steps①③">(2)</a>
     <li><a href="#ref-for-entry-query-permission-steps①④">3.1. Native File System Permissions</a> <a href="#ref-for-entry-query-permission-steps①⑤">(2)</a> <a href="#ref-for-entry-query-permission-steps①⑥">(3)</a> <a href="#ref-for-entry-query-permission-steps①⑦">(4)</a>
@@ -4762,8 +4754,8 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-entry-request-permission-steps">2.2. Permissions</a>
     <li><a href="#ref-for-entry-request-permission-steps①">2.3.3. The requestPermission() method</a>
     <li><a href="#ref-for-entry-request-permission-steps②">2.4.2. The createWritable() method</a>
-    <li><a href="#ref-for-entry-request-permission-steps③">2.5.2. The getFile() method</a>
-    <li><a href="#ref-for-entry-request-permission-steps④">2.5.3. The getDirectory() method</a>
+    <li><a href="#ref-for-entry-request-permission-steps③">2.5.2. The getFileHandle() method</a>
+    <li><a href="#ref-for-entry-request-permission-steps④">2.5.3. The getDirectoryHandle() method</a>
     <li><a href="#ref-for-entry-request-permission-steps⑤">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-entry-request-permission-steps⑥">3.2. The showOpenFilePicker() method</a>
     <li><a href="#ref-for-entry-request-permission-steps⑦">3.3. The showSaveFilePicker() method</a>
@@ -4786,8 +4778,8 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable④">2.4.1. The getFile() method</a>
     <li><a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable⑤">2.4.2. The createWritable() method</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable⑥">(2)</a>
     <li><a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable⑦">2.5.1. Directory iteration</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable⑧">(2)</a>
-    <li><a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable⑨">2.5.2. The getFile() method</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①⓪">(2)</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①①">(3)</a>
-    <li><a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①②">2.5.3. The getDirectory() method</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①③">(2)</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①④">(3)</a>
+    <li><a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable⑨">2.5.2. The getFileHandle() method</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①⓪">(2)</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①①">(3)</a>
+    <li><a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①②">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①③">(2)</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①④">(3)</a>
     <li><a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑤">2.5.4. The removeEntry() method</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑥">(2)</a>
     <li><a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑧">(2)</a>
     <li><a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑨">3.1. Native File System Permissions</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable②⓪">(2)</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable②①">(3)</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable②②">(4)</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable②③">(5)</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable②④">(6)</a>
@@ -4814,8 +4806,8 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-filesystemhandle-entry①③">2.4.2. The createWritable() method</a>
     <li><a href="#ref-for-filesystemhandle-entry①④">2.5. The FileSystemDirectoryHandle interface</a>
     <li><a href="#ref-for-filesystemhandle-entry①⑤">2.5.1. Directory iteration</a> <a href="#ref-for-filesystemhandle-entry①⑥">(2)</a>
-    <li><a href="#ref-for-filesystemhandle-entry①⑦">2.5.2. The getFile() method</a> <a href="#ref-for-filesystemhandle-entry①⑧">(2)</a> <a href="#ref-for-filesystemhandle-entry①⑨">(3)</a>
-    <li><a href="#ref-for-filesystemhandle-entry②⓪">2.5.3. The getDirectory() method</a> <a href="#ref-for-filesystemhandle-entry②①">(2)</a> <a href="#ref-for-filesystemhandle-entry②②">(3)</a>
+    <li><a href="#ref-for-filesystemhandle-entry①⑦">2.5.2. The getFileHandle() method</a> <a href="#ref-for-filesystemhandle-entry①⑧">(2)</a> <a href="#ref-for-filesystemhandle-entry①⑨">(3)</a>
+    <li><a href="#ref-for-filesystemhandle-entry②⓪">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-filesystemhandle-entry②①">(2)</a> <a href="#ref-for-filesystemhandle-entry②②">(3)</a>
     <li><a href="#ref-for-filesystemhandle-entry②③">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-filesystemhandle-entry②④">2.5.5. The resolve() method</a> <a href="#ref-for-filesystemhandle-entry②⑤">(2)</a>
     <li><a href="#ref-for-filesystemhandle-entry②⑥">4.2. The getOriginPrivateDirectory() method</a>
@@ -4881,7 +4873,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-filesystemfilehandle①">2.4. The FileSystemFileHandle interface</a> <a href="#ref-for-filesystemfilehandle②">(2)</a> <a href="#ref-for-filesystemfilehandle③">(3)</a>
     <li><a href="#ref-for-filesystemfilehandle④">2.5. The FileSystemDirectoryHandle interface</a>
     <li><a href="#ref-for-filesystemfilehandle⑤">2.5.1. Directory iteration</a>
-    <li><a href="#ref-for-filesystemfilehandle⑥">2.5.2. The getFile() method</a> <a href="#ref-for-filesystemfilehandle⑦">(2)</a>
+    <li><a href="#ref-for-filesystemfilehandle⑥">2.5.2. The getFileHandle() method</a> <a href="#ref-for-filesystemfilehandle⑦">(2)</a>
     <li><a href="#ref-for-filesystemfilehandle⑧">3. Accessing Native File System</a> <a href="#ref-for-filesystemfilehandle⑨">(2)</a>
     <li><a href="#ref-for-filesystemfilehandle①⓪">3.2. The showOpenFilePicker() method</a>
     <li><a href="#ref-for-filesystemfilehandle①①">3.3. The showSaveFilePicker() method</a>
@@ -4910,8 +4902,8 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
   <aside class="dfn-panel" data-for="dom-filesystemgetfileoptions-create">
    <b><a href="#dom-filesystemgetfileoptions-create">#dom-filesystemgetfileoptions-create</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-filesystemgetfileoptions-create">2.5.2. The getFile() method</a> <a href="#ref-for-dom-filesystemgetfileoptions-create①">(2)</a> <a href="#ref-for-dom-filesystemgetfileoptions-create②">(3)</a> <a href="#ref-for-dom-filesystemgetfileoptions-create③">(4)</a> <a href="#ref-for-dom-filesystemgetfileoptions-create④">(5)</a>
-    <li><a href="#ref-for-dom-filesystemgetfileoptions-create⑤">2.5.3. The getDirectory() method</a>
+    <li><a href="#ref-for-dom-filesystemgetfileoptions-create">2.5.2. The getFileHandle() method</a> <a href="#ref-for-dom-filesystemgetfileoptions-create①">(2)</a> <a href="#ref-for-dom-filesystemgetfileoptions-create②">(3)</a> <a href="#ref-for-dom-filesystemgetfileoptions-create③">(4)</a> <a href="#ref-for-dom-filesystemgetfileoptions-create④">(5)</a>
+    <li><a href="#ref-for-dom-filesystemgetfileoptions-create⑤">2.5.3. The getDirectoryHandle() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-filesystemgetdirectoryoptions">
@@ -4923,7 +4915,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
   <aside class="dfn-panel" data-for="dom-filesystemgetdirectoryoptions-create">
    <b><a href="#dom-filesystemgetdirectoryoptions-create">#dom-filesystemgetdirectoryoptions-create</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-filesystemgetdirectoryoptions-create">2.5.3. The getDirectory() method</a> <a href="#ref-for-dom-filesystemgetdirectoryoptions-create①">(2)</a> <a href="#ref-for-dom-filesystemgetdirectoryoptions-create②">(3)</a> <a href="#ref-for-dom-filesystemgetdirectoryoptions-create③">(4)</a>
+    <li><a href="#ref-for-dom-filesystemgetdirectoryoptions-create">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-dom-filesystemgetdirectoryoptions-create①">(2)</a> <a href="#ref-for-dom-filesystemgetdirectoryoptions-create②">(3)</a> <a href="#ref-for-dom-filesystemgetdirectoryoptions-create③">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-filesystemremoveoptions">
@@ -4944,7 +4936,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-filesystemdirectoryhandle">2.3. The FileSystemHandle interface</a>
     <li><a href="#ref-for-filesystemdirectoryhandle①">2.5. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-filesystemdirectoryhandle②">(2)</a> <a href="#ref-for-filesystemdirectoryhandle③">(3)</a> <a href="#ref-for-filesystemdirectoryhandle④">(4)</a>
     <li><a href="#ref-for-filesystemdirectoryhandle⑤">2.5.1. Directory iteration</a> <a href="#ref-for-filesystemdirectoryhandle⑥">(2)</a> <a href="#ref-for-filesystemdirectoryhandle⑦">(3)</a>
-    <li><a href="#ref-for-filesystemdirectoryhandle⑧">2.5.3. The getDirectory() method</a> <a href="#ref-for-filesystemdirectoryhandle⑨">(2)</a>
+    <li><a href="#ref-for-filesystemdirectoryhandle⑧">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-filesystemdirectoryhandle⑨">(2)</a>
     <li><a href="#ref-for-filesystemdirectoryhandle①⓪">3. Accessing Native File System</a>
     <li><a href="#ref-for-filesystemdirectoryhandle①①">3.5. The showDirectoryPicker() method</a>
     <li><a href="#ref-for-filesystemdirectoryhandle①②">4.2. The getOriginPrivateDirectory() method</a> <a href="#ref-for-filesystemdirectoryhandle①③">(2)</a>
@@ -4956,18 +4948,18 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-filesystemdirectoryhandle-iterator-past-results">2.5.1. Directory iteration</a> <a href="#ref-for-filesystemdirectoryhandle-iterator-past-results①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-filesystemdirectoryhandle-getfile">
-   <b><a href="#dom-filesystemdirectoryhandle-getfile">#dom-filesystemdirectoryhandle-getfile</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-filesystemdirectoryhandle-getfilehandle">
+   <b><a href="#dom-filesystemdirectoryhandle-getfilehandle">#dom-filesystemdirectoryhandle-getfilehandle</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getfile">2.5. The FileSystemDirectoryHandle interface</a>
-    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getfile①">2.5.2. The getFile() method</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getfile②">(2)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getfile③">(3)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getfile④">(4)</a>
+    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getfilehandle">2.5. The FileSystemDirectoryHandle interface</a>
+    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getfilehandle①">2.5.2. The getFileHandle() method</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getfilehandle②">(2)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getfilehandle③">(3)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getfilehandle④">(4)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-filesystemdirectoryhandle-getdirectory">
-   <b><a href="#dom-filesystemdirectoryhandle-getdirectory">#dom-filesystemdirectoryhandle-getdirectory</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-filesystemdirectoryhandle-getdirectoryhandle">
+   <b><a href="#dom-filesystemdirectoryhandle-getdirectoryhandle">#dom-filesystemdirectoryhandle-getdirectoryhandle</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getdirectory">2.5. The FileSystemDirectoryHandle interface</a>
-    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getdirectory①">2.5.3. The getDirectory() method</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getdirectory②">(2)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getdirectory③">(3)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getdirectory④">(4)</a>
+    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getdirectoryhandle">2.5. The FileSystemDirectoryHandle interface</a>
+    <li><a href="#ref-for-dom-filesystemdirectoryhandle-getdirectoryhandle①">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getdirectoryhandle②">(2)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getdirectoryhandle③">(3)</a> <a href="#ref-for-dom-filesystemdirectoryhandle-getdirectoryhandle④">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemdirectoryhandle-removeentry">
