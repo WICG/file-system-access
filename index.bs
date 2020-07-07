@@ -1402,7 +1402,7 @@ const options = {
   <l>{{FilePickerOptions/types}}</l>: [
     {
       <l>{{FilePickerAcceptType/accept}}</l>: {
-        'image/svg+xml': 'svg',
+        'image/svg+xml': ['svg']
       }
     },
   ],
