@@ -462,8 +462,8 @@ dictionary FileSystemRemoveOptions {
 interface FileSystemDirectoryHandle : FileSystemHandle {
   async iterable<USVString, FileSystemHandle>;
 
-  Promise<FileSystemFileHandle> getFile(USVString name, optional FileSystemGetFileOptions options = {});
-  Promise<FileSystemDirectoryHandle> getDirectory(USVString name, optional FileSystemGetDirectoryOptions options = {});
+  Promise<FileSystemFileHandle> getFileHandle(USVString name, optional FileSystemGetFileOptions options = {});
+  Promise<FileSystemDirectoryHandle> getDirectoryHandle(USVString name, optional FileSystemGetDirectoryOptions options = {});
 
   Promise<void> removeEntry(USVString name, optional FileSystemRemoveOptions options = {});
 
@@ -479,12 +479,8 @@ A {{FileSystemDirectoryHandle}}'s associated [=FileSystemHandle/entry=] must be 
 Advisement: In the Origin Trial as available in Chrome 78, these objects are not yet serializable. 
 In Chrome 82 they are.
 
-Issue: Should we have separate getFile and getDirectory methods, or just a single getChild/getEntry
-method?
-
-Issue(98): Having getFile methods in both FileSystemDirectoryHandle and FileSystemFileHandle, but
-with very different behavior might be confusing? Perhaps rename at least one of them (but see also
-previous issue).
+Advisement: In Chrome versions upto Chrome 85 `getFileHandle` and `getDirectoryHandle` where
+called `getFile` and `getDirectory` instead.
 
 ### Directory iteration ### {#api-filesystemdirectoryhandle-asynciterable}
 
@@ -563,15 +559,15 @@ and its async iterator |iterator|:
 
 </div>
 
-### The {{FileSystemDirectoryHandle/getFile()}} method ### {#api-filesystemdirectoryhandle-getfile}
+### The {{FileSystemDirectoryHandle/getFileHandle()}} method ### {#api-filesystemdirectoryhandle-getfilehandle}
 
 <div class="note domintro">
-  : |fileHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getFile()|getFile}}(|name|)
-  : |fileHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getFile()|getFile}}(|name|, { {{FileSystemGetFileOptions/create}}: false })
+  : |fileHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getFileHandle()|getFileHandle}}(|name|)
+  : |fileHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getFileHandle()|getFileHandle}}(|name|, { {{FileSystemGetFileOptions/create}}: false })
   :: Returns a handle for a file named |name| in the directory represented by |directoryHandle|. If
      no such file exists, this rejects.
 
-  : |fileHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getFile()|getFile}}(|name|, { {{FileSystemGetFileOptions/create}}: true })
+  : |fileHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getFileHandle()|getFileHandle}}(|name|, { {{FileSystemGetFileOptions/create}}: true })
   :: Returns a handle for a file named |name| in the directory represented by |directoryHandle|. If
      no such file exists, this creates a new file. If no file with named |name| can be created this
      rejects. Creation can fail because there already is a directory with the same name, because the
@@ -585,7 +581,7 @@ and its async iterator |iterator|:
 </div>
 
 <div algorithm>
-The <dfn method for=FileSystemDirectoryHandle>getFile(|name|, |options|)</dfn> method, when invoked,
+The <dfn method for=FileSystemDirectoryHandle>getFileHandle(|name|, |options|)</dfn> method, when invoked,
 must run these steps:
 
 1. Let |result| be [=a new promise=].
@@ -631,15 +627,15 @@ must run these steps:
 
 </div>
 
-### The {{FileSystemDirectoryHandle/getDirectory()}} method ### {#api-filesystemdirectoryhandle-getdirectory}
+### The {{FileSystemDirectoryHandle/getDirectoryHandle()}} method ### {#api-filesystemdirectoryhandle-getdirectoryhandle}
 
 <div class="note domintro">
-  : |subdirHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getDirectory()|getDirectory}}(|name|)
-  : |subdirHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getDirectory()|getDirectory}}(|name|, { {{FileSystemGetDirectoryOptions/create}}: false })
+  : |subdirHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getDirectoryHandle()|getDirectoryHandle}}(|name|)
+  : |subdirHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getDirectoryHandle()|getDirectoryHandle}}(|name|, { {{FileSystemGetDirectoryOptions/create}}: false })
   :: Returns a handle for a directory named |name| in the directory represented by
     |directoryHandle|. If no such directory exists, this rejects.
 
-  : |subdirHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getDirectory()|getDirectory}}(|name|, { {{FileSystemGetDirectoryOptions/create}}: true })
+  : |subdirHandle| = await |directoryHandle| . {{FileSystemDirectoryHandle/getDirectoryHandle()|getDirectoryHandle}}(|name|, { {{FileSystemGetDirectoryOptions/create}}: true })
   :: Returns a handle for a directory named |name| in the directory represented by
      |directoryHandle|. If no such directory exists, this creates a new directory. If creating the
      directory failed, this rejects. Creation can fail because there already is a file with the same
@@ -653,7 +649,7 @@ must run these steps:
 </div>
 
 <div algorithm>
-The <dfn method for=FileSystemDirectoryHandle>getDirectory(|name|, |options|)</dfn> method, when
+The <dfn method for=FileSystemDirectoryHandle>getDirectoryHandle(|name|, |options|)</dfn> method, when
 invoked, must run these steps:
 
 1. Let |result| be [=a new promise=].
