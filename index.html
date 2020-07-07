@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 76c0936a, updated Fri Jun 12 19:44:53 2020 -0700" name="generator">
+  <meta content="Bikeshed version 04c91f0f, updated Mon Jun 29 08:51:04 2020 +0200" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="b1b9ce234e9348cde544608753d8eafd06adaa53" name="document-revision">
+  <meta content="7f778b0428d2b348285848ce71d9ff3dea599704" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1501,7 +1501,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-06-17">17 June 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-07-07">7 July 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2513,7 +2513,7 @@ All operations executed on the stream are queuable and producers will be able to
     <p>The underlying sink’s write method, and therefore <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#default-writer-write" id="ref-for-default-writer-write">WritableStreamDefaultWriter’s write()</a></code> method, will accept byte-like data or <code class="idl"><a data-link-type="idl" href="#dictdef-writeparams" id="ref-for-dictdef-writeparams①">WriteParams</a></code> as input.</p>
     <p>The <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑦">FileSystemWritableFileStream</a></code> has a file position cursor initialized at byte offset 0 from the top of the file.
 When using <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write①">write()</a></code> or by using WritableStream capabilities through the <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#default-writer-write" id="ref-for-default-writer-write①">WritableStreamDefaultWriter’s write()</a></code> method, this position will be advanced based on the number of bytes written through the stream object.</p>
-    <p>Similarly, when piping a <code class="idl"><a data-link-type="idl" href="https://fetch.spec.whatwg.org/#concept-readablestream" id="ref-for-concept-readablestream">ReadableStream</a></code> into a <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑧">FileSystemWritableFileStream</a></code> object, this position is updated with the number of bytes that passed through the stream.</p>
+    <p>Similarly, when piping a <code class="idl"><a data-link-type="idl">ReadableStream</a></code> into a <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑧">FileSystemWritableFileStream</a></code> object, this position is updated with the number of bytes that passed through the stream.</p>
     <p><code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#ws-get-writer" id="ref-for-ws-get-writer">getWriter()</a></code> returns an instance of <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#writablestreamdefaultwriter" id="ref-for-writablestreamdefaultwriter">WritableStreamDefaultWriter</a></code>.</p>
    </div>
    <div class="algorithm" data-algorithm="create a new FileSystemWritableFileStream">
@@ -3101,7 +3101,7 @@ will not show an option to not apply any filters.</p>
   <code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-types" id="ref-for-dom-filepickeroptions-types③">types</a></code><c- o>:</c-> <c- p>[</c->
     <c- p>{</c->
       <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept②">accept</a></code><c- o>:</c-> <c- p>{</c->
-        <c- t>'image/svg+xml'</c-><c- o>:</c-> <c- t>'svg'</c-><c- p>,</c->
+        <c- t>'image/svg+xml'</c-><c- o>:</c-> <c- p>[</c-><c- t>'svg'</c-><c- p>]</c->
       <c- p>}</c->
     <c- p>},</c->
   <c- p>],</c->
@@ -3636,12 +3636,6 @@ appropriate.</p>
    <a href="https://encoding.spec.whatwg.org/#utf-8-encode">https://encoding.spec.whatwg.org/#utf-8-encode</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-utf-8-encode">2.6. The FileSystemWritableFileStream interface</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-concept-readablestream">
-   <a href="https://fetch.spec.whatwg.org/#concept-readablestream">https://fetch.spec.whatwg.org/#concept-readablestream</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-readablestream">2.6. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dfn-Blob">
@@ -4345,11 +4339,6 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-utf-8-encode" style="color:initial">utf-8 encode</span>
     </ul>
    <li>
-    <a data-link-type="biblio">[FETCH]</a> defines the following terms:
-    <ul>
-     <li><span class="dfn-paneled" id="term-for-concept-readablestream" style="color:initial">ReadableStream</span>
-    </ul>
-   <li>
     <a data-link-type="biblio">[FILE-API]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-dfn-Blob" style="color:initial">Blob</span>
@@ -4495,8 +4484,6 @@ appropriate.</p>
   <dl>
    <dt id="biblio-entries-api">[ENTRIES-API]
    <dd><a href="https://wicg.github.io/entries-api/">File and Directory Entries API</a>. cg-draft. URL: <a href="https://wicg.github.io/entries-api/">https://wicg.github.io/entries-api/</a>
-   <dt id="biblio-fetch">[FETCH]
-   <dd>Anne van Kesteren. <a href="https://fetch.spec.whatwg.org/">Fetch Standard</a>. Living Standard. URL: <a href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>
    <dt id="biblio-file-system-api">[FILE-SYSTEM-API]
    <dd>Eric Uhrhane. <a href="https://www.w3.org/TR/file-system-api/">File API: Directories and System</a>. 24 April 2014. NOTE. URL: <a href="https://www.w3.org/TR/file-system-api/">https://www.w3.org/TR/file-system-api/</a>
   </dl>
