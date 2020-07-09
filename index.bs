@@ -1512,6 +1512,9 @@ The <dfn>origin private file system</dfn> is a [=storage endpoint=] whose
 <a spec=storage for="storage endpoint">types</a> are `« "local" »`,
 and <a spec=storage for="storage endpoint">quota</a> is null.
 
+Issue: Storage endpoints should be defined in [[storage]] itself, rather
+than being defined here. So merge this into the table there.
+
 Note: While user agents will typically implement this by persisting the contents of this
 [=origin private file system=] to disk, it is not intended that the contents are easily
 user accessible. Similarly there is no expectation that files or directories with names
