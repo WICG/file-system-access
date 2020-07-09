@@ -177,10 +177,14 @@ dictionary FileSystemHandlePermissionDescriptor {
   boolean writable = false;
 };
 
+enum FileSystemHandleKind {
+  "file",
+  "directory",
+};
+
 [Exposed=(Window,Worker), SecureContext, Serializable]
 interface FileSystemHandle {
-  readonly attribute boolean isFile;
-  readonly attribute boolean isDirectory;
+  readonly attribute FileSystemHandleKind kind;
   readonly attribute USVString name;
 
   Promise<boolean> isSameEntry(FileSystemHandle other);
@@ -218,21 +222,20 @@ Their [=deserialization steps=], given |serialized| and |value| are:
 </div>
 
 <div class="note domintro">
-  : |handle| . {{FileSystemHandle/isFile}}
-  :: Returns true if |handle| is a {{FileSystemFileHandle}}.
+  : |handle| . {{FileSystemHandle/kind}}
+  :: Returns {{FileSystemHandleKind/"file"}} if |handle| is a {{FileSystemFileHandle}},
+     or {{FileSystemHandleKind/"directory"}} if |handle| is a {{FileSystemDirectoryHandle}}.
 
-  : |handle| . {{FileSystemHandle/isDirectory}}
-  :: Returns true if |handle| is a {{FileSystemDirectoryHandle}}.
+     This can be used to distinguish files from directories when iterating over the contents
+     of a directory.
 
   : |handle| . {{FileSystemHandle/name}}
   :: Returns the [=entry/name=] of the entry represented by |handle|.
 </div>
 
-The <dfn attribute for=FileSystemHandle>isFile</dfn> attribute must return true if the associated
-[=FileSystemHandle/entry=] is a [=file entry=], and false otherwise.
-
-The <dfn attribute for=FileSystemHandle>isDirectory</dfn> attribute must return true if the
-associated [=FileSystemHandle/entry=] is a [=directory entry=], and false otherwise.
+The <dfn attribute for=FileSystemHandle>kind</dfn> attribute must
+return {{FileSystemHandleKind/"file"}} if the associated [=FileSystemHandle/entry=] is a [=file entry=],
+and return {{FileSystemHandleKind/"directory"}} otherwise.
 
 The <dfn attribute for=FileSystemHandle>name</dfn> attribute must return the [=entry/name=] of the
 associated [=FileSystemHandle/entry=].
