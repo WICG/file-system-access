@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 04c91f0f, updated Mon Jun 29 08:51:04 2020 +0200" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="fa242ddde40ebe3fe6a835dd05206408564d56df" name="document-revision">
+  <meta content="6b3c7da3f77da88543804e832086a69c324527f4" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1501,7 +1501,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-07-07">7 July 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-07-09">9 July 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1748,13 +1748,17 @@ can be updated, and the new state can be queried by executing the query permissi
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemHandlePermissionDescriptor" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemhandlepermissiondescriptor-writable"><code><c- g>writable</c-></code></dfn> = <c- b>false</c->;
 };
 
+<c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-filesystemhandlekind"><code><c- g>FileSystemHandleKind</c-></code></dfn> {
+  <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandleKind" data-dfn-type="enum-value" data-export id="dom-filesystemhandlekind-file"><code><c- s>"file"</c-></code></dfn>,
+  <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandleKind" data-dfn-type="enum-value" data-export id="dom-filesystemhandlekind-directory"><code><c- s>"directory"</c-></code></dfn>,
+};
+
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->), <a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext"><c- g>SecureContext</c-></a>, <a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/structured-data.html#serializable" id="ref-for-serializable"><c- g>Serializable</c-></a>]
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemhandle"><code><c- g>FileSystemHandle</c-></code></dfn> {
-  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean①"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isfile" id="ref-for-dom-filesystemhandle-isfile"><c- g>isFile</c-></a>;
-  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean②"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isdirectory" id="ref-for-dom-filesystemhandle-isdirectory"><c- g>isDirectory</c-></a>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="#enumdef-filesystemhandlekind" id="ref-for-enumdef-filesystemhandlekind"><c- n>FileSystemHandleKind</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="FileSystemHandleKind" href="#dom-filesystemhandle-kind" id="ref-for-dom-filesystemhandle-kind"><c- g>kind</c-></a>;
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString"><c- b>USVString</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="USVString" href="#dom-filesystemhandle-name" id="ref-for-dom-filesystemhandle-name"><c- g>name</c-></a>;
 
-  <c- b>Promise</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean③"><c- b>boolean</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-issameentry" id="ref-for-dom-filesystemhandle-issameentry"><c- g>isSameEntry</c-></a>(<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①"><c- n>FileSystemHandle</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/isSameEntry(other)" data-dfn-type="argument" data-export id="dom-filesystemhandle-issameentry-other-other"><code><c- g>other</c-></code><a class="self-link" href="#dom-filesystemhandle-issameentry-other-other"></a></dfn>);
+  <c- b>Promise</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean①"><c- b>boolean</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-issameentry" id="ref-for-dom-filesystemhandle-issameentry"><c- g>isSameEntry</c-></a>(<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①"><c- n>FileSystemHandle</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/isSameEntry(other)" data-dfn-type="argument" data-export id="dom-filesystemhandle-issameentry-other-other"><code><c- g>other</c-></code><a class="self-link" href="#dom-filesystemhandle-issameentry-other-other"></a></dfn>);
 
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/permissions/#enumdef-permissionstate" id="ref-for-enumdef-permissionstate①"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission"><c- g>queryPermission</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor②"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/queryPermission(descriptor), FileSystemHandle/queryPermission()" data-dfn-type="argument" data-export id="dom-filesystemhandle-querypermission-descriptor-descriptor"><code><c- g>descriptor</c-></code><a class="self-link" href="#dom-filesystemhandle-querypermission-descriptor-descriptor"></a></dfn> = {});
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="https://w3c.github.io/permissions/#enumdef-permissionstate" id="ref-for-enumdef-permissionstate②"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission"><c- g>requestPermission</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor③"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/requestPermission(descriptor), FileSystemHandle/requestPermission()" data-dfn-type="argument" data-export id="dom-filesystemhandle-requestpermission-descriptor-descriptor"><code><c- g>descriptor</c-></code><a class="self-link" href="#dom-filesystemhandle-requestpermission-descriptor-descriptor"></a></dfn> = {});
@@ -1787,22 +1791,22 @@ In Chrome 82 they are.</strong></p>
    </div>
    <div class="note domintro" role="note">
     <dl>
-     <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-isfile" id="ref-for-dom-filesystemhandle-isfile①">isFile</a></code>
+     <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-kind" id="ref-for-dom-filesystemhandle-kind①">kind</a></code>
      <dd data-md>
-      <p>Returns true if <var>handle</var> is a <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle">FileSystemFileHandle</a></code>.</p>
-     <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-isdirectory" id="ref-for-dom-filesystemhandle-isdirectory①">isDirectory</a></code>
-     <dd data-md>
-      <p>Returns true if <var>handle</var> is a <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle">FileSystemDirectoryHandle</a></code>.</p>
+      <p>Returns <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlekind-file" id="ref-for-dom-filesystemhandlekind-file">"file"</a></code> if <var>handle</var> is a <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle">FileSystemFileHandle</a></code>,
+ or <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlekind-directory" id="ref-for-dom-filesystemhandlekind-directory">"directory"</a></code> if <var>handle</var> is a <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle">FileSystemDirectoryHandle</a></code>.</p>
+      <p>This can be used to distinguish files from directories when iterating over the contents
+ of a directory.</p>
      <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-name" id="ref-for-dom-filesystemhandle-name①">name</a></code>
      <dd data-md>
       <p>Returns the <a data-link-type="dfn" href="#entry-name" id="ref-for-entry-name①">name</a> of the entry represented by <var>handle</var>.</p>
     </dl>
    </div>
-   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="attribute" data-export id="dom-filesystemhandle-isfile"><code>isFile</code></dfn> attribute must return true if the associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry③">entry</a> is a <a data-link-type="dfn" href="#file" id="ref-for-file②">file entry</a>, and false otherwise.</p>
-   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="attribute" data-export id="dom-filesystemhandle-isdirectory"><code>isDirectory</code></dfn> attribute must return true if the
-associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry④">entry</a> is a <a data-link-type="dfn" href="#directory" id="ref-for-directory④">directory entry</a>, and false otherwise.</p>
+   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="attribute" data-export id="dom-filesystemhandle-kind"><code>kind</code></dfn> attribute must
+return <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlekind-file" id="ref-for-dom-filesystemhandlekind-file①">"file"</a></code> if the associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry③">entry</a> is a <a data-link-type="dfn" href="#file" id="ref-for-file②">file entry</a>,
+and return <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlekind-directory" id="ref-for-dom-filesystemhandlekind-directory①">"directory"</a></code> otherwise.</p>
    <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="attribute" data-export id="dom-filesystemhandle-name"><code>name</code></dfn> attribute must return the <a data-link-type="dfn" href="#entry-name" id="ref-for-entry-name②">name</a> of the
-associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑤">entry</a>.</p>
+associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry④">entry</a>.</p>
    <h4 class="heading settled" data-level="2.3.1" id="api-filesystemhandle-issameentry"><span class="secno">2.3.1. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-issameentry" id="ref-for-dom-filesystemhandle-issameentry①">isSameEntry()</a></code> method</span><a class="self-link" href="#api-filesystemhandle-issameentry"></a></h4>
    <div class="note domintro" role="note">
     <dl>
@@ -1823,7 +1827,7 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
       <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel①">in parallel</a>:</p>
       <ol>
        <li data-md>
-        <p>If <a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①">this</a>'s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑥">entry</a> is <a data-link-type="dfn" href="#entry-the-same-as" id="ref-for-entry-the-same-as①">the same as</a> <var>other</var>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑦">entry</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve③">resolve</a> <var>p</var> with <code>true</code>.</p>
+        <p>If <a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①">this</a>'s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑤">entry</a> is <a data-link-type="dfn" href="#entry-the-same-as" id="ref-for-entry-the-same-as①">the same as</a> <var>other</var>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑥">entry</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve③">resolve</a> <var>p</var> with <code>true</code>.</p>
        <li data-md>
         <p>Else <a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve④">resolve</a> <var>p</var> with <code>false</code>.</p>
       </ol>
@@ -1864,7 +1868,7 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
       <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel②">in parallel</a>:</p>
       <ol>
        <li data-md>
-        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve⑤">Resolve</a> <var>result</var> with the result of running <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑧">entry</a>'s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①">query permission steps</a> given <var>descriptor</var> and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this③">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object②">relevant settings object</a>.</p>
+        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve⑤">Resolve</a> <var>result</var> with the result of running <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑦">entry</a>'s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps①">query permission steps</a> given <var>descriptor</var> and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this③">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object②">relevant settings object</a>.</p>
       </ol>
      <li data-md>
       <p>Return <var>result</var>.</p>
@@ -1898,10 +1902,10 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
       <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel③">in parallel</a>:</p>
       <ol>
        <li data-md>
-        <p>Run <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this④">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑨">entry</a>'s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps①">request permission steps</a> given <var>descriptor</var> and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑤">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object③">relevant settings object</a>.
+        <p>Run <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this④">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑧">entry</a>'s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps①">request permission steps</a> given <var>descriptor</var> and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑤">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object③">relevant settings object</a>.
  If that throws an exception, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject">reject</a> <var>result</var> with that exception and abort.</p>
        <li data-md>
-        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve⑥">Resolve</a> <var>result</var> with the result of running <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑥">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⓪">entry</a>'s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps②">query permission steps</a> given <var>descriptor</var> and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑦">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object④">relevant settings object</a>.</p>
+        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve⑥">Resolve</a> <var>result</var> with the result of running <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑥">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑨">entry</a>'s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps②">query permission steps</a> given <var>descriptor</var> and <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑦">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object④">relevant settings object</a>.</p>
       </ol>
      <li data-md>
       <p>Return <var>result</var>.</p>
@@ -1909,7 +1913,7 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
    </div>
    <h3 class="heading settled" data-level="2.4" id="api-filesystemfilehandle"><span class="secno">2.4. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle①">FileSystemFileHandle</a></code> interface</span><a class="self-link" href="#api-filesystemfilehandle"></a></h3>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystemcreatewritableoptions"><code><c- g>FileSystemCreateWritableOptions</c-></code></dfn> {
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean④"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemCreateWritableOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemcreatewritableoptions-keepexistingdata"><code><c- g>keepExistingData</c-></code></dfn> = <c- b>false</c->;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean②"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemCreateWritableOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemcreatewritableoptions-keepexistingdata"><code><c- g>keepExistingData</c-></code></dfn> = <c- b>false</c->;
 };
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed①"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->), <a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext①"><c- g>SecureContext</c-></a>, <a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/structured-data.html#serializable" id="ref-for-serializable①"><c- g>Serializable</c-></a>]
@@ -1918,7 +1922,7 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
   <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream"><c- n>FileSystemWritableFileStream</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemfilehandle-createwritable" id="ref-for-dom-filesystemfilehandle-createwritable"><c- g>createWritable</c-></a>(<c- b>optional</c-> <a class="n" data-link-type="idl-name" href="#dictdef-filesystemcreatewritableoptions" id="ref-for-dictdef-filesystemcreatewritableoptions"><c- n>FileSystemCreateWritableOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemFileHandle/createWritable(options), FileSystemFileHandle/createWritable()" data-dfn-type="argument" data-export id="dom-filesystemfilehandle-createwritable-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemfilehandle-createwritable-options-options"></a></dfn> = {});
 };
 </pre>
-   <p>A <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle②">FileSystemFileHandle</a></code>'s associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①①">entry</a> must be a <a data-link-type="dfn" href="#file" id="ref-for-file③">file entry</a>.</p>
+   <p>A <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle②">FileSystemFileHandle</a></code>'s associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⓪">entry</a> must be a <a data-link-type="dfn" href="#file" id="ref-for-file③">file entry</a>.</p>
    <p><code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle③">FileSystemFileHandle</a></code> objects are <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/structured-data.html#serializable-objects" id="ref-for-serializable-objects①">serializable objects</a>. Their <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/structured-data.html#serialization-steps" id="ref-for-serialization-steps①">serialization steps</a> and <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/structured-data.html#deserialization-steps" id="ref-for-deserialization-steps①">deserialization steps</a> are the same as those for <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle⑦">FileSystemHandle</a></code>.</p>
    <p><strong class="advisement"> In the Origin Trial as available in Chrome 78, these objects are not yet serializable.
 In Chrome 82 they are.</strong></p>
@@ -1940,7 +1944,7 @@ In Chrome 82 they are.</strong></p>
       <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel④">in parallel</a>:</p>
       <ol>
        <li data-md>
-        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑧">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①②">entry</a>.</p>
+        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this⑧">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①①">entry</a>.</p>
        <li data-md>
         <p>Let <var>permissionStatus</var> be the result of running <var>entry</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps③">query permission steps</a> given
  «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable④">writable</a></code>" → <code>false</code> ]»
@@ -2001,7 +2005,7 @@ modifications to existing large files. <a href="https://github.com/wicg/native-f
       <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel⑤">in parallel</a>:</p>
       <ol>
        <li data-md>
-        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⓪">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①③">entry</a>.</p>
+        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⓪">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①②">entry</a>.</p>
        <li data-md>
         <p>Run <var>entry</var>’s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps②">request permission steps</a> given
  «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable⑤">writable</a></code>" → <code>true</code> ]»
@@ -2031,15 +2035,15 @@ modifications to existing large files. <a href="https://github.com/wicg/native-f
    </div>
    <h3 class="heading settled" data-level="2.5" id="api-filesystemdirectoryhandle"><span class="secno">2.5. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①">FileSystemDirectoryHandle</a></code> interface</span><a class="self-link" href="#api-filesystemdirectoryhandle"></a></h3>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystemgetfileoptions"><code><c- g>FileSystemGetFileOptions</c-></code></dfn> {
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑤"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemGetFileOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemgetfileoptions-create"><code><c- g>create</c-></code></dfn> = <c- b>false</c->;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean③"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemGetFileOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemgetfileoptions-create"><code><c- g>create</c-></code></dfn> = <c- b>false</c->;
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystemgetdirectoryoptions"><code><c- g>FileSystemGetDirectoryOptions</c-></code></dfn> {
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑥"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemGetDirectoryOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemgetdirectoryoptions-create"><code><c- g>create</c-></code></dfn> = <c- b>false</c->;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean④"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemGetDirectoryOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemgetdirectoryoptions-create"><code><c- g>create</c-></code></dfn> = <c- b>false</c->;
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystemremoveoptions"><code><c- g>FileSystemRemoveOptions</c-></code></dfn> {
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑦"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemRemoveOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemremoveoptions-recursive"><code><c- g>recursive</c-></code></dfn> = <c- b>false</c->;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑤"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemRemoveOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemremoveoptions-recursive"><code><c- g>recursive</c-></code></dfn> = <c- b>false</c->;
 };
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed②"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->), <a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext②"><c- g>SecureContext</c-></a>, <a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/structured-data.html#serializable" id="ref-for-serializable②"><c- g>Serializable</c-></a>]
@@ -2054,7 +2058,7 @@ modifications to existing large files. <a href="https://github.com/wicg/native-f
   <c- b>Promise</c->&lt;<c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑤"><c- b>USVString</c-></a>>?> <a class="idl-code" data-link-type="method" href="#dom-filesystemdirectoryhandle-resolve" id="ref-for-dom-filesystemdirectoryhandle-resolve"><c- g>resolve</c-></a>(<a class="n" data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle①⓪"><c- n>FileSystemHandle</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemDirectoryHandle/resolve(possibleDescendant)" data-dfn-type="argument" data-export id="dom-filesystemdirectoryhandle-resolve-possibledescendant-possibledescendant"><code><c- g>possibleDescendant</c-></code><a class="self-link" href="#dom-filesystemdirectoryhandle-resolve-possibledescendant-possibledescendant"></a></dfn>);
 };
 </pre>
-   <p>A <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle③">FileSystemDirectoryHandle</a></code>'s associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①④">entry</a> must be a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑤">directory entry</a>.</p>
+   <p>A <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle③">FileSystemDirectoryHandle</a></code>'s associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①③">entry</a> must be a <a data-link-type="dfn" href="#directory" id="ref-for-directory④">directory entry</a>.</p>
    <p><code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle④">FileSystemDirectoryHandle</a></code> objects are <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/structured-data.html#serializable-objects" id="ref-for-serializable-objects②">serializable objects</a>. Their <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/structured-data.html#serialization-steps" id="ref-for-serialization-steps②">serialization steps</a> and <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/structured-data.html#deserialization-steps" id="ref-for-deserialization-steps②">deserialization steps</a> are the same as those for <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle①①">FileSystemHandle</a></code>.</p>
    <p><strong class="advisement"> In the Origin Trial as available in Chrome 78, these objects are not yet serializable.
 In Chrome 82 they are.</strong></p>
@@ -2082,7 +2086,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
      The <a data-link-type="dfn" href="https://heycam.github.io/webidl/#asynchronous-iterator-initialization-steps" id="ref-for-asynchronous-iterator-initialization-steps">asynchronous iterator initialization steps</a> for a <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑤">FileSystemDirectoryHandle</a></code> <var>handle</var> ant its async iterator <var>iterator</var> are: 
     <ol>
      <li data-md>
-      <p>Let <var>entry</var> be <var>handle</var>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑤">entry</a>.</p>
+      <p>Let <var>entry</var> be <var>handle</var>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①④">entry</a>.</p>
      <li data-md>
       <p>Let <var>permissionStatus</var> be the result of running <var>entry</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps⑤">query permission steps</a> given
  «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable⑦">writable</a></code>" → <code>false</code> ]»
@@ -2100,7 +2104,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
      <li data-md>
       <p>Let <var>promise</var> be <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-new-promise" id="ref-for-a-new-promise⑥">a new promise</a>.</p>
      <li data-md>
-      <p>Let <var>directory</var> be <var>handle</var>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑥">entry</a>.</p>
+      <p>Let <var>directory</var> be <var>handle</var>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑤">entry</a>.</p>
      <li data-md>
       <p>Let <var>permissionStatus</var> be the result of running <var>directory</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps⑥">query permission steps</a> given
  «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable⑧">writable</a></code>" → <code>false</code> ]»
@@ -2179,7 +2183,7 @@ must run these steps:
        <li data-md>
         <p>If <var>name</var> is not a <a data-link-type="dfn" href="#valid-file-name" id="ref-for-valid-file-name①">valid file name</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②">reject</a> <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror">TypeError</a></code> and abort.</p>
        <li data-md>
-        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⑥">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑦">entry</a>.</p>
+        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⑥">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑥">entry</a>.</p>
        <li data-md>
         <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystemgetfileoptions-create" id="ref-for-dom-filesystemgetfileoptions-create③">create</a></code> is <code>true</code>:</p>
         <ol>
@@ -2211,13 +2215,13 @@ must run these steps:
           <p>If <var>child</var>’s <a data-link-type="dfn" href="#entry-name" id="ref-for-entry-name⑧">name</a> equals <var>name</var>:</p>
           <ol>
            <li data-md>
-            <p>If <var>child</var> is a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑥">directory entry</a>:</p>
+            <p>If <var>child</var> is a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑤">directory entry</a>:</p>
             <ol>
              <li data-md>
               <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject④">Reject</a> <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#typemismatcherror" id="ref-for-typemismatcherror">TypeMismatchError</a></code> and abort.</p>
             </ol>
            <li data-md>
-            <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve①①">Resolve</a> <var>result</var> with a new <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle⑥">FileSystemFileHandle</a></code> whose <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑧">entry</a> is <var>child</var> and abort.</p>
+            <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve①①">Resolve</a> <var>result</var> with a new <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle⑥">FileSystemFileHandle</a></code> whose <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑦">entry</a> is <var>child</var> and abort.</p>
           </ol>
         </ol>
        <li data-md>
@@ -2240,7 +2244,7 @@ must run these steps:
         <p>If creating <var>child</var> in the underlying file system throws an exception, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject⑥">reject</a> <var>result</var> with that exception and abort.</p>
         <p class="issue" id="issue-721a33e4"><a class="self-link" href="#issue-721a33e4"></a> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/native-file-system/issues/68">&lt;https://github.com/wicg/native-file-system/issues/68></a></p>
        <li data-md>
-        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve①②">Resolve</a> <var>result</var> with a new <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle⑦">FileSystemFileHandle</a></code> whose <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑨">entry</a> is <var>child</var>.</p>
+        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve①②">Resolve</a> <var>result</var> with a new <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle⑦">FileSystemFileHandle</a></code> whose <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑧">entry</a> is <var>child</var>.</p>
       </ol>
      <li data-md>
       <p>Return <var>result</var>.</p>
@@ -2277,7 +2281,7 @@ invoked, must run these steps:
        <li data-md>
         <p>If <var>name</var> is not a <a data-link-type="dfn" href="#valid-file-name" id="ref-for-valid-file-name②">valid file name</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject⑦">reject</a> <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①">TypeError</a></code> and abort.</p>
        <li data-md>
-        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②⓪">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②⓪">entry</a>.</p>
+        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②⓪">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑨">entry</a>.</p>
        <li data-md>
         <p>If <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystemgetdirectoryoptions-create" id="ref-for-dom-filesystemgetdirectoryoptions-create③">create</a></code> is <code>true</code>:</p>
         <ol>
@@ -2315,7 +2319,7 @@ invoked, must run these steps:
               <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject⑨">Reject</a> <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#typemismatcherror" id="ref-for-typemismatcherror①">TypeMismatchError</a></code> and abort.</p>
             </ol>
            <li data-md>
-            <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve①③">Resolve</a> <var>result</var> with a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑧">FileSystemDirectoryHandle</a></code> whose <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②①">entry</a> is <var>child</var> and abort.</p>
+            <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve①③">Resolve</a> <var>result</var> with a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑧">FileSystemDirectoryHandle</a></code> whose <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②⓪">entry</a> is <var>child</var> and abort.</p>
           </ol>
         </ol>
        <li data-md>
@@ -2325,7 +2329,7 @@ invoked, must run these steps:
           <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject①⓪">Reject</a> <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notfounderror" id="ref-for-notfounderror①">NotFoundError</a></code> and abort.</p>
         </ol>
        <li data-md>
-        <p>Let <var>child</var> be a new <a data-link-type="dfn" href="#directory" id="ref-for-directory⑦">directory entry</a>.</p>
+        <p>Let <var>child</var> be a new <a data-link-type="dfn" href="#directory" id="ref-for-directory⑥">directory entry</a>.</p>
        <li data-md>
         <p>Set <var>child</var>’s <a data-link-type="dfn" href="#entry-name" id="ref-for-entry-name①①">name</a> to <var>name</var>.</p>
        <li data-md>
@@ -2336,7 +2340,7 @@ invoked, must run these steps:
         <p>If creating <var>child</var> in the underlying file system throws an exception, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject①①">reject</a> <var>result</var> with that exception and abort.</p>
         <p class="issue" id="issue-721a33e4①"><a class="self-link" href="#issue-721a33e4①"></a> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/native-file-system/issues/68">&lt;https://github.com/wicg/native-file-system/issues/68></a></p>
        <li data-md>
-        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve①④">Resolve</a> <var>result</var> with a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑨">FileSystemDirectoryHandle</a></code> whose <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②②">entry</a> is <var>child</var>.</p>
+        <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve①④">Resolve</a> <var>result</var> with a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑨">FileSystemDirectoryHandle</a></code> whose <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②①">entry</a> is <var>child</var>.</p>
       </ol>
      <li data-md>
       <p>Return <var>result</var>.</p>
@@ -2372,7 +2376,7 @@ these steps:
        <li data-md>
         <p>If <var>name</var> is not a <a data-link-type="dfn" href="#valid-file-name" id="ref-for-valid-file-name③">valid file name</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject①②">reject</a> <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror②">TypeError</a></code> and abort.</p>
        <li data-md>
-        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②④">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②③">entry</a>.</p>
+        <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②④">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②②">entry</a>.</p>
        <li data-md>
         <p>Run <var>entry</var>’s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps⑤">request permission steps</a> given
  «[ "<code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-writable" id="ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑤">writable</a></code>" → <code>true</code> ]»
@@ -2392,7 +2396,7 @@ these steps:
           <p>If <var>child</var>’s <a data-link-type="dfn" href="#entry-name" id="ref-for-entry-name①②">name</a> equals <var>name</var>:</p>
           <ol>
            <li data-md>
-            <p>If <var>child</var> is a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑧">directory entry</a>:</p>
+            <p>If <var>child</var> is a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑦">directory entry</a>:</p>
             <ol>
              <li data-md>
               <p>If <var>child</var>’s <a data-link-type="dfn" href="#directory-entry-children" id="ref-for-directory-entry-children①⓪">children</a> is not <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-is-empty" id="ref-for-list-is-empty">empty</a> and <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystemremoveoptions-recursive" id="ref-for-dom-filesystemremoveoptions-recursive②">recursive</a></code> is <code>false</code>:</p>
@@ -2470,7 +2474,7 @@ these steps:
 </pre>
    </div>
    <div class="algorithm" data-algorithm="resolve(possibleDescendant)" data-algorithm-for="FileSystemDirectoryHandle"> The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export id="dom-filesystemdirectoryhandle-resolve"><code>resolve(<var>possibleDescendant</var>)</code></dfn> method,
-when invoked, must return the result of <a data-link-type="dfn" href="#entry-resolve" id="ref-for-entry-resolve①">resolving</a> <var>possibleDescendant</var>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②④">entry</a> relative to <a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②⑦">this</a>'s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②⑤">entry</a>. </div>
+when invoked, must return the result of <a data-link-type="dfn" href="#entry-resolve" id="ref-for-entry-resolve①">resolving</a> <var>possibleDescendant</var>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②③">entry</a> relative to <a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②⑦">this</a>'s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②④">entry</a>. </div>
    <h3 class="heading settled" data-level="2.6" id="api-filesystemwritablefilestream"><span class="secno">2.6. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream②">FileSystemWritableFileStream</a></code> interface</span><a class="self-link" href="#api-filesystemwritablefilestream"></a></h3>
 <pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-writecommandtype"><code><c- g>WriteCommandType</c-></code></dfn> {
   <dfn class="dfn-paneled idl-code" data-dfn-for="WriteCommandType" data-dfn-type="enum-value" data-export id="dom-writecommandtype-write"><code><c- s>"write"</c-></code></dfn>,
@@ -2793,11 +2797,11 @@ steps:
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filepickeroptions"><code><c- g>FilePickerOptions</c-></code></dfn> {
     <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-filepickeraccepttype" id="ref-for-dictdef-filepickeraccepttype"><c- n>FilePickerAcceptType</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FilePickerOptions" data-dfn-type="dict-member" data-export data-type="sequence<FilePickerAcceptType> " id="dom-filepickeroptions-types"><code><c- g>types</c-></code></dfn>;
-    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑧"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FilePickerOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filepickeroptions-excludeacceptalloption"><code><c- g>excludeAcceptAllOption</c-></code></dfn> = <c- b>false</c->;
+    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑥"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FilePickerOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filepickeroptions-excludeacceptalloption"><code><c- g>excludeAcceptAllOption</c-></code></dfn> = <c- b>false</c->;
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-openfilepickeroptions"><code><c- g>OpenFilePickerOptions</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="#dictdef-filepickeroptions" id="ref-for-dictdef-filepickeroptions"><c- n>FilePickerOptions</c-></a> {
-    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑨"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="OpenFilePickerOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-openfilepickeroptions-multiple"><code><c- g>multiple</c-></code></dfn> = <c- b>false</c->;
+    <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑦"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="OpenFilePickerOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-openfilepickeroptions-multiple"><code><c- g>multiple</c-></code></dfn> = <c- b>false</c->;
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-savefilepickeroptions"><code><c- g>SaveFilePickerOptions</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="#dictdef-filepickeroptions" id="ref-for-dictdef-filepickeroptions①"><c- n>FilePickerOptions</c-></a> {
@@ -3213,7 +3217,7 @@ these steps:
        <li data-md>
         <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⑦">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror⑤">AbortError</a></code> and abort.</p>
        <li data-md>
-        <p>Let <var>entry</var> be a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑨">directory entry</a> representing the selected directory.</p>
+        <p>Let <var>entry</var> be a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑧">directory entry</a> representing the selected directory.</p>
        <li data-md>
         <p>If <var>entry</var> is deemed <a data-link-type="dfn" href="#too-sensitive-or-dangerous" id="ref-for-too-sensitive-or-dangerous②">too sensitive or dangerous</a> to be exposed to this website by the user agent:</p>
         <ol>
@@ -3245,7 +3249,7 @@ these steps:
    </div>
    <h2 class="heading settled" data-level="4" id="sandboxed-filesystem"><span class="secno">4. </span><span class="content">Accessing the Sandboxed File System</span><a class="self-link" href="#sandboxed-filesystem"></a></h2>
    <h3 class="heading settled" data-level="4.1" id="sandboxed-filesystem-concepts"><span class="secno">4.1. </span><span class="content">Sandboxed File System Concepts</span><a class="self-link" href="#sandboxed-filesystem-concepts"></a></h3>
-   <p>A <a data-link-type="dfn">bucket</a> contains a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="sandboxed-file-system-root">sandboxed file system root</dfn>, a <a data-link-type="dfn" href="#directory" id="ref-for-directory①⓪">directory entry</a>.</p>
+   <p>A <a data-link-type="dfn">bucket</a> contains a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="sandboxed-file-system-root">sandboxed file system root</dfn>, a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑨">directory entry</a>.</p>
    <p>The <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root">sandboxed file system root</a> for one <a data-link-type="dfn">bucket</a> must be completely separate from
 that of any other <a data-link-type="dfn">bucket</a>.</p>
    <p class="note" role="note"><span>Note:</span> While user agents will typically implement this by persisting the contents of this <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root①">sandboxed file system root</a> to disk, it is not intended that the contents are easily
@@ -3289,7 +3293,7 @@ invoked, must run these steps:
       <p>Let <var>bucket</var> be <var>storage</var>’s <a data-link-type="dfn">bucket</a>.</p>
      <li data-md>
       <p>Return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with①">a promise resolved with</a> a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①③">FileSystemDirectoryHandle</a></code>,
- whose associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②⑥">entry</a> is <var>bucket</var>’s <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root⑤">sandboxed file system root</a>.</p>
+ whose associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②⑤">entry</a> is <var>bucket</var>’s <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root⑤">sandboxed file system root</a>.</p>
     </ol>
    </div>
    <h2 class="heading settled" data-level="5" id="privacy-considerations"><span class="secno">5. </span><span class="content">Privacy Considerations</span><a class="self-link" href="#privacy-considerations"></a></h2>
@@ -3533,6 +3537,7 @@ appropriate.</p>
    <li><a href="#dom-filesystemfilehandle-createwritable">createWritable(options)</a><span>, in §2.4.2</span>
    <li><a href="#dom-writeparams-data">data</a><span>, in §2.6</span>
    <li><a href="#dom-filepickeraccepttype-description">description</a><span>, in §3</span>
+   <li><a href="#dom-filesystemhandlekind-directory">"directory"</a><span>, in §2.3</span>
    <li><a href="#directory">directory</a><span>, in §2.1</span>
    <li><a href="#directory">directory entry</a><span>, in §2.1</span>
    <li><a href="#dictdef-directorypickeroptions">DirectoryPickerOptions</a><span>, in §3</span>
@@ -3543,6 +3548,7 @@ appropriate.</p>
      <li><a href="#filesystemhandle-entry">dfn for FileSystemHandle</a><span>, in §2.3</span>
     </ul>
    <li><a href="#dom-filepickeroptions-excludeacceptalloption">excludeAcceptAllOption</a><span>, in §3</span>
+   <li><a href="#dom-filesystemhandlekind-file">"file"</a><span>, in §2.3</span>
    <li><a href="#filesystemwritablefilestream-file">[[file]]</a><span>, in §2.6</span>
    <li><a href="#file">file</a><span>, in §2.1</span>
    <li><a href="#file">file entry</a><span>, in §2.1</span>
@@ -3554,6 +3560,7 @@ appropriate.</p>
    <li><a href="#dictdef-filesystemgetdirectoryoptions">FileSystemGetDirectoryOptions</a><span>, in §2.5</span>
    <li><a href="#dictdef-filesystemgetfileoptions">FileSystemGetFileOptions</a><span>, in §2.5</span>
    <li><a href="#filesystemhandle">FileSystemHandle</a><span>, in §2.3</span>
+   <li><a href="#enumdef-filesystemhandlekind">FileSystemHandleKind</a><span>, in §2.3</span>
    <li><a href="#dictdef-filesystemhandlepermissiondescriptor">FileSystemHandlePermissionDescriptor</a><span>, in §2.3</span>
    <li><a href="#dictdef-filesystemremoveoptions">FileSystemRemoveOptions</a><span>, in §2.5</span>
    <li><a href="#filesystemwritablefilestream">FileSystemWritableFileStream</a><span>, in §2.6</span>
@@ -3565,10 +3572,9 @@ appropriate.</p>
    <li><a href="#dom-filesystemdirectoryhandle-getfilehandle">getFileHandle(name, options)</a><span>, in §2.5.2</span>
    <li><a href="#dom-windoworworkerglobalscope-getoriginprivatedirectory">getOriginPrivateDirectory()</a><span>, in §4.2</span>
    <li><a href="#is-allowed-to-show-a-file-picker">is allowed to show a file picker</a><span>, in §3.1</span>
-   <li><a href="#dom-filesystemhandle-isdirectory">isDirectory</a><span>, in §2.3</span>
-   <li><a href="#dom-filesystemhandle-isfile">isFile</a><span>, in §2.3</span>
    <li><a href="#dom-filesystemhandle-issameentry">isSameEntry(other)</a><span>, in §2.3.1</span>
    <li><a href="#dom-filesystemcreatewritableoptions-keepexistingdata">keepExistingData</a><span>, in §2.4</span>
+   <li><a href="#dom-filesystemhandle-kind">kind</a><span>, in §2.3</span>
    <li><a href="#malware-scans-and-safe-browsing-checks">malware scans and safe browsing checks</a><span>, in §6.1</span>
    <li><a href="#file-entry-modification-timestamp">modification timestamp</a><span>, in §2.1</span>
    <li><a href="#dom-openfilepickeroptions-multiple">multiple</a><span>, in §3</span>
@@ -4233,10 +4239,10 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-idl-boolean">
    <a href="https://heycam.github.io/webidl/#idl-boolean">https://heycam.github.io/webidl/#idl-boolean</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-idl-boolean">2.3. The FileSystemHandle interface</a> <a href="#ref-for-idl-boolean①">(2)</a> <a href="#ref-for-idl-boolean②">(3)</a> <a href="#ref-for-idl-boolean③">(4)</a>
-    <li><a href="#ref-for-idl-boolean④">2.4. The FileSystemFileHandle interface</a>
-    <li><a href="#ref-for-idl-boolean⑤">2.5. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-idl-boolean⑥">(2)</a> <a href="#ref-for-idl-boolean⑦">(3)</a>
-    <li><a href="#ref-for-idl-boolean⑧">3. Accessing Native File System</a> <a href="#ref-for-idl-boolean⑨">(2)</a>
+    <li><a href="#ref-for-idl-boolean">2.3. The FileSystemHandle interface</a> <a href="#ref-for-idl-boolean①">(2)</a>
+    <li><a href="#ref-for-idl-boolean②">2.4. The FileSystemFileHandle interface</a>
+    <li><a href="#ref-for-idl-boolean③">2.5. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-idl-boolean④">(2)</a> <a href="#ref-for-idl-boolean⑤">(3)</a>
+    <li><a href="#ref-for-idl-boolean⑥">3. Accessing Native File System</a> <a href="#ref-for-idl-boolean⑦">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dfn-get-buffer-source-copy">
@@ -4489,10 +4495,14 @@ appropriate.</p>
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-filesystemhandlepermissiondescriptor-writable"><code><c- g>writable</c-></code></a> = <c- b>false</c->;
 };
 
+<c- b>enum</c-> <a href="#enumdef-filesystemhandlekind"><code><c- g>FileSystemHandleKind</c-></code></a> {
+  <a href="#dom-filesystemhandlekind-file"><code><c- s>"file"</c-></code></a>,
+  <a href="#dom-filesystemhandlekind-directory"><code><c- s>"directory"</c-></code></a>,
+};
+
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed"><c- g>Exposed</c-></a>=(<c- n>Window</c->,<c- n>Worker</c->), <a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext"><c- g>SecureContext</c-></a>, <a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/structured-data.html#serializable"><c- g>Serializable</c-></a>]
 <c- b>interface</c-> <a href="#filesystemhandle"><code><c- g>FileSystemHandle</c-></code></a> {
-  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isfile"><c- g>isFile</c-></a>;
-  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="boolean" href="#dom-filesystemhandle-isdirectory"><c- g>isDirectory</c-></a>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="#enumdef-filesystemhandlekind"><c- n>FileSystemHandleKind</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="FileSystemHandleKind" href="#dom-filesystemhandle-kind"><c- g>kind</c-></a>;
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="USVString" href="#dom-filesystemhandle-name"><c- g>name</c-></a>;
 
   <c- b>Promise</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-issameentry"><c- g>isSameEntry</c-></a>(<a class="n" data-link-type="idl-name" href="#filesystemhandle"><c- n>FileSystemHandle</c-></a> <a href="#dom-filesystemhandle-issameentry-other-other"><code><c- g>other</c-></code></a>);
@@ -4688,13 +4698,12 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
    <b><a href="#directory">#directory</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-directory">2.1. Concepts</a> <a href="#ref-for-directory①">(2)</a> <a href="#ref-for-directory②">(3)</a> <a href="#ref-for-directory③">(4)</a>
-    <li><a href="#ref-for-directory④">2.3. The FileSystemHandle interface</a>
-    <li><a href="#ref-for-directory⑤">2.5. The FileSystemDirectoryHandle interface</a>
-    <li><a href="#ref-for-directory⑥">2.5.2. The getFileHandle() method</a>
-    <li><a href="#ref-for-directory⑦">2.5.3. The getDirectoryHandle() method</a>
-    <li><a href="#ref-for-directory⑧">2.5.4. The removeEntry() method</a>
-    <li><a href="#ref-for-directory⑨">3.5. The showDirectoryPicker() method</a>
-    <li><a href="#ref-for-directory①⓪">4.1. Sandboxed File System Concepts</a>
+    <li><a href="#ref-for-directory④">2.5. The FileSystemDirectoryHandle interface</a>
+    <li><a href="#ref-for-directory⑤">2.5.2. The getFileHandle() method</a>
+    <li><a href="#ref-for-directory⑥">2.5.3. The getDirectoryHandle() method</a>
+    <li><a href="#ref-for-directory⑦">2.5.4. The removeEntry() method</a>
+    <li><a href="#ref-for-directory⑧">3.5. The showDirectoryPicker() method</a>
+    <li><a href="#ref-for-directory⑨">4.1. Sandboxed File System Concepts</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="directory-entry-children">
@@ -4785,6 +4794,24 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable①⑨">3.1. Native File System Permissions</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable②⓪">(2)</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable②①">(3)</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable②②">(4)</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable②③">(5)</a> <a href="#ref-for-dom-filesystemhandlepermissiondescriptor-writable②④">(6)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="enumdef-filesystemhandlekind">
+   <b><a href="#enumdef-filesystemhandlekind">#enumdef-filesystemhandlekind</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-enumdef-filesystemhandlekind">2.3. The FileSystemHandle interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-filesystemhandlekind-file">
+   <b><a href="#dom-filesystemhandlekind-file">#dom-filesystemhandlekind-file</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-filesystemhandlekind-file">2.3. The FileSystemHandle interface</a> <a href="#ref-for-dom-filesystemhandlekind-file①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-filesystemhandlekind-directory">
+   <b><a href="#dom-filesystemhandlekind-directory">#dom-filesystemhandlekind-directory</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-filesystemhandlekind-directory">2.3. The FileSystemHandle interface</a> <a href="#ref-for-dom-filesystemhandlekind-directory①">(2)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="filesystemhandle">
    <b><a href="#filesystemhandle">#filesystemhandle</a></b><b>Referenced in:</b>
    <ul>
@@ -4797,32 +4824,26 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
    <b><a href="#filesystemhandle-entry">#filesystemhandle-entry</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-filesystemhandle-entry">2.1. Concepts</a>
-    <li><a href="#ref-for-filesystemhandle-entry①">2.3. The FileSystemHandle interface</a> <a href="#ref-for-filesystemhandle-entry②">(2)</a> <a href="#ref-for-filesystemhandle-entry③">(3)</a> <a href="#ref-for-filesystemhandle-entry④">(4)</a> <a href="#ref-for-filesystemhandle-entry⑤">(5)</a>
-    <li><a href="#ref-for-filesystemhandle-entry⑥">2.3.1. The isSameEntry() method</a> <a href="#ref-for-filesystemhandle-entry⑦">(2)</a>
-    <li><a href="#ref-for-filesystemhandle-entry⑧">2.3.2. The queryPermission() method</a>
-    <li><a href="#ref-for-filesystemhandle-entry⑨">2.3.3. The requestPermission() method</a> <a href="#ref-for-filesystemhandle-entry①⓪">(2)</a>
-    <li><a href="#ref-for-filesystemhandle-entry①①">2.4. The FileSystemFileHandle interface</a>
-    <li><a href="#ref-for-filesystemhandle-entry①②">2.4.1. The getFile() method</a>
-    <li><a href="#ref-for-filesystemhandle-entry①③">2.4.2. The createWritable() method</a>
-    <li><a href="#ref-for-filesystemhandle-entry①④">2.5. The FileSystemDirectoryHandle interface</a>
-    <li><a href="#ref-for-filesystemhandle-entry①⑤">2.5.1. Directory iteration</a> <a href="#ref-for-filesystemhandle-entry①⑥">(2)</a>
-    <li><a href="#ref-for-filesystemhandle-entry①⑦">2.5.2. The getFileHandle() method</a> <a href="#ref-for-filesystemhandle-entry①⑧">(2)</a> <a href="#ref-for-filesystemhandle-entry①⑨">(3)</a>
-    <li><a href="#ref-for-filesystemhandle-entry②⓪">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-filesystemhandle-entry②①">(2)</a> <a href="#ref-for-filesystemhandle-entry②②">(3)</a>
-    <li><a href="#ref-for-filesystemhandle-entry②③">2.5.4. The removeEntry() method</a>
-    <li><a href="#ref-for-filesystemhandle-entry②④">2.5.5. The resolve() method</a> <a href="#ref-for-filesystemhandle-entry②⑤">(2)</a>
-    <li><a href="#ref-for-filesystemhandle-entry②⑥">4.2. The getOriginPrivateDirectory() method</a>
+    <li><a href="#ref-for-filesystemhandle-entry①">2.3. The FileSystemHandle interface</a> <a href="#ref-for-filesystemhandle-entry②">(2)</a> <a href="#ref-for-filesystemhandle-entry③">(3)</a> <a href="#ref-for-filesystemhandle-entry④">(4)</a>
+    <li><a href="#ref-for-filesystemhandle-entry⑤">2.3.1. The isSameEntry() method</a> <a href="#ref-for-filesystemhandle-entry⑥">(2)</a>
+    <li><a href="#ref-for-filesystemhandle-entry⑦">2.3.2. The queryPermission() method</a>
+    <li><a href="#ref-for-filesystemhandle-entry⑧">2.3.3. The requestPermission() method</a> <a href="#ref-for-filesystemhandle-entry⑨">(2)</a>
+    <li><a href="#ref-for-filesystemhandle-entry①⓪">2.4. The FileSystemFileHandle interface</a>
+    <li><a href="#ref-for-filesystemhandle-entry①①">2.4.1. The getFile() method</a>
+    <li><a href="#ref-for-filesystemhandle-entry①②">2.4.2. The createWritable() method</a>
+    <li><a href="#ref-for-filesystemhandle-entry①③">2.5. The FileSystemDirectoryHandle interface</a>
+    <li><a href="#ref-for-filesystemhandle-entry①④">2.5.1. Directory iteration</a> <a href="#ref-for-filesystemhandle-entry①⑤">(2)</a>
+    <li><a href="#ref-for-filesystemhandle-entry①⑥">2.5.2. The getFileHandle() method</a> <a href="#ref-for-filesystemhandle-entry①⑦">(2)</a> <a href="#ref-for-filesystemhandle-entry①⑧">(3)</a>
+    <li><a href="#ref-for-filesystemhandle-entry①⑨">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-filesystemhandle-entry②⓪">(2)</a> <a href="#ref-for-filesystemhandle-entry②①">(3)</a>
+    <li><a href="#ref-for-filesystemhandle-entry②②">2.5.4. The removeEntry() method</a>
+    <li><a href="#ref-for-filesystemhandle-entry②③">2.5.5. The resolve() method</a> <a href="#ref-for-filesystemhandle-entry②④">(2)</a>
+    <li><a href="#ref-for-filesystemhandle-entry②⑤">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-filesystemhandle-isfile">
-   <b><a href="#dom-filesystemhandle-isfile">#dom-filesystemhandle-isfile</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-filesystemhandle-kind">
+   <b><a href="#dom-filesystemhandle-kind">#dom-filesystemhandle-kind</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-filesystemhandle-isfile">2.3. The FileSystemHandle interface</a> <a href="#ref-for-dom-filesystemhandle-isfile①">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="dom-filesystemhandle-isdirectory">
-   <b><a href="#dom-filesystemhandle-isdirectory">#dom-filesystemhandle-isdirectory</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-filesystemhandle-isdirectory">2.3. The FileSystemHandle interface</a> <a href="#ref-for-dom-filesystemhandle-isdirectory①">(2)</a>
+    <li><a href="#ref-for-dom-filesystemhandle-kind">2.3. The FileSystemHandle interface</a> <a href="#ref-for-dom-filesystemhandle-kind①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemhandle-name">
