@@ -22,6 +22,8 @@ spec:webidl; type:dfn; text:resolve
 <pre class=anchors>
 urlPrefix: https://tc39.github.io/ecma262/; spec: ECMA-262
   type: dfn; text: realm; url: realm
+urlPrefix: https://storage.spec.whatwg.org/; spec: storage
+  type: dfn; text: storage; url: site-storage
 </pre>
 
 <style>
@@ -144,7 +146,7 @@ Unless specified otherwise, these steps are:
 1. Assert: |parent| is not null.
 
    Note: [[#native-file-system-permissions]] overrides these steps for entries returned by
-   the [=native file system handle factories=]. Additionally [[#sandboxed-filesystem-concepts]] overrides
+   the [=native file system handle factories=]. Additionally [[#sandboxed-filesystem]] overrides
    these steps for entries returned by {{getOriginPrivateDirectory()}}.
    All other entries always have a parent.
 
@@ -1503,32 +1505,17 @@ these steps:
 
 </div>
 
-# Accessing the Sandboxed File System # {#sandboxed-filesystem}
+# Accessing the Origin Private File System # {#sandboxed-filesystem}
 
-## Sandboxed File System Concepts ## {#sandboxed-filesystem-concepts}
-
-A [=bucket=] contains a <dfn>sandboxed file system root</dfn>, a [=directory entry=].
-
-The [=sandboxed file system root=] for one [=bucket=] must be completely separate from
-that of any other [=bucket=].
+The <dfn>origin private file system</dfn> is a [=storage endpoint=] whose
+<a spec=storage for="storage endpoint">identifier</a> is `"fileSystem"`,
+<a spec=storage for="storage endpoint">types</a> are `« "local" »`,
+and <a spec=storage for="storage endpoint">quota</a> is null.
 
 Note: While user agents will typically implement this by persisting the contents of this
-[=sandboxed file system root=] to disk, it is not intended that the contents are easily
+[=origin private file system=] to disk, it is not intended that the contents are easily
 user accessible. Similarly there is no expectation that files or directories with names
-matching the names of children of the [=sandboxed file system root=] exist.
-
-Note: In Chrome this [=sandboxed file system root=] refers to the same storage as the
-<a href="https://dev.w3.org/2009/dap/file-system/file-dir-sys.html#dfn-temporary">temporary
-file system</a> as used to be defined in [[file-system-api|File API: Directories and System]].
-
-<div algorithm="sandbox-query-permission">
-The [=sandboxed file system root=]'s [=query permission steps=] are the following:
-
-1. Return {{PermissionState/"granted"}}.
-
-</div>
-
-## The {{getOriginPrivateDirectory()}} method ## {#api-getoriginprivatefilesystem}
+matching the names of children of the [=origin private file system=] exist.
 
 <xmp class=idl>
 [SecureContext]
@@ -1538,10 +1525,11 @@ partial interface mixin WindowOrWorkerGlobalScope {
 </xmp>
 
 Advisement: In Chrome this functionality is currently exposed as `FileSystemDirectoryHandle.getSystemDirectory({type: "sandbox"})`.
+This new method is available as of Chrome 85.
 
 <div class="note domintro">
   : |directoryHandle| = await window . {{getOriginPrivateDirectory()}}
-  :: Returns the root directory of the sandboxed file system.
+  :: Returns the root directory of the origin private file system.
 </div>
 
 <div algorithm>
@@ -1550,15 +1538,25 @@ invoked, must run these steps:
 
 1. Let |environment| be the [=current settings object=].
 
-1. If |environment|'s [=environment settings object/origin=] is an [=opaque origin=],
+1. Let |map| be the result of running [=obtain a local storage bottle map=]
+   with |environment| and `"fileSystem"`. If this returns failure,
    return [=a promise rejected with=] a {{SecurityError}}.
 
-1. Let |storage| be |environment|'s [=environment settings object/origin=]'s [=storage unit=].
-1. Let |bucket| be |storage|'s [=bucket=].
+1. If |map|["root"] does not [=map/exist=]:
+  1. Set |map|["root"] to a new [=directory entry=].
+  1. Set |map|["root"]'s [=entry/name=] to `""`.
+  1. Set |map|["root"]'s [=directory entry/children=] to an empty [=/set=].
+  1. Set |map|["root"]'s [=entry/query permission steps=] to an algorithm
+     that returns {{PermissionState/"granted"}}.
+
 1. Return [=a promise resolved with=] a new {{FileSystemDirectoryHandle}},
-   whose associated [=FileSystemHandle/entry=] is |bucket|'s [=sandboxed file system root=].
+   whose associated [=FileSystemHandle/entry=] is |map|["root"].
 
 </div>
+
+Note: In Chrome the directory entry returned by the above algorithm refers to the same storage as the
+<a href="https://dev.w3.org/2009/dap/file-system/file-dir-sys.html#dfn-temporary">temporary
+file system</a> as used to be defined in [[file-system-api|File API: Directories and System]].
 
 # Privacy Considerations # {#privacy-considerations}
 
