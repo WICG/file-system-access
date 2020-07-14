@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 04c91f0f, updated Mon Jun 29 08:51:04 2020 +0200" name="generator">
+  <meta content="Bikeshed version fa7080de, updated Fri Jul 10 17:43:01 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="6b3c7da3f77da88543804e832086a69c324527f4" name="document-revision">
+  <meta content="97ba7e69ba8248673252c23a26d5af9184bb6316" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1501,7 +1501,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-07-09">9 July 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-07-14">14 July 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1584,12 +1584,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       <li><a href="#api-filpickeroptions-types"><span class="secno">3.4</span> <span class="content"><code class="idl"><span>FilePickerOptions</span></code>.<code class="idl"><span>types</span></code></span></a>
       <li><a href="#api-showdirectorypicker"><span class="secno">3.5</span> <span class="content">The <code class="idl"><span>showDirectoryPicker()</span></code> method</span></a>
      </ol>
-    <li>
-     <a href="#sandboxed-filesystem"><span class="secno">4</span> <span class="content">Accessing the Sandboxed File System</span></a>
-     <ol class="toc">
-      <li><a href="#sandboxed-filesystem-concepts"><span class="secno">4.1</span> <span class="content">Sandboxed File System Concepts</span></a>
-      <li><a href="#api-getoriginprivatefilesystem"><span class="secno">4.2</span> <span class="content">The <code class="idl"><span>getOriginPrivateDirectory()</span></code> method</span></a>
-     </ol>
+    <li><a href="#sandboxed-filesystem"><span class="secno">4</span> <span class="content">Accessing the Origin Private File System</span></a>
     <li>
      <a href="#privacy-considerations"><span class="secno">5</span> <span class="content">Privacy Considerations</span></a>
      <ol class="toc">
@@ -1719,7 +1714,7 @@ Unless specified otherwise, these steps are:
      <li data-md>
       <p class="assertion">Assert: <var>parent</var> is not null.</p>
       <p class="note" role="note"><span>Note:</span> <a href="#native-file-system-permissions">§ 3.1 Native File System Permissions</a> overrides these steps for entries returned by
- the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories①">native file system handle factories</a>. Additionally <a href="#sandboxed-filesystem-concepts">§ 4.1 Sandboxed File System Concepts</a> overrides
+ the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories①">native file system handle factories</a>. Additionally <a href="#sandboxed-filesystem">§ 4 Accessing the Origin Private File System</a> overrides
  these steps for entries returned by <code class="idl"><a data-link-type="idl" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory②">getOriginPrivateDirectory()</a></code>.
  All other entries always have a parent.</p>
      <li data-md>
@@ -3247,35 +3242,26 @@ these steps:
       <p>Return <var>p</var>.</p>
     </ol>
    </div>
-   <h2 class="heading settled" data-level="4" id="sandboxed-filesystem"><span class="secno">4. </span><span class="content">Accessing the Sandboxed File System</span><a class="self-link" href="#sandboxed-filesystem"></a></h2>
-   <h3 class="heading settled" data-level="4.1" id="sandboxed-filesystem-concepts"><span class="secno">4.1. </span><span class="content">Sandboxed File System Concepts</span><a class="self-link" href="#sandboxed-filesystem-concepts"></a></h3>
-   <p>A <a data-link-type="dfn">bucket</a> contains a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="sandboxed-file-system-root">sandboxed file system root</dfn>, a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑨">directory entry</a>.</p>
-   <p>The <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root">sandboxed file system root</a> for one <a data-link-type="dfn">bucket</a> must be completely separate from
-that of any other <a data-link-type="dfn">bucket</a>.</p>
-   <p class="note" role="note"><span>Note:</span> While user agents will typically implement this by persisting the contents of this <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root①">sandboxed file system root</a> to disk, it is not intended that the contents are easily
+   <h2 class="heading settled" data-level="4" id="sandboxed-filesystem"><span class="secno">4. </span><span class="content">Accessing the Origin Private File System</span><a class="self-link" href="#sandboxed-filesystem"></a></h2>
+   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="origin-private-file-system">origin private file system</dfn> is a <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint" id="ref-for-storage-endpoint">storage endpoint</a> whose <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint-identifier" id="ref-for-storage-endpoint-identifier">identifier</a> is <code>"fileSystem"</code>, <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint-types" id="ref-for-storage-endpoint-types">types</a> are <code>« "local" »</code>,
+and <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint-quota" id="ref-for-storage-endpoint-quota">quota</a> is null.</p>
+   <p class="issue" id="issue-9c98e739"><a class="self-link" href="#issue-9c98e739"></a> Storage endpoints should be defined in <a data-link-type="biblio" href="#biblio-storage">[storage]</a> itself, rather
+than being defined here. So merge this into the table there.</p>
+   <p class="note" role="note"><span>Note:</span> While user agents will typically implement this by persisting the contents of this <a data-link-type="dfn" href="#origin-private-file-system" id="ref-for-origin-private-file-system">origin private file system</a> to disk, it is not intended that the contents are easily
 user accessible. Similarly there is no expectation that files or directories with names
-matching the names of children of the <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root②">sandboxed file system root</a> exist.</p>
-   <p class="note" role="note"><span>Note:</span> In Chrome this <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root③">sandboxed file system root</a> refers to the same storage as the <a href="https://dev.w3.org/2009/dap/file-system/file-dir-sys.html#dfn-temporary">temporary
-file system</a> as used to be defined in <a data-link-type="biblio" href="#biblio-file-system-api">File API: Directories and System</a>.</p>
-   <div class="algorithm" data-algorithm="sandbox-query-permission">
-     The <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root④">sandboxed file system root</a>'s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps②①">query permission steps</a> are the following: 
-    <ol>
-     <li data-md>
-      <p>Return <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①③">"granted"</a></code>.</p>
-    </ol>
-   </div>
-   <h3 class="heading settled" data-level="4.2" id="api-getoriginprivatefilesystem"><span class="secno">4.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory③">getOriginPrivateDirectory()</a></code> method</span><a class="self-link" href="#api-getoriginprivatefilesystem"></a></h3>
+matching the names of children of the <a data-link-type="dfn" href="#origin-private-file-system" id="ref-for-origin-private-file-system①">origin private file system</a> exist.</p>
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext⑤"><c- g>SecureContext</c-></a>]
 <c- b>partial</c-> <c- b>interface</c-> <c- b>mixin</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/webappapis.html#windoworworkerglobalscope" id="ref-for-windoworworkerglobalscope"><c- g>WindowOrWorkerGlobalScope</c-></a> {
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①②"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory④"><c- g>getOriginPrivateDirectory</c-></a>();
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①②"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory③"><c- g>getOriginPrivateDirectory</c-></a>();
 };
 </pre>
-   <p><strong class="advisement"> In Chrome this functionality is currently exposed as <code>FileSystemDirectoryHandle.getSystemDirectory({type: "sandbox"})</code>.</strong></p>
+   <p><strong class="advisement"> In Chrome this functionality was previously exposed as <code>FileSystemDirectoryHandle.getSystemDirectory({type: "sandbox"})</code>.
+This new method is available as of Chrome 85.</strong></p>
    <div class="note domintro" role="note">
     <dl>
-     <dt data-md><var>directoryHandle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory⑤">getOriginPrivateDirectory()</a></code>
+     <dt data-md><var>directoryHandle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory④">getOriginPrivateDirectory()</a></code>
      <dd data-md>
-      <p>Returns the root directory of the sandboxed file system.</p>
+      <p>Returns the root directory of the origin private file system.</p>
     </dl>
    </div>
    <div class="algorithm" data-algorithm="getOriginPrivateDirectory()" data-algorithm-for="WindowOrWorkerGlobalScope">
@@ -3285,17 +3271,30 @@ invoked, must run these steps:
      <li data-md>
       <p>Let <var>environment</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object" id="ref-for-current-settings-object">current settings object</a>.</p>
      <li data-md>
-      <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin⑤">origin</a> is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque" id="ref-for-concept-origin-opaque①">opaque origin</a>,
+      <p>Let <var>map</var> be the result of running <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#obtain-a-local-storage-bottle-map" id="ref-for-obtain-a-local-storage-bottle-map">obtain a local storage bottle map</a> with <var>environment</var> and <code>"fileSystem"</code>. If this returns failure,
  return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with③">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror④">SecurityError</a></code>.</p>
      <li data-md>
-      <p>Let <var>storage</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin⑥">origin</a>'s <a data-link-type="dfn">storage unit</a>.</p>
-     <li data-md>
-      <p>Let <var>bucket</var> be <var>storage</var>’s <a data-link-type="dfn">bucket</a>.</p>
+      <p>If <var>map</var>["root"] does not <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists">exist</a>:</p>
+      <ol>
+       <li data-md>
+        <p>Let <var>dir</var> be a new <a data-link-type="dfn" href="#directory" id="ref-for-directory⑨">directory entry</a>.</p>
+       <li data-md>
+        <p>Set <var>dir</var>’s <a data-link-type="dfn" href="#entry-name" id="ref-for-entry-name①③">name</a> to <code>""</code>.</p>
+       <li data-md>
+        <p>Set <var>dir</var>’s <a data-link-type="dfn" href="#directory-entry-children" id="ref-for-directory-entry-children①②">children</a> to an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-set" id="ref-for-ordered-set③">set</a>.</p>
+       <li data-md>
+        <p>Set <var>dir</var>’s <a data-link-type="dfn" href="#entry-query-permission-steps" id="ref-for-entry-query-permission-steps②①">query permission steps</a> to an algorithm
+ that returns <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①③">"granted"</a></code>.</p>
+       <li data-md>
+        <p>Set <var>map</var>["root"] to <var>dir</var>.</p>
+      </ol>
      <li data-md>
       <p>Return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with①">a promise resolved with</a> a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①③">FileSystemDirectoryHandle</a></code>,
- whose associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②⑤">entry</a> is <var>bucket</var>’s <a data-link-type="dfn" href="#sandboxed-file-system-root" id="ref-for-sandboxed-file-system-root⑤">sandboxed file system root</a>.</p>
+ whose associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②⑤">entry</a> is <var>map</var>["root"].</p>
     </ol>
    </div>
+   <p class="note" role="note"><span>Note:</span> In Chrome the directory entry returned by the above algorithm refers to the same storage as the <a href="https://dev.w3.org/2009/dap/file-system/file-dir-sys.html#dfn-temporary">temporary
+file system</a> as used to be defined in <a data-link-type="biblio" href="#biblio-file-system-api">File API: Directories and System</a>.</p>
    <h2 class="heading settled" data-level="5" id="privacy-considerations"><span class="secno">5. </span><span class="content">Privacy Considerations</span><a class="self-link" href="#privacy-considerations"></a></h2>
    <p><em>This section is non-normative.</em></p>
    <p>This API does not give websites any more read access to data than the existing <code>&lt;input type=file></code> and <code>&lt;input type=file webkitdirectory></code> APIs already do. Furthermore similarly to those APIs, all
@@ -3320,7 +3319,7 @@ with some of their most private personal data.</p>
     <li data-md>
      <p>The directory or directories containing the user agent itself.</p>
     <li data-md>
-     <p>Directories where the user agent stores <a data-link-type="dfn">website storage</a>.</p>
+     <p>Directories where the user agent stores <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#site-storage" id="ref-for-site-storage">website storage</a>.</p>
     <li data-md>
      <p>Directories containing system files (such as <code>C:\Windows</code> on Windows).</p>
     <li data-md>
@@ -3570,7 +3569,7 @@ appropriate.</p>
    <li><a href="#dom-filesystemfilehandle-getfile">getFile()</a><span>, in §2.4.1</span>
    <li><a href="#dom-filesystemdirectoryhandle-getfilehandle">getFileHandle(name)</a><span>, in §2.5.2</span>
    <li><a href="#dom-filesystemdirectoryhandle-getfilehandle">getFileHandle(name, options)</a><span>, in §2.5.2</span>
-   <li><a href="#dom-windoworworkerglobalscope-getoriginprivatedirectory">getOriginPrivateDirectory()</a><span>, in §4.2</span>
+   <li><a href="#dom-windoworworkerglobalscope-getoriginprivatedirectory">getOriginPrivateDirectory()</a><span>, in §4</span>
    <li><a href="#is-allowed-to-show-a-file-picker">is allowed to show a file picker</a><span>, in §3.1</span>
    <li><a href="#dom-filesystemhandle-issameentry">isSameEntry(other)</a><span>, in §2.3.1</span>
    <li><a href="#dom-filesystemcreatewritableoptions-keepexistingdata">keepExistingData</a><span>, in §2.4</span>
@@ -3588,6 +3587,7 @@ appropriate.</p>
    <li><a href="#native-file-system-query-permission-steps">native file system query permission steps</a><span>, in §3.1</span>
    <li><a href="#native-file-system-request-permission-steps">native file system request permission steps</a><span>, in §3.1</span>
    <li><a href="#dictdef-openfilepickeroptions">OpenFilePickerOptions</a><span>, in §3</span>
+   <li><a href="#origin-private-file-system">origin private file system</a><span>, in §4</span>
    <li><a href="#entry-parent">parent</a><span>, in §2.1</span>
    <li><a href="#filesystemdirectoryhandle-iterator-past-results">past results</a><span>, in §2.5.1</span>
    <li><a href="#dom-writeparams-position">position</a><span>, in §2.6</span>
@@ -3603,7 +3603,6 @@ appropriate.</p>
    <li><a href="#entry-request-permission-steps">request permission steps</a><span>, in §2.2</span>
    <li><a href="#entry-resolve">resolve</a><span>, in §2.1</span>
    <li><a href="#dom-filesystemdirectoryhandle-resolve">resolve(possibleDescendant)</a><span>, in §2.5.5</span>
-   <li><a href="#sandboxed-file-system-root">sandboxed file system root</a><span>, in §4.1</span>
    <li><a href="#dictdef-savefilepickeroptions">SaveFilePickerOptions</a><span>, in §3</span>
    <li><a href="#dom-writecommandtype-seek">"seek"</a><span>, in §2.6</span>
    <li><a href="#filesystemwritablefilestream-seekoffset">[[seekOffset]]</a><span>, in §2.6</span>
@@ -3702,7 +3701,7 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-windoworworkerglobalscope">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#windoworworkerglobalscope">https://html.spec.whatwg.org/multipage/webappapis.html#windoworworkerglobalscope</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-windoworworkerglobalscope">4.2. The getOriginPrivateDirectory() method</a>
+    <li><a href="#ref-for-windoworworkerglobalscope">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-activation-notification">
@@ -3724,7 +3723,7 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-current-settings-object">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object">https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-current-settings-object">4.2. The getOriginPrivateDirectory() method</a>
+    <li><a href="#ref-for-current-settings-object">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-deserialization-steps">
@@ -3779,7 +3778,6 @@ appropriate.</p>
    <a href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque">https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-origin-opaque">3.1. Native File System Permissions</a>
-    <li><a href="#ref-for-concept-origin-opaque①">4.2. The getOriginPrivateDirectory() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-settings-object-origin">
@@ -3787,7 +3785,6 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-concept-settings-object-origin">2.3. The FileSystemHandle interface</a> <a href="#ref-for-concept-settings-object-origin①">(2)</a>
     <li><a href="#ref-for-concept-settings-object-origin②">3.1. Native File System Permissions</a> <a href="#ref-for-concept-settings-object-origin③">(2)</a> <a href="#ref-for-concept-settings-object-origin④">(3)</a>
-    <li><a href="#ref-for-concept-settings-object-origin⑤">4.2. The getOriginPrivateDirectory() method</a> <a href="#ref-for-concept-settings-object-origin⑥">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-relevant-realm">
@@ -3890,6 +3887,12 @@ appropriate.</p>
     <li><a href="#ref-for-list-empty">3.4. FilePickerOptions.types</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-map-exists">
+   <a href="https://infra.spec.whatwg.org/#map-exists">https://infra.spec.whatwg.org/#map-exists</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-map-exists">4. Accessing the Origin Private File System</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-map-iterate">
    <a href="https://infra.spec.whatwg.org/#map-iterate">https://infra.spec.whatwg.org/#map-iterate</a><b>Referenced in:</b>
    <ul>
@@ -3939,6 +3942,7 @@ appropriate.</p>
     <li><a href="#ref-for-ordered-set">2.1. Concepts</a>
     <li><a href="#ref-for-ordered-set①">2.5.1. Directory iteration</a>
     <li><a href="#ref-for-ordered-set②">2.5.3. The getDirectoryHandle() method</a>
+    <li><a href="#ref-for-ordered-set③">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-string">
@@ -4001,7 +4005,7 @@ appropriate.</p>
     <li><a href="#ref-for-dom-permissionstate-granted⑥">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-dom-permissionstate-granted⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-permissionstate-granted⑧">(2)</a>
     <li><a href="#ref-for-dom-permissionstate-granted⑨">3.1. Native File System Permissions</a> <a href="#ref-for-dom-permissionstate-granted①⓪">(2)</a> <a href="#ref-for-dom-permissionstate-granted①①">(3)</a> <a href="#ref-for-dom-permissionstate-granted①②">(4)</a>
-    <li><a href="#ref-for-dom-permissionstate-granted①③">4.1. Sandboxed File System Concepts</a>
+    <li><a href="#ref-for-dom-permissionstate-granted①③">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-permissionstate-prompt">
@@ -4021,6 +4025,42 @@ appropriate.</p>
    <a href="https://w3c.github.io/permissions/#new-information-about-the-users-intent">https://w3c.github.io/permissions/#new-information-about-the-users-intent</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-new-information-about-the-users-intent">3.1. Native File System Permissions</a> <a href="#ref-for-new-information-about-the-users-intent①">(2)</a> <a href="#ref-for-new-information-about-the-users-intent②">(3)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-storage-endpoint-identifier">
+   <a href="https://storage.spec.whatwg.org/#storage-endpoint-identifier">https://storage.spec.whatwg.org/#storage-endpoint-identifier</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-storage-endpoint-identifier">4. Accessing the Origin Private File System</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-obtain-a-local-storage-bottle-map">
+   <a href="https://storage.spec.whatwg.org/#obtain-a-local-storage-bottle-map">https://storage.spec.whatwg.org/#obtain-a-local-storage-bottle-map</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-obtain-a-local-storage-bottle-map">4. Accessing the Origin Private File System</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-storage-endpoint-quota">
+   <a href="https://storage.spec.whatwg.org/#storage-endpoint-quota">https://storage.spec.whatwg.org/#storage-endpoint-quota</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-storage-endpoint-quota">4. Accessing the Origin Private File System</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-site-storage">
+   <a href="https://storage.spec.whatwg.org/#site-storage">https://storage.spec.whatwg.org/#site-storage</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-site-storage">5.1. Users giving access to more, or more sensitive files than they intended.</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-storage-endpoint">
+   <a href="https://storage.spec.whatwg.org/#storage-endpoint">https://storage.spec.whatwg.org/#storage-endpoint</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-storage-endpoint">4. Accessing the Origin Private File System</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-storage-endpoint-types">
+   <a href="https://storage.spec.whatwg.org/#storage-endpoint-types">https://storage.spec.whatwg.org/#storage-endpoint-types</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-storage-endpoint-types">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-acquire-writable-stream-default-writer">
@@ -4160,14 +4200,14 @@ appropriate.</p>
     <li><a href="#ref-for-SecureContext②">2.5. The FileSystemDirectoryHandle interface</a>
     <li><a href="#ref-for-SecureContext③">2.6. The FileSystemWritableFileStream interface</a>
     <li><a href="#ref-for-SecureContext④">3. Accessing Native File System</a>
-    <li><a href="#ref-for-SecureContext⑤">4.2. The getOriginPrivateDirectory() method</a>
+    <li><a href="#ref-for-SecureContext⑤">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-securityerror">
    <a href="https://heycam.github.io/webidl/#securityerror">https://heycam.github.io/webidl/#securityerror</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-securityerror">3.1. Native File System Permissions</a> <a href="#ref-for-securityerror①">(2)</a> <a href="#ref-for-securityerror②">(3)</a> <a href="#ref-for-securityerror③">(4)</a>
-    <li><a href="#ref-for-securityerror④">4.2. The getOriginPrivateDirectory() method</a>
+    <li><a href="#ref-for-securityerror④">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-exceptiondef-typeerror">
@@ -4220,14 +4260,14 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-a-promise-rejected-with">2.6. The FileSystemWritableFileStream interface</a>
     <li><a href="#ref-for-a-promise-rejected-with①">3.1. Native File System Permissions</a> <a href="#ref-for-a-promise-rejected-with②">(2)</a>
-    <li><a href="#ref-for-a-promise-rejected-with③">4.2. The getOriginPrivateDirectory() method</a>
+    <li><a href="#ref-for-a-promise-rejected-with③">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-a-promise-resolved-with">
    <a href="https://heycam.github.io/webidl/#a-promise-resolved-with">https://heycam.github.io/webidl/#a-promise-resolved-with</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-a-promise-resolved-with">2.6. The FileSystemWritableFileStream interface</a>
-    <li><a href="#ref-for-a-promise-resolved-with①">4.2. The getOriginPrivateDirectory() method</a>
+    <li><a href="#ref-for-a-promise-resolved-with①">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-asynchronous-iterator-initialization-steps">
@@ -4385,6 +4425,7 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-list-contain" style="color:initial">contain</span>
      <li><span class="dfn-paneled" id="term-for-javascript-string-convert" style="color:initial">convert</span>
      <li><span class="dfn-paneled" id="term-for-list-empty" style="color:initial">empty</span>
+     <li><span class="dfn-paneled" id="term-for-map-exists" style="color:initial">exist</span>
      <li><span class="dfn-paneled" id="term-for-map-iterate" style="color:initial">for each <small>(for map)</small></span>
      <li><span class="dfn-paneled" id="term-for-list-is-empty" style="color:initial">is empty</span>
      <li><span class="dfn-paneled" id="term-for-byte-sequence-length" style="color:initial">length</span>
@@ -4413,6 +4454,16 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-dom-permissionstate-prompt" style="color:initial">"prompt"</span>
      <li><span class="dfn-paneled" id="term-for-enumdef-permissionstate" style="color:initial">PermissionState</span>
      <li><span class="dfn-paneled" id="term-for-new-information-about-the-users-intent" style="color:initial">new information about the user's intent</span>
+    </ul>
+   <li>
+    <a data-link-type="biblio">[storage]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-storage-endpoint-identifier" style="color:initial">identifier</span>
+     <li><span class="dfn-paneled" id="term-for-obtain-a-local-storage-bottle-map" style="color:initial">obtain a local storage bottle map</span>
+     <li><span class="dfn-paneled" id="term-for-storage-endpoint-quota" style="color:initial">quota</span>
+     <li><span class="dfn-paneled" id="term-for-site-storage" style="color:initial">storage</span>
+     <li><span class="dfn-paneled" id="term-for-storage-endpoint" style="color:initial">storage endpoint</span>
+     <li><span class="dfn-paneled" id="term-for-storage-endpoint-types" style="color:initial">types</span>
     </ul>
    <li>
     <a data-link-type="biblio">[STREAMS]</a> defines the following terms:
@@ -4478,6 +4529,8 @@ appropriate.</p>
    <dd>Mounir Lamouri; Marcos Caceres; Jeffrey Yasskin. <a href="https://www.w3.org/TR/permissions/">Permissions</a>. 25 September 2017. WD. URL: <a href="https://www.w3.org/TR/permissions/">https://www.w3.org/TR/permissions/</a>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>. March 1997. Best Current Practice. URL: <a href="https://tools.ietf.org/html/rfc2119">https://tools.ietf.org/html/rfc2119</a>
+   <dt id="biblio-storage">[STORAGE]
+   <dd>Anne van Kesteren. <a href="https://storage.spec.whatwg.org/">Storage Standard</a>. Living Standard. URL: <a href="https://storage.spec.whatwg.org/">https://storage.spec.whatwg.org/</a>
    <dt id="biblio-streams">[STREAMS]
    <dd>Adam Rice; Domenic Denicola; 吉野剛史 (Takeshi Yoshino). <a href="https://streams.spec.whatwg.org/">Streams Standard</a>. Living Standard. URL: <a href="https://streams.spec.whatwg.org/">https://streams.spec.whatwg.org/</a>
    <dt id="biblio-webidl">[WebIDL]
@@ -4629,6 +4682,8 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
    <div class="issue"> Should this be <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror">SecurityError</a></code> or <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#notallowederror">NotAllowedError</a></code> (and same question for the request permission steps checking for user activation)?<a href="#issue-a33056c3"> ↵ </a></div>
    <div class="issue"> Rather than requiring the website to prompt separately for a writable directory,
  we should provide some kind of API to request a writable directory in one step. <a href="https://github.com/wicg/native-file-system/issues/89">&lt;https://github.com/wicg/native-file-system/issues/89></a><a href="#issue-923f3009"> ↵ </a></div>
+   <div class="issue"> Storage endpoints should be defined in <a data-link-type="biblio" href="#biblio-storage">[storage]</a> itself, rather
+than being defined here. So merge this into the table there.<a href="#issue-9c98e739"> ↵ </a></div>
   </div>
   <aside class="dfn-panel" data-for="entry">
    <b><a href="#entry">#entry</a></b><b>Referenced in:</b>
@@ -4650,6 +4705,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-entry-name⑧">2.5.2. The getFileHandle() method</a> <a href="#ref-for-entry-name⑨">(2)</a>
     <li><a href="#ref-for-entry-name①⓪">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-entry-name①①">(2)</a>
     <li><a href="#ref-for-entry-name①②">2.5.4. The removeEntry() method</a>
+    <li><a href="#ref-for-entry-name①③">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="valid-file-name">
@@ -4703,7 +4759,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-directory⑥">2.5.3. The getDirectoryHandle() method</a>
     <li><a href="#ref-for-directory⑦">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-directory⑧">3.5. The showDirectoryPicker() method</a>
-    <li><a href="#ref-for-directory⑨">4.1. Sandboxed File System Concepts</a>
+    <li><a href="#ref-for-directory⑨">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="directory-entry-children">
@@ -4714,6 +4770,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-directory-entry-children④">2.5.2. The getFileHandle() method</a> <a href="#ref-for-directory-entry-children⑤">(2)</a>
     <li><a href="#ref-for-directory-entry-children⑥">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-directory-entry-children⑦">(2)</a> <a href="#ref-for-directory-entry-children⑧">(3)</a>
     <li><a href="#ref-for-directory-entry-children⑨">2.5.4. The removeEntry() method</a> <a href="#ref-for-directory-entry-children①⓪">(2)</a> <a href="#ref-for-directory-entry-children①①">(3)</a>
+    <li><a href="#ref-for-directory-entry-children①②">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="entry-parent">
@@ -4754,7 +4811,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-entry-query-permission-steps①⑧">3.2. The showOpenFilePicker() method</a>
     <li><a href="#ref-for-entry-query-permission-steps①⑨">3.3. The showSaveFilePicker() method</a>
     <li><a href="#ref-for-entry-query-permission-steps②⓪">3.5. The showDirectoryPicker() method</a>
-    <li><a href="#ref-for-entry-query-permission-steps②①">4.1. Sandboxed File System Concepts</a>
+    <li><a href="#ref-for-entry-query-permission-steps②①">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="entry-request-permission-steps">
@@ -4837,7 +4894,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-filesystemhandle-entry①⑨">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-filesystemhandle-entry②⓪">(2)</a> <a href="#ref-for-filesystemhandle-entry②①">(3)</a>
     <li><a href="#ref-for-filesystemhandle-entry②②">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-filesystemhandle-entry②③">2.5.5. The resolve() method</a> <a href="#ref-for-filesystemhandle-entry②④">(2)</a>
-    <li><a href="#ref-for-filesystemhandle-entry②⑤">4.2. The getOriginPrivateDirectory() method</a>
+    <li><a href="#ref-for-filesystemhandle-entry②⑤">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemhandle-kind">
@@ -4960,7 +5017,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-filesystemdirectoryhandle⑧">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-filesystemdirectoryhandle⑨">(2)</a>
     <li><a href="#ref-for-filesystemdirectoryhandle①⓪">3. Accessing Native File System</a>
     <li><a href="#ref-for-filesystemdirectoryhandle①①">3.5. The showDirectoryPicker() method</a>
-    <li><a href="#ref-for-filesystemdirectoryhandle①②">4.2. The getOriginPrivateDirectory() method</a> <a href="#ref-for-filesystemdirectoryhandle①③">(2)</a>
+    <li><a href="#ref-for-filesystemdirectoryhandle①②">4. Accessing the Origin Private File System</a> <a href="#ref-for-filesystemdirectoryhandle①③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="filesystemdirectoryhandle-iterator-past-results">
@@ -5259,11 +5316,10 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-dom-window-showdirectorypicker②">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-dom-window-showdirectorypicker③">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="sandboxed-file-system-root">
-   <b><a href="#sandboxed-file-system-root">#sandboxed-file-system-root</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="origin-private-file-system">
+   <b><a href="#origin-private-file-system">#origin-private-file-system</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-sandboxed-file-system-root">4.1. Sandboxed File System Concepts</a> <a href="#ref-for-sandboxed-file-system-root①">(2)</a> <a href="#ref-for-sandboxed-file-system-root②">(3)</a> <a href="#ref-for-sandboxed-file-system-root③">(4)</a> <a href="#ref-for-sandboxed-file-system-root④">(5)</a>
-    <li><a href="#ref-for-sandboxed-file-system-root⑤">4.2. The getOriginPrivateDirectory() method</a>
+    <li><a href="#ref-for-origin-private-file-system">4. Accessing the Origin Private File System</a> <a href="#ref-for-origin-private-file-system①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-windoworworkerglobalscope-getoriginprivatedirectory">
@@ -5272,7 +5328,7 @@ support for example recursive iteration. <a href="https://github.com/wicg/native
     <li><a href="#ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory">1. Introduction</a>
     <li><a href="#ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory①">2.1. Concepts</a>
     <li><a href="#ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory②">2.2. Permissions</a>
-    <li><a href="#ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory③">4.2. The getOriginPrivateDirectory() method</a> <a href="#ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory④">(2)</a> <a href="#ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory⑤">(3)</a>
+    <li><a href="#ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory③">4. Accessing the Origin Private File System</a> <a href="#ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory④">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="too-sensitive-or-dangerous">
