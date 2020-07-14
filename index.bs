@@ -1527,7 +1527,7 @@ partial interface mixin WindowOrWorkerGlobalScope {
 };
 </xmp>
 
-Advisement: In Chrome this functionality is currently exposed as `FileSystemDirectoryHandle.getSystemDirectory({type: "sandbox"})`.
+Advisement: In Chrome this functionality was previously exposed as `FileSystemDirectoryHandle.getSystemDirectory({type: "sandbox"})`.
 This new method is available as of Chrome 85.
 
 <div class="note domintro">
@@ -1546,11 +1546,12 @@ invoked, must run these steps:
    return [=a promise rejected with=] a {{SecurityError}}.
 
 1. If |map|["root"] does not [=map/exist=]:
-  1. Set |map|["root"] to a new [=directory entry=].
-  1. Set |map|["root"]'s [=entry/name=] to `""`.
-  1. Set |map|["root"]'s [=directory entry/children=] to an empty [=/set=].
-  1. Set |map|["root"]'s [=entry/query permission steps=] to an algorithm
+  1. Let |dir| be a new [=directory entry=].
+  1. Set |dir|'s [=entry/name=] to `""`.
+  1. Set |dir|'s [=directory entry/children=] to an empty [=/set=].
+  1. Set |dir|'s [=entry/query permission steps=] to an algorithm
      that returns {{PermissionState/"granted"}}.
+  1. Set |map|["root"] to |dir|.
 
 1. Return [=a promise resolved with=] a new {{FileSystemDirectoryHandle}},
    whose associated [=FileSystemHandle/entry=] is |map|["root"].
