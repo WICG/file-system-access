@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version fa7080de, updated Fri Jul 10 17:43:01 2020 -0700" name="generator">
+  <meta content="Bikeshed version 1bdc5b25, updated Tue Jul 14 16:26:50 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="97ba7e69ba8248673252c23a26d5af9184bb6316" name="document-revision">
+  <meta content="e34c187b61fe578a27befc22169b1f1e8f26942f" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -2509,7 +2509,7 @@ All operations executed on the stream are queuable and producers will be able to
     <p>The underlying sink’s write method, and therefore <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#default-writer-write" id="ref-for-default-writer-write">WritableStreamDefaultWriter’s write()</a></code> method, will accept byte-like data or <code class="idl"><a data-link-type="idl" href="#dictdef-writeparams" id="ref-for-dictdef-writeparams①">WriteParams</a></code> as input.</p>
     <p>The <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑦">FileSystemWritableFileStream</a></code> has a file position cursor initialized at byte offset 0 from the top of the file.
 When using <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-write" id="ref-for-dom-filesystemwritablefilestream-write①">write()</a></code> or by using WritableStream capabilities through the <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#default-writer-write" id="ref-for-default-writer-write①">WritableStreamDefaultWriter’s write()</a></code> method, this position will be advanced based on the number of bytes written through the stream object.</p>
-    <p>Similarly, when piping a <code class="idl"><a data-link-type="idl">ReadableStream</a></code> into a <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑧">FileSystemWritableFileStream</a></code> object, this position is updated with the number of bytes that passed through the stream.</p>
+    <p>Similarly, when piping a <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#readablestream" id="ref-for-readablestream">ReadableStream</a></code> into a <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑧">FileSystemWritableFileStream</a></code> object, this position is updated with the number of bytes that passed through the stream.</p>
     <p><code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#ws-get-writer" id="ref-for-ws-get-writer">getWriter()</a></code> returns an instance of <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#writablestreamdefaultwriter" id="ref-for-writablestreamdefaultwriter">WritableStreamDefaultWriter</a></code>.</p>
    </div>
    <div class="algorithm" data-algorithm="create a new FileSystemWritableFileStream">
@@ -4077,6 +4077,12 @@ appropriate.</p>
     <li><a href="#ref-for-initialize-writable-stream">2.6. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-readablestream">
+   <a href="https://streams.spec.whatwg.org/#readablestream">https://streams.spec.whatwg.org/#readablestream</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-readablestream">2.6. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-set-up-writable-stream-default-controller">
    <a href="https://streams.spec.whatwg.org/#set-up-writable-stream-default-controller">https://streams.spec.whatwg.org/#set-up-writable-stream-default-controller</a><b>Referenced in:</b>
    <ul>
@@ -4470,6 +4476,7 @@ appropriate.</p>
     <ul>
      <li><span class="dfn-paneled" id="term-for-acquire-writable-stream-default-writer" style="color:initial">AcquireWritableStreamDefaultWriter</span>
      <li><span class="dfn-paneled" id="term-for-initialize-writable-stream" style="color:initial">InitializeWritableStream</span>
+     <li><span class="dfn-paneled" id="term-for-readablestream" style="color:initial">ReadableStream</span>
      <li><span class="dfn-paneled" id="term-for-set-up-writable-stream-default-controller" style="color:initial">SetUpWritableStreamDefaultController</span>
      <li><span class="dfn-paneled" id="term-for-writablestream" style="color:initial">WritableStream</span>
      <li><span class="dfn-paneled" id="term-for-writablestreamdefaultcontroller" style="color:initial">WritableStreamDefaultController</span>
