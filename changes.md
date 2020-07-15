@@ -7,6 +7,8 @@ and what is or will be available in Chrome 86.
 ```javascript
 let file1 = await window.chooseFileSystemEntries(
     {type: 'open-file'});
+let files = await window.chooseFileSystemEntries(
+    {type: 'open-file', multiple: true});
 let file2 = await window.chooseFileSystemEntries(
     {type: 'save-file'});
 let dir = window.chooseFileSystemEntries(
@@ -15,6 +17,7 @@ let dir = window.chooseFileSystemEntries(
 **After (in Chrome M86)**
 ```javascript
 let [file1] = await window.showOpenFilePicker();
+let files = await window.showOpenFilePicker({multiple: true});
 let file2 = await window.showSaveFilePicker();
 let dir = await window.showDirectoryPicker();
 ```
