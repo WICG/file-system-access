@@ -157,8 +157,8 @@ permission-related algorithms and types are defined as follows:
 
   1. Let |entry| be |desc|.{{FileSystemPermissionDescriptor/handle}}'s [=FileSystemHandle/entry=].
   1. If |entry| represents an [=/entry=] in an [=origin private file system=],
-    this descriptor's [=permission state=] should always be {{PermissionState/"granted"}}.
-  1. Otherwise, if |entry|'s [=entry/parent=] is not null, this descriptor's [=permission state=] should be
+    this descriptor's [=permission state=] must always be {{PermissionState/"granted"}}.
+  1. Otherwise, if |entry|'s [=entry/parent=] is not null, this descriptor's [=permission state=] must be
     equal to the [=permission state=] for a descriptor with the same {{FileSystemPermissionDescriptor/mode}},
     and a {{FileSystemPermissionDescriptor/handle}} representing |entry|'s [=entry/parent=].
   1. Otherwise, if |desc|.{{FileSystemPermissionDescriptor/mode}} is {{"readwrite"}}:
@@ -166,7 +166,7 @@ permission-related algorithms and types are defined as follows:
       with the same {{FileSystemPermissionDescriptor/handle}},
       but {{FileSystemPermissionDescriptor/mode}} = {{"read"}}.
     1. If |read state| is not {{PermissionState/"granted"}}, this descriptor's [=permission state=]
-      should be equal to |read state|.
+      must be equal to |read state|.
 
 : [=permission request algorithm=]
 :: <div algorithm="permission request algorithm">
