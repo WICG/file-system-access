@@ -766,7 +766,13 @@ these steps:
   :: If |child| is a direct child of |directory|, |path| will be an array containing |child|'s name.
   :: If |child| is a descendant of |directory|, |path| will be an array containing the names of
      all the intermediate directories and |child|'s name as last element.
+     For example if |directory| represents `/home/user/project`
+     and |child| represents `/home/user/project/foo/bar`, this will return
+     `['foo', 'bar']`.
   :: Otherwise (|directory| and |child| are not related), |path| will be null.
+
+     This functionality can be useful if a web application shows a directory
+     listing to highlight a file opened through a file picker in that directory listing.
 </div>
 
 Advisement: This method is first available in Chrome 82.
