@@ -1089,7 +1089,7 @@ steps:
 <xmp class=idl>
 dictionary FilePickerAcceptType {
     USVString description;
-    record<USVString, sequence<USVString>> accept;
+    record<USVString, sequence<USVString> or USVString> accept;
 };
 
 dictionary FilePickerOptions {
@@ -1402,7 +1402,7 @@ const options = {
   <l>{{FilePickerOptions/types}}</l>: [
     {
       <l>{{FilePickerAcceptType/accept}}</l>: {
-        'image/svg+xml': ['svg']
+        'image/svg+xml': 'svg'
       }
     },
   ],
@@ -1431,6 +1431,8 @@ run these steps:
         1. If |parsedType|'s [=MIME type/type=] is "*", return `true`.
         1. If |parsedType|'s [=MIME type/type=] is |type|'s [=MIME type/type=], return `true`.
       1. |parsedType|'s [=MIME type/essence=] is |type|'s [=MIME type/essence=], return `true`.
+      1. If |extensions| is a string, set |extensions| to a [=list=] with a single
+        element equal to |extensions|.
       1. [=list/For each=] |extension| of |extensions|:
         1. If |filename| ends with "." followed by |extension|, return `true`.
     1. Return `false`.
