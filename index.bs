@@ -1613,7 +1613,8 @@ combination with the ability to write to files, websites will be able to persist
 identifier on the users' disk. Clearing browsing data will not affect those files
 in any way, making these identifiers persist through those actions.
 
-This risk is somewhat mitigated by the fact that clearing browsing data will also clear IndexedDB,
+This risk is somewhat mitigated by the fact that clearing browsing data will clear all handles
+that a website had persisted (for example in IndexedDB),
 so websites won't have any handles to re-prompt for permission after browsing data was cleared.
 Furthermore user agents are encouraged to make it clear what files and directories a website has
 access to, and to automatically expire permission grants except for particularly well trusted
