@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 1bdc5b25, updated Tue Jul 14 16:26:50 2020 -0700" name="generator">
+  <meta content="Bikeshed version f948ea95, updated Thu Jul 16 13:39:07 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="e34c187b61fe578a27befc22169b1f1e8f26942f" name="document-revision">
+  <meta content="19515665533d4f7770593301982c8c28db300116" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1501,7 +1501,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-07-14">14 July 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-07-17">17 July 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -3339,7 +3339,8 @@ able to grant persistent access to files or directories and can re-prompt. In
 combination with the ability to write to files, websites will be able to persist an
 identifier on the users' disk. Clearing browsing data will not affect those files
 in any way, making these identifiers persist through those actions.</p>
-   <p>This risk is somewhat mitigated by the fact that clearing browsing data will also clear IndexedDB,
+   <p>This risk is somewhat mitigated by the fact that clearing browsing data will clear all handles
+that a website had persisted (for example in IndexedDB),
 so websites won’t have any handles to re-prompt for permission after browsing data was cleared.
 Furthermore user agents are encouraged to make it clear what files and directories a website has
 access to, and to automatically expire permission grants except for particularly well trusted
