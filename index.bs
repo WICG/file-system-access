@@ -79,8 +79,9 @@ other operating systems. Additionally underlying file systems might have further
 on what names are or aren't allowed, so a string merely being a [=valid file name=] is not
 a guarantee that creating a file or directory with that name will succeed.
 
-A <dfn lt="file|file entry">file entry</dfn> additionally consists of <dfn for="file entry">binary
-data</dfn> and a <dfn for="file entry">modification timestamp</dfn>.
+A <dfn lt="file|file entry">file entry</dfn> additionally consists of
+<dfn for="file entry">binary data</dfn> (a [=byte sequence=]) and a
+<dfn for="file entry">modification timestamp</dfn> (a number representing the number of milliseconds since the <a spec=FileAPI>Unix Epoch</a>).
 
 A <dfn lt="directory|directory entry">directory entry</dfn> additionally consists of a [=/set=] of
 <dfn for="directory entry">children</dfn>, which are themselves [=/entries=]. Each member is either a [=/file=] or a [=directory=].
