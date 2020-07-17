@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version f948ea95, updated Thu Jul 16 13:39:07 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="19515665533d4f7770593301982c8c28db300116" name="document-revision">
+  <meta content="fd373d312d629073aee6c29646507da2765c01d6" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1636,8 +1636,7 @@ and does not contain '/' or any other character used as path separator on the un
 other operating systems. Additionally underlying file systems might have further restrictions
 on what names are or aren’t allowed, so a string merely being a <a data-link-type="dfn" href="#valid-file-name" id="ref-for-valid-file-name">valid file name</a> is not
 a guarantee that creating a file or directory with that name will succeed.</p>
-   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="file|file entry" data-noexport id="file">file entry</dfn> additionally consists of <dfn class="dfn-paneled" data-dfn-for="file entry" data-dfn-type="dfn" data-lt="binary data" data-noexport id="file-entry-binary-data">binary
-data</dfn> and a <dfn class="dfn-paneled" data-dfn-for="file entry" data-dfn-type="dfn" data-noexport id="file-entry-modification-timestamp">modification timestamp</dfn>.</p>
+   <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="file|file entry" data-noexport id="file">file entry</dfn> additionally consists of <dfn class="dfn-paneled" data-dfn-for="file entry" data-dfn-type="dfn" data-noexport id="file-entry-binary-data">binary data</dfn> (a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence">byte sequence</a>) and a <dfn class="dfn-paneled" data-dfn-for="file entry" data-dfn-type="dfn" data-noexport id="file-entry-modification-timestamp">modification timestamp</dfn> (a number representing the number of milliseconds since the <a data-link-type="dfn" href="https://w3c.github.io/FileAPI/#UnixEpoch" id="ref-for-UnixEpoch">Unix Epoch</a>).</p>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="directory|directory entry" data-noexport id="directory">directory entry</dfn> additionally consists of a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-set" id="ref-for-ordered-set">set</a> of <dfn class="dfn-paneled" data-dfn-for="directory entry" data-dfn-type="dfn" data-noexport id="directory-entry-children">children</dfn>, which are themselves <a data-link-type="dfn" href="#entry" id="ref-for-entry①">entries</a>. Each member is either a <a data-link-type="dfn" href="#file" id="ref-for-file①">file</a> or a <a data-link-type="dfn" href="#directory" id="ref-for-directory①">directory</a>.</p>
    <p>An <a data-link-type="dfn" href="#entry" id="ref-for-entry②">entry</a> <var>entry</var> should be <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-contain" id="ref-for-list-contain">contained</a> in the <a data-link-type="dfn" href="#directory-entry-children" id="ref-for-directory-entry-children">children</a> of at most one <a data-link-type="dfn" href="#directory" id="ref-for-directory②">directory entry</a>, and that directory entry is also known as <var>entry</var>’s <dfn class="dfn-paneled" data-dfn-for="entry" data-dfn-type="dfn" data-noexport id="entry-parent">parent</dfn>.
 An <a data-link-type="dfn" href="#entry" id="ref-for-entry③">entry</a>'s <a data-link-type="dfn" href="#entry-parent" id="ref-for-entry-parent">parent</a> is null if no such directory entry exists.</p>
@@ -2230,7 +2229,7 @@ must run these steps:
        <li data-md>
         <p>Set <var>child</var>’s <a data-link-type="dfn" href="#entry-name" id="ref-for-entry-name⑨">name</a> to <var>name</var>.</p>
        <li data-md>
-        <p>Set <var>child</var>’s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data③">binary data</a> to an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence">byte sequence</a>.</p>
+        <p>Set <var>child</var>’s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data③">binary data</a> to an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence①">byte sequence</a>.</p>
        <li data-md>
         <p>Set <var>child</var>’s <a data-link-type="dfn" href="#file-entry-modification-timestamp" id="ref-for-file-entry-modification-timestamp②">modification timestamp</a> to the current time.</p>
        <li data-md>
@@ -2494,7 +2493,7 @@ when invoked, must return the result of <a data-link-type="dfn" href="#entry-res
 };
 </pre>
    <p>A <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream③">FileSystemWritableFileStream</a></code> has an associated <dfn class="dfn-paneled" data-dfn-for="FileSystemWritableFileStream" data-dfn-type="dfn" data-noexport id="filesystemwritablefilestream-file">[[file]]</dfn> (a <a data-link-type="dfn" href="#file" id="ref-for-file⑦">file entry</a>).</p>
-   <p>A <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream④">FileSystemWritableFileStream</a></code> has an associated <dfn class="dfn-paneled" data-dfn-for="FileSystemWritableFileStream" data-dfn-type="dfn" data-noexport id="filesystemwritablefilestream-buffer">[[buffer]]</dfn> (a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence①">byte sequence</a>).
+   <p>A <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream④">FileSystemWritableFileStream</a></code> has an associated <dfn class="dfn-paneled" data-dfn-for="FileSystemWritableFileStream" data-dfn-type="dfn" data-noexport id="filesystemwritablefilestream-buffer">[[buffer]]</dfn> (a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence②">byte sequence</a>).
 It is initially empty.</p>
    <p class="note" role="note"><span>Note:</span> This buffer can get arbitrarily large, so it is expected that implementations will not keep this in memory,
 but instead use a temporary file for this. All access to [[buffer]] is done in promise returning methods and
@@ -2631,14 +2630,14 @@ runs these steps:
             <p>Let <var>dataBytes</var> be the result of <a data-link-type="dfn" href="https://encoding.spec.whatwg.org/#utf-8-encode" id="ref-for-utf-8-encode">UTF-8 encoding</a> <var>data</var>.</p>
           </ol>
          <li data-md>
-          <p>Let <var>head</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence②">byte sequence</a> containing the first <var>writePosition</var> bytes of <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer③">[[buffer]]</a>.</p>
+          <p>Let <var>head</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence③">byte sequence</a> containing the first <var>writePosition</var> bytes of <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer③">[[buffer]]</a>.</p>
          <li data-md>
-          <p>Let <var>tail</var> be an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence③">byte sequence</a>.</p>
+          <p>Let <var>tail</var> be an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence④">byte sequence</a>.</p>
          <li data-md>
           <p>If <var>writePosition</var> + <var>data</var>.<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length①">length</a> is smaller than <var>oldSize</var>:</p>
           <ol>
            <li data-md>
-            <p>Let <var>tail</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence④">byte sequence</a> containing the last <var>oldSize</var> - (<var>writePosition</var> + <var>data</var>.<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length②">length</a>) bytes of <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer④">[[buffer]]</a>.</p>
+            <p>Let <var>tail</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑤">byte sequence</a> containing the last <var>oldSize</var> - (<var>writePosition</var> + <var>data</var>.<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length②">length</a>) bytes of <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer④">[[buffer]]</a>.</p>
           </ol>
          <li data-md>
           <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑤">[[buffer]]</a> to the concatenation of <var>head</var>, <var>data</var> and <var>tail</var>.</p>
@@ -2670,13 +2669,13 @@ runs these steps:
           <p>If <var>newSize</var> is larger than <var>oldSize</var>:</p>
           <ol>
            <li data-md>
-            <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑦">[[buffer]]</a> to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑤">byte sequence</a> formed by concating <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑧">[[buffer]]</a> with a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑥">byte sequence</a> containing <var>newSize</var>-<var>oldSize</var> <code>0x00</code> bytes.</p>
+            <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑦">[[buffer]]</a> to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑥">byte sequence</a> formed by concating <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑧">[[buffer]]</a> with a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑦">byte sequence</a> containing <var>newSize</var>-<var>oldSize</var> <code>0x00</code> bytes.</p>
           </ol>
          <li data-md>
           <p>Else if <var>newSize</var> is smaller than <var>oldSize</var>:</p>
           <ol>
            <li data-md>
-            <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑨">[[buffer]]</a> to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑦">byte sequence</a> containing the first <var>newSize</var> bytes
+            <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑨">[[buffer]]</a> to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑧">byte sequence</a> containing the first <var>newSize</var> bytes
   in <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer①⓪">[[buffer]]</a>.</p>
           </ol>
          <li data-md>
@@ -3039,7 +3038,7 @@ these steps:
        <li data-md>
         <p>Set <var>entry</var>’s <a data-link-type="dfn" href="#entry-request-permission-steps" id="ref-for-entry-request-permission-steps⑦">request permission steps</a> to the <a data-link-type="dfn" href="#native-file-system-request-permission-steps" id="ref-for-native-file-system-request-permission-steps①">native file system request permission steps</a>.</p>
        <li data-md>
-        <p>Set <var>entry</var>’s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑤">binary data</a> to an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑧">byte sequence</a>.</p>
+        <p>Set <var>entry</var>’s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑤">binary data</a> to an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑨">byte sequence</a>.</p>
        <li data-md>
         <p>Set <var>result</var> to a new <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle①①">FileSystemFileHandle</a></code> associated with <var>entry</var>.</p>
        <li data-md>
@@ -3684,6 +3683,12 @@ appropriate.</p>
     <li><a href="#ref-for-dfn-type">2.4.1. The getFile() method</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-UnixEpoch">
+   <a href="https://w3c.github.io/FileAPI/#UnixEpoch">https://w3c.github.io/FileAPI/#UnixEpoch</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-UnixEpoch">2.1. Concepts</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-serializable">
    <a href="https://html.spec.whatwg.org/multipage/structured-data.html#serializable">https://html.spec.whatwg.org/multipage/structured-data.html#serializable</a><b>Referenced in:</b>
    <ul>
@@ -3865,9 +3870,10 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-byte-sequence">
    <a href="https://infra.spec.whatwg.org/#byte-sequence">https://infra.spec.whatwg.org/#byte-sequence</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-byte-sequence">2.5.2. The getFileHandle() method</a>
-    <li><a href="#ref-for-byte-sequence①">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-byte-sequence②">(2)</a> <a href="#ref-for-byte-sequence③">(3)</a> <a href="#ref-for-byte-sequence④">(4)</a> <a href="#ref-for-byte-sequence⑤">(5)</a> <a href="#ref-for-byte-sequence⑥">(6)</a> <a href="#ref-for-byte-sequence⑦">(7)</a>
-    <li><a href="#ref-for-byte-sequence⑧">3.3. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-byte-sequence">2.1. Concepts</a>
+    <li><a href="#ref-for-byte-sequence①">2.5.2. The getFileHandle() method</a>
+    <li><a href="#ref-for-byte-sequence②">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-byte-sequence③">(2)</a> <a href="#ref-for-byte-sequence④">(3)</a> <a href="#ref-for-byte-sequence⑤">(4)</a> <a href="#ref-for-byte-sequence⑥">(5)</a> <a href="#ref-for-byte-sequence⑦">(6)</a> <a href="#ref-for-byte-sequence⑧">(7)</a>
+    <li><a href="#ref-for-byte-sequence⑨">3.3. The showSaveFilePicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-list-contain">
@@ -4398,6 +4404,7 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-readOperation" style="color:initial">read operation</span>
      <li><span class="dfn-paneled" id="term-for-snapshot-state" style="color:initial">snapshot state</span>
      <li><span class="dfn-paneled" id="term-for-dfn-type" style="color:initial">type</span>
+     <li><span class="dfn-paneled" id="term-for-UnixEpoch" style="color:initial">unix epoch</span>
     </ul>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
