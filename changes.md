@@ -14,6 +14,7 @@ let file2 = await window.chooseFileSystemEntries(
 let dir = window.chooseFileSystemEntries(
     {type: 'open-directory'});
 ```
+
 **After (in Chrome M86)**
 ```javascript
 let [file1] = await window.showOpenFilePicker();
@@ -41,6 +42,7 @@ await window.chooseFileSystemEntries({
   ]
 });
 ```
+
 **After (in Chrome M86)**
 ```javascript
 await window.showOpenFilePicker({
@@ -74,6 +76,7 @@ if (handle.isFile) {
   // can't happen
 }
 ```
+
 **After (in Chrome M86)**
 ```javascript
 switch (handle.kind) {
@@ -97,6 +100,7 @@ let file2 = parent.getFile('name2', {create: true});
 let dir1 = parent.getDirectory('dir1');
 let dir2 = parent.getDirectory('dir2', {create: true});
 ```
+
 **After (in Chrome M86)**
 ```javascript
 let file1 = parent.getFileHandle('name');
@@ -113,6 +117,7 @@ for await (let handle of parent.getEntries()) {
   // Use handle and/or handle.name
 }
 ```
+
 **After (in Chrome M86)**
 ```javascript
 for await (let handle of parent.values()) { /* ... */ }
@@ -130,6 +135,7 @@ await handle.queryPermission({writable: false});
 await handle.requestPermission();
 await handle.requestPermission({writable: false});
 ```
+
 **After (in Chrome M86)**
 ```javascript
 await handle.queryPermission();
@@ -143,6 +149,7 @@ await handle.requestPermission({mode: 'read'});
 await handle.queryPermission({writable: true});
 await handle.requestPermission({writable: true});
 ```
+
 **After (in Chrome M86)**
 ```javascript
 await handle.queryPermission({mode: 'readwrite'});
@@ -155,6 +162,7 @@ await handle.requestPermission({mode: 'readwrite'});
 ```javascript
 let root = await FileSystemDirectoryHandle.getSystemDirectory(type: 'sandbox');
 ```
+
 **After (in Chrome M86)**
 ```javascript
 let root = await self.getOriginPrivateDirectory();
