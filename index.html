@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version a1fcaa3b, updated Fri Jul 17 17:22:25 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="c939511cc4908ca79d63ec60cf0f4a4bccb0f786" name="document-revision">
+  <meta content="7bba310f546bf0c0baeba6e91c3beb9bb949690b" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -2464,9 +2464,12 @@ these steps:
       <p>If <var>child</var> is a direct child of <var>directory</var>, <var>path</var> will be an array containing <var>child</var>’s name.</p>
      <dd data-md>
       <p>If <var>child</var> is a descendant of <var>directory</var>, <var>path</var> will be an array containing the names of
- all the intermediate directories and <var>child</var>’s name as last element.</p>
+ all the intermediate directories and <var>child</var>’s name as last element.
+ For example if <var>directory</var> represents <code>/home/user/project</code> and <var>child</var> represents <code>/home/user/project/foo/bar</code>, this will return <code>['foo', 'bar']</code>.</p>
      <dd data-md>
       <p>Otherwise (<var>directory</var> and <var>child</var> are not related), <var>path</var> will be null.</p>
+      <p>This functionality can be useful if a web application shows a directory
+ listing to highlight a file opened through a file picker in that directory listing.</p>
     </dl>
    </div>
    <p><strong class="advisement"> This method is first available in Chrome 82.</strong></p>
