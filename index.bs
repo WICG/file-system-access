@@ -1089,7 +1089,7 @@ steps:
 <xmp class=idl>
 dictionary FilePickerAcceptType {
     USVString description;
-    record<USVString, sequence<USVString> or USVString> accept;
+    record<USVString, (USVString or sequence<USVString>)> accept;
 };
 
 dictionary FilePickerOptions {
