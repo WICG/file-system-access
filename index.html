@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version a1fcaa3b, updated Fri Jul 17 17:22:25 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="3716d62202a894f542836039432231f87d7fb468" name="document-revision">
+  <meta content="112eb31f1cb423746c600f3630d0ad1ae2cfee4f" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -2838,7 +2838,7 @@ steps:
    <h2 class="heading settled" data-level="3" id="native-filesystem"><span class="secno">3. </span><span class="content">Accessing Native File System</span><a class="self-link" href="#native-filesystem"></a></h2>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filepickeraccepttype"><code><c- g>FilePickerAcceptType</c-></code></dfn> {
     <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑨"><c- b>USVString</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FilePickerAcceptType" data-dfn-type="dict-member" data-export data-type="USVString " id="dom-filepickeraccepttype-description"><code><c- g>description</c-></code></dfn>;
-    <c- b>record</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①⓪"><c- b>USVString</c-></a>, <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①①"><c- b>USVString</c-></a>>> <dfn class="dfn-paneled idl-code" data-dfn-for="FilePickerAcceptType" data-dfn-type="dict-member" data-export data-type="record<USVString, sequence<USVString>> " id="dom-filepickeraccepttype-accept"><code><c- g>accept</c-></code></dfn>;
+    <c- b>record</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①⓪"><c- b>USVString</c-></a>, (<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①①"><c- b>USVString</c-></a> <c- b>or</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①②"><c- b>USVString</c-></a>>)> <dfn class="dfn-paneled idl-code" data-dfn-for="FilePickerAcceptType" data-dfn-type="dict-member" data-export data-type="record<USVString, (USVString or sequence<USVString>)> " id="dom-filepickeraccepttype-accept"><code><c- g>accept</c-></code></dfn>;
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filepickeroptions"><code><c- g>FilePickerOptions</c-></code></dfn> {
@@ -3076,7 +3076,7 @@ will not show an option to not apply any filters.</p>
   <code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-types" id="ref-for-dom-filepickeroptions-types③">types</a></code><c- o>:</c-> <c- p>[</c->
     <c- p>{</c->
       <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept②">accept</a></code><c- o>:</c-> <c- p>{</c->
-        <c- t>'image/svg+xml'</c-><c- o>:</c-> <c- p>[</c-><c- t>'svg'</c-><c- p>]</c->
+        <c- t>'image/svg+xml'</c-><c- o>:</c-> <c- t>'svg'</c->
       <c- p>}</c->
     <c- p>},</c->
   <c- p>],</c->
@@ -3123,6 +3123,9 @@ run these steps:
             </ol>
            <li data-md>
             <p><var>parsedType</var>’s <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#mime-type-essence" id="ref-for-mime-type-essence">essence</a> is <var>type</var>’s <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#mime-type-essence" id="ref-for-mime-type-essence①">essence</a>, return <code>true</code>.</p>
+           <li data-md>
+            <p>If <var>extensions</var> is a string, set <var>extensions</var> to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list③">list</a> with a single
+element equal to <var>extensions</var>.</p>
            <li data-md>
             <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate⑥">For each</a> <var>extension</var> of <var>extensions</var>:</p>
             <ol>
@@ -3896,7 +3899,7 @@ appropriate.</p>
    <a href="https://infra.spec.whatwg.org/#list">https://infra.spec.whatwg.org/#list</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-list">3.2. The showOpenFilePicker() method</a> <a href="#ref-for-list①">(2)</a>
-    <li><a href="#ref-for-list②">3.4. FilePickerOptions.types</a>
+    <li><a href="#ref-for-list②">3.4. FilePickerOptions.types</a> <a href="#ref-for-list③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-pair">
@@ -4295,7 +4298,7 @@ appropriate.</p>
     <li><a href="#ref-for-idl-USVString">2.3. The FileSystemHandle interface</a>
     <li><a href="#ref-for-idl-USVString①">2.5. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-idl-USVString②">(2)</a> <a href="#ref-for-idl-USVString③">(3)</a> <a href="#ref-for-idl-USVString④">(4)</a> <a href="#ref-for-idl-USVString⑤">(5)</a>
     <li><a href="#ref-for-idl-USVString⑥">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-idl-USVString⑦">(2)</a> <a href="#ref-for-idl-USVString⑧">(3)</a>
-    <li><a href="#ref-for-idl-USVString⑨">3. Accessing Native File System</a> <a href="#ref-for-idl-USVString①⓪">(2)</a> <a href="#ref-for-idl-USVString①①">(3)</a>
+    <li><a href="#ref-for-idl-USVString⑨">3. Accessing Native File System</a> <a href="#ref-for-idl-USVString①⓪">(2)</a> <a href="#ref-for-idl-USVString①①">(3)</a> <a href="#ref-for-idl-USVString①②">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-a-new-promise">
@@ -4712,7 +4715,7 @@ appropriate.</p>
 
 <c- b>dictionary</c-> <a href="#dictdef-filepickeraccepttype"><code><c- g>FilePickerAcceptType</c-></code></a> {
     <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a> <a data-type="USVString " href="#dom-filepickeraccepttype-description"><code><c- g>description</c-></code></a>;
-    <c- b>record</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a>, <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a>>> <a data-type="record<USVString, sequence<USVString>> " href="#dom-filepickeraccepttype-accept"><code><c- g>accept</c-></code></a>;
+    <c- b>record</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a>, (<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a> <c- b>or</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString"><c- b>USVString</c-></a>>)> <a data-type="record<USVString, (USVString or sequence<USVString>)> " href="#dom-filepickeraccepttype-accept"><code><c- g>accept</c-></code></a>;
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-filepickeroptions"><code><c- g>FilePickerOptions</c-></code></a> {
