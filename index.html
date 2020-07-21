@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version a1fcaa3b, updated Fri Jul 17 17:22:25 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="7bba310f546bf0c0baeba6e91c3beb9bb949690b" name="document-revision">
+  <meta content="3716d62202a894f542836039432231f87d7fb468" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1501,7 +1501,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-07-20">20 July 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-07-21">21 July 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1520,9 +1520,11 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>This document defines a web platform API that lets websites gain write access to the
+   <p>This document defines a web platform API that enables developers to build
 
-  native file system. It builds on <a data-link-type="biblio" href="#biblio-file-api">File API</a>, but adds lots of new functionality on top.</p>
+  powerful web apps that interact with files on the user’s local device.
+  It builds on <a data-link-type="biblio" href="#biblio-file-api">File API</a> for file reading capabilities, and adds new API
+  surface to enable modifying files, as well as working with directories.</p>
   </div>
   <div data-fill-with="at-risk"></div>
   <h2 class="no-num no-toc no-ref heading settled" id="status"><span class="content">Status of this document</span></h2>
@@ -1618,14 +1620,27 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
   <main>
    <h2 class="heading settled" data-level="1" id="introduction"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#introduction"></a></h2>
    <p><em>This section is non-normative.</em></p>
-   <p>This provides similar functionality as earlier drafts of the <a data-link-type="biblio" href="#biblio-file-system-api">File API: Directories and System</a> as well as the <a data-link-type="biblio" href="#biblio-entries-api">File and Directory Entries API</a>, but with a more modern API.</p>
-   <p>TODO explain native file system access</p>
+   <p>This API enables developers to build powerful apps that interact with other
+(non-Web) apps on the user’s device via the device’s file system. Prominent
+examples of applications where users expect this functionality are IDEs,
+photo and video editors, text editors, and more.
+After a user grants a web app access, this API allows the app to read or save
+changes directly to files and folders on the user’s device. Beyond reading and
+writing files, this API provides the ability to open a directory and enumerate
+its contents. Additionally, web apps can use this API to store references to
+files and directories they’ve been given access to, allowing the web apps to
+later regain access to the same content without requiring the user to select the
+same file again.</p>
+   <p>This API is similar to <a href="https://html.spec.whatwg.org/multipage/input.html#file-upload-state-(type=file)"><code>&lt;input type=file></code></a> and <a href="https://wicg.github.io/entries-api/#html-forms"><code>&lt;input type=file webkitdirectory></code></a> <a data-link-type="biblio" href="#biblio-entries-api">[entries-api]</a> in that user interaction happens through file and directory picker dialogs.
+Unlike those APIs, this API is currently purely a javascript API, and
+does not integrate with forms and/or input elements.</p>
    <p>Additionally this API also makes it possible for websites to get access to some
 directory without having to first prompt the user for access. This enables use
 cases where a website wants to save data to disk before a user has picked a
 location to save to, without forcing the website to use a completely different
 storage mechanism with a different API for such files. It also makes it easier
-to write automated tests for code using this API. The entry point for this is the <code class="idl"><a data-link-type="idl" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory">getOriginPrivateDirectory()</a></code> method.</p>
+to write automated tests for code using this API. The entry point for this is the <code class="idl"><a data-link-type="idl" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory">getOriginPrivateDirectory()</a></code> method. This is similar to the temporary file
+system as defined in earlier drafts of <a data-link-type="biblio" href="#biblio-file-system-api">File API: Directories and System</a>.</p>
    <h2 class="heading settled" data-level="2" id="files-and-directories"><span class="secno">2. </span><span class="content">Files and Directories</span><a class="self-link" href="#files-and-directories"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="concepts"><span class="secno">2.1. </span><span class="content">Concepts</span><a class="self-link" href="#concepts"></a></h3>
    <p>An <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="entry">entry</dfn> is either a <a data-link-type="dfn" href="#file" id="ref-for-file">file entry</a> or a <a data-link-type="dfn" href="#directory" id="ref-for-directory">directory entry</a>.</p>
