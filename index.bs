@@ -1,8 +1,10 @@
 <pre class=metadata>
 Title: Native File System
 Shortname: native-file-system
-Abstract: This document defines a web platform API that lets websites gain write access to the
-  native file system. It builds on [[FILE-API|File API]], but adds lots of new functionality on top.
+Abstract: This document defines a web platform API that enables developers to build
+  powerful web apps that interact with files on the user's local device.
+  It builds on [[FILE-API|File API]] for file reading capabilities, and adds new API
+  surface to enable modifying files, as well as working with directories.
 Status: CG-DRAFT
 ED: https://wicg.github.io/native-file-system/
 Level: 1
@@ -49,11 +51,24 @@ urlPrefix: https://storage.spec.whatwg.org/; spec: storage
 
 *This section is non-normative.*
 
-This provides similar functionality as earlier drafts of the
-[[file-system-api|File API: Directories and System]] as well as the
-[[entries-api|File and Directory Entries API]], but with a more modern API.
+This API enables developers to build powerful apps that interact with other
+(non-Web) apps on the user's device via the device's file system. Prominent
+examples of applications where users expect this functionality are IDEs,
+photo and video editors, text editors, and more.
+After a user grants a web app access, this API allows the app to read or save
+changes directly to files and folders on the user's device. Beyond reading and
+writing files, this API provides the ability to open a directory and enumerate
+its contents. Additionally, web apps can use this API to store references to
+files and directories they've been given access to, allowing the web apps to
+later regain access to the same content without requiring the user to select the
+same file again.
 
-TODO explain native file system access
+This API is similar to <a href="https://html.spec.whatwg.org/multipage/input.html#file-upload-state-(type=file)">`<input type=file>`</a>
+and <a href="https://wicg.github.io/entries-api/#html-forms">`<input type=file webkitdirectory>`</a>
+[[entries-api]]
+in that user interaction happens through file and directory picker dialogs.
+Unlike those APIs, this API is currently purely a javascript API, and
+does not integrate with forms and/or input elements.
 
 Additionally this API also makes it possible for websites to get access to some
 directory without having to first prompt the user for access. This enables use
@@ -61,7 +76,8 @@ cases where a website wants to save data to disk before a user has picked a
 location to save to, without forcing the website to use a completely different
 storage mechanism with a different API for such files. It also makes it easier
 to write automated tests for code using this API. The entry point for this is the
-{{getOriginPrivateDirectory()}} method.
+{{getOriginPrivateDirectory()}} method. This is similar to the temporary file
+system as defined in earlier drafts of [[file-system-api|File API: Directories and System]].
 
 # Files and Directories # {#files-and-directories}
 
