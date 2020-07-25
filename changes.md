@@ -37,7 +37,7 @@ await window.chooseFileSystemEntries({
     {
       description: 'Images',
       mimeTypes: ['image/*'],
-      extensions: ['png', 'gif', 'jpeg', jpg']
+      extensions: ['png', 'gif', 'jpeg', 'jpg']
     }
   ]
 });
@@ -57,7 +57,7 @@ await window.showOpenFilePicker({
     {
       description: 'Images',
       accept: {
-        'image/*': ['png', 'gif', 'jpeg', jpg']
+        'image/*': ['png', 'gif', 'jpeg', 'jpg']
       }
     }
   ]
