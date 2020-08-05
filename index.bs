@@ -1333,7 +1333,7 @@ By default the file picker will also include an option to not apply any filter,
 letting the user select any file. Set {{excludeAcceptAllOption}} to `true` to not
 include this option in the file picker.
 
-For example , the following options will let the user pick one of three different filter.
+For example , the following options will let the user pick one of three different filters.
 One for text files (either plain text or HTML), one for images, and a third one that doesn't apply
 any filter and lets the user select any file.
 
