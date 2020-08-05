@@ -1,5 +1,5 @@
 # Native File System API
-View proposals in the [EXPLAINER](EXPLAINER.md) and the (very early draft) [spec](https://wicg.github.io/native-file-system/).
+View proposals in the [EXPLAINER](EXPLAINER.md) and the [spec](https://wicg.github.io/native-file-system/).
 
 See [changes.md](changes.md) for a list of changes that were made to the API surface between what was available as an Origin Trial in Chrome 83 through Chrome 85, and what will be shipped in Chrome 86.
 
