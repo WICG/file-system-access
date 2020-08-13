@@ -1466,8 +1466,85 @@ these steps:
   1. [=/Resolve=] |p| with |result|.
 
 1. Return |p|.
+</div>
+
+## Drag and Drop ## {#drag-and-drop}
+
+<xmp class=idl>
+partial interface DataTransferItem {
+    Promise<FileSystemHandle?> getAsFileSystemHandle();
+};
+</xmp>
+
+During a <em>drag-and-drop operation</em>, dragged file and
+directory items are associated with [=file entries=] and [=directory entries=]
+respectively.
+
+<div class="note domintro">
+  : |handle| = await item . {{getAsFileSystemHandle()}}
+  :: Returns a {{FileSystemFileHandle}} object if the dragged item is file and a {{FileSystemDirectoryHandle}} object if the dragged item is a directory.
+</div>
+
+<div algorithm>
+
+The <dfn method for=DataTransferItem>getAsFileSystemHandle()</dfn> method steps are:
+
+1. Let |p| be [=a new promise=].
+
+1. Run the following steps [=in parallel=]:
+
+  1. If the {{DataTransferItem}} object is not in the <a spec=html>read/write
+      mode</a> or the <a spec=html>read-only mode</a>, then [=/resolve=] |p| with `null`.
+
+  1. If the <a spec=html>the drag data item kind</a> is not <em>File</em>, then 
+      then [=/resolve=] |p| with `null`.
+
+  1. Let |entry| be the [=/entry=] representing the dragged file or directory.
+
+  1. If |entry| is a [=file entry=]:
+
+    1. Let |handle| be a {{FileSystemFileHandle}} associated with |entry|.
+
+  1. Else if |entry| is a [=directory entry=]:
+
+    1. Let |handle| be a {{FileSystemDirectoryHandle}} associated with |entry|.
+
+  1. [=/Resolve=] |p| with |entry|.
+
+1. Return |p|.
 
 </div>
+
+<div class=example id=draganddrop-example>
+Handling drag and drop of files and directories:
+<xmp highlight=js>
+elem.addEventListener('dragover', (e) => {
+  // Prevent navigation.
+  e.preventDefault();
+});
+elem.addEventListener('drop', async (e) => {
+  // Prevent navigation.
+  e.preventDefault();
+
+  // Process all of the items.
+  for (const item of e.dataTransfer.items) {
+    // kind will be 'file' for file/directory entries.
+    if (item.kind === 'file') {
+      const entry = await item.getAsFileSystemHandle();
+      if (entry.kind == 'file') {
+        handleDirectoryEntry(entry);
+      } else if (entry.kind == 'directory') {
+        handleFileEntry(entry);
+      }
+    }
+  }
+});
+</xmp>
+</div>
+
+Issue: This currently does not block access to [=too sensitive or dangerous=] directories, to
+be consistent with other APIs that give access to dropped files and directories. This is inconsistent
+with the [=native file system handle factories=] though, so we might want to reconsider this.
 
 # Accessing the Origin Private File System # {#sandboxed-filesystem}
 
