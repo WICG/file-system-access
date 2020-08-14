@@ -1491,10 +1491,10 @@ respectively.
 The <dfn method for=DataTransferItem>getAsFileSystemHandle()</dfn> method steps are:
 
 1. If the {{DataTransferItem}} object is not in the <a spec=html>read/write
-    mode</a> or the <a spec=html>read-only mode</a>, then return 
+    mode</a> or the <a spec=html>read-only mode</a>, return 
     [=a promise resolved with=] `null`.
 
-1. If the <a spec=html>the drag data item kind</a> is not <em>File</em>, then 
+1. If the <a spec=html>the drag data item kind</a> is not <em>File</em>, 
     then return [=a promise resolved with=] `null`.
 
 1. Let |p| be [=a new promise=].
