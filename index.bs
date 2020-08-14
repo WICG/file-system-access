@@ -1466,6 +1466,7 @@ these steps:
   1. [=/Resolve=] |p| with |result|.
 
 1. Return |p|.
+
 </div>
 
 ## Drag and Drop ## {#drag-and-drop}
@@ -1489,15 +1490,16 @@ respectively.
 
 The <dfn method for=DataTransferItem>getAsFileSystemHandle()</dfn> method steps are:
 
+1. If the {{DataTransferItem}} object is not in the <a spec=html>read/write
+    mode</a> or the <a spec=html>read-only mode</a>, then return 
+    [=a promise resolved with=] `null`.
+
+1. If the <a spec=html>the drag data item kind</a> is not <em>File</em>, then 
+    then return [=a promise resolved with=] `null`.
+
 1. Let |p| be [=a new promise=].
 
 1. Run the following steps [=in parallel=]:
-
-  1. If the {{DataTransferItem}} object is not in the <a spec=html>read/write
-      mode</a> or the <a spec=html>read-only mode</a>, then [=/resolve=] |p| with `null`.
-
-  1. If the <a spec=html>the drag data item kind</a> is not <em>File</em>, then 
-      then [=/resolve=] |p| with `null`.
 
   1. Let |entry| be the [=/entry=] representing the dragged file or directory.
 
