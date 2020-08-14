@@ -76,7 +76,7 @@ cases where a website wants to save data to disk before a user has picked a
 location to save to, without forcing the website to use a completely different
 storage mechanism with a different API for such files. It also makes it easier
 to write automated tests for code using this API. The entry point for this is the
-{{getOriginPrivateDirectory()}} method. This is similar to the temporary file
+{{getPrivateDirectory()}} method. This is similar to the temporary file
 system as defined in earlier drafts of [[file-system-api|File API: Directories and System]].
 
 # Files and Directories # {#files-and-directories}
@@ -109,7 +109,7 @@ An [=/entry=]'s [=entry/parent=] is null if no such directory entry exists.
 Note: Two different [=/entries=] can represent the same file or directory on disk, in which
 case it is possible for both entries to have a different parent, or for one entry to have a
 parent while the other entry does not have a parent. Typically an entry does not have a parent
-if it was returned by {{getOriginPrivateDirectory()}} or one of the [=native file system handle factories=],
+if it was returned by {{getPrivateDirectory()}} or one of the [=native file system handle factories=],
 and an entry will have a parent in all other cases.
 
 [=/Entries=] can (but don't have to) be backed by files on the systems native file system,
@@ -809,7 +809,7 @@ const dir_ref = current_project_dir;
 if (!dir_ref) return;
 
 // Now get a file reference by showing a file picker:
-const file_ref = await self.chooseFileSystemEntries({type: 'openFile'});
+const file_ref = await FileSystem.showOpenFilePicker();
 if (!file_ref) {
     // User cancelled, or otherwise failed to open a file.
     return;
@@ -1136,10 +1136,13 @@ dictionary SaveFilePickerOptions : FilePickerOptions {
 dictionary DirectoryPickerOptions {
 };
 
-[SecureContext]
-partial interface Window {
+[SecureContext, Exposed=(Window,Worker)]
+namespace FileSystem {
+    [Exposed=Window]
     Promise<sequence<FileSystemFileHandle>> showOpenFilePicker(optional OpenFilePickerOptions options = {});
+    [Exposed=Window]
     Promise<FileSystemFileHandle> showSaveFilePicker(optional SaveFilePickerOptions options = {});
+    [Exposed=Window]
     Promise<FileSystemDirectoryHandle> showDirectoryPicker(optional DirectoryPickerOptions options = {});
 };
 </xmp>
@@ -1183,12 +1186,12 @@ To verify that an |environment| <dfn>is allowed to show a file picker</dfn>, run
 ## The {{showOpenFilePicker()}} method ## {#api-showopenfilepicker}
 
 <div class="note domintro">
-  : [ |handle| ] = await window . {{showOpenFilePicker()}}
-  : [ |handle| ] = await window . {{showOpenFilePicker()|showOpenFilePicker}}({ {{OpenFilePickerOptions/multiple}}: false })
+  : [ |handle| ] = await {{FileSystem}} . {{showOpenFilePicker()}}
+  : [ |handle| ] = await {{FileSystem}} . {{showOpenFilePicker()|showOpenFilePicker}}({ {{OpenFilePickerOptions/multiple}}: false })
   :: Shows a file picker that lets a user select a single existing file, returning a handle for
     the selected file.
 
-  : handles = await window . {{showOpenFilePicker()|showOpenFilePicker}}({ {{OpenFilePickerOptions/multiple}}: true })
+  : handles = await {{FileSystem}} . {{showOpenFilePicker()|showOpenFilePicker}}({ {{OpenFilePickerOptions/multiple}}: true })
   :: Shows a file picker that lets a user select multiple existing files, returning handles for
     the selected files.
 
@@ -1197,7 +1200,7 @@ To verify that an |environment| <dfn>is allowed to show a file picker</dfn>, run
 </div>
 
 <div algorithm>
-The <dfn method for=Window>showOpenFilePicker(|options|)</dfn> method, when invoked, must run
+The <dfn method for=FileSystem>showOpenFilePicker(|options|)</dfn> method, when invoked, must run
 these steps:
 
 1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
@@ -1246,10 +1249,10 @@ these steps:
 
 </div>
 
-## The {{Window/showSaveFilePicker()}} method ## {#api-showsavefilepicker}
+## The {{showSaveFilePicker()}} method ## {#api-showsavefilepicker}
 
 <div class="note domintro">
-  : |handle| = await window . {{showSaveFilePicker()|showSaveFilePicker}}( |options| )
+  : |handle| = await {{FileSystem}} . {{showSaveFilePicker()|showSaveFilePicker}}( |options| )
   :: Shows a file picker that lets a user select a single file, returning a handle for
     the selected file. The selected file does not have to exist already. If the selected
     file does not exist a new empty file is created before this method returns, otherwise
@@ -1260,7 +1263,7 @@ these steps:
 </div>
 
 <div algorithm>
-The <dfn method for=Window>showSaveFilePicker(|options|)</dfn> method, when invoked, must run
+The <dfn method for=FileSystem>showSaveFilePicker(|options|)</dfn> method, when invoked, must run
 these steps:
 
 1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
@@ -1394,7 +1397,7 @@ run these steps:
         1. If |parsedType|'s [=MIME type/type=] is "*", return `true`.
         1. If |parsedType|'s [=MIME type/type=] is |type|'s [=MIME type/type=], return `true`.
       1. |parsedType|'s [=MIME type/essence=] is |type|'s [=MIME type/essence=], return `true`.
-      1. If |extensions| is a string, set |extensions| to a [=list=] with a single
+      1. If |extensions| is a string, set |extensions| to a [=/list=] with a single
         element equal to |extensions|.
       1. [=list/For each=] |extension| of |extensions|:
         1. If |filename| ends with "." followed by |extension|, return `true`.
@@ -1417,16 +1420,16 @@ run these steps:
 
 </div>
 
-## The {{Window/showDirectoryPicker()}} method ## {#api-showdirectorypicker}
+## The {{showDirectoryPicker()}} method ## {#api-showdirectorypicker}
 
 <div class="note domintro">
-  : |handle| = await window . {{Window/showDirectoryPicker()}}
+  : |handle| = await {{FileSystem}} . {{showDirectoryPicker()}}
   :: Shows a directory picker that lets the user select a single directory, returning a handle for
     the selected directory.
 </div>
 
 <div algorithm>
-The <dfn method for=Window>showDirectoryPicker(<var ignore>options</var>)</dfn> method, when invoked, must run
+The <dfn method for=FileSystem>showDirectoryPicker(<var ignore>options</var>)</dfn> method, when invoked, must run
 these steps:
 
 1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
@@ -1564,9 +1567,9 @@ user accessible. Similarly there is no expectation that files or directories wit
 matching the names of children of the [=origin private file system=] exist.
 
 <xmp class=idl>
-[SecureContext]
-partial interface mixin WindowOrWorkerGlobalScope {
-  Promise<FileSystemDirectoryHandle> getOriginPrivateDirectory();
+[SecureContext, Exposed=(Window,Worker)]
+partial namespace FileSystem {
+  Promise<FileSystemDirectoryHandle> getPrivateDirectory();
 };
 </xmp>
 
@@ -1574,12 +1577,12 @@ Advisement: In Chrome this functionality was previously exposed as `FileSystemDi
 This new method is available as of Chrome 85.
 
 <div class="note domintro">
-  : |directoryHandle| = await window . {{getOriginPrivateDirectory()}}
+  : |directoryHandle| = await {{FileSystem}} . {{getPrivateDirectory()}}
   :: Returns the root directory of the origin private file system.
 </div>
 
 <div algorithm>
-The <dfn method for=WindowOrWorkerGlobalScope>getOriginPrivateDirectory()</dfn> method, when
+The <dfn method for=FileSystem>getPrivateDirectory()</dfn> method, when
 invoked, must run these steps:
 
 1. Let |environment| be the [=current settings object=].
