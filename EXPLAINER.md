@@ -88,7 +88,7 @@ to write automated tests for code using this API.
 At least for now out of scope is access to the full file system, subscribing to
 file change notifications, probably many things related to file metadata (i.e.
 marking files as executable/hidden, etc). Also not yet planning to address how
-this new API might integrate with drag&drop and `<input type=file>`.
+this new API might integrate with `<input type=file>`.
 
 # Example code
 
