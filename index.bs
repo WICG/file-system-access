@@ -76,8 +76,9 @@ cases where a website wants to save data to disk before a user has picked a
 location to save to, without forcing the website to use a completely different
 storage mechanism with a different API for such files. It also makes it easier
 to write automated tests for code using this API. The entry point for this is the
-{{getOriginPrivateDirectory()}} method. This is similar to the temporary file
-system as defined in earlier drafts of [[file-system-api|File API: Directories and System]].
+{{StorageManager/getDirectory()|navigator.storage.getDirectory()}} method. This
+is similar to the temporary file system as defined in earlier drafts of
+[[file-system-api|File API: Directories and System]].
 
 # Files and Directories # {#files-and-directories}
 
@@ -109,7 +110,8 @@ An [=/entry=]'s [=entry/parent=] is null if no such directory entry exists.
 Note: Two different [=/entries=] can represent the same file or directory on disk, in which
 case it is possible for both entries to have a different parent, or for one entry to have a
 parent while the other entry does not have a parent. Typically an entry does not have a parent
-if it was returned by {{getOriginPrivateDirectory()}} or one of the [=native file system handle factories=],
+if it was returned by {{StorageManager/getDirectory()|navigator.storage.getDirectory()}}
+or one of the [=native file system handle factories=],
 and an entry will have a parent in all other cases.
 
 [=/Entries=] can (but don't have to) be backed by files on the systems native file system,
@@ -1394,7 +1396,7 @@ run these steps:
         1. If |parsedType|'s [=MIME type/type=] is "*", return `true`.
         1. If |parsedType|'s [=MIME type/type=] is |type|'s [=MIME type/type=], return `true`.
       1. |parsedType|'s [=MIME type/essence=] is |type|'s [=MIME type/essence=], return `true`.
-      1. If |extensions| is a string, set |extensions| to a [=list=] with a single
+      1. If |extensions| is a string, set |extensions| to a [=/list=] with a single
         element equal to |extensions|.
       1. [=list/For each=] |extension| of |extensions|:
         1. If |filename| ends with "." followed by |extension|, return `true`.
@@ -1565,8 +1567,8 @@ matching the names of children of the [=origin private file system=] exist.
 
 <xmp class=idl>
 [SecureContext]
-partial interface mixin WindowOrWorkerGlobalScope {
-  Promise<FileSystemDirectoryHandle> getOriginPrivateDirectory();
+partial interface StorageManager {
+  Promise<FileSystemDirectoryHandle> getDirectory();
 };
 </xmp>
 
@@ -1574,12 +1576,12 @@ Advisement: In Chrome this functionality was previously exposed as `FileSystemDi
 This new method is available as of Chrome 85.
 
 <div class="note domintro">
-  : |directoryHandle| = await window . {{getOriginPrivateDirectory()}}
+  : |directoryHandle| = await navigator . storage . {{StorageManager/getDirectory()}}
   :: Returns the root directory of the origin private file system.
 </div>
 
 <div algorithm>
-The <dfn method for=WindowOrWorkerGlobalScope>getOriginPrivateDirectory()</dfn> method, when
+The <dfn method for=StorageManager>getDirectory()</dfn> method, when
 invoked, must run these steps:
 
 1. Let |environment| be the [=current settings object=].

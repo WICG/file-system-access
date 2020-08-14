@@ -165,5 +165,5 @@ let root = await FileSystemDirectoryHandle.getSystemDirectory(type: 'sandbox');
 
 **After (in Chrome M86)**
 ```javascript
-let root = await self.getOriginPrivateDirectory();
+let root = await navigator.storage.getDirectory();
 ```
