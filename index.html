@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version f539c4af, updated Mon Aug 10 11:34:58 2020 -0700" name="generator">
+  <meta content="Bikeshed version 65c8882a, updated Fri Aug 14 17:43:28 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="a6a04c895bd36dac366b929ecdb88b6b02383bfa" name="document-revision">
+  <meta content="97d88d6ba20cbd575069141c5946554d1930a06a" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1501,7 +1501,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-08-14">14 August 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-08-17">17 August 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2509,7 +2509,7 @@ these steps:
 <c- p>}</c-> <c- k>else</c-> <c- p>{</c->
     <c- c1>// relative_path is an array of names, giving the relative path</c->
     <c- c1>// from dir_ref to the file that is represented by file_ref:</c->
-    assert relative_path<c- p>.</c->pop<c- p>()</c-> <c- o>==</c-> file_ref<c- p>.</c->name<c- p>;</c->
+    assert relative_path<c- p>.</c->pop<c- p>()</c-> <c- o>===</c-> file_ref<c- p>.</c->name<c- p>;</c->
 
     <c- a>let</c-> entry <c- o>=</c-> dir_ref<c- p>;</c->
     <c- k>for</c-> <c- p>(</c-><c- kr>const</c-> name <c- k>of</c-> relative_path<c- p>)</c-> <c- p>{</c->
@@ -2518,7 +2518,7 @@ these steps:
     entry <c- o>=</c-> await entry<c- p>.</c->getFile<c- p>(</c->file_ref<c- p>.</c->name<c- p>);</c->
 
     <c- c1>// Now |entry| will represent the same file on disk as |file_ref|.</c->
-    assert await entry<c- p>.</c->isSameEntry<c- p>(</c->file_ref<c- p>)</c-> <c- o>==</c-> <c- kc>true</c-><c- p>;</c->
+    assert await entry<c- p>.</c->isSameEntry<c- p>(</c->file_ref<c- p>)</c-> <c- o>===</c-> <c- kc>true</c-><c- p>;</c->
 <c- p>}</c->
 </pre>
    </div>
@@ -3232,7 +3232,7 @@ directory items are associated with <a data-link-type="dfn" href="#file" id="ref
     <dl>
      <dt data-md><var>handle</var> = await item . <code class="idl"><a data-link-type="idl" href="#dom-datatransferitem-getasfilesystemhandle" id="ref-for-dom-datatransferitem-getasfilesystemhandle①">getAsFileSystemHandle()</a></code>
      <dd data-md>
-      <p>Returns a <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle①②">FileSystemFileHandle</a></code> object if the dragged item is file and a <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①②">FileSystemDirectoryHandle</a></code> object if the dragged item is a directory.</p>
+      <p>Returns a <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle①②">FileSystemFileHandle</a></code> object if the dragged item is a file and a <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①②">FileSystemDirectoryHandle</a></code> object if the dragged item is a directory.</p>
     </dl>
    </div>
    <div class="algorithm" data-algorithm="getAsFileSystemHandle()" data-algorithm-for="DataTransferItem">
@@ -3285,9 +3285,9 @@ elem<c- p>.</c->addEventListener<c- p>(</c-><c- t>'drop'</c-><c- p>,</c-> async 
     <c- c1>// kind will be 'file' for file/directory entries.</c->
     <c- k>if</c-> <c- p>(</c->item<c- p>.</c->kind <c- o>===</c-> <c- t>'file'</c-><c- p>)</c-> <c- p>{</c->
       <c- kr>const</c-> entry <c- o>=</c-> await item<c- p>.</c->getAsFileSystemHandle<c- p>();</c->
-      <c- k>if</c-> <c- p>(</c->entry<c- p>.</c->kind <c- o>==</c-> <c- t>'file'</c-><c- p>)</c-> <c- p>{</c->
+      <c- k>if</c-> <c- p>(</c->entry<c- p>.</c->kind <c- o>===</c-> <c- t>'file'</c-><c- p>)</c-> <c- p>{</c->
         handleDirectoryEntry<c- p>(</c->entry<c- p>);</c->
-      <c- p>}</c-> <c- k>else</c-> <c- k>if</c-> <c- p>(</c->entry<c- p>.</c->kind <c- o>==</c-> <c- t>'directory'</c-><c- p>)</c-> <c- p>{</c->
+      <c- p>}</c-> <c- k>else</c-> <c- k>if</c-> <c- p>(</c->entry<c- p>.</c->kind <c- o>===</c-> <c- t>'directory'</c-><c- p>)</c-> <c- p>{</c->
         handleFileEntry<c- p>(</c->entry<c- p>);</c->
       <c- p>}</c->
     <c- p>}</c->
