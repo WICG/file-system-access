@@ -822,7 +822,7 @@ if (relative_path === null) {
 } else {
     // relative_path is an array of names, giving the relative path
     // from dir_ref to the file that is represented by file_ref:
-    assert relative_path.pop() == file_ref.name;
+    assert relative_path.pop() === file_ref.name;
 
     let entry = dir_ref;
     for (const name of relative_path) {
@@ -831,7 +831,7 @@ if (relative_path === null) {
     entry = await entry.getFile(file_ref.name);
 
     // Now |entry| will represent the same file on disk as |file_ref|.
-    assert await entry.isSameEntry(file_ref) == true;
+    assert await entry.isSameEntry(file_ref) === true;
 }
 </xmp>
 </div>
@@ -1483,7 +1483,7 @@ respectively.
 
 <div class="note domintro">
   : |handle| = await item . {{getAsFileSystemHandle()}}
-  :: Returns a {{FileSystemFileHandle}} object if the dragged item is file and a {{FileSystemDirectoryHandle}} object if the dragged item is a directory.
+  :: Returns a {{FileSystemFileHandle}} object if the dragged item is a file and a {{FileSystemDirectoryHandle}} object if the dragged item is a directory.
 </div>
 
 <div algorithm>
@@ -1533,9 +1533,9 @@ elem.addEventListener('drop', async (e) => {
     // kind will be 'file' for file/directory entries.
     if (item.kind === 'file') {
       const entry = await item.getAsFileSystemHandle();
-      if (entry.kind == 'file') {
+      if (entry.kind === 'file') {
         handleDirectoryEntry(entry);
-      } else if (entry.kind == 'directory') {
+      } else if (entry.kind === 'directory') {
         handleFileEntry(entry);
       }
     }
