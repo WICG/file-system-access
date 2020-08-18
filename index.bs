@@ -1345,14 +1345,14 @@ const options = {
     {
       <l>{{FilePickerAcceptType/description}}</l>: 'Text Files',
       <l>{{FilePickerAcceptType/accept}}</l>: {
-        'text/plain': ['txt', 'text'],
-        'text/html': ['html', 'htm']
+        'text/plain': ['.txt', '.text'],
+        'text/html': ['.html', '.htm']
       }
     },
     {
       <l>{{FilePickerAcceptType/description}}</l>: 'Images',
       <l>{{FilePickerAcceptType/accept}}</l>: {
-        'image/*': ['png', 'gif', 'jpeg', 'jpg']
+        'image/*': ['.png', '.gif', '.jpeg', '.jpg']
       }
     }
   ],
@@ -1367,7 +1367,7 @@ const options = {
   <l>{{FilePickerOptions/types}}</l>: [
     {
       <l>{{FilePickerAcceptType/accept}}</l>: {
-        'image/svg+xml': 'svg'
+        'image/svg+xml': '.svg'
       }
     },
   ],
@@ -1384,22 +1384,25 @@ run these steps:
 1. Let |accepts options| be a empty [=/list=] of [=pairs=].
 1. [=list/For each=] |type| of |options|.{{FilePickerOptions/types}}:
   1. Let |description| be |type|.{{FilePickerAcceptType/description}}.
-  1. [=map/For each=] |type string| → |extensions| of |type|.{{FilePickerAcceptType/accept}}:
+  1. [=map/For each=] |type string| → |suffixes| of |type|.{{FilePickerAcceptType/accept}}:
     1. Let |parsedType| be the result of [=parse a MIME type=] with |typeString|.
     1. If |parsedType| is failure, throw a {{TypeError}}.
     1. If |parsedType|'s [=MIME type/parameters=] are not empty, throw a {{TypeError}}.
+    1. If |suffixes| is a string:
+      1. If |suffixes| does not start with ".", throw a {{TypeError}}.
+    1. Otherwise, [=list/for each=] |suffix| of |suffixes|:
+      1. If |suffix| does not start with ".", throw a {{TypeError}}.
 
   1. Let |filter| be the following steps, given a |filename| (a [=string=]), and a |type| (a [=MIME type=]):
-    1. [=map/For each=] |type string| → |extensions| of |type|.{{FilePickerAcceptType/accept}}:
+    1. [=map/For each=] |type string| → |suffixes| of |type|.{{FilePickerAcceptType/accept}}:
     1. Let |parsedType| be the result of [=parse a MIME type=] with |typeString|.
       1. If |parsedType|'s [=MIME type/subtype=] is "*":
         1. If |parsedType|'s [=MIME type/type=] is "*", return `true`.
         1. If |parsedType|'s [=MIME type/type=] is |type|'s [=MIME type/type=], return `true`.
       1. |parsedType|'s [=MIME type/essence=] is |type|'s [=MIME type/essence=], return `true`.
-      1. If |extensions| is a string, set |extensions| to a [=/list=] with a single
-        element equal to |extensions|.
-      1. [=list/For each=] |extension| of |extensions|:
-        1. If |filename| ends with "." followed by |extension|, return `true`.
+      1. If |suffixes| is a string, set |suffixes| to « |suffixes| ».
+      1. [=list/For each=] |suffix| of |suffixes|:
+        1. If |filename| ends with |suffix|, return `true`.
     1. Return `false`.
 
   1. If |description| is an empty string,
