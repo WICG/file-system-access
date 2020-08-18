@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 65c8882a, updated Fri Aug 14 17:43:28 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="e0f724c0863fb87e2361b1189865b6ac81fafefc" name="document-revision">
+  <meta content="ebf021022e1a5ef64182dcb71ea291d33a8b1e20" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1640,8 +1640,8 @@ directory without having to first prompt the user for access. This enables use
 cases where a website wants to save data to disk before a user has picked a
 location to save to, without forcing the website to use a completely different
 storage mechanism with a different API for such files. It also makes it easier
-to write automated tests for code using this API. The entry point for this is the <code class="idl"><a data-link-type="idl" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory">getOriginPrivateDirectory()</a></code> method. This is similar to the temporary file
-system as defined in earlier drafts of <a data-link-type="biblio" href="#biblio-file-system-api">File API: Directories and System</a>.</p>
+to write automated tests for code using this API. The entry point for this is the <code class="idl"><a data-link-type="idl" href="#dom-storagemanager-getdirectory" id="ref-for-dom-storagemanager-getdirectory">navigator.storage.getDirectory()</a></code> method. This
+is similar to the temporary file system as defined in earlier drafts of <a data-link-type="biblio" href="#biblio-file-system-api">File API: Directories and System</a>.</p>
    <h2 class="heading settled" data-level="2" id="files-and-directories"><span class="secno">2. </span><span class="content">Files and Directories</span><a class="self-link" href="#files-and-directories"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="concepts"><span class="secno">2.1. </span><span class="content">Concepts</span><a class="self-link" href="#concepts"></a></h3>
    <p>An <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="entry">entry</dfn> is either a <a data-link-type="dfn" href="#file" id="ref-for-file">file entry</a> or a <a data-link-type="dfn" href="#directory" id="ref-for-directory">directory entry</a>.</p>
@@ -1659,7 +1659,7 @@ An <a data-link-type="dfn" href="#entry" id="ref-for-entry③">entry</a>'s <a da
    <p class="note" role="note"><span>Note:</span> Two different <a data-link-type="dfn" href="#entry" id="ref-for-entry④">entries</a> can represent the same file or directory on disk, in which
 case it is possible for both entries to have a different parent, or for one entry to have a
 parent while the other entry does not have a parent. Typically an entry does not have a parent
-if it was returned by <code class="idl"><a data-link-type="idl" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory①">getOriginPrivateDirectory()</a></code> or one of the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories">native file system handle factories</a>,
+if it was returned by <code class="idl"><a data-link-type="idl" href="#dom-storagemanager-getdirectory" id="ref-for-dom-storagemanager-getdirectory①">navigator.storage.getDirectory()</a></code> or one of the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories">native file system handle factories</a>,
 and an entry will have a parent in all other cases.</p>
    <p><a data-link-type="dfn" href="#entry" id="ref-for-entry⑤">Entries</a> can (but don’t have to) be backed by files on the systems native file system,
 so it is possible for the <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data">binary data</a>, <a data-link-type="dfn" href="#file-entry-modification-timestamp" id="ref-for-file-entry-modification-timestamp">modification timestamp</a>,
@@ -3307,21 +3307,21 @@ than being defined here. So merge this into the table there.</p>
 user accessible. Similarly there is no expectation that files or directories with names
 matching the names of children of the <a data-link-type="dfn" href="#origin-private-file-system" id="ref-for-origin-private-file-system②">origin private file system</a> exist.</p>
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext⑤"><c- g>SecureContext</c-></a>]
-<c- b>partial</c-> <c- b>interface</c-> <c- b>mixin</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/webappapis.html#windoworworkerglobalscope" id="ref-for-windoworworkerglobalscope"><c- g>WindowOrWorkerGlobalScope</c-></a> {
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①④"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory②"><c- g>getOriginPrivateDirectory</c-></a>();
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://storage.spec.whatwg.org/#storagemanager" id="ref-for-storagemanager"><c- g>StorageManager</c-></a> {
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①④"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-storagemanager-getdirectory" id="ref-for-dom-storagemanager-getdirectory②"><c- g>getDirectory</c-></a>();
 };
 </pre>
    <p><strong class="advisement"> In Chrome this functionality was previously exposed as <code>FileSystemDirectoryHandle.getSystemDirectory({type: "sandbox"})</code>.
 This new method is available as of Chrome 85.</strong></p>
    <div class="note domintro" role="note">
     <dl>
-     <dt data-md><var>directoryHandle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory" id="ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory③">getOriginPrivateDirectory()</a></code>
+     <dt data-md><var>directoryHandle</var> = await navigator . storage . <code class="idl"><a data-link-type="idl" href="#dom-storagemanager-getdirectory" id="ref-for-dom-storagemanager-getdirectory③">getDirectory()</a></code>
      <dd data-md>
       <p>Returns the root directory of the origin private file system.</p>
     </dl>
    </div>
-   <div class="algorithm" data-algorithm="getOriginPrivateDirectory()" data-algorithm-for="WindowOrWorkerGlobalScope">
-     The <dfn class="dfn-paneled idl-code" data-dfn-for="WindowOrWorkerGlobalScope" data-dfn-type="method" data-export id="dom-windoworworkerglobalscope-getoriginprivatedirectory"><code>getOriginPrivateDirectory()</code></dfn> method, when
+   <div class="algorithm" data-algorithm="getDirectory()" data-algorithm-for="StorageManager">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="StorageManager" data-dfn-type="method" data-export id="dom-storagemanager-getdirectory"><code>getDirectory()</code></dfn> method, when
 invoked, must run these steps: 
     <ol>
      <li data-md>
@@ -3622,12 +3622,12 @@ appropriate.</p>
    <li><a href="#filesystemwritablefilestream">FileSystemWritableFileStream</a><span>, in §2.6</span>
    <li><a href="#typedefdef-filesystemwritechunktype">FileSystemWriteChunkType</a><span>, in §2.6</span>
    <li><a href="#dom-datatransferitem-getasfilesystemhandle">getAsFileSystemHandle()</a><span>, in §3.6</span>
+   <li><a href="#dom-storagemanager-getdirectory">getDirectory()</a><span>, in §4</span>
    <li><a href="#dom-filesystemdirectoryhandle-getdirectoryhandle">getDirectoryHandle(name)</a><span>, in §2.5.3</span>
    <li><a href="#dom-filesystemdirectoryhandle-getdirectoryhandle">getDirectoryHandle(name, options)</a><span>, in §2.5.3</span>
    <li><a href="#dom-filesystemfilehandle-getfile">getFile()</a><span>, in §2.4.1</span>
    <li><a href="#dom-filesystemdirectoryhandle-getfilehandle">getFileHandle(name)</a><span>, in §2.5.2</span>
    <li><a href="#dom-filesystemdirectoryhandle-getfilehandle">getFileHandle(name, options)</a><span>, in §2.5.2</span>
-   <li><a href="#dom-windoworworkerglobalscope-getoriginprivatedirectory">getOriginPrivateDirectory()</a><span>, in §4</span>
    <li><a href="#dom-filesystempermissiondescriptor-handle">handle</a><span>, in §2.2</span>
    <li><a href="#is-allowed-to-show-a-file-picker">is allowed to show a file picker</a><span>, in §3.1</span>
    <li><a href="#dom-filesystemhandle-issameentry">isSameEntry(other)</a><span>, in §2.3.1</span>
@@ -3774,12 +3774,6 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-window">2.2. Permissions</a>
     <li><a href="#ref-for-window①">3. Accessing Native File System</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-windoworworkerglobalscope">
-   <a href="https://html.spec.whatwg.org/multipage/webappapis.html#windoworworkerglobalscope">https://html.spec.whatwg.org/multipage/webappapis.html#windoworworkerglobalscope</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-windoworworkerglobalscope">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-activation-notification">
@@ -4190,6 +4184,12 @@ appropriate.</p>
     <li><a href="#ref-for-permission-request-algorithm">2.2. Permissions</a> <a href="#ref-for-permission-request-algorithm①">(2)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-storagemanager">
+   <a href="https://storage.spec.whatwg.org/#storagemanager">https://storage.spec.whatwg.org/#storagemanager</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-storagemanager">4. Accessing the Origin Private File System</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-storage-endpoint-identifier">
    <a href="https://storage.spec.whatwg.org/#storage-endpoint-identifier">https://storage.spec.whatwg.org/#storage-endpoint-identifier</a><b>Referenced in:</b>
    <ul>
@@ -4577,7 +4577,6 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-datatransferitem" style="color:initial">DataTransferItem</span>
      <li><span class="dfn-paneled" id="term-for-serializable" style="color:initial">Serializable</span>
      <li><span class="dfn-paneled" id="term-for-window" style="color:initial">Window</span>
-     <li><span class="dfn-paneled" id="term-for-windoworworkerglobalscope" style="color:initial">WindowOrWorkerGlobalScope</span>
      <li><span class="dfn-paneled" id="term-for-activation-notification" style="color:initial">activation notification</span>
      <li><span class="dfn-paneled" id="term-for-window-bc" style="color:initial">browsing context</span>
      <li><span class="dfn-paneled" id="term-for-current-settings-object" style="color:initial">current settings object</span>
@@ -4656,6 +4655,7 @@ appropriate.</p>
    <li>
     <a data-link-type="biblio">[storage]</a> defines the following terms:
     <ul>
+     <li><span class="dfn-paneled" id="term-for-storagemanager" style="color:initial">StorageManager</span>
      <li><span class="dfn-paneled" id="term-for-storage-endpoint-identifier" style="color:initial">identifier</span>
      <li><span class="dfn-paneled" id="term-for-obtain-a-local-storage-bottle-map" style="color:initial">obtain a local storage bottle map</span>
      <li><span class="dfn-paneled" id="term-for-storage-endpoint-quota" style="color:initial">quota</span>
@@ -4864,8 +4864,8 @@ appropriate.</p>
 };
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext"><c- g>SecureContext</c-></a>]
-<c- b>partial</c-> <c- b>interface</c-> <c- b>mixin</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/webappapis.html#windoworworkerglobalscope"><c- g>WindowOrWorkerGlobalScope</c-></a> {
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-windoworworkerglobalscope-getoriginprivatedirectory"><c- g>getOriginPrivateDirectory</c-></a>();
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://storage.spec.whatwg.org/#storagemanager"><c- g>StorageManager</c-></a> {
+  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#filesystemdirectoryhandle"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-storagemanager-getdirectory"><c- g>getDirectory</c-></a>();
 };
 
 </pre>
@@ -5574,12 +5574,12 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
     <li><a href="#ref-for-origin-private-file-system①">4. Accessing the Origin Private File System</a> <a href="#ref-for-origin-private-file-system②">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-windoworworkerglobalscope-getoriginprivatedirectory">
-   <b><a href="#dom-windoworworkerglobalscope-getoriginprivatedirectory">#dom-windoworworkerglobalscope-getoriginprivatedirectory</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-storagemanager-getdirectory">
+   <b><a href="#dom-storagemanager-getdirectory">#dom-storagemanager-getdirectory</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory">1. Introduction</a>
-    <li><a href="#ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory①">2.1. Concepts</a>
-    <li><a href="#ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory②">4. Accessing the Origin Private File System</a> <a href="#ref-for-dom-windoworworkerglobalscope-getoriginprivatedirectory③">(2)</a>
+    <li><a href="#ref-for-dom-storagemanager-getdirectory">1. Introduction</a>
+    <li><a href="#ref-for-dom-storagemanager-getdirectory①">2.1. Concepts</a>
+    <li><a href="#ref-for-dom-storagemanager-getdirectory②">4. Accessing the Origin Private File System</a> <a href="#ref-for-dom-storagemanager-getdirectory③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="too-sensitive-or-dangerous">
