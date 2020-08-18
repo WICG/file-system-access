@@ -1384,7 +1384,7 @@ run these steps:
 1. Let |accepts options| be a empty [=/list=] of [=pairs=].
 1. [=list/For each=] |type| of |options|.{{FilePickerOptions/types}}:
   1. Let |description| be |type|.{{FilePickerAcceptType/description}}.
-  1. [=map/For each=] |type string| → |suffixes| of |type|.{{FilePickerAcceptType/accept}}:
+  1. [=map/For each=] |typeString| → |suffixes| of |type|.{{FilePickerAcceptType/accept}}:
     1. Let |parsedType| be the result of [=parse a MIME type=] with |typeString|.
     1. If |parsedType| is failure, throw a {{TypeError}}.
     1. If |parsedType|'s [=MIME type/parameters=] are not empty, throw a {{TypeError}}.
@@ -1394,7 +1394,7 @@ run these steps:
       1. If |suffix| does not start with ".", throw a {{TypeError}}.
 
   1. Let |filter| be the following steps, given a |filename| (a [=string=]), and a |type| (a [=MIME type=]):
-    1. [=map/For each=] |type string| → |suffixes| of |type|.{{FilePickerAcceptType/accept}}:
+    1. [=map/For each=] |typeString| → |suffixes| of |type|.{{FilePickerAcceptType/accept}}:
     1. Let |parsedType| be the result of [=parse a MIME type=] with |typeString|.
       1. If |parsedType|'s [=MIME type/subtype=] is "*":
         1. If |parsedType|'s [=MIME type/type=] is "*", return `true`.
