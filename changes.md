@@ -50,14 +50,14 @@ await window.showOpenFilePicker({
     {
       description: 'Text Files',
       accept: {
-        'text/plain': ['txt', 'text'],
-        'text/html': ['html', 'htm']
+        'text/plain': ['.txt', '.text'],
+        'text/html': ['.html', '.htm']
       }
     },
     {
       description: 'Images',
       accept: {
-        'image/*': ['png', 'gif', 'jpeg', 'jpg']
+        'image/*': ['.png', '.gif', '.jpeg', '.jpg']
       }
     }
   ]

@@ -96,7 +96,7 @@ this new API might integrate with `<input type=file>`.
 // Show a file picker to open a file.
 const [file_ref] = await self.showOpenFilePicker({
     multiple: false,
-    types: [{description: 'Images', accept: {'image/*': ['jpg', 'gif', 'png']}}],
+    types: [{description: 'Images', accept: {'image/*': ['.jpg', '.gif', '.png']}}],
     suggestedStartLocation: 'pictures-library'
 });
 if (!file_ref) {
