@@ -1322,6 +1322,7 @@ for filtering the files displayed in the file picker.
 Each option consists of an <span class=allow-2119>optional</span> {{FilePickerAcceptType/description}}
 and a number of MIME types and extensions (specified as a mapping of
 MIME type to a list of extensions). If no description is provided one will be generated.
+Extensions have to be strings that start with a ".".
 
 In addition to complete MIME types, "*" can be used as the subtype of a MIME type to match
 for example all image formats with "image/*".
