@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 65c8882a, updated Fri Aug 14 17:43:28 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="ebf021022e1a5ef64182dcb71ea291d33a8b1e20" name="document-revision">
+  <meta content="5aa4132da31f4e623442480e43a1aa337725e626" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -3040,7 +3040,8 @@ the file picker will let the user select.
     <p>Each entry in <code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-types" id="ref-for-dom-filepickeroptions-types①">types</a></code> specifies a single user selectable option
 for filtering the files displayed in the file picker.</p>
     <p>Each option consists of an <span class="allow-2119">optional</span> <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-description" id="ref-for-dom-filepickeraccepttype-description">description</a></code> and a number of MIME types and extensions (specified as a mapping of
-MIME type to a list of extensions). If no description is provided one will be generated.</p>
+MIME type to a list of extensions). If no description is provided one will be generated.
+Extensions have to be strings that start with a ".".</p>
     <p>In addition to complete MIME types, "<em>" can be used as the subtype of a MIME type to match
 for example all image formats with "image/</em>".</p>
     <p>Websites <span class="allow-2119">should</span> always provide both MIME types and file
@@ -3058,14 +3059,14 @@ any filter and lets the user select any file.</p>
     <c- p>{</c->
       <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-description" id="ref-for-dom-filepickeraccepttype-description①">description</a></code><c- o>:</c-> <c- t>'Text Files'</c-><c- p>,</c->
       <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept">accept</a></code><c- o>:</c-> <c- p>{</c->
-        <c- t>'text/plain'</c-><c- o>:</c-> <c- p>[</c-><c- t>'txt'</c-><c- p>,</c-> <c- t>'text'</c-><c- p>],</c->
-        <c- t>'text/html'</c-><c- o>:</c-> <c- p>[</c-><c- t>'html'</c-><c- p>,</c-> <c- t>'htm'</c-><c- p>]</c->
+        <c- t>'text/plain'</c-><c- o>:</c-> <c- p>[</c-><c- t>'.txt'</c-><c- p>,</c-> <c- t>'.text'</c-><c- p>],</c->
+        <c- t>'text/html'</c-><c- o>:</c-> <c- p>[</c-><c- t>'.html'</c-><c- p>,</c-> <c- t>'.htm'</c-><c- p>]</c->
       <c- p>}</c->
     <c- p>},</c->
     <c- p>{</c->
       <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-description" id="ref-for-dom-filepickeraccepttype-description②">description</a></code><c- o>:</c-> <c- t>'Images'</c-><c- p>,</c->
       <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept①">accept</a></code><c- o>:</c-> <c- p>{</c->
-        <c- t>'image/*'</c-><c- o>:</c-> <c- p>[</c-><c- t>'png'</c-><c- p>,</c-> <c- t>'gif'</c-><c- p>,</c-> <c- t>'jpeg'</c-><c- p>,</c-> <c- t>'jpg'</c-><c- p>]</c->
+        <c- t>'image/*'</c-><c- o>:</c-> <c- p>[</c-><c- t>'.png'</c-><c- p>,</c-> <c- t>'.gif'</c-><c- p>,</c-> <c- t>'.jpeg'</c-><c- p>,</c-> <c- t>'.jpg'</c-><c- p>]</c->
       <c- p>}</c->
     <c- p>}</c->
   <c- p>],</c->
@@ -3077,7 +3078,7 @@ will not show an option to not apply any filters.</p>
   <code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-types" id="ref-for-dom-filepickeroptions-types③">types</a></code><c- o>:</c-> <c- p>[</c->
     <c- p>{</c->
       <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept②">accept</a></code><c- o>:</c-> <c- p>{</c->
-        <c- t>'image/svg+xml'</c-><c- o>:</c-> <c- t>'svg'</c->
+        <c- t>'image/svg+xml'</c-><c- o>:</c-> <c- t>'.svg'</c->
       <c- p>}</c->
     <c- p>},</c->
   <c- p>],</c->
@@ -3097,7 +3098,7 @@ run these steps:
        <li data-md>
         <p>Let <var>description</var> be <var>type</var>.<code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-description" id="ref-for-dom-filepickeraccepttype-description③">description</a></code>.</p>
        <li data-md>
-        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-iterate" id="ref-for-map-iterate">For each</a> <var>type string</var> → <var>extensions</var> of <var>type</var>.<code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept③">accept</a></code>:</p>
+        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-iterate" id="ref-for-map-iterate">For each</a> <var>typeString</var> → <var>suffixes</var> of <var>type</var>.<code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept③">accept</a></code>:</p>
         <ol>
          <li data-md>
           <p>Let <var>parsedType</var> be the result of <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#parse-a-mime-type" id="ref-for-parse-a-mime-type">parse a MIME type</a> with <var>typeString</var>.</p>
@@ -3105,12 +3106,24 @@ run these steps:
           <p>If <var>parsedType</var> is failure, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑥">TypeError</a></code>.</p>
          <li data-md>
           <p>If <var>parsedType</var>’s <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#parameters" id="ref-for-parameters">parameters</a> are not empty, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑦">TypeError</a></code>.</p>
+         <li data-md>
+          <p>If <var>suffixes</var> is a string:</p>
+          <ol>
+           <li data-md>
+            <p>If <var>suffixes</var> does not start with ".", throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑧">TypeError</a></code>.</p>
+          </ol>
+         <li data-md>
+          <p>Otherwise, <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate⑥">for each</a> <var>suffix</var> of <var>suffixes</var>:</p>
+          <ol>
+           <li data-md>
+            <p>If <var>suffix</var> does not start with ".", throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑨">TypeError</a></code>.</p>
+          </ol>
         </ol>
        <li data-md>
         <p>Let <var>filter</var> be the following steps, given a <var>filename</var> (a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string②">string</a>), and a <var>type</var> (a <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#mime-type" id="ref-for-mime-type">MIME type</a>):</p>
         <ol>
          <li data-md>
-          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-iterate" id="ref-for-map-iterate①">For each</a> <var>type string</var> → <var>extensions</var> of <var>type</var>.<code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept④">accept</a></code>:</p>
+          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-iterate" id="ref-for-map-iterate①">For each</a> <var>typeString</var> → <var>suffixes</var> of <var>type</var>.<code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept④">accept</a></code>:</p>
          <li data-md>
           <p>Let <var>parsedType</var> be the result of <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#parse-a-mime-type" id="ref-for-parse-a-mime-type①">parse a MIME type</a> with <var>typeString</var>.</p>
           <ol>
@@ -3125,13 +3138,12 @@ run these steps:
            <li data-md>
             <p><var>parsedType</var>’s <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#mime-type-essence" id="ref-for-mime-type-essence">essence</a> is <var>type</var>’s <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#mime-type-essence" id="ref-for-mime-type-essence①">essence</a>, return <code>true</code>.</p>
            <li data-md>
-            <p>If <var>extensions</var> is a string, set <var>extensions</var> to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list③">list</a> with a single
-element equal to <var>extensions</var>.</p>
+            <p>If <var>suffixes</var> is a string, set <var>suffixes</var> to « <var>suffixes</var> ».</p>
            <li data-md>
-            <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate⑥">For each</a> <var>extension</var> of <var>extensions</var>:</p>
+            <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate⑦">For each</a> <var>suffix</var> of <var>suffixes</var>:</p>
             <ol>
              <li data-md>
-              <p>If <var>filename</var> ends with "." followed by <var>extension</var>, return <code>true</code>.</p>
+              <p>If <var>filename</var> ends with <var>suffix</var>, return <code>true</code>.</p>
             </ol>
           </ol>
          <li data-md>
@@ -3157,7 +3169,7 @@ or <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filep
         </ol>
       </ol>
      <li data-md>
-      <p>If <var>accepts options</var> is empty, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑧">TypeError</a></code>.</p>
+      <p>If <var>accepts options</var> is empty, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①⓪">TypeError</a></code>.</p>
      <li data-md>
       <p>Return <var>accepts options</var>.</p>
     </ol>
@@ -3997,7 +4009,7 @@ appropriate.</p>
    <a href="https://infra.spec.whatwg.org/#list">https://infra.spec.whatwg.org/#list</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-list">3.2. The showOpenFilePicker() method</a> <a href="#ref-for-list①">(2)</a>
-    <li><a href="#ref-for-list②">3.4. FilePickerOptions.types</a> <a href="#ref-for-list③">(2)</a>
+    <li><a href="#ref-for-list②">3.4. FilePickerOptions.types</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-pair">
@@ -4386,7 +4398,7 @@ appropriate.</p>
     <li><a href="#ref-for-exceptiondef-typeerror①">2.5.3. The getDirectoryHandle() method</a>
     <li><a href="#ref-for-exceptiondef-typeerror②">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-exceptiondef-typeerror③">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-exceptiondef-typeerror④">(2)</a> <a href="#ref-for-exceptiondef-typeerror⑤">(3)</a>
-    <li><a href="#ref-for-exceptiondef-typeerror⑥">3.4. FilePickerOptions.types</a> <a href="#ref-for-exceptiondef-typeerror⑦">(2)</a> <a href="#ref-for-exceptiondef-typeerror⑧">(3)</a>
+    <li><a href="#ref-for-exceptiondef-typeerror⑥">3.4. FilePickerOptions.types</a> <a href="#ref-for-exceptiondef-typeerror⑦">(2)</a> <a href="#ref-for-exceptiondef-typeerror⑧">(3)</a> <a href="#ref-for-exceptiondef-typeerror⑨">(4)</a> <a href="#ref-for-exceptiondef-typeerror①⓪">(5)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-typemismatcherror">
