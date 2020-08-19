@@ -22,6 +22,7 @@ Today, if a web site wants to create experiences involving local files (document
 	- Set `href` to a data URI or Blob URL (`a.href = URL.createObjectURL(blob)`)
 	- Fake a click on the anchor element (`a.click()`)
 	- Clean up if necessary (`URL.revokeObjectURL(a.href)`)
+
   This is also the approach taken in the
   [browser-nativefs](https://github.com/GoogleChromeLabs/browser-nativefs)
   support library.
