@@ -22,7 +22,10 @@ Today, if a web site wants to create experiences involving local files (document
 	- Set `href` to a data URI or Blob URL (`a.href = URL.createObjectURL(blob)`)
 	- Fake a click on the anchor element (`a.click()`)
 	- Clean up if necessary (`URL.revokeObjectURL(a.href)`)
-- Setting `window.location` to `'data:application/octet-stream' + data_stream`
-- Hidden Flash controls to display a “save as” dialog
+  This is also the approach taken in the
+  [browser-nativefs](https://github.com/GoogleChromeLabs/browser-nativefs)
+  support library.
+- Setting `window.location` to `'data:application/octet-stream' + data_stream`.
+- Hidden Flash controls to display a “save as” dialog.
 
 These methods are clunky and only support “save as” (and depending on the UA may automatically appear in Downloads without prompting the user for location). They do not support most recently used lists, auto save, save, or deleting a file.
