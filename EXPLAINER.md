@@ -1,7 +1,6 @@
 # What is all this?
 
-The exact interfaces involved here are yet to be decided. But at a high level
-what we're providing is several bits:
+At a high level what we're providing is several bits:
 
 1. A modernized version of the existing (but not really standardized)
    [`Entry`](https://www.w3.org/TR/2012/WD-file-system-api-20120417/#idl-def-Entry)
