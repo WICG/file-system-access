@@ -1540,9 +1540,9 @@ elem.addEventListener('drop', async (e) => {
     if (item.kind === 'file') {
       const entry = await item.getAsFileSystemHandle();
       if (entry.kind === 'file') {
-        handleDirectoryEntry(entry);
-      } else if (entry.kind === 'directory') {
         handleFileEntry(entry);
+      } else if (entry.kind === 'directory') {
+        handleDirectoryEntry(entry);
       }
     }
   }
