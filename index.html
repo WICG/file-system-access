@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 1e61f304, updated Tue Aug 18 15:51:53 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="3dd57a24691911b4782fb641a954a76d2a10d257" name="document-revision">
+  <meta content="555d61cda881f82eabb3d5f06761eb787da3d7f3" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1501,7 +1501,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-08-20">20 August 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-08-25">25 August 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -3298,9 +3298,9 @@ elem<c- p>.</c->addEventListener<c- p>(</c-><c- t>'drop'</c-><c- p>,</c-> async 
     <c- k>if</c-> <c- p>(</c->item<c- p>.</c->kind <c- o>===</c-> <c- t>'file'</c-><c- p>)</c-> <c- p>{</c->
       <c- kr>const</c-> entry <c- o>=</c-> await item<c- p>.</c->getAsFileSystemHandle<c- p>();</c->
       <c- k>if</c-> <c- p>(</c->entry<c- p>.</c->kind <c- o>===</c-> <c- t>'file'</c-><c- p>)</c-> <c- p>{</c->
-        handleDirectoryEntry<c- p>(</c->entry<c- p>);</c->
-      <c- p>}</c-> <c- k>else</c-> <c- k>if</c-> <c- p>(</c->entry<c- p>.</c->kind <c- o>===</c-> <c- t>'directory'</c-><c- p>)</c-> <c- p>{</c->
         handleFileEntry<c- p>(</c->entry<c- p>);</c->
+      <c- p>}</c-> <c- k>else</c-> <c- k>if</c-> <c- p>(</c->entry<c- p>.</c->kind <c- o>===</c-> <c- t>'directory'</c-><c- p>)</c-> <c- p>{</c->
+        handleDirectoryEntry<c- p>(</c->entry<c- p>);</c->
       <c- p>}</c->
     <c- p>}</c->
   <c- p>}</c->
