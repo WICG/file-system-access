@@ -907,11 +907,8 @@ Similarly, when piping a {{ReadableStream}} into a {{FileSystemWritableFileStrea
 To <dfn>create a new FileSystemWritableFileStream</dfn> given a [=file entry=] |file|
 in a [=/Realm=] |realm|, perform the following steps:
 
-1. Let |stream| be a new {{FileSystemWritableFileStream}} in |realm|.
-1. Perform [$InitializeWritableStream$](|stream|)
+1. Let |stream| be a [=new=] {{FileSystemWritableFileStream}} in |realm|.
 1. Set |stream|.[=FileSystemWritableFileStream/[[file]]=] to |file|.
-1. Let |controller| be a new {{WritableStreamDefaultController}}.
-1. Let |startAlgorithm| be an algorithm that returns `undefined`.
 1. Let |writeAlgorithm| be an algorithm which takes a |chunk| argument
    and returns the result of running the [=write a chunk=] algorithm with |stream| and |chunk|.
 1. Let |closeAlgorithm| be the following steps:
@@ -931,10 +928,13 @@ in a [=/Realm=] |realm|, perform the following steps:
          being written to.
       1. [=/Resolve=] |closeResult| with `undefined`.
    1. Return |closeResult|.
-1. Let |abortAlgorithm| be an algorithm that returns [=a promise resolved with=] `undefined`.
 1. Let |highWaterMark| be 1.
 1. Let |sizeAlgorithm| be an algorithm that returns `1`.
-1. Perform [$SetUpWritableStreamDefaultController$](|stream|, |controller|, |startAlgorithm|, |writeAlgorithm|, |closeAlgorithm|, |abortAlgorithm|, |highWaterMark|, |sizeAlgorithm|).
+1. [=WritableStream/Set up=] |stream| with <a for="WritableStream/set up"><var
+   ignore>writeAlgorithm</var></a> set to |writeAlgorithm|, <a for="WritableStream/set up"><var
+   ignore>closeAlgorithm</var></a> set to |closeAlgorithm|, <a for="WritableStream/set up"><var
+   ignore>highWaterMark</var></a> set to |highWaterMark|, and <a for="WritableStream/set up"><var
+   ignore>sizeAlgorithm</var></a> set to |sizeAlgorithm|.
 1. Return |stream|.
 
 </div>
@@ -1058,9 +1058,10 @@ runs these steps:
 The <dfn method for=FileSystemWritableFileStream>write(|data|)</dfn> method, when invoked, must run
 these steps:
 
-1. Let |writer| be the result of calling [$AcquireWritableStreamDefaultWriter$](<b>[=this=]</b>).
-1. Let |result| be [$WritableStreamDefaultWriterWrite$](|writer|, |data|).
-1. Perform [$WritableStreamDefaultWriterRelease$](|writer|).
+1. Let |writer| be the result of [=WritableStream/getting a writer=] for [=this=].
+1. Let |result| be the result of [=WritableStreamDefaultWriter/writing a chunk=] to |writer| given
+   |data|.
+1. [=WritableStreamDefaultWriter/Release=] |writer|.
 1. Return |result|.
 
 </div>
@@ -1076,12 +1077,11 @@ these steps:
 The <dfn method for=FileSystemWritableFileStream>seek(|position|)</dfn> method, when invoked, must run these
 steps:
 
-1. Let |writer| be the result of calling [$AcquireWritableStreamDefaultWriter$](<b>[=this=]</b>).
-1. Let |result| be [$WritableStreamDefaultWriterWrite$](|writer|,
-   <code>{<l>{{WriteParams/type}}</l>: {{WriteCommandType/"seek"}},
-   <l>{{WriteParams/position}}</l>: |position|,
-   <l>{{WriteParams/size}}</l>: undefined, <l>{{WriteParams/data}}</l>: undefined}</code>).
-1. Perform [$WritableStreamDefaultWriterRelease$](|writer|).
+1. Let |writer| be the result of [=WritableStream/getting a writer=] for [=this=].
+1. Let |result| be the result of [=WritableStreamDefaultWriter/writing a chunk=] to |writer| given
+    «[ "{{WriteParams/type}}" → {{WriteCommandType/"seek"}}, "{{WriteParams/position}}" →
+    |position| ]».
+1. [=WritableStreamDefaultWriter/Release=] |writer|.
 1. Return |result|.
 
 </div>
@@ -1105,12 +1105,11 @@ steps:
 The <dfn method for=FileSystemWritableFileStream>truncate(|size|)</dfn> method, when invoked, must run these
 steps:
 
-1. Let |writer| be the result of calling [$AcquireWritableStreamDefaultWriter$](<b>[=this=]</b>).
-1. Let |result| be [$WritableStreamDefaultWriterWrite$](|writer|,
-   <code>{<l>{{WriteParams/type}}</l>: {{WriteCommandType/"truncate"}},
-   <l>{{WriteParams/size}}</l>: |size|,
-   <l>{{WriteParams/position}}</l>: undefined, <l>{{WriteParams/data}}</l>: undefined}</code>).
-1. Perform [$WritableStreamDefaultWriterRelease$](|writer|).
+1. Let |writer| be the result of [=WritableStream/getting a writer=] for [=this=].
+1. Let |result| be the result of [=WritableStreamDefaultWriter/writing a chunk=] to |writer| given
+    «[ "{{WriteParams/type}}" → {{WriteCommandType/"truncate"}}, "{{WriteParams/size}}" →
+    |size| ]».
+1. [=WritableStreamDefaultWriter/Release=] |writer|.
 1. Return |result|.
 
 </div>
