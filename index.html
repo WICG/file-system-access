@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 1e61f304, updated Tue Aug 18 15:51:53 2020 -0700" name="generator">
+  <meta content="Bikeshed version 9cdaf2b5, updated Tue Sep 15 11:13:35 2020 -0700" name="generator">
   <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="555d61cda881f82eabb3d5f06761eb787da3d7f3" name="document-revision">
+  <meta content="e9e12a651cf217ec70314c08d05431ad17ef951c" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1501,7 +1501,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-08-25">25 August 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-09-15">15 September 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2570,15 +2570,9 @@ When using <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritab
      To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="create-a-new-filesystemwritablefilestream">create a new FileSystemWritableFileStream</dfn> given a <a data-link-type="dfn" href="#file" id="ref-for-file⑧">file entry</a> <var>file</var> in a <a data-link-type="dfn" href="https://tc39.github.io/ecma262/#realm" id="ref-for-realm">Realm</a> <var>realm</var>, perform the following steps: 
     <ol>
      <li data-md>
-      <p>Let <var>stream</var> be a new <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑨">FileSystemWritableFileStream</a></code> in <var>realm</var>.</p>
-     <li data-md>
-      <p>Perform <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#initialize-writable-stream" id="ref-for-initialize-writable-stream">InitializeWritableStream</a>(<var>stream</var>)</p>
+      <p>Let <var>stream</var> be a <a data-link-type="dfn" href="https://heycam.github.io/webidl/#new" id="ref-for-new">new</a> <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream⑨">FileSystemWritableFileStream</a></code> in <var>realm</var>.</p>
      <li data-md>
       <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file">[[file]]</a> to <var>file</var>.</p>
-     <li data-md>
-      <p>Let <var>controller</var> be a new <code class="idl"><a data-link-type="idl" href="https://streams.spec.whatwg.org/#writablestreamdefaultcontroller" id="ref-for-writablestreamdefaultcontroller">WritableStreamDefaultController</a></code>.</p>
-     <li data-md>
-      <p>Let <var>startAlgorithm</var> be an algorithm that returns <code>undefined</code>.</p>
      <li data-md>
       <p>Let <var>writeAlgorithm</var> be an algorithm which takes a <var>chunk</var> argument
  and returns the result of running the <a data-link-type="dfn" href="#write-a-chunk" id="ref-for-write-a-chunk">write a chunk</a> algorithm with <var>stream</var> and <var>chunk</var>.</p>
@@ -2611,13 +2605,11 @@ When using <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritab
         <p>Return <var>closeResult</var>.</p>
       </ol>
      <li data-md>
-      <p>Let <var>abortAlgorithm</var> be an algorithm that returns <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with">a promise resolved with</a> <code>undefined</code>.</p>
-     <li data-md>
       <p>Let <var>highWaterMark</var> be 1.</p>
      <li data-md>
       <p>Let <var>sizeAlgorithm</var> be an algorithm that returns <code>1</code>.</p>
      <li data-md>
-      <p>Perform <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#set-up-writable-stream-default-controller" id="ref-for-set-up-writable-stream-default-controller">SetUpWritableStreamDefaultController</a>(<var>stream</var>, <var>controller</var>, <var>startAlgorithm</var>, <var>writeAlgorithm</var>, <var>closeAlgorithm</var>, <var>abortAlgorithm</var>, <var>highWaterMark</var>, <var>sizeAlgorithm</var>).</p>
+      <p><a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestream-set-up" id="ref-for-writablestream-set-up">Set up</a> <var>stream</var> with <a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestream-set-up-writealgorithm" id="ref-for-writablestream-set-up-writealgorithm"><var>writeAlgorithm</var></a> set to <var>writeAlgorithm</var>, <a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestream-set-up-closealgorithm" id="ref-for-writablestream-set-up-closealgorithm"><var>closeAlgorithm</var></a> set to <var>closeAlgorithm</var>, <a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestream-set-up-highwatermark" id="ref-for-writablestream-set-up-highwatermark"><var>highWaterMark</var></a> set to <var>highWaterMark</var>, and <a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestream-set-up-sizealgorithm" id="ref-for-writablestream-set-up-sizealgorithm"><var>sizeAlgorithm</var></a> set to <var>sizeAlgorithm</var>.</p>
      <li data-md>
       <p>Return <var>stream</var>.</p>
     </ol>
@@ -2777,11 +2769,11 @@ runs these steps:
 these steps: 
     <ol>
      <li data-md>
-      <p>Let <var>writer</var> be the result of calling <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer" id="ref-for-acquire-writable-stream-default-writer">AcquireWritableStreamDefaultWriter</a>(<b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⑧">this</a></b>).</p>
+      <p>Let <var>writer</var> be the result of <a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestream-get-a-writer" id="ref-for-writablestream-get-a-writer">getting a writer</a> for <a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⑧">this</a>.</p>
      <li data-md>
-      <p>Let <var>result</var> be <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-write" id="ref-for-writable-stream-default-writer-write">WritableStreamDefaultWriterWrite</a>(<var>writer</var>, <var>data</var>).</p>
+      <p>Let <var>result</var> be the result of <a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestreamdefaultwriter-write-a-chunk" id="ref-for-writablestreamdefaultwriter-write-a-chunk">writing a chunk</a> to <var>writer</var> given <var>data</var>.</p>
      <li data-md>
-      <p>Perform <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-release" id="ref-for-writable-stream-default-writer-release">WritableStreamDefaultWriterRelease</a>(<var>writer</var>).</p>
+      <p><a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestreamdefaultwriter-release" id="ref-for-writablestreamdefaultwriter-release">Release</a> <var>writer</var>.</p>
      <li data-md>
       <p>Return <var>result</var>.</p>
     </ol>
@@ -2799,11 +2791,12 @@ these steps:
 steps: 
     <ol>
      <li data-md>
-      <p>Let <var>writer</var> be the result of calling <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer" id="ref-for-acquire-writable-stream-default-writer①">AcquireWritableStreamDefaultWriter</a>(<b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⑨">this</a></b>).</p>
+      <p>Let <var>writer</var> be the result of <a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestream-get-a-writer" id="ref-for-writablestream-get-a-writer①">getting a writer</a> for <a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this①⑨">this</a>.</p>
      <li data-md>
-      <p>Let <var>result</var> be <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-write" id="ref-for-writable-stream-default-writer-write①">WritableStreamDefaultWriterWrite</a>(<var>writer</var>, <code>{<code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type⑤">type</a></code>: <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-seek" id="ref-for-dom-writecommandtype-seek②">"seek"</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position⑥">position</a></code>: <var>position</var>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-size" id="ref-for-dom-writeparams-size③">size</a></code>: undefined, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-data" id="ref-for-dom-writeparams-data③">data</a></code>: undefined}</code>).</p>
+      <p>Let <var>result</var> be the result of <a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestreamdefaultwriter-write-a-chunk" id="ref-for-writablestreamdefaultwriter-write-a-chunk①">writing a chunk</a> to <var>writer</var> given
+  «[ "<code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type⑤">type</a></code>" → <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-seek" id="ref-for-dom-writecommandtype-seek②">"seek"</a></code>, "<code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position⑥">position</a></code>" → <var>position</var> ]».</p>
      <li data-md>
-      <p>Perform <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-release" id="ref-for-writable-stream-default-writer-release①">WritableStreamDefaultWriterRelease</a>(<var>writer</var>).</p>
+      <p><a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestreamdefaultwriter-release" id="ref-for-writablestreamdefaultwriter-release①">Release</a> <var>writer</var>.</p>
      <li data-md>
       <p>Return <var>result</var>.</p>
     </ol>
@@ -2827,11 +2820,12 @@ steps:
 steps: 
     <ol>
      <li data-md>
-      <p>Let <var>writer</var> be the result of calling <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer" id="ref-for-acquire-writable-stream-default-writer②">AcquireWritableStreamDefaultWriter</a>(<b><a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②⓪">this</a></b>).</p>
+      <p>Let <var>writer</var> be the result of <a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestream-get-a-writer" id="ref-for-writablestream-get-a-writer②">getting a writer</a> for <a data-link-type="dfn" href="https://heycam.github.io/webidl/#this" id="ref-for-this②⓪">this</a>.</p>
      <li data-md>
-      <p>Let <var>result</var> be <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-write" id="ref-for-writable-stream-default-writer-write②">WritableStreamDefaultWriterWrite</a>(<var>writer</var>, <code>{<code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type⑥">type</a></code>: <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate④">"truncate"</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-size" id="ref-for-dom-writeparams-size④">size</a></code>: <var>size</var>, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position⑦">position</a></code>: undefined, <code class="idl"><a data-link-type="idl" href="#dom-writeparams-data" id="ref-for-dom-writeparams-data④">data</a></code>: undefined}</code>).</p>
+      <p>Let <var>result</var> be the result of <a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestreamdefaultwriter-write-a-chunk" id="ref-for-writablestreamdefaultwriter-write-a-chunk②">writing a chunk</a> to <var>writer</var> given
+  «[ "<code class="idl"><a data-link-type="idl" href="#dom-writeparams-type" id="ref-for-dom-writeparams-type⑥">type</a></code>" → <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate④">"truncate"</a></code>, "<code class="idl"><a data-link-type="idl" href="#dom-writeparams-size" id="ref-for-dom-writeparams-size③">size</a></code>" → <var>size</var> ]».</p>
      <li data-md>
-      <p>Perform <a data-link-type="abstract-op" href="https://streams.spec.whatwg.org/#writable-stream-default-writer-release" id="ref-for-writable-stream-default-writer-release②">WritableStreamDefaultWriterRelease</a>(<var>writer</var>).</p>
+      <p><a data-link-type="dfn" href="https://streams.spec.whatwg.org/#writablestreamdefaultwriter-release" id="ref-for-writablestreamdefaultwriter-release②">Release</a> <var>writer</var>.</p>
      <li data-md>
       <p>Return <var>result</var>.</p>
     </ol>
@@ -3252,10 +3246,10 @@ directory items are associated with <a data-link-type="dfn" href="#file" id="ref
     <ol>
      <li data-md>
       <p>If the <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/dnd.html#datatransferitem" id="ref-for-datatransferitem①">DataTransferItem</a></code> object is not in the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/dnd.html#concept-dnd-rw" id="ref-for-concept-dnd-rw">read/write
-  mode</a> or the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/dnd.html#concept-dnd-ro" id="ref-for-concept-dnd-ro">read-only mode</a>, return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with①">a promise resolved with</a> <code>null</code>.</p>
+  mode</a> or the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/dnd.html#concept-dnd-ro" id="ref-for-concept-dnd-ro">read-only mode</a>, return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with">a promise resolved with</a> <code>null</code>.</p>
      <li data-md>
       <p>If the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/dnd.html#the-drag-data-item-kind" id="ref-for-the-drag-data-item-kind">the drag data item kind</a> is not <em>File</em>,
-  then return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with②">a promise resolved with</a> <code>null</code>.</p>
+  then return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with①">a promise resolved with</a> <code>null</code>.</p>
      <li data-md>
       <p>Let <var>p</var> be <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-new-promise" id="ref-for-a-new-promise①⑤">a new promise</a>.</p>
      <li data-md>
@@ -3354,7 +3348,7 @@ invoked, must run these steps:
         <p>Set <var>map</var>["root"] to <var>dir</var>.</p>
       </ol>
      <li data-md>
-      <p>Return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with③">a promise resolved with</a> a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①⑤">FileSystemDirectoryHandle</a></code>,
+      <p>Return <a data-link-type="dfn" href="https://heycam.github.io/webidl/#a-promise-resolved-with" id="ref-for-a-promise-resolved-with②">a promise resolved with</a> a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①⑤">FileSystemDirectoryHandle</a></code>,
  whose associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②②">entry</a> is <var>map</var>["root"].</p>
     </ol>
    </div>
@@ -4238,30 +4232,10 @@ appropriate.</p>
     <li><a href="#ref-for-storage-endpoint-types">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-acquire-writable-stream-default-writer">
-   <a href="https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer">https://streams.spec.whatwg.org/#acquire-writable-stream-default-writer</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-acquire-writable-stream-default-writer">2.6.1. The write() method</a>
-    <li><a href="#ref-for-acquire-writable-stream-default-writer①">2.6.2. The seek() method</a>
-    <li><a href="#ref-for-acquire-writable-stream-default-writer②">2.6.3. The truncate() method</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-initialize-writable-stream">
-   <a href="https://streams.spec.whatwg.org/#initialize-writable-stream">https://streams.spec.whatwg.org/#initialize-writable-stream</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-initialize-writable-stream">2.6. The FileSystemWritableFileStream interface</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-readablestream">
    <a href="https://streams.spec.whatwg.org/#readablestream">https://streams.spec.whatwg.org/#readablestream</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-readablestream">2.6. The FileSystemWritableFileStream interface</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-set-up-writable-stream-default-controller">
-   <a href="https://streams.spec.whatwg.org/#set-up-writable-stream-default-controller">https://streams.spec.whatwg.org/#set-up-writable-stream-default-controller</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-set-up-writable-stream-default-controller">2.6. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-writablestream">
@@ -4270,32 +4244,16 @@ appropriate.</p>
     <li><a href="#ref-for-writablestream">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-writablestream①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-writablestreamdefaultcontroller">
-   <a href="https://streams.spec.whatwg.org/#writablestreamdefaultcontroller">https://streams.spec.whatwg.org/#writablestreamdefaultcontroller</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-writablestreamdefaultcontroller">2.6. The FileSystemWritableFileStream interface</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-writablestreamdefaultwriter">
    <a href="https://streams.spec.whatwg.org/#writablestreamdefaultwriter">https://streams.spec.whatwg.org/#writablestreamdefaultwriter</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-writablestreamdefaultwriter">2.6. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-writable-stream-default-writer-release">
-   <a href="https://streams.spec.whatwg.org/#writable-stream-default-writer-release">https://streams.spec.whatwg.org/#writable-stream-default-writer-release</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-writablestream-set-up-closealgorithm">
+   <a href="https://streams.spec.whatwg.org/#writablestream-set-up-closealgorithm">https://streams.spec.whatwg.org/#writablestream-set-up-closealgorithm</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-writable-stream-default-writer-release">2.6.1. The write() method</a>
-    <li><a href="#ref-for-writable-stream-default-writer-release①">2.6.2. The seek() method</a>
-    <li><a href="#ref-for-writable-stream-default-writer-release②">2.6.3. The truncate() method</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-writable-stream-default-writer-write">
-   <a href="https://streams.spec.whatwg.org/#writable-stream-default-writer-write">https://streams.spec.whatwg.org/#writable-stream-default-writer-write</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-writable-stream-default-writer-write">2.6.1. The write() method</a>
-    <li><a href="#ref-for-writable-stream-default-writer-write①">2.6.2. The seek() method</a>
-    <li><a href="#ref-for-writable-stream-default-writer-write②">2.6.3. The truncate() method</a>
+    <li><a href="#ref-for-writablestream-set-up-closealgorithm">2.6. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-ws-get-writer">
@@ -4304,10 +4262,58 @@ appropriate.</p>
     <li><a href="#ref-for-ws-get-writer">2.6. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-writablestream-get-a-writer">
+   <a href="https://streams.spec.whatwg.org/#writablestream-get-a-writer">https://streams.spec.whatwg.org/#writablestream-get-a-writer</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-writablestream-get-a-writer">2.6.1. The write() method</a>
+    <li><a href="#ref-for-writablestream-get-a-writer①">2.6.2. The seek() method</a>
+    <li><a href="#ref-for-writablestream-get-a-writer②">2.6.3. The truncate() method</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-writablestream-set-up-highwatermark">
+   <a href="https://streams.spec.whatwg.org/#writablestream-set-up-highwatermark">https://streams.spec.whatwg.org/#writablestream-set-up-highwatermark</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-writablestream-set-up-highwatermark">2.6. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-writablestreamdefaultwriter-release">
+   <a href="https://streams.spec.whatwg.org/#writablestreamdefaultwriter-release">https://streams.spec.whatwg.org/#writablestreamdefaultwriter-release</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-writablestreamdefaultwriter-release">2.6.1. The write() method</a>
+    <li><a href="#ref-for-writablestreamdefaultwriter-release①">2.6.2. The seek() method</a>
+    <li><a href="#ref-for-writablestreamdefaultwriter-release②">2.6.3. The truncate() method</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-writablestream-set-up">
+   <a href="https://streams.spec.whatwg.org/#writablestream-set-up">https://streams.spec.whatwg.org/#writablestream-set-up</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-writablestream-set-up">2.6. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-writablestream-set-up-sizealgorithm">
+   <a href="https://streams.spec.whatwg.org/#writablestream-set-up-sizealgorithm">https://streams.spec.whatwg.org/#writablestream-set-up-sizealgorithm</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-writablestream-set-up-sizealgorithm">2.6. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-default-writer-write">
    <a href="https://streams.spec.whatwg.org/#default-writer-write">https://streams.spec.whatwg.org/#default-writer-write</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-default-writer-write">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-default-writer-write①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-writablestream-set-up-writealgorithm">
+   <a href="https://streams.spec.whatwg.org/#writablestream-set-up-writealgorithm">https://streams.spec.whatwg.org/#writablestream-set-up-writealgorithm</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-writablestream-set-up-writealgorithm">2.6. The FileSystemWritableFileStream interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-writablestreamdefaultwriter-write-a-chunk">
+   <a href="https://streams.spec.whatwg.org/#writablestreamdefaultwriter-write-a-chunk">https://streams.spec.whatwg.org/#writablestreamdefaultwriter-write-a-chunk</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-writablestreamdefaultwriter-write-a-chunk">2.6.1. The write() method</a>
+    <li><a href="#ref-for-writablestreamdefaultwriter-write-a-chunk①">2.6.2. The seek() method</a>
+    <li><a href="#ref-for-writablestreamdefaultwriter-write-a-chunk②">2.6.3. The truncate() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-aborterror">
@@ -4448,9 +4454,8 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-a-promise-resolved-with">
    <a href="https://heycam.github.io/webidl/#a-promise-resolved-with">https://heycam.github.io/webidl/#a-promise-resolved-with</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-a-promise-resolved-with">2.6. The FileSystemWritableFileStream interface</a>
-    <li><a href="#ref-for-a-promise-resolved-with①">3.6. Drag and Drop</a> <a href="#ref-for-a-promise-resolved-with②">(2)</a>
-    <li><a href="#ref-for-a-promise-resolved-with③">4. Accessing the Origin Private File System</a>
+    <li><a href="#ref-for-a-promise-resolved-with">3.6. Drag and Drop</a> <a href="#ref-for-a-promise-resolved-with①">(2)</a>
+    <li><a href="#ref-for-a-promise-resolved-with②">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-asynchronous-iterator-initialization-steps">
@@ -4478,6 +4483,12 @@ appropriate.</p>
    <a href="https://heycam.github.io/webidl/#dfn-get-the-next-iteration-result">https://heycam.github.io/webidl/#dfn-get-the-next-iteration-result</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dfn-get-the-next-iteration-result">2.5.1. Directory iteration</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-new">
+   <a href="https://heycam.github.io/webidl/#new">https://heycam.github.io/webidl/#new</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-new">2.6. The FileSystemWritableFileStream interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-reject">
@@ -4678,17 +4689,19 @@ appropriate.</p>
    <li>
     <a data-link-type="biblio">[STREAMS]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-acquire-writable-stream-default-writer" style="color:initial">AcquireWritableStreamDefaultWriter</span>
-     <li><span class="dfn-paneled" id="term-for-initialize-writable-stream" style="color:initial">InitializeWritableStream</span>
      <li><span class="dfn-paneled" id="term-for-readablestream" style="color:initial">ReadableStream</span>
-     <li><span class="dfn-paneled" id="term-for-set-up-writable-stream-default-controller" style="color:initial">SetUpWritableStreamDefaultController</span>
      <li><span class="dfn-paneled" id="term-for-writablestream" style="color:initial">WritableStream</span>
-     <li><span class="dfn-paneled" id="term-for-writablestreamdefaultcontroller" style="color:initial">WritableStreamDefaultController</span>
      <li><span class="dfn-paneled" id="term-for-writablestreamdefaultwriter" style="color:initial">WritableStreamDefaultWriter</span>
-     <li><span class="dfn-paneled" id="term-for-writable-stream-default-writer-release" style="color:initial">WritableStreamDefaultWriterRelease</span>
-     <li><span class="dfn-paneled" id="term-for-writable-stream-default-writer-write" style="color:initial">WritableStreamDefaultWriterWrite</span>
+     <li><span class="dfn-paneled" id="term-for-writablestream-set-up-closealgorithm" style="color:initial">closealgorithm</span>
      <li><span class="dfn-paneled" id="term-for-ws-get-writer" style="color:initial">getWriter()</span>
+     <li><span class="dfn-paneled" id="term-for-writablestream-get-a-writer" style="color:initial">getting a writer</span>
+     <li><span class="dfn-paneled" id="term-for-writablestream-set-up-highwatermark" style="color:initial">highwatermark</span>
+     <li><span class="dfn-paneled" id="term-for-writablestreamdefaultwriter-release" style="color:initial">release</span>
+     <li><span class="dfn-paneled" id="term-for-writablestream-set-up" style="color:initial">set up</span>
+     <li><span class="dfn-paneled" id="term-for-writablestream-set-up-sizealgorithm" style="color:initial">sizealgorithm</span>
      <li><span class="dfn-paneled" id="term-for-default-writer-write" style="color:initial">write()</span>
+     <li><span class="dfn-paneled" id="term-for-writablestream-set-up-writealgorithm" style="color:initial">writealgorithm</span>
+     <li><span class="dfn-paneled" id="term-for-writablestreamdefaultwriter-write-a-chunk" style="color:initial">writing a chunk</span>
     </ul>
    <li>
     <a data-link-type="biblio">[WebIDL]</a> defines the following terms:
@@ -4713,6 +4726,7 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-idl-boolean" style="color:initial">boolean</span>
      <li><span class="dfn-paneled" id="term-for-dfn-get-buffer-source-copy" style="color:initial">get a copy of the buffer source</span>
      <li><span class="dfn-paneled" id="term-for-dfn-get-the-next-iteration-result" style="color:initial">get the next iteration result</span>
+     <li><span class="dfn-paneled" id="term-for-new" style="color:initial">new</span>
      <li><span class="dfn-paneled" id="term-for-reject" style="color:initial">reject</span>
      <li><span class="dfn-paneled" id="term-for-resolve" style="color:initial">resolve</span>
      <li><span class="dfn-paneled" id="term-for-this" style="color:initial">this</span>
@@ -5375,8 +5389,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
    <ul>
     <li><a href="#ref-for-dom-writeparams-size">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-writeparams-size①">(2)</a>
     <li><a href="#ref-for-dom-writeparams-size②">2.6.1. The write() method</a>
-    <li><a href="#ref-for-dom-writeparams-size③">2.6.2. The seek() method</a>
-    <li><a href="#ref-for-dom-writeparams-size④">2.6.3. The truncate() method</a>
+    <li><a href="#ref-for-dom-writeparams-size③">2.6.3. The truncate() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-writeparams-position">
@@ -5385,7 +5398,6 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
     <li><a href="#ref-for-dom-writeparams-position">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-writeparams-position①">(2)</a> <a href="#ref-for-dom-writeparams-position②">(3)</a> <a href="#ref-for-dom-writeparams-position③">(4)</a>
     <li><a href="#ref-for-dom-writeparams-position④">2.6.1. The write() method</a> <a href="#ref-for-dom-writeparams-position⑤">(2)</a>
     <li><a href="#ref-for-dom-writeparams-position⑥">2.6.2. The seek() method</a>
-    <li><a href="#ref-for-dom-writeparams-position⑦">2.6.3. The truncate() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-writeparams-data">
@@ -5393,8 +5405,6 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
    <ul>
     <li><a href="#ref-for-dom-writeparams-data">2.6. The FileSystemWritableFileStream interface</a>
     <li><a href="#ref-for-dom-writeparams-data①">2.6.1. The write() method</a> <a href="#ref-for-dom-writeparams-data②">(2)</a>
-    <li><a href="#ref-for-dom-writeparams-data③">2.6.2. The seek() method</a>
-    <li><a href="#ref-for-dom-writeparams-data④">2.6.3. The truncate() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="typedefdef-filesystemwritechunktype">
