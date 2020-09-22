@@ -1,16 +1,16 @@
 <pre class=metadata>
-Title: Native File System
-Shortname: native-file-system
+Title: File System Access
+Shortname: file-system-access
 Abstract: This document defines a web platform API that enables developers to build
   powerful web apps that interact with files on the user's local device.
   It builds on [[FILE-API|File API]] for file reading capabilities, and adds new API
   surface to enable modifying files, as well as working with directories.
 Status: CG-DRAFT
-ED: https://wicg.github.io/native-file-system/
+ED: https://wicg.github.io/file-system-access/
 Level: 1
 Editor: Marijn Kruisselbrink, Google, mek@chromium.org, w3cid 72440
 Group: WICG
-Repository: wicg/native-file-system
+Repository: wicg/file-system-access
 Indent: 2
 Complain About: accidental-2119 yes, missing-example-ids yes
 Markup Shorthands: css no, markdown yes
@@ -111,10 +111,10 @@ Note: Two different [=/entries=] can represent the same file or directory on dis
 case it is possible for both entries to have a different parent, or for one entry to have a
 parent while the other entry does not have a parent. Typically an entry does not have a parent
 if it was returned by {{StorageManager/getDirectory()|navigator.storage.getDirectory()}}
-or one of the [=native file system handle factories=],
+or one of the [=local file system handle factories=],
 and an entry will have a parent in all other cases.
 
-[=/Entries=] can (but don't have to) be backed by files on the systems native file system,
+[=/Entries=] can (but don't have to) be backed by files on the host operating system's local file system,
 so it is possible for the [=binary data=], [=modification timestamp=],
 and [=children=] of entries to be modified by applications outside of this specification.
 Exactly how external changes are reflected in the data structures defined by this specification,
@@ -122,7 +122,7 @@ as well as how changes made to the data structures defined here are reflected ex
 is left up to individual user-agent implementations.
 
 An [=/entry=] |a| is <dfn for="entry">the same as</dfn> an [=/entry=] |b| if |a| is equal to |b|, or
-if |a| and |b| are backed by the same file or directory on the native file system.
+if |a| and |b| are backed by the same file or directory on the local file system.
 
 Issue: TODO: Explain better how entries map to files on disk (multiple entries can map to the same file or
 directory on disk but an entry doesn't have to map to any file on disk).
@@ -335,7 +335,7 @@ The <dfn method for=FileSystemHandle>isSameEntry(|other|)</dfn> method, when inv
      the website will have to call {{FileSystemHandle/requestPermission()}} before any
      operations on the handle can be done. If this returns `"denied"` any operations will reject.
 
-     Usually handles returned by the [=native file system handle factories=] will initially return `"granted"` for
+     Usually handles returned by the [=local file system handle factories=] will initially return `"granted"` for
      their read permission state, however other than through the user revoking permission, a handle
      retrieved from IndexedDB is also likely to return `"prompt"`.
 
@@ -1114,7 +1114,7 @@ steps:
 
 </div>
 
-# Accessing Native File System # {#native-filesystem}
+# Accessing Local File System # {#local-filesystem}
 
 <xmp class=idl>
 dictionary FilePickerAcceptType {
@@ -1146,16 +1146,21 @@ partial interface Window {
 </xmp>
 
 The {{showOpenFilePicker()}}, {{showSaveFilePicker()}} and {{showDirectoryPicker()}} methods
-are together known as the <dfn>native file system handle factories</dfn>.
+are together known as the <dfn>local file system handle factories</dfn>.
+
+Note: What is referred to as the "local file system" in this spec, does not have to
+strictly refer to the file system on the local device. What we call the local file system
+could just as well be backed by a cloud provider. For example on Chrome OS these
+file pickers will also let you pick files and directories on Google Drive.
 
 Advisement: In Chrome this is currently implemented as a `chooseFileSystemEntries` method.
 Starting in Chrome 85 these new methods will also become available.
 
-## Native File System Permissions ## {#native-file-system-permissions}
+## Local File System Permissions ## {#local-file-system-permissions}
 
-The fact that the user picked the specific files returned by the [=native file system handle factories=] in a prompt
+The fact that the user picked the specific files returned by the [=local file system handle factories=] in a prompt
 should be treated by the user agent as the user intending to grant read access to the website
-for the returned files. As such, at the time the promise returned by one of the [=native file system handle factories=]
+for the returned files. As such, at the time the promise returned by one of the [=local file system handle factories=]
 resolves, [=permission state=] for a descriptor with {{FileSystemPermissionDescriptor/handle}} set to the returned handle,
 and {{FileSystemPermissionDescriptor/mode}} set to {{"read"}}
 should be {{PermissionState/"granted"}}.
@@ -1551,7 +1556,7 @@ elem.addEventListener('drop', async (e) => {
 
 Issue: This currently does not block access to [=too sensitive or dangerous=] directories, to
 be consistent with other APIs that give access to dropped files and directories. This is inconsistent
-with the [=native file system handle factories=] though, so we might want to reconsider this.
+with the [=local file system handle factories=] though, so we might want to reconsider this.
 
 # Accessing the Origin Private File System # {#sandboxed-filesystem}
 
@@ -1671,7 +1676,7 @@ Clearing browsing data is expected to revoke all permissions as well.
 
 In third-party contexts (e.g. an iframe whose origin does not match that of the top-level frame)
 websites can't gain access to data they don't already have access to. This includes both getting
-access to new files or directories via the [=native file system handle factories=], as well as requesting
+access to new files or directories via the [=local file system handle factories=], as well as requesting
 more permissions to existing handles via the {{requestPermission}} API.
 
 Handles can also only be post-messaged to same-origin destinations. Attempts to send a handle to
