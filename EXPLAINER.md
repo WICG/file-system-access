@@ -11,7 +11,7 @@ At a high level what we're providing is several bits:
    [`FileWriter`](https://dev.w3.org/2009/dap/file-system/file-writer.html#the-filewriter-interface)
    interface.
 3. Various entry points to get a handle representing a limited view of the
-   native file system. I.e. either via a file picker, or to get access to
+   local file system. I.e. either via a file picker, or to get access to
    certain well known directories. Mimicking things such as chrome's
    [`chrome.fileSystem.chooseEntry`](https://developer.chrome.com/apps/fileSystem#method-chooseEntry) API.
 
