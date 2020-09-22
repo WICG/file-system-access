@@ -1,7 +1,7 @@
 <!doctype html><html lang="en">
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-  <title>Native File System</title>
+  <title>File System Access</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 <style data-fill-with="stylesheet">/******************************************************************************
  *                   Style sheet for the W3C specifications                   *
@@ -68,6 +68,8 @@
  *
  ******************************************************************************/
 
+/* color variables included separately for reliability */
+
 /******************************************************************************/
 /*                                   Body                                     */
 /******************************************************************************/
@@ -92,7 +94,9 @@
 
 		/* Colors */
 		color: black;
+		color: var(--text);
 		background: white top left fixed no-repeat;
+		background-color: var(--bg);
 		background-size: 25px auto;
 	}
 
@@ -124,10 +128,13 @@
 	.head img[src*="logos/W3C"] {
 		display: block;
 		border: solid #1a5e9a;
+		border: solid var(--logo-bg);
 		border-width: .65rem .7rem .6rem;
 		border-radius: .4rem;
 		background: #1a5e9a;
+		background: var(--logo-bg);
 		color: white;
+		color: var(--logo-text);
 		font-weight: bold;
 	}
 
@@ -138,7 +145,9 @@
 
 	.head a:active > img[src*="logos/W3C"] {
 		background: #c00;
+		background: var(--logo-active-bg);
 		border-color: #c00;
+		border-color: var(--logo-active-bg);
 	}
 
 	/* see also additional rules in Link Styling section */
@@ -165,7 +174,6 @@
 			border-top-right-radius: 2rem;
 			box-shadow: 0 0 2px;
 			font-size: 1.5em;
-			color: black;
 		}
 		#toc-nav > a {
 			display: block;
@@ -175,23 +183,32 @@
 			padding: .1em 0.3em;
 			margin: 0;
 
-			background: white;
 			box-shadow: 0 0 2px;
 			border: none;
 			border-top-right-radius: 1.33em;
+
+			color: #707070;
+			color: var(--tocnav-normal-text);
 			background: white;
+			background: var(--tocnav-normal-bg);
 		}
+		#toc-nav > a:hover,
+		#toc-nav > a:focus {
+			color: black;
+			color: var(--tocnav-hover-text);
+			background: #f8f8f8;
+			background: var(--tocnav-hover-bg);
+		}
+		#toc-nav > a:active {
+			color: #c00;
+			color: var(--tocnav-active-text);
+			background: white;
+			background: var(--tocnav-active-bg);
+		}
+
 		#toc-nav > #toc-jump {
 			padding-bottom: 2em;
 			margin-bottom: -1.9em;
-		}
-
-		#toc-nav > a:hover,
-		#toc-nav > a:focus {
-			background: #f8f8f8;
-		}
-		#toc-nav > a:not(:hover):not(:focus) {
-			color: #707070;
 		}
 
 		/* statusbar gets in the way on keyboard focus; remove once browsers fix */
@@ -205,26 +222,6 @@
 		}
 		#toc-nav > a > span + span {
 			padding-right: 0.2em;
-		}
-
-		#toc-toggle-inline {
-			vertical-align: 0.05em;
-			font-size: 80%;
-			color: gray;
-			color: hsla(203,20%,40%,.7);
-			border-style: none;
-			background: transparent;
-			position: relative;
-		}
-		#toc-toggle-inline:hover:not(:active),
-		#toc-toggle-inline:focus:not(:active) {
-			text-shadow: 1px 1px silver;
-			top: -1px;
-			left: -1px;
-		}
-
-		#toc-nav :active {
-			color: #C00;
 		}
 	}
 
@@ -243,10 +240,14 @@
 			padding: 0 1em;
 			padding-left: 42px;
 			padding-left: calc(1em + 26px);
+			color: black;
+			color: var(--tocsidebar-text);
 			background: inherit;
 			background-color: #f7f8f9;
+			background-color: var(--tocsidebar-bg);
 			z-index: 1;
 			box-shadow: -.1em 0 .25em rgba(0,0,0,.1) inset;
+			box-shadow: -.1em 0 .25em var(--tocsidebar-shadow) inset;
 		}
 		body.toc-sidebar #toc h2 {
 			margin-top: .8rem;
@@ -256,6 +257,7 @@
 			font-weight: bold;
 			color: gray;
 			color: hsla(203,20%,40%,.7);
+			color: var(--tocsidebar-heading-text);
 		}
 		body.toc-sidebar #toc-jump:not(:focus) {
 			width: 0;
@@ -283,10 +285,14 @@
 			padding: 0 1em;
 			padding-left: 42px;
 			padding-left: calc(1em + 26px);
+			color: black;
+			color: var(--tocsidebar-text);
 			background: inherit;
 			background-color: #f7f8f9;
+			background-color: var(--tocsidebar-bg);
 			z-index: 1;
 			box-shadow: -.1em 0 .25em rgba(0,0,0,.1) inset;
+			box-shadow: -.1em 0 .25em var(--tocsidebar-shadow) inset;
 		}
 		body:not(.toc-inline) #toc h2 {
 			margin-top: .8rem;
@@ -296,6 +302,7 @@
 			font-weight: bold;
 			color: gray;
 			color: hsla(203,20%,40%,.7);
+			color: var(--tocsidebar-heading-text);
 		}
 
 		body:not(.toc-inline) {
@@ -338,7 +345,7 @@
 
 	h1, h2, h3 {
 		color: #005A9C;
-		background: transparent;
+		color: var(--heading-text);
 	}
 
 	h1 { font-size: 170%; }
@@ -365,11 +372,13 @@
 
 /** Section divider ***********************************************************/
 
-	:not(.head) > hr {
+	:not(.head) > :not(.head) + hr {
 		font-size: 1.5em;
 		text-align: center;
 		margin: 1em auto;
 		height: auto;
+		color: black;
+		color: var(--hr-text);
 		border: transparent solid 0;
 		background: transparent;
 	}
@@ -412,12 +421,15 @@
 	ol.algorithm ol:not(.algorithm),
 	.algorithm > ol ol:not(.algorithm) {
 	 border-left: 0.5em solid #DEF;
+	 border-left: 0.5em solid var(--algo-border);
 	}
 
 	/* Put nice boxes around each algorithm. */
 	[data-algorithm]:not(.heading) {
 	  padding: .5em;
-	  border: thin solid #ddd; border-radius: .5em;
+	  border: thin solid #ddd;
+	  border: thin solid var(--algo-border);
+	  border-radius: .5em;
 	  margin: .5em calc(-0.5em - 1px);
 	}
 	[data-algorithm]:not(.heading) > :first-child {
@@ -478,8 +490,20 @@
 
 /** Change Marking ************************************************************/
 
-	del { color: red;  text-decoration: line-through; }
-	ins { color: #080; text-decoration: underline;    }
+	del {
+		color: red;
+		color: var(--del-text);
+		background: transparent;
+		background: var(--del-bg);
+		text-decoration: line-through;
+	}
+	ins {
+		color: #080;
+		color: var(--ins-text);
+		background: transparent;
+		background: var(--ins-bg);
+		text-decoration: underline;
+	}
 
 /** Miscellaneous improvements to inline formatting ***************************/
 
@@ -497,9 +521,14 @@
 	pre, code, samp {
 		font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
 		font-size: .9em;
-		page-break-inside: avoid;
 		hyphens: none;
 		text-transform: none;
+		text-align: left;
+		text-align: start;
+		font-variant: normal;
+		orphans: 3;
+		widows: 3;
+		page-break-before: avoid;
 	}
 	pre code,
 	code code {
@@ -525,14 +554,19 @@
 	/* We hyperlink a lot, so make it less intrusive */
 	a[href] {
 		color: #034575;
+		color: var(--a-normal-text);
 		text-decoration: none;
 		border-bottom: 1px solid #707070;
+		border-bottom: 1px solid var(--a-normal-underline);
 		/* Need a bit of extending for it to look okay */
 		padding: 0 1px 0;
 		margin: 0 -1px 0;
 	}
 	a:visited {
-		border-bottom-color: #BBB;
+		color: #034575;
+		color: var(--a-visited-text);
+		border-bottom-color: #bbb;
+		border-bottom-color: var(--a-visited-underline);
 	}
 
 	/* Use distinguishing colors when user is interacting with the link */
@@ -540,12 +574,15 @@
 	a[href]:hover {
 		background: #f8f8f8;
 		background: rgba(75%, 75%, 75%, .25);
+		background: var(--a-hover-bg);
 		border-bottom-width: 3px;
 		margin-bottom: -2px;
 	}
 	a[href]:active {
-		color: #C00;
-		border-color: #C00;
+		color: #c00;
+		color: var(--a-active-text);
+		border-color: #c00;
+		border-color: var(--a-active-underline);
 	}
 
 	/* Backout above styling for W3C logo */
@@ -564,6 +601,11 @@
 		border-style: none;
 	}
 
+	img, svg {
+		/* Intentionally not color-scheme aware. */
+		background: white;
+	}
+
 	/* For autogen numbers, add
 	   .caption::before, figcaption::before { content: "Figure " counter(figure) ". "; }
 	*/
@@ -577,6 +619,7 @@
 	.figure object, .sidefigure object, figure object {
 		max-width: 100%;
 		margin: auto;
+		height: auto;
 	}
 	.figure pre, .sidefigure pre, figure pre {
 		text-align: left;
@@ -639,25 +682,46 @@
 		margin-bottom: 0;
 	}
 
+
+	.issue::before, .issue > .marker,
+	.example::before, .example > .marker,
+	.note::before, .note > .marker,
+	details.note > summary > .marker {
+		text-transform: uppercase;
+		padding-right: 1em;
+	}
+
+	.example::before, .example > .marker {
+		display: block;
+		padding-right: 0em;
+	}
+
 /** Blockquotes ***************************************************************/
 
 	blockquote {
 		border-color: silver;
+		border-color: var(--blockquote-border);
+		background: transparent;
+		background: var(--blockquote-bg);
+		color: currentcolor;
+		color: var(--blockquote-text);
 	}
 
 /** Open issue ****************************************************************/
 
 	.issue {
-		border-color: #E05252;
-		background: #FBE9E9;
+		border-color: #e05252;
+		border-color: var(--issue-border);
+		background: #fbe9e9;
+		background: var(--issue-bg);
+		color: black;
+		color: var(--issue-text);
 		counter-increment: issue;
 		overflow: auto;
 	}
 	.issue::before, .issue > .marker {
-		text-transform: uppercase;
-		color: #AE1E1E;
-		padding-right: 1em;
-		text-transform: uppercase;
+		color: #831616;
+		color: var(--issueheading-text);
 	}
 	/* Add .issue::before { content: "Issue " counter(issue) " "; } for autogen numbers,
 	   or use class="marker" to mark up the issue number in source. */
@@ -665,17 +729,19 @@
 /** Example *******************************************************************/
 
 	.example {
-		border-color: #E0CB52;
-		background: #FCFAEE;
+		border-color: #e0cb52;
+		border-color: var(--example-border);
+		background: #fcfaee;
+		background: var(--example-bg);
+		color: black;
+		color: var(--example-text);
 		counter-increment: example;
 		overflow: auto;
 		clear: both;
 	}
 	.example::before, .example > .marker {
-		text-transform: uppercase;
-		color: #827017;
-		min-width: 7.5em;
-		display: block;
+		color: #574b0f;
+		color: var(--exampleheading-text);
 	}
 	/* Add .example::before { content: "Example " counter(example) " "; } for autogen numbers,
 	   or use class="marker" to mark up the example number in source. */
@@ -683,27 +749,26 @@
 /** Non-normative Note ********************************************************/
 
 	.note {
-		border-color: #52E052;
-		background: #E9FBE9;
+		border-color: #52e052;
+		border-color: var(--note-border);
+		background: #e9fbe9;
+		background: var(--note-bg);
+		color: black;
+		color: var(--note-text);
 		overflow: auto;
 	}
 
 	.note::before, .note > .marker,
-	details.note > summary::before,
-	details.note > summary > .marker {
-		text-transform: uppercase;
-		display: block;
+	details.note > summary {
 		color: hsl(120, 70%, 30%);
+		color: var(--noteheading-text);
 	}
-	/* Add .note::before { content: "Note"; } for autogen label,
+	/* Add .note::before { content: "Note "; } for autogen label,
 	   or use class="marker" to mark up the label in source. */
 
-	details.note > summary {
-		display: block;
-		color: hsl(120, 70%, 30%);
-	}
 	details.note[open] > summary {
 		border-bottom: 1px silver solid;
+		border-bottom: 1px var(--notesummary-underline) solid;
 	}
 
 /** Assertion Box *************************************************************/
@@ -711,7 +776,11 @@
 
 	.assertion {
 		border-color: #AAA;
+		border-color: var(--assertion-border);
 		background: #EEE;
+		background: var(--assertion-bg);
+		color: black;
+		color: var(--assertion-text);
 	}
 
 /** Advisement Box ************************************************************/
@@ -719,15 +788,20 @@
 
 	.advisement {
 		border-color: orange;
+		border-color: var(--advisement-border);
 		border-style: none solid;
-		background: #FFEECC;
+		background: #fec;
+		background: var(--advisement-bg);
+		color: black;
+		color: var(--advisement-text);
 	}
 	strong.advisement {
 		display: block;
 		text-align: center;
 	}
-	.advisement > .marker {
-		color: #B35F00;
+	.advisement::before, .advisement > .marker {
+		color: #b35f00;
+		color: var(--advisementheading-text);
 	}
 
 /** Spec Obsoletion Notice ****************************************************/
@@ -743,27 +817,30 @@
 	.annoying-warning:not(details),
 	details.annoying-warning:not([open]) > summary,
 	details.annoying-warning[open] {
-		background: #fdd;
-		color: red;
-		font-weight: bold;
+		background: hsla(40,100%,50%,0.95);
+		background: var(--warning-bg);
+		color: black;
+		color: var(--warning-text);
 		padding: .75em 1em;
-		border: thick red;
-		border-style: solid;
-		border-radius: 1em;
+		border: red;
+		border: var(--warning-border);
+		border-style: solid none;
+		box-shadow: 0 2px 8px black;
+		text-align: center;
 	}
 	.annoying-warning :last-child {
 		margin-bottom: 0;
 	}
 
-@media not print {
-	details.annoying-warning[open] {
-		position: fixed;
-		left: 1em;
-		right: 1em;
-		bottom: 1em;
-		z-index: 1000;
+	@media not print {
+		details.annoying-warning[open] {
+			position: fixed;
+			left: 0;
+			right: 0;
+			bottom: 2em;
+			z-index: 1000;
+		}
 	}
-}
 
 	details.annoying-warning:not([open]) > summary {
 		text-align: center;
@@ -773,9 +850,13 @@
 
 	.def {
 		padding: .5em 1em;
-		background: #DEF;
+		background: #def;
+		background: var(--def-bg);
 		margin: 1.2em 0;
-		border-left: 0.5em solid #8CCBF2;
+		border-left: 0.5em solid #8ccbf2;
+		border-left: 0.5em solid var(--def-border);
+		color: black;
+		color: var(--def-text);
 	}
 
 /******************************************************************************/
@@ -800,6 +881,7 @@
 		padding: 0.5em;
 		vertical-align: baseline;
 		border-bottom: 1px solid #bbd7e9;
+		border-bottom: 1px solid var(--defrow-border);
 	}
 
 	table.def > tbody > tr:last-child th,
@@ -820,10 +902,10 @@
 	}
 
 	/* A footnote at the bottom of a def table */
-	table.def           td.footnote {
+	table.def td.footnote {
 		padding-top: 0.6em;
 	}
-	table.def           td.footnote::before {
+	table.def td.footnote::before {
 		content: " ";
 		display: block;
 		height: 0.6em;
@@ -868,6 +950,7 @@
 		padding: 0.5em 1em;
 		border-width: 1px;
 		border-color: silver;
+		border-color: var(--datacell-border);
 		border-top-style: solid;
 	}
 
@@ -892,6 +975,7 @@
 	table.index tbody th:first-child  {
 		border-right: 2px solid;
 		border-top: 1px solid silver;
+		border-top: 1px solid var(--datacell-border);
 		padding-right: 1em;
 	}
 
@@ -903,13 +987,14 @@
 	table.complex.data th,
 	table.complex.data td {
 		border: 1px solid silver;
+		border: 1px solid var(--datacell-border);
 		text-align: center;
 	}
 
 	table.data.longlastcol td:last-child,
 	table.data td.long {
-	 vertical-align: baseline;
-	 text-align: left;
+		vertical-align: baseline;
+		text-align: left;
 	}
 
 	table.data img {
@@ -967,12 +1052,15 @@ Possible extra rowspan handling
 		display: block;
 		/* Reverse color scheme */
 		color: black;
-		border-color: #3980B5;
-		border-bottom-width: 3px !important;
-		margin-bottom: 0px !important;
+		color: var(--toclink-text);
+		border-color: #3980b5;
+		border-color: var(--toclink-underline);
 	}
 	.toc a:visited {
+		color: black;
+		color: var(--toclink-visited-text);
 		border-color: #054572;
+		border-color: var(--toclink-visited-underline);
 	}
 	.toc a:not(:focus):not(:hover) {
 		/* Allow colors to cascade through from link styling */
@@ -1027,6 +1115,15 @@ Possible extra rowspan handling
 			.toc > li li li li .secno    { margin-left: -6rem; }
 			.toc > li li li li li .secno { margin-left: -7rem; }
 		}
+		/* Loosen it on wide screens */
+		@media screen and (min-width: 78em) {
+			body:not(.toc-inline) :not(li) > .toc              { margin-left:  4rem; }
+			body:not(.toc-inline) .toc .secno                  { margin-left: -4rem; }
+			body:not(.toc-inline) .toc > li li li              { margin-left:  1rem; }
+			body:not(.toc-inline) .toc > li li li .secno       { margin-left: -5rem; }
+			body:not(.toc-inline) .toc > li li li li .secno    { margin-left: -6rem; }
+			body:not(.toc-inline) .toc > li li li li li .secno { margin-left: -7rem; }
+	}
 	/* } */
 
 	@supports (display:grid) and (display:contents) {
@@ -1068,9 +1165,12 @@ Possible extra rowspan handling
 			width: auto;
 			margin-right: 1rem;
 		}
-		#toc .content:hover {
+		#toc .content:hover,
+		#toc .content:focus {
 			background: rgba(75%, 75%, 75%, .25);
+			background: var(--a-hover-bg);
 			border-bottom: 3px solid #054572;
+			border-bottom: 3px solid var(--toclink-underline);
 			margin-bottom: -3px;
 		}
 		#toc li li li .content {
@@ -1101,6 +1201,7 @@ Possible extra rowspan handling
 		ul.index li a:hover + span,
 		ul.index li a:focus + span {
 			color: #707070;
+			color: var(--indexinfo-text);
 		}
 	}
 
@@ -1122,7 +1223,10 @@ Possible extra rowspan handling
 
 	table.index tr:hover td:not([rowspan]),
 	table.index tr:hover th:not([rowspan]) {
+		color: black;
+		color: var(--indextable-hover-text);
 		background: #f7f8f9;
+		background: var(--indextable-hover-bg);
 	}
 
 	/* The link in the first column in the property table (formerly a TD) */
@@ -1147,13 +1251,6 @@ Possible extra rowspan handling
 	@page {
 		margin: 1.5cm 1.1cm;
 	}
-
-/******************************************************************************/
-/*                                    Legacy                                  */
-/******************************************************************************/
-
-	/* This rule is inherited from past style sheets. No idea what it's for. */
-	.hide { display: none }
 
 
 
@@ -1222,9 +1319,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 9cdaf2b5, updated Tue Sep 15 11:13:35 2020 -0700" name="generator">
-  <link href="https://wicg.github.io/native-file-system/" rel="canonical">
-  <meta content="e9e12a651cf217ec70314c08d05431ad17ef951c" name="document-revision">
+  <meta content="Bikeshed version b8157505, updated Mon Sep 21 08:44:17 2020 -0700" name="generator">
+  <link href="https://wicg.github.io/file-system-access/" rel="canonical">
+  <meta content="58d2fe8453c9b1ff9bdabadd3dde0f0757cfddd7" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1247,7 +1344,7 @@ Possible extra rowspan handling
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
-    color: #005a9c;
+    color: var(--a-normal-text);
     font-size: inherit;
     font-family: inherit;
 }
@@ -1306,6 +1403,108 @@ pre .property::before, pre .property::after {
 [data-link-type=biblio] {
     white-space: pre;
 }</style>
+<style>/* style-colors */
+
+/* Any --*-text not paired with a --*-bg is assumed to have a transparent bg */
+:root {
+    color-scheme: light dark;
+
+    --text: black;
+    --bg: white;
+
+    --logo-bg: #1a5e9a;
+    --logo-active-bg: #c00;
+    --logo-text: white;
+
+    --tocnav-normal-text: #707070;
+    --tocnav-normal-bg: var(--bg);
+    --tocnav-hover-text: var(--tocnav-normal-text);
+    --tocnav-hover-bg: #f8f8f8;
+    --tocnav-active-text: #c00;
+    --tocnav-active-bg: var(--tocnav-normal-bg);
+
+    --tocsidebar-text: var(--text);
+    --tocsidebar-bg: #f7f8f9;
+    --tocsidebar-shadow: rgba(0,0,0,.1);
+    --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+    --toclink-text: var(--text);
+    --toclink-underline: #3980b5;
+    --toclink-visited-text: var(--toclink-text);
+    --toclink-visited-underline: #054572;
+
+    --heading-text: #005a9c;
+
+    --hr-text: var(--text);
+
+    --algo-border: #def;
+
+    --del-text: red;
+    --del-bg: transparent;
+    --ins-text: #080;
+    --ins-bg: transparent;
+
+    --a-normal-text: #034575;
+    --a-normal-underline: #707070;
+    --a-visited-text: var(--a-normal-text);
+    --a-visited-underline: #bbb;
+    --a-hover-bg: rgba(75%, 75%, 75%, .25);
+    --a-active-text: #c00;
+    --a-active-underline: #c00;
+
+    --blockquote-border: silver;
+    --blockquote-bg: transparent;
+    --blockquote-text: currentcolor;
+
+    --issue-border: #e05252;
+    --issue-bg: #fbe9e9;
+    --issue-text: var(--text);
+    --issueheading-text: #831616;
+
+    --example-border: #e0cb52;
+    --example-bg: #fcfaee;
+    --example-text: var(--text);
+    --exampleheading-text: #574b0f;
+
+    --note-border: #52e052;
+    --note-bg: #e9fbe9;
+    --note-text: var(--text);
+    --noteheading-text: hsl(120, 70%, 30%);
+    --notesummary-underline: silver;
+
+    --assertion-border: #aaa;
+    --assertion-bg: #eee;
+    --assertion-text: black;
+
+    --advisement-border: orange;
+    --advisement-bg: #fec;
+    --advisement-text: var(--text);
+    --advisementheading-text: #b35f00;
+
+    --warning-border: red;
+    --warning-bg: hsla(40,100%,50%,0.95);
+    --warning-text: var(--text);
+
+    --def-border: #8ccbf2;
+    --def-bg: #def;
+    --def-text: var(--text);
+    --defrow-border: #bbd7e9;
+
+    --datacell-border: silver;
+
+    --indexinfo-text: #707070;
+
+    --indextable-hover-text: black;
+    --indextable-hover-bg: #f7f8f9;
+
+    --outdatedspec-bg: rgba(0, 0, 0, .5);
+    --outdatedspec-text: black;
+    --outdated-bg: maroon;
+    --outdated-text: white;
+    --outdated-shadow: red;
+
+    --editedrec-bg: darkorange;
+}</style>
 <style>/* style-counters */
 
 body {
@@ -1337,6 +1536,10 @@ figcaption:not(.no-marker)::before {
 }</style>
 <style>/* style-dfn-panel */
 
+:root {
+    --dfnpanel-bg: #ddd;
+    --dfnpanel-text: var(--text);
+}
 .dfn-panel {
     position: absolute;
     z-index: 35;
@@ -1348,8 +1551,8 @@ figcaption:not(.no-marker)::before {
     overflow: auto;
     padding: 0.5em 0.75em;
     font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
-    background: #DDDDDD;
-    color: black;
+    background: var(--dfnpanel-bg);
+    color: var(--dfnpanel-text);
     border: outset 0.2em;
 }
 .dfn-panel:not(.on) { display: none; }
@@ -1384,6 +1587,11 @@ figcaption:not(.no-marker)::before {
 }</style>
 <style>/* style-selflinks */
 
+:root {
+    --selflink-text: white;
+    --selflink-bg: gray;
+    --selflink-hover-text: black;
+}
 .heading, .issue, .note, .example, li, dt {
     position: relative;
 }
@@ -1413,8 +1621,8 @@ dfn > a.self-link {
     opacity: 0;
     width: 1.5em;
     height: 1.5em;
-    background: gray;
-    color: white;
+    background: var(--selflink-bg);
+    color: var(--selflink-text);
     font-style: normal;
     transition: opacity .2s, background-color .2s, color .2s;
 }
@@ -1422,17 +1630,23 @@ dfn:hover > a.self-link {
     opacity: 1;
 }
 dfn > a.self-link:hover {
-    color: black;
+    color: var(--selflink-hover-text);
 }
 
 a.self-link::before            { content: "¶"; }
 .heading > a.self-link::before { content: "§"; }
-dfn > a.self-link::before      { content: "#"; }</style>
+dfn > a.self-link::before      { content: "#"; }
+</style>
 <style>/* style-syntax-highlighting */
-pre.idl.highlight { color: #708090; }
-.highlight:not(.idl) { background: hsl(24, 20%, 95%); }
+
+            pre.idl.highlight {
+                background: var(--borderedblock-bg, var(--def-bg));
+            }
+            
 code.highlight { padding: .1em; border-radius: .3em; }
 pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
+
+.highlight:not(.idl) { background: #fdf6e3; }
 c-[a] { color: #990055 } /* Keyword.Declaration */
 c-[b] { color: #990055 } /* Keyword.Type */
 c-[c] { color: #708090 } /* Comment */
@@ -1497,24 +1711,912 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     var.selected5 { background-color: #82DDFF; box-shadow: 0 0 0 2px #82DDFF; }
     var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
     </style>
+<style>/* style-darkmode */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #ddd;
+        --bg: #111;
+
+        --logo-bg: #1a5e9a;
+        --logo-active-bg: #c00;
+        --logo-text: white;
+
+        --tocnav-normal-text: #999;
+        --tocnav-normal-bg: var(--bg);
+        --tocnav-hover-text: var(--tocnav-normal-text);
+        --tocnav-hover-bg: #080808;
+        --tocnav-active-text: #f44;
+        --tocnav-active-bg: var(--tocnav-normal-bg);
+
+        --tocsidebar-text: var(--text);
+        --tocsidebar-bg: #080808;
+        --tocsidebar-shadow: rgba(255,255,255,.1);
+        --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+        --toclink-text: var(--text);
+        --toclink-underline: #6af;
+        --toclink-visited-text: var(--toclink-text);
+        --toclink-visited-underline: #054572;
+
+        --heading-text: #8af;
+
+        --hr-text: var(--text);
+
+        --algo-border: #456;
+
+        --del-text: #f44;
+        --del-bg: transparent;
+        --ins-text: #4a4;
+        --ins-bg: transparent;
+
+        --a-normal-text: #6af;
+        --a-normal-underline: #555;
+        --a-visited-text: var(--a-normal-text);
+        --a-visited-underline: var(--a-normal-underline);
+        --a-hover-bg: rgba(25%, 25%, 25%, .2);
+        --a-active-text: #f44;
+        --a-active-underline: var(--a-active-text);
+
+        --borderedblock-bg: rgba(255, 255, 255, .05);
+
+        --blockquote-border: silver;
+        --blockquote-bg: var(--borderedblock-bg);
+        --blockquote-text: currentcolor;
+
+        --issue-border: #e05252;
+        --issue-bg: var(--borderedblock-bg);
+        --issue-text: var(--text);
+        --issueheading-text: hsl(0deg, 70%, 70%);
+
+        --example-border: hsl(50deg, 90%, 60%);
+        --example-bg: var(--borderedblock-bg);
+        --example-text: var(--text);
+        --exampleheading-text: hsl(50deg, 70%, 70%);
+
+        --note-border: hsl(120deg, 100%, 35%);
+        --note-bg: var(--borderedblock-bg);
+        --note-text: var(--text);
+        --noteheading-text: hsl(120, 70%, 70%);
+        --notesummary-underline: silver;
+
+        --assertion-border: #444;
+        --assertion-bg: var(--borderedblock-bg);
+        --assertion-text: var(--text);
+
+        --advisement-border: orange;
+        --advisement-bg: #222218;
+        --advisement-text: var(--text);
+        --advisementheading-text: #f84;
+
+        --warning-border: red;
+        --warning-bg: hsla(40,100%,20%,0.95);
+        --warning-text: var(--text);
+
+        --def-border: #8ccbf2;
+        --def-bg: #080818;
+        --def-text: var(--text);
+        --defrow-border: #136;
+
+        --datacell-border: silver;
+
+        --indexinfo-text: #aaa;
+
+        --indextable-hover-text: var(--text);
+        --indextable-hover-bg: #181818;
+
+        --outdatedspec-bg: rgba(255, 255, 255, .5);
+        --outdatedspec-text: black;
+        --outdated-bg: maroon;
+        --outdated-text: white;
+        --outdated-shadow: red;
+
+        --editedrec-bg: darkorange;
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --selflink-text: black;
+        --selflink-bg: silver;
+        --selflink-hover-text: white;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    .highlight:not(.idl) { background: rgba(255, 255, 255, .05); }
+
+    c-[a] { color: #d33682 } /* Keyword.Declaration */
+    c-[b] { color: #d33682 } /* Keyword.Type */
+    c-[c] { color: #2aa198 } /* Comment */
+    c-[d] { color: #2aa198 } /* Comment.Multiline */
+    c-[e] { color: #268bd2 } /* Name.Attribute */
+    c-[f] { color: #b58900 } /* Name.Tag */
+    c-[g] { color: #cb4b16 } /* Name.Variable */
+    c-[k] { color: #d33682 } /* Keyword */
+    c-[l] { color: #657b83 } /* Literal */
+    c-[m] { color: #657b83 } /* Literal.Number */
+    c-[n] { color: #268bd2 } /* Name */
+    c-[o] { color: #657b83 } /* Operator */
+    c-[p] { color: #657b83 } /* Punctuation */
+    c-[s] { color: #6c71c4 } /* Literal.String */
+    c-[t] { color: #6c71c4 } /* Literal.String.Single */
+    c-[u] { color: #6c71c4 } /* Literal.String.Double */
+    c-[ch] { color: #2aa198 } /* Comment.Hashbang */
+    c-[cp] { color: #2aa198 } /* Comment.Preproc */
+    c-[cpf] { color: #2aa198 } /* Comment.PreprocFile */
+    c-[c1] { color: #2aa198 } /* Comment.Single */
+    c-[cs] { color: #2aa198 } /* Comment.Special */
+    c-[kc] { color: #d33682 } /* Keyword.Constant */
+    c-[kn] { color: #d33682 } /* Keyword.Namespace */
+    c-[kp] { color: #d33682 } /* Keyword.Pseudo */
+    c-[kr] { color: #d33682 } /* Keyword.Reserved */
+    c-[ld] { color: #657b83 } /* Literal.Date */
+    c-[nc] { color: #268bd2 } /* Name.Class */
+    c-[no] { color: #268bd2 } /* Name.Constant */
+    c-[nd] { color: #268bd2 } /* Name.Decorator */
+    c-[ni] { color: #268bd2 } /* Name.Entity */
+    c-[ne] { color: #268bd2 } /* Name.Exception */
+    c-[nf] { color: #268bd2 } /* Name.Function */
+    c-[nl] { color: #268bd2 } /* Name.Label */
+    c-[nn] { color: #268bd2 } /* Name.Namespace */
+    c-[py] { color: #268bd2 } /* Name.Property */
+    c-[ow] { color: #657b83 } /* Operator.Word */
+    c-[mb] { color: #657b83 } /* Literal.Number.Bin */
+    c-[mf] { color: #657b83 } /* Literal.Number.Float */
+    c-[mh] { color: #657b83 } /* Literal.Number.Hex */
+    c-[mi] { color: #657b83 } /* Literal.Number.Integer */
+    c-[mo] { color: #657b83 } /* Literal.Number.Oct */
+    c-[sa] { color: #6c71c4 } /* Literal.String.Affix */
+    c-[sb] { color: #6c71c4 } /* Literal.String.Backtick */
+    c-[sc] { color: #6c71c4 } /* Literal.String.Char */
+    c-[dl] { color: #6c71c4 } /* Literal.String.Delimiter */
+    c-[sd] { color: #6c71c4 } /* Literal.String.Doc */
+    c-[se] { color: #6c71c4 } /* Literal.String.Escape */
+    c-[sh] { color: #6c71c4 } /* Literal.String.Heredoc */
+    c-[si] { color: #6c71c4 } /* Literal.String.Interpol */
+    c-[sx] { color: #6c71c4 } /* Literal.String.Other */
+    c-[sr] { color: #6c71c4 } /* Literal.String.Regex */
+    c-[ss] { color: #6c71c4 } /* Literal.String.Symbol */
+    c-[fm] { color: #268bd2 } /* Name.Function.Magic */
+    c-[vc] { color: #cb4b16 } /* Name.Variable.Class */
+    c-[vg] { color: #cb4b16 } /* Name.Variable.Global */
+    c-[vi] { color: #cb4b16 } /* Name.Variable.Instance */
+    c-[vm] { color: #cb4b16 } /* Name.Variable.Magic */
+    c-[il] { color: #657b83 } /* Literal.Number.Integer.Long */
+}
+</style>
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"></p>
-   <h1 class="p-name no-ref" id="title">Native File System</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-09-15">15 September 2020</time></span></h2>
+   <h1 class="p-name no-ref" id="title">File System Access</h1>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-09-22">22 September 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
-     <dd><a class="u-url" href="https://wicg.github.io/native-file-system/">https://wicg.github.io/native-file-system/</a>
+     <dd><a class="u-url" href="https://wicg.github.io/file-system-access/">https://wicg.github.io/file-system-access/</a>
      <dt>Issue Tracking:
-     <dd><a href="https://github.com/wicg/native-file-system/issues/">GitHub</a>
+     <dd><a href="https://github.com/wicg/file-system-access/issues/">GitHub</a>
      <dd><a href="#issues-index">Inline In Spec</a>
      <dt class="editor">Editor:
      <dd class="editor p-author h-card vcard" data-editor-id="72440"><a class="p-name fn u-email email" href="mailto:mek@chromium.org">Marijn Kruisselbrink</a> (<span class="p-org org">Google</span>)
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2020 the Contributors to the Native File System Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2020 the Contributors to the File System Access Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
 A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available. </p>
    <hr title="Separator for header">
   </div>
@@ -1578,9 +2680,9 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
        </ol>
      </ol>
     <li>
-     <a href="#native-filesystem"><span class="secno">3</span> <span class="content">Accessing Native File System</span></a>
+     <a href="#local-filesystem"><span class="secno">3</span> <span class="content">Accessing Local File System</span></a>
      <ol class="toc">
-      <li><a href="#native-file-system-permissions"><span class="secno">3.1</span> <span class="content">Native File System Permissions</span></a>
+      <li><a href="#local-file-system-permissions"><span class="secno">3.1</span> <span class="content">Local File System Permissions</span></a>
       <li><a href="#api-showopenfilepicker"><span class="secno">3.2</span> <span class="content">The <code class="idl"><span>showOpenFilePicker()</span></code> method</span></a>
       <li><a href="#api-showsavefilepicker"><span class="secno">3.3</span> <span class="content">The <code class="idl"><span>showSaveFilePicker()</span></code> method</span></a>
       <li><a href="#api-filpickeroptions-types"><span class="secno">3.4</span> <span class="content"><code class="idl"><span>FilePickerOptions</span></code>.<code class="idl"><span>types</span></code></span></a>
@@ -1659,16 +2761,16 @@ An <a data-link-type="dfn" href="#entry" id="ref-for-entry③">entry</a>'s <a da
    <p class="note" role="note"><span>Note:</span> Two different <a data-link-type="dfn" href="#entry" id="ref-for-entry④">entries</a> can represent the same file or directory on disk, in which
 case it is possible for both entries to have a different parent, or for one entry to have a
 parent while the other entry does not have a parent. Typically an entry does not have a parent
-if it was returned by <code class="idl"><a data-link-type="idl" href="#dom-storagemanager-getdirectory" id="ref-for-dom-storagemanager-getdirectory①">navigator.storage.getDirectory()</a></code> or one of the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories">native file system handle factories</a>,
+if it was returned by <code class="idl"><a data-link-type="idl" href="#dom-storagemanager-getdirectory" id="ref-for-dom-storagemanager-getdirectory①">navigator.storage.getDirectory()</a></code> or one of the <a data-link-type="dfn" href="#local-file-system-handle-factories" id="ref-for-local-file-system-handle-factories">local file system handle factories</a>,
 and an entry will have a parent in all other cases.</p>
-   <p><a data-link-type="dfn" href="#entry" id="ref-for-entry⑤">Entries</a> can (but don’t have to) be backed by files on the systems native file system,
+   <p><a data-link-type="dfn" href="#entry" id="ref-for-entry⑤">Entries</a> can (but don’t have to) be backed by files on the host operating system’s local file system,
 so it is possible for the <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data">binary data</a>, <a data-link-type="dfn" href="#file-entry-modification-timestamp" id="ref-for-file-entry-modification-timestamp">modification timestamp</a>,
 and <a data-link-type="dfn" href="#directory-entry-children" id="ref-for-directory-entry-children①">children</a> of entries to be modified by applications outside of this specification.
 Exactly how external changes are reflected in the data structures defined by this specification,
 as well as how changes made to the data structures defined here are reflected externally
 is left up to individual user-agent implementations.</p>
    <p>An <a data-link-type="dfn" href="#entry" id="ref-for-entry⑥">entry</a> <var>a</var> is <dfn class="dfn-paneled" data-dfn-for="entry" data-dfn-type="dfn" data-noexport id="entry-the-same-as">the same as</dfn> an <a data-link-type="dfn" href="#entry" id="ref-for-entry⑦">entry</a> <var>b</var> if <var>a</var> is equal to <var>b</var>, or
-if <var>a</var> and <var>b</var> are backed by the same file or directory on the native file system.</p>
+if <var>a</var> and <var>b</var> are backed by the same file or directory on the local file system.</p>
    <p class="issue" id="issue-88e7ec9d"><a class="self-link" href="#issue-88e7ec9d"></a> TODO: Explain better how entries map to files on disk (multiple entries can map to the same file or
 directory on disk but an entry doesn’t have to map to any file on disk).</p>
    <div class="algorithm" data-algorithm="resolve" data-algorithm-for="entry">
@@ -1823,7 +2925,7 @@ run these steps:
     </ol>
    </div>
    <p class="issue" id="issue-7fc2f5c7"><a class="self-link" href="#issue-7fc2f5c7"></a> Currently <code class="idl"><a data-link-type="idl" href="#enumdef-filesystempermissionmode" id="ref-for-enumdef-filesystempermissionmode③">FileSystemPermissionMode</a></code> can only be <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-read" id="ref-for-dom-filesystempermissionmode-read①">"read"</a></code> or <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-readwrite" id="ref-for-dom-filesystempermissionmode-readwrite①">"readwrite"</a></code>. In
-the future we might want to add a "write" mode as well to support write-only handles. <a href="https://github.com/wicg/native-file-system/issues/119">&lt;https://github.com/wicg/native-file-system/issues/119></a></p>
+the future we might want to add a "write" mode as well to support write-only handles. <a href="https://github.com/wicg/file-system-access/issues/119">&lt;https://github.com/wicg/file-system-access/issues/119></a></p>
    <h3 class="heading settled" data-level="2.3" id="api-filesystemhandle"><span class="secno">2.3. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle③">FileSystemHandle</a></code> interface</span><a class="self-link" href="#api-filesystemhandle"></a></h3>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystemhandlepermissiondescriptor"><code><c- g>FileSystemHandlePermissionDescriptor</c-></code></dfn> {
   <a class="n" data-link-type="idl-name" href="#enumdef-filesystempermissionmode" id="ref-for-enumdef-filesystempermissionmode④"><c- n>FileSystemPermissionMode</c-></a> <dfn class="dfn-paneled idl-code" data-default="&quot;read&quot;" data-dfn-for="FileSystemHandlePermissionDescriptor" data-dfn-type="dict-member" data-export data-type="FileSystemPermissionMode " id="dom-filesystemhandlepermissiondescriptor-mode"><code><c- g>mode</c-></code></dfn> = "read";
@@ -1925,7 +3027,7 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
      <dd data-md>
       <p>Queries the current state of the read permission of this handle. If this returns <code>"prompt"</code> the website will have to call <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission①">requestPermission()</a></code> before any
  operations on the handle can be done. If this returns <code>"denied"</code> any operations will reject.</p>
-      <p>Usually handles returned by the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories①">native file system handle factories</a> will initially return <code>"granted"</code> for
+      <p>Usually handles returned by the <a data-link-type="dfn" href="#local-file-system-handle-factories" id="ref-for-local-file-system-handle-factories①">local file system handle factories</a> will initially return <code>"granted"</code> for
  their read permission state, however other than through the user revoking permission, a handle
  retrieved from IndexedDB is also likely to return <code>"prompt"</code>.</p>
      <dt data-md><var>status</var> = await <var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission④">queryPermission</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlepermissiondescriptor-mode" id="ref-for-dom-filesystemhandlepermissiondescriptor-mode①">mode</a></code> : <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-readwrite" id="ref-for-dom-filesystempermissionmode-readwrite②">"readwrite"</a></code> })
@@ -2075,7 +3177,7 @@ In Chrome 82 they are.</strong></p>
 example to support in-place modification of large files or things like databases). This is not
 currently implemented in Chrome. Implementing this is currently blocked on figuring out how to
 combine the desire to run malware checks with the desire to let websites make fast in-place
-modifications to existing large files. <a href="https://github.com/wicg/native-file-system/issues/67">&lt;https://github.com/wicg/native-file-system/issues/67></a></p>
+modifications to existing large files. <a href="https://github.com/wicg/file-system-access/issues/67">&lt;https://github.com/wicg/file-system-access/issues/67></a></p>
    <div class="algorithm" data-algorithm="createWritable(options)" data-algorithm-for="FileSystemFileHandle">
      The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemFileHandle" data-dfn-type="method" data-export data-lt="createWritable(options)|createWritable()" id="dom-filesystemfilehandle-createwritable"><code>createWritable(<var>options</var>)</code></dfn> method, when invoked, must run these steps: 
     <ol>
@@ -2155,7 +3257,7 @@ called <code>getFile</code> and <code>getDirectory</code> instead.</strong></p>
 This <code>getEntries()</code> method returns more or less the same async iterable as what is returned by <code>values()</code> in this specification.
 The proper async iterable declaration is not yet implemented.</strong></p>
    <p class="issue" id="issue-cce0bb28"><a class="self-link" href="#issue-cce0bb28"></a> In the future we might want to add arguments to the async iterable declaration to
-support for example recursive iteration. <a href="https://github.com/wicg/native-file-system/issues/173">&lt;https://github.com/wicg/native-file-system/issues/173></a></p>
+support for example recursive iteration. <a href="https://github.com/wicg/file-system-access/issues/173">&lt;https://github.com/wicg/file-system-access/issues/173></a></p>
    <div class="algorithm" data-algorithm="iterator initialization">
      The <a data-link-type="dfn" href="https://heycam.github.io/webidl/#asynchronous-iterator-initialization-steps" id="ref-for-asynchronous-iterator-initialization-steps">asynchronous iterator initialization steps</a> for a <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑤">FileSystemDirectoryHandle</a></code> <var>handle</var> ant its async iterator <var>iterator</var> are: 
     <ol>
@@ -2302,7 +3404,7 @@ must run these steps:
         <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#set-append" id="ref-for-set-append①">Append</a> <var>child</var> to <var>entry</var>’s <a data-link-type="dfn" href="#directory-entry-children" id="ref-for-directory-entry-children⑤">children</a>.</p>
        <li data-md>
         <p>If creating <var>child</var> in the underlying file system throws an exception, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject⑥">reject</a> <var>result</var> with that exception and abort.</p>
-        <p class="issue" id="issue-721a33e4"><a class="self-link" href="#issue-721a33e4"></a> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/native-file-system/issues/68">&lt;https://github.com/wicg/native-file-system/issues/68></a></p>
+        <p class="issue" id="issue-721a33e4"><a class="self-link" href="#issue-721a33e4"></a> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/file-system-access/issues/68">&lt;https://github.com/wicg/file-system-access/issues/68></a></p>
        <li data-md>
         <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve①②">Resolve</a> <var>result</var> with a new <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle⑦">FileSystemFileHandle</a></code> whose <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑤">entry</a> is <var>child</var>.</p>
       </ol>
@@ -2390,7 +3492,7 @@ invoked, must run these steps:
         <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#set-append" id="ref-for-set-append②">Append</a> <var>child</var> to <var>entry</var>’s <a data-link-type="dfn" href="#directory-entry-children" id="ref-for-directory-entry-children⑧">children</a>.</p>
        <li data-md>
         <p>If creating <var>child</var> in the underlying file system throws an exception, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject①①">reject</a> <var>result</var> with that exception and abort.</p>
-        <p class="issue" id="issue-721a33e4①"><a class="self-link" href="#issue-721a33e4①"></a> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/native-file-system/issues/68">&lt;https://github.com/wicg/native-file-system/issues/68></a></p>
+        <p class="issue" id="issue-721a33e4①"><a class="self-link" href="#issue-721a33e4①"></a> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/file-system-access/issues/68">&lt;https://github.com/wicg/file-system-access/issues/68></a></p>
        <li data-md>
         <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve①④">Resolve</a> <var>result</var> with a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle⑨">FileSystemDirectoryHandle</a></code> whose <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①⑧">entry</a> is <var>child</var>.</p>
       </ol>
@@ -2458,7 +3560,7 @@ these steps:
             <p class="note" role="note"><span>Note:</span> If <code class="idl"><a data-link-type="idl" href="#dom-filesystemremoveoptions-recursive" id="ref-for-dom-filesystemremoveoptions-recursive③">recursive</a></code> is <code>true</code>, the removal can fail
  non-atomically. Some files or directories might have been removed while other files
  or directories still exist.</p>
-            <p class="issue" id="issue-721a33e4②"><a class="self-link" href="#issue-721a33e4②"></a> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/native-file-system/issues/68">&lt;https://github.com/wicg/native-file-system/issues/68></a></p>
+            <p class="issue" id="issue-721a33e4②"><a class="self-link" href="#issue-721a33e4②"></a> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/file-system-access/issues/68">&lt;https://github.com/wicg/file-system-access/issues/68></a></p>
            <li data-md>
             <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve①⑤">Resolve</a> <var>result</var> with <code>undefined</code>.</p>
           </ol>
@@ -2830,7 +3932,7 @@ steps:
       <p>Return <var>result</var>.</p>
     </ol>
    </div>
-   <h2 class="heading settled" data-level="3" id="native-filesystem"><span class="secno">3. </span><span class="content">Accessing Native File System</span><a class="self-link" href="#native-filesystem"></a></h2>
+   <h2 class="heading settled" data-level="3" id="local-filesystem"><span class="secno">3. </span><span class="content">Accessing Local File System</span><a class="self-link" href="#local-filesystem"></a></h2>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filepickeraccepttype"><code><c- g>FilePickerAcceptType</c-></code></dfn> {
     <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString⑨"><c- b>USVString</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FilePickerAcceptType" data-dfn-type="dict-member" data-export data-type="USVString " id="dom-filepickeraccepttype-description"><code><c- g>description</c-></code></dfn>;
     <c- b>record</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①⓪"><c- b>USVString</c-></a>, (<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①①"><c- b>USVString</c-></a> <c- b>or</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-USVString" id="ref-for-idl-USVString①②"><c- b>USVString</c-></a>>)> <dfn class="dfn-paneled idl-code" data-dfn-for="FilePickerAcceptType" data-dfn-type="dict-member" data-export data-type="record<USVString, (USVString or sequence<USVString>)> " id="dom-filepickeraccepttype-accept"><code><c- g>accept</c-></code></dfn>;
@@ -2859,13 +3961,17 @@ steps:
 };
 </pre>
    <p>The <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker①">showOpenFilePicker()</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker①">showSaveFilePicker()</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-window-showdirectorypicker" id="ref-for-dom-window-showdirectorypicker①">showDirectoryPicker()</a></code> methods
-are together known as the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="native-file-system-handle-factories">native file system handle factories</dfn>.</p>
+are together known as the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="local-file-system-handle-factories">local file system handle factories</dfn>.</p>
+   <p class="note" role="note"><span>Note:</span> What is referred to as the "local file system" in this spec, does not have to
+strictly refer to the file system on the local device. What we call the local file system
+could just as well be backed by a cloud provider. For example on Chrome OS these
+file pickers will also let you pick files and directories on Google Drive.</p>
    <p><strong class="advisement"> In Chrome this is currently implemented as a <code>chooseFileSystemEntries</code> method.
 Starting in Chrome 85 these new methods will also become available.</strong></p>
-   <h3 class="heading settled" data-level="3.1" id="native-file-system-permissions"><span class="secno">3.1. </span><span class="content">Native File System Permissions</span><a class="self-link" href="#native-file-system-permissions"></a></h3>
-   <p>The fact that the user picked the specific files returned by the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories②">native file system handle factories</a> in a prompt
+   <h3 class="heading settled" data-level="3.1" id="local-file-system-permissions"><span class="secno">3.1. </span><span class="content">Local File System Permissions</span><a class="self-link" href="#local-file-system-permissions"></a></h3>
+   <p>The fact that the user picked the specific files returned by the <a data-link-type="dfn" href="#local-file-system-handle-factories" id="ref-for-local-file-system-handle-factories②">local file system handle factories</a> in a prompt
 should be treated by the user agent as the user intending to grant read access to the website
-for the returned files. As such, at the time the promise returned by one of the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories③">native file system handle factories</a> resolves, <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state" id="ref-for-permission-state⑨">permission state</a> for a descriptor with <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle①⓪">handle</a></code> set to the returned handle,
+for the returned files. As such, at the time the promise returned by one of the <a data-link-type="dfn" href="#local-file-system-handle-factories" id="ref-for-local-file-system-handle-factories③">local file system handle factories</a> resolves, <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state" id="ref-for-permission-state⑨">permission state</a> for a descriptor with <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle①⓪">handle</a></code> set to the returned handle,
 and <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-mode" id="ref-for-dom-filesystempermissiondescriptor-mode⑧">mode</a></code> set to <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-read" id="ref-for-dom-filesystempermissionmode-read⑨">"read"</a></code> should be <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①①">"granted"</a></code>.</p>
    <p>Additionally for calls to <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker②">showSaveFilePicker</a></code> the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state" id="ref-for-permission-state①⓪">permission state</a> for a descriptor with <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle①①">handle</a></code> set to the returned handle,
 and <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-mode" id="ref-for-dom-filesystempermissiondescriptor-mode⑨">mode</a></code> set to <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-readwrite" id="ref-for-dom-filesystempermissionmode-readwrite①①">readwrite</a></code> should be <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①②">"granted"</a></code>.</p>
@@ -3219,7 +4325,7 @@ these steps:
         <p class="note" role="note"><span>Note:</span> This lets a website immediately perform operations on the returned handles that
  might require user activation, such as requesting more permissions.</p>
         <p class="issue" id="issue-923f3009"><a class="self-link" href="#issue-923f3009"></a> Rather than requiring the website to prompt separately for a writable directory,
- we should provide some kind of API to request a writable directory in one step. <a href="https://github.com/wicg/native-file-system/issues/89">&lt;https://github.com/wicg/native-file-system/issues/89></a></p>
+ we should provide some kind of API to request a writable directory in one step. <a href="https://github.com/wicg/file-system-access/issues/89">&lt;https://github.com/wicg/file-system-access/issues/89></a></p>
        <li data-md>
         <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve②②">Resolve</a> <var>p</var> with <var>result</var>.</p>
       </ol>
@@ -3301,9 +4407,9 @@ elem<c- p>.</c->addEventListener<c- p>(</c-><c- t>'drop'</c-><c- p>,</c-> async 
 <c- p>});</c->
 </pre>
    </div>
-   <p class="issue" id="issue-fe9f6575"><a class="self-link" href="#issue-fe9f6575"></a> This currently does not block access to <a data-link-type="dfn" href="#too-sensitive-or-dangerous" id="ref-for-too-sensitive-or-dangerous③">too sensitive or dangerous</a> directories, to
+   <p class="issue" id="issue-8306b646"><a class="self-link" href="#issue-8306b646"></a> This currently does not block access to <a data-link-type="dfn" href="#too-sensitive-or-dangerous" id="ref-for-too-sensitive-or-dangerous③">too sensitive or dangerous</a> directories, to
 be consistent with other APIs that give access to dropped files and directories. This is inconsistent
-with the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories④">native file system handle factories</a> though, so we might want to reconsider this.</p>
+with the <a data-link-type="dfn" href="#local-file-system-handle-factories" id="ref-for-local-file-system-handle-factories④">local file system handle factories</a> though, so we might want to reconsider this.</p>
    <h2 class="heading settled" data-level="4" id="sandboxed-filesystem"><span class="secno">4. </span><span class="content">Accessing the Origin Private File System</span><a class="self-link" href="#sandboxed-filesystem"></a></h2>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="origin-private-file-system">origin private file system</dfn> is a <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint" id="ref-for-storage-endpoint">storage endpoint</a> whose <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint-identifier" id="ref-for-storage-endpoint-identifier">identifier</a> is <code>"fileSystem"</code>, <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint-types" id="ref-for-storage-endpoint-types">types</a> are <code>« "local" »</code>,
 and <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint-quota" id="ref-for-storage-endpoint-quota">quota</a> is null.</p>
@@ -3409,7 +4515,7 @@ Clearing browsing data is expected to revoke all permissions as well.</p>
    <h3 class="heading settled" data-level="5.3" id="privacy-third-party"><span class="secno">5.3. </span><span class="content">First-party vs third-party contexts.</span><a class="self-link" href="#privacy-third-party"></a></h3>
    <p>In third-party contexts (e.g. an iframe whose origin does not match that of the top-level frame)
 websites can’t gain access to data they don’t already have access to. This includes both getting
-access to new files or directories via the <a data-link-type="dfn" href="#native-file-system-handle-factories" id="ref-for-native-file-system-handle-factories⑤">native file system handle factories</a>, as well as requesting
+access to new files or directories via the <a data-link-type="dfn" href="#local-file-system-handle-factories" id="ref-for-local-file-system-handle-factories⑤">local file system handle factories</a>, as well as requesting
 more permissions to existing handles via the <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission⑦">requestPermission</a></code> API.</p>
    <p>Handles can also only be post-messaged to same-origin destinations. Attempts to send a handle to
 a cross-origin destination will result in a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/indices.html#event-messageerror" id="ref-for-event-messageerror">messageerror</a></code> event.</p>
@@ -3639,6 +4745,7 @@ appropriate.</p>
    <li><a href="#dom-filesystemhandle-issameentry">isSameEntry(other)</a><span>, in §2.3.1</span>
    <li><a href="#dom-filesystemcreatewritableoptions-keepexistingdata">keepExistingData</a><span>, in §2.4</span>
    <li><a href="#dom-filesystemhandle-kind">kind</a><span>, in §2.3</span>
+   <li><a href="#local-file-system-handle-factories">local file system handle factories</a><span>, in §3</span>
    <li><a href="#malware-scans-and-safe-browsing-checks">malware scans and safe browsing checks</a><span>, in §6.1</span>
    <li>
     mode
@@ -3654,7 +4761,6 @@ appropriate.</p>
      <li><a href="#dom-filesystemhandle-name">attribute for FileSystemHandle</a><span>, in §2.3</span>
      <li><a href="#entry-name">dfn for entry</a><span>, in §2.1</span>
     </ul>
-   <li><a href="#native-file-system-handle-factories">native file system handle factories</a><span>, in §3</span>
    <li><a href="#dictdef-openfilepickeroptions">OpenFilePickerOptions</a><span>, in §3</span>
    <li><a href="#origin-private-file-system">origin private file system</a><span>, in §4</span>
    <li><a href="#entry-parent">parent</a><span>, in §2.1</span>
@@ -3779,7 +4885,7 @@ appropriate.</p>
    <a href="https://html.spec.whatwg.org/multipage/window-object.html#window">https://html.spec.whatwg.org/multipage/window-object.html#window</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-window">2.2. Permissions</a>
-    <li><a href="#ref-for-window①">3. Accessing Native File System</a>
+    <li><a href="#ref-for-window①">3. Accessing Local File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-activation-notification">
@@ -3816,7 +4922,7 @@ appropriate.</p>
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global">https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-settings-object-global">2.2. Permissions</a>
-    <li><a href="#ref-for-concept-settings-object-global①">3.1. Native File System Permissions</a>
+    <li><a href="#ref-for-concept-settings-object-global①">3.1. Local File System Permissions</a>
     <li><a href="#ref-for-concept-settings-object-global②">3.2. The showOpenFilePicker() method</a>
     <li><a href="#ref-for-concept-settings-object-global③">3.3. The showSaveFilePicker() method</a>
     <li><a href="#ref-for-concept-settings-object-global④">3.5. The showDirectoryPicker() method</a>
@@ -3850,7 +4956,7 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-concept-origin-opaque">
    <a href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque">https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-origin-opaque">3.1. Native File System Permissions</a>
+    <li><a href="#ref-for-concept-origin-opaque">3.1. Local File System Permissions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-settings-object-origin">
@@ -3858,7 +4964,7 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-concept-settings-object-origin">2.2. Permissions</a>
     <li><a href="#ref-for-concept-settings-object-origin①">2.3. The FileSystemHandle interface</a> <a href="#ref-for-concept-settings-object-origin②">(2)</a>
-    <li><a href="#ref-for-concept-settings-object-origin③">3.1. Native File System Permissions</a> <a href="#ref-for-concept-settings-object-origin④">(2)</a>
+    <li><a href="#ref-for-concept-settings-object-origin③">3.1. Local File System Permissions</a> <a href="#ref-for-concept-settings-object-origin④">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-dnd-ro">
@@ -3895,7 +5001,7 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-same-origin">2.2. Permissions</a>
     <li><a href="#ref-for-same-origin①">2.3. The FileSystemHandle interface</a>
-    <li><a href="#ref-for-same-origin②">3.1. Native File System Permissions</a>
+    <li><a href="#ref-for-same-origin②">3.1. Local File System Permissions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-serializable-objects">
@@ -3924,14 +5030,14 @@ appropriate.</p>
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin">https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-environment-top-level-origin">2.2. Permissions</a>
-    <li><a href="#ref-for-concept-environment-top-level-origin①">3.1. Native File System Permissions</a>
+    <li><a href="#ref-for-concept-environment-top-level-origin①">3.1. Local File System Permissions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-transient-activation">
    <a href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation">https://html.spec.whatwg.org/multipage/interaction.html#transient-activation</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-transient-activation">2.2. Permissions</a>
-    <li><a href="#ref-for-transient-activation①">3.1. Native File System Permissions</a>
+    <li><a href="#ref-for-transient-activation①">3.1. Local File System Permissions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-set-append">
@@ -4087,7 +5193,7 @@ appropriate.</p>
     <li><a href="#ref-for-dom-permissionstate-granted⑦">2.5.3. The getDirectoryHandle() method</a>
     <li><a href="#ref-for-dom-permissionstate-granted⑧">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-dom-permissionstate-granted⑨">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-permissionstate-granted①⓪">(2)</a>
-    <li><a href="#ref-for-dom-permissionstate-granted①①">3.1. Native File System Permissions</a> <a href="#ref-for-dom-permissionstate-granted①②">(2)</a>
+    <li><a href="#ref-for-dom-permissionstate-granted①①">3.1. Local File System Permissions</a> <a href="#ref-for-dom-permissionstate-granted①②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-permissionstate-prompt">
@@ -4144,7 +5250,7 @@ appropriate.</p>
    <ul>
     <li><a href="#ref-for-permission-state">2.2. Permissions</a> <a href="#ref-for-permission-state①">(2)</a> <a href="#ref-for-permission-state②">(3)</a> <a href="#ref-for-permission-state③">(4)</a> <a href="#ref-for-permission-state④">(5)</a> <a href="#ref-for-permission-state⑤">(6)</a> <a href="#ref-for-permission-state⑥">(7)</a>
     <li><a href="#ref-for-permission-state⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-permission-state⑧">(2)</a>
-    <li><a href="#ref-for-permission-state⑨">3.1. Native File System Permissions</a> <a href="#ref-for-permission-state①⓪">(2)</a>
+    <li><a href="#ref-for-permission-state⑨">3.1. Local File System Permissions</a> <a href="#ref-for-permission-state①⓪">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-permission-state-constraints">
@@ -4385,7 +5491,7 @@ appropriate.</p>
     <li><a href="#ref-for-SecureContext①">2.4. The FileSystemFileHandle interface</a>
     <li><a href="#ref-for-SecureContext②">2.5. The FileSystemDirectoryHandle interface</a>
     <li><a href="#ref-for-SecureContext③">2.6. The FileSystemWritableFileStream interface</a>
-    <li><a href="#ref-for-SecureContext④">3. Accessing Native File System</a>
+    <li><a href="#ref-for-SecureContext④">3. Accessing Local File System</a>
     <li><a href="#ref-for-SecureContext⑤">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
@@ -4393,7 +5499,7 @@ appropriate.</p>
    <a href="https://heycam.github.io/webidl/#securityerror">https://heycam.github.io/webidl/#securityerror</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-securityerror">2.2. Permissions</a> <a href="#ref-for-securityerror①">(2)</a> <a href="#ref-for-securityerror②">(3)</a>
-    <li><a href="#ref-for-securityerror③">3.1. Native File System Permissions</a> <a href="#ref-for-securityerror④">(2)</a> <a href="#ref-for-securityerror⑤">(3)</a>
+    <li><a href="#ref-for-securityerror③">3.1. Local File System Permissions</a> <a href="#ref-for-securityerror④">(2)</a> <a href="#ref-for-securityerror⑤">(3)</a>
     <li><a href="#ref-for-securityerror⑥">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
@@ -4420,7 +5526,7 @@ appropriate.</p>
     <li><a href="#ref-for-idl-USVString">2.3. The FileSystemHandle interface</a>
     <li><a href="#ref-for-idl-USVString①">2.5. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-idl-USVString②">(2)</a> <a href="#ref-for-idl-USVString③">(3)</a> <a href="#ref-for-idl-USVString④">(4)</a> <a href="#ref-for-idl-USVString⑤">(5)</a>
     <li><a href="#ref-for-idl-USVString⑥">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-idl-USVString⑦">(2)</a> <a href="#ref-for-idl-USVString⑧">(3)</a>
-    <li><a href="#ref-for-idl-USVString⑨">3. Accessing Native File System</a> <a href="#ref-for-idl-USVString①⓪">(2)</a> <a href="#ref-for-idl-USVString①①">(3)</a> <a href="#ref-for-idl-USVString①②">(4)</a>
+    <li><a href="#ref-for-idl-USVString⑨">3. Accessing Local File System</a> <a href="#ref-for-idl-USVString①⓪">(2)</a> <a href="#ref-for-idl-USVString①①">(3)</a> <a href="#ref-for-idl-USVString①②">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-a-new-promise">
@@ -4447,7 +5553,7 @@ appropriate.</p>
    <a href="https://heycam.github.io/webidl/#a-promise-rejected-with">https://heycam.github.io/webidl/#a-promise-rejected-with</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-a-promise-rejected-with">2.6. The FileSystemWritableFileStream interface</a>
-    <li><a href="#ref-for-a-promise-rejected-with①">3.1. Native File System Permissions</a> <a href="#ref-for-a-promise-rejected-with②">(2)</a>
+    <li><a href="#ref-for-a-promise-rejected-with①">3.1. Local File System Permissions</a> <a href="#ref-for-a-promise-rejected-with②">(2)</a>
     <li><a href="#ref-for-a-promise-rejected-with③">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
@@ -4470,7 +5576,7 @@ appropriate.</p>
     <li><a href="#ref-for-idl-boolean">2.3. The FileSystemHandle interface</a>
     <li><a href="#ref-for-idl-boolean①">2.4. The FileSystemFileHandle interface</a>
     <li><a href="#ref-for-idl-boolean②">2.5. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-idl-boolean③">(2)</a> <a href="#ref-for-idl-boolean④">(3)</a>
-    <li><a href="#ref-for-idl-boolean⑤">3. Accessing Native File System</a> <a href="#ref-for-idl-boolean⑥">(2)</a>
+    <li><a href="#ref-for-idl-boolean⑤">3. Accessing Local File System</a> <a href="#ref-for-idl-boolean⑥">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dfn-get-buffer-source-copy">
@@ -4901,7 +6007,7 @@ appropriate.</p>
 directory on disk but an entry doesn’t have to map to any file on disk).<a href="#issue-88e7ec9d"> ↵ </a></div>
    <div class="issue"> Ideally this user activation requirement would be defined upstream. <a href="https://github.com/WICG/permissions-request/issues/2">&lt;https://github.com/WICG/permissions-request/issues/2></a><a href="#issue-88417955"> ↵ </a></div>
    <div class="issue"> Currently <code class="idl"><a data-link-type="idl" href="#enumdef-filesystempermissionmode">FileSystemPermissionMode</a></code> can only be <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-read">"read"</a></code> or <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-readwrite">"readwrite"</a></code>. In
-the future we might want to add a "write" mode as well to support write-only handles. <a href="https://github.com/wicg/native-file-system/issues/119">&lt;https://github.com/wicg/native-file-system/issues/119></a><a href="#issue-7fc2f5c7"> ↵ </a></div>
+the future we might want to add a "write" mode as well to support write-only handles. <a href="https://github.com/wicg/file-system-access/issues/119">&lt;https://github.com/wicg/file-system-access/issues/119></a><a href="#issue-7fc2f5c7"> ↵ </a></div>
    <div class="issue"> The reading and snapshotting behavior needs to be better specified in the <a data-link-type="biblio" href="#biblio-file-api">[FILE-API]</a> spec,
  for now this is kind of hand-wavy.<a href="#issue-1fb8bcae"> ↵ </a></div>
    <div class="issue"> There has been some discussion around and desire for a "inPlace" mode for createWritable
@@ -4909,19 +6015,19 @@ the future we might want to add a "write" mode as well to support write-only han
 example to support in-place modification of large files or things like databases). This is not
 currently implemented in Chrome. Implementing this is currently blocked on figuring out how to
 combine the desire to run malware checks with the desire to let websites make fast in-place
-modifications to existing large files. <a href="https://github.com/wicg/native-file-system/issues/67">&lt;https://github.com/wicg/native-file-system/issues/67></a><a href="#issue-0693bc11"> ↵ </a></div>
+modifications to existing large files. <a href="https://github.com/wicg/file-system-access/issues/67">&lt;https://github.com/wicg/file-system-access/issues/67></a><a href="#issue-0693bc11"> ↵ </a></div>
    <div class="issue"> In the future we might want to add arguments to the async iterable declaration to
-support for example recursive iteration. <a href="https://github.com/wicg/native-file-system/issues/173">&lt;https://github.com/wicg/native-file-system/issues/173></a><a href="#issue-cce0bb28"> ↵ </a></div>
-   <div class="issue"> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/native-file-system/issues/68">&lt;https://github.com/wicg/native-file-system/issues/68></a><a href="#issue-721a33e4"> ↵ </a></div>
-   <div class="issue"> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/native-file-system/issues/68">&lt;https://github.com/wicg/native-file-system/issues/68></a><a href="#issue-721a33e4①"> ↵ </a></div>
-   <div class="issue"> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/native-file-system/issues/68">&lt;https://github.com/wicg/native-file-system/issues/68></a><a href="#issue-721a33e4②"> ↵ </a></div>
+support for example recursive iteration. <a href="https://github.com/wicg/file-system-access/issues/173">&lt;https://github.com/wicg/file-system-access/issues/173></a><a href="#issue-cce0bb28"> ↵ </a></div>
+   <div class="issue"> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/file-system-access/issues/68">&lt;https://github.com/wicg/file-system-access/issues/68></a><a href="#issue-721a33e4"> ↵ </a></div>
+   <div class="issue"> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/file-system-access/issues/68">&lt;https://github.com/wicg/file-system-access/issues/68></a><a href="#issue-721a33e4①"> ↵ </a></div>
+   <div class="issue"> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/file-system-access/issues/68">&lt;https://github.com/wicg/file-system-access/issues/68></a><a href="#issue-721a33e4②"> ↵ </a></div>
    <div class="issue"> Not clear if this should reject, and if it does, is this really the right error type?
  Chrome’s implementation is actually inconsistent about this rejecting or not.<a href="#issue-9aa12629"> ↵ </a></div>
    <div class="issue"> Rather than requiring the website to prompt separately for a writable directory,
- we should provide some kind of API to request a writable directory in one step. <a href="https://github.com/wicg/native-file-system/issues/89">&lt;https://github.com/wicg/native-file-system/issues/89></a><a href="#issue-923f3009"> ↵ </a></div>
+ we should provide some kind of API to request a writable directory in one step. <a href="https://github.com/wicg/file-system-access/issues/89">&lt;https://github.com/wicg/file-system-access/issues/89></a><a href="#issue-923f3009"> ↵ </a></div>
    <div class="issue"> This currently does not block access to <a data-link-type="dfn" href="#too-sensitive-or-dangerous">too sensitive or dangerous</a> directories, to
 be consistent with other APIs that give access to dropped files and directories. This is inconsistent
-with the <a data-link-type="dfn" href="#native-file-system-handle-factories">native file system handle factories</a> though, so we might want to reconsider this.<a href="#issue-fe9f6575"> ↵ </a></div>
+with the <a data-link-type="dfn" href="#local-file-system-handle-factories">local file system handle factories</a> though, so we might want to reconsider this.<a href="#issue-8306b646"> ↵ </a></div>
    <div class="issue"> Storage endpoints should be defined in <a data-link-type="biblio" href="#biblio-storage">[storage]</a> itself, rather
 than being defined here. So merge this into the table there.<a href="#issue-9c98e739"> ↵ </a></div>
   </div>
@@ -5059,7 +6165,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
     <li><a href="#ref-for-dom-filesystempermissionmode-read⑤">2.5.1. Directory iteration</a> <a href="#ref-for-dom-filesystempermissionmode-read⑥">(2)</a>
     <li><a href="#ref-for-dom-filesystempermissionmode-read⑦">2.5.2. The getFileHandle() method</a>
     <li><a href="#ref-for-dom-filesystempermissionmode-read⑧">2.5.3. The getDirectoryHandle() method</a>
-    <li><a href="#ref-for-dom-filesystempermissionmode-read⑨">3.1. Native File System Permissions</a>
+    <li><a href="#ref-for-dom-filesystempermissionmode-read⑨">3.1. Local File System Permissions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystempermissionmode-readwrite">
@@ -5073,7 +6179,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
     <li><a href="#ref-for-dom-filesystempermissionmode-readwrite⑦">2.5.3. The getDirectoryHandle() method</a>
     <li><a href="#ref-for-dom-filesystempermissionmode-readwrite⑧">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-dom-filesystempermissionmode-readwrite⑨">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-filesystempermissionmode-readwrite①⓪">(2)</a>
-    <li><a href="#ref-for-dom-filesystempermissionmode-readwrite①①">3.1. Native File System Permissions</a>
+    <li><a href="#ref-for-dom-filesystempermissionmode-readwrite①①">3.1. Local File System Permissions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-filesystempermissiondescriptor">
@@ -5089,7 +6195,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
     <li><a href="#ref-for-dom-filesystempermissiondescriptor-handle">2.2. Permissions</a> <a href="#ref-for-dom-filesystempermissiondescriptor-handle①">(2)</a> <a href="#ref-for-dom-filesystempermissiondescriptor-handle②">(3)</a> <a href="#ref-for-dom-filesystempermissiondescriptor-handle③">(4)</a> <a href="#ref-for-dom-filesystempermissiondescriptor-handle④">(5)</a> <a href="#ref-for-dom-filesystempermissiondescriptor-handle⑤">(6)</a>
     <li><a href="#ref-for-dom-filesystempermissiondescriptor-handle⑥">2.3.2. The queryPermission() method</a> <a href="#ref-for-dom-filesystempermissiondescriptor-handle⑦">(2)</a>
     <li><a href="#ref-for-dom-filesystempermissiondescriptor-handle⑧">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-filesystempermissiondescriptor-handle⑨">(2)</a>
-    <li><a href="#ref-for-dom-filesystempermissiondescriptor-handle①⓪">3.1. Native File System Permissions</a> <a href="#ref-for-dom-filesystempermissiondescriptor-handle①①">(2)</a>
+    <li><a href="#ref-for-dom-filesystempermissiondescriptor-handle①⓪">3.1. Local File System Permissions</a> <a href="#ref-for-dom-filesystempermissiondescriptor-handle①①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystempermissiondescriptor-mode">
@@ -5098,7 +6204,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
     <li><a href="#ref-for-dom-filesystempermissiondescriptor-mode">2.2. Permissions</a> <a href="#ref-for-dom-filesystempermissiondescriptor-mode①">(2)</a> <a href="#ref-for-dom-filesystempermissiondescriptor-mode②">(3)</a> <a href="#ref-for-dom-filesystempermissiondescriptor-mode③">(4)</a> <a href="#ref-for-dom-filesystempermissiondescriptor-mode④">(5)</a>
     <li><a href="#ref-for-dom-filesystempermissiondescriptor-mode⑤">2.3.2. The queryPermission() method</a>
     <li><a href="#ref-for-dom-filesystempermissiondescriptor-mode⑥">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-filesystempermissiondescriptor-mode⑦">(2)</a>
-    <li><a href="#ref-for-dom-filesystempermissiondescriptor-mode⑧">3.1. Native File System Permissions</a> <a href="#ref-for-dom-filesystempermissiondescriptor-mode⑨">(2)</a>
+    <li><a href="#ref-for-dom-filesystempermissiondescriptor-mode⑧">3.1. Local File System Permissions</a> <a href="#ref-for-dom-filesystempermissiondescriptor-mode⑨">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="querying-file-system-permission">
@@ -5236,7 +6342,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
     <li><a href="#ref-for-filesystemfilehandle④">2.5. The FileSystemDirectoryHandle interface</a>
     <li><a href="#ref-for-filesystemfilehandle⑤">2.5.1. Directory iteration</a>
     <li><a href="#ref-for-filesystemfilehandle⑥">2.5.2. The getFileHandle() method</a> <a href="#ref-for-filesystemfilehandle⑦">(2)</a>
-    <li><a href="#ref-for-filesystemfilehandle⑧">3. Accessing Native File System</a> <a href="#ref-for-filesystemfilehandle⑨">(2)</a>
+    <li><a href="#ref-for-filesystemfilehandle⑧">3. Accessing Local File System</a> <a href="#ref-for-filesystemfilehandle⑨">(2)</a>
     <li><a href="#ref-for-filesystemfilehandle①⓪">3.2. The showOpenFilePicker() method</a>
     <li><a href="#ref-for-filesystemfilehandle①①">3.3. The showSaveFilePicker() method</a>
     <li><a href="#ref-for-filesystemfilehandle①②">3.6. Drag and Drop</a> <a href="#ref-for-filesystemfilehandle①③">(2)</a>
@@ -5300,7 +6406,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
     <li><a href="#ref-for-filesystemdirectoryhandle①">2.5. The FileSystemDirectoryHandle interface</a> <a href="#ref-for-filesystemdirectoryhandle②">(2)</a> <a href="#ref-for-filesystemdirectoryhandle③">(3)</a> <a href="#ref-for-filesystemdirectoryhandle④">(4)</a>
     <li><a href="#ref-for-filesystemdirectoryhandle⑤">2.5.1. Directory iteration</a> <a href="#ref-for-filesystemdirectoryhandle⑥">(2)</a> <a href="#ref-for-filesystemdirectoryhandle⑦">(3)</a>
     <li><a href="#ref-for-filesystemdirectoryhandle⑧">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-filesystemdirectoryhandle⑨">(2)</a>
-    <li><a href="#ref-for-filesystemdirectoryhandle①⓪">3. Accessing Native File System</a>
+    <li><a href="#ref-for-filesystemdirectoryhandle①⓪">3. Accessing Local File System</a>
     <li><a href="#ref-for-filesystemdirectoryhandle①①">3.5. The showDirectoryPicker() method</a>
     <li><a href="#ref-for-filesystemdirectoryhandle①②">3.6. Drag and Drop</a> <a href="#ref-for-filesystemdirectoryhandle①③">(2)</a>
     <li><a href="#ref-for-filesystemdirectoryhandle①④">4. Accessing the Origin Private File System</a> <a href="#ref-for-filesystemdirectoryhandle①⑤">(2)</a>
@@ -5476,7 +6582,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
   <aside class="dfn-panel" data-for="dictdef-filepickeraccepttype">
    <b><a href="#dictdef-filepickeraccepttype">#dictdef-filepickeraccepttype</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dictdef-filepickeraccepttype">3. Accessing Native File System</a>
+    <li><a href="#ref-for-dictdef-filepickeraccepttype">3. Accessing Local File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filepickeraccepttype-description">
@@ -5494,7 +6600,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
   <aside class="dfn-panel" data-for="dictdef-filepickeroptions">
    <b><a href="#dictdef-filepickeroptions">#dictdef-filepickeroptions</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dictdef-filepickeroptions">3. Accessing Native File System</a> <a href="#ref-for-dictdef-filepickeroptions①">(2)</a>
+    <li><a href="#ref-for-dictdef-filepickeroptions">3. Accessing Local File System</a> <a href="#ref-for-dictdef-filepickeroptions①">(2)</a>
     <li><a href="#ref-for-dictdef-filepickeroptions②">3.4. FilePickerOptions.types</a> <a href="#ref-for-dictdef-filepickeroptions③">(2)</a> <a href="#ref-for-dictdef-filepickeroptions④">(3)</a>
    </ul>
   </aside>
@@ -5513,7 +6619,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
   <aside class="dfn-panel" data-for="dictdef-openfilepickeroptions">
    <b><a href="#dictdef-openfilepickeroptions">#dictdef-openfilepickeroptions</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dictdef-openfilepickeroptions">3. Accessing Native File System</a>
+    <li><a href="#ref-for-dictdef-openfilepickeroptions">3. Accessing Local File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-openfilepickeroptions-multiple">
@@ -5525,23 +6631,23 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
   <aside class="dfn-panel" data-for="dictdef-savefilepickeroptions">
    <b><a href="#dictdef-savefilepickeroptions">#dictdef-savefilepickeroptions</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dictdef-savefilepickeroptions">3. Accessing Native File System</a>
+    <li><a href="#ref-for-dictdef-savefilepickeroptions">3. Accessing Local File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-directorypickeroptions">
    <b><a href="#dictdef-directorypickeroptions">#dictdef-directorypickeroptions</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dictdef-directorypickeroptions">3. Accessing Native File System</a>
+    <li><a href="#ref-for-dictdef-directorypickeroptions">3. Accessing Local File System</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="native-file-system-handle-factories">
-   <b><a href="#native-file-system-handle-factories">#native-file-system-handle-factories</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="local-file-system-handle-factories">
+   <b><a href="#local-file-system-handle-factories">#local-file-system-handle-factories</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-native-file-system-handle-factories">2.1. Concepts</a>
-    <li><a href="#ref-for-native-file-system-handle-factories①">2.3.2. The queryPermission() method</a>
-    <li><a href="#ref-for-native-file-system-handle-factories②">3.1. Native File System Permissions</a> <a href="#ref-for-native-file-system-handle-factories③">(2)</a>
-    <li><a href="#ref-for-native-file-system-handle-factories④">3.6. Drag and Drop</a>
-    <li><a href="#ref-for-native-file-system-handle-factories⑤">5.3. First-party vs third-party contexts.</a>
+    <li><a href="#ref-for-local-file-system-handle-factories">2.1. Concepts</a>
+    <li><a href="#ref-for-local-file-system-handle-factories①">2.3.2. The queryPermission() method</a>
+    <li><a href="#ref-for-local-file-system-handle-factories②">3.1. Local File System Permissions</a> <a href="#ref-for-local-file-system-handle-factories③">(2)</a>
+    <li><a href="#ref-for-local-file-system-handle-factories④">3.6. Drag and Drop</a>
+    <li><a href="#ref-for-local-file-system-handle-factories⑤">5.3. First-party vs third-party contexts.</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="is-allowed-to-show-a-file-picker">
@@ -5555,7 +6661,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
   <aside class="dfn-panel" data-for="dom-window-showopenfilepicker">
    <b><a href="#dom-window-showopenfilepicker">#dom-window-showopenfilepicker</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-window-showopenfilepicker">3. Accessing Native File System</a> <a href="#ref-for-dom-window-showopenfilepicker①">(2)</a>
+    <li><a href="#ref-for-dom-window-showopenfilepicker">3. Accessing Local File System</a> <a href="#ref-for-dom-window-showopenfilepicker①">(2)</a>
     <li><a href="#ref-for-dom-window-showopenfilepicker②">3.2. The showOpenFilePicker() method</a> <a href="#ref-for-dom-window-showopenfilepicker③">(2)</a> <a href="#ref-for-dom-window-showopenfilepicker④">(3)</a> <a href="#ref-for-dom-window-showopenfilepicker⑤">(4)</a> <a href="#ref-for-dom-window-showopenfilepicker⑥">(5)</a>
     <li><a href="#ref-for-dom-window-showopenfilepicker⑦">3.4. FilePickerOptions.types</a>
    </ul>
@@ -5563,8 +6669,8 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
   <aside class="dfn-panel" data-for="dom-window-showsavefilepicker">
    <b><a href="#dom-window-showsavefilepicker">#dom-window-showsavefilepicker</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-window-showsavefilepicker">3. Accessing Native File System</a> <a href="#ref-for-dom-window-showsavefilepicker①">(2)</a>
-    <li><a href="#ref-for-dom-window-showsavefilepicker②">3.1. Native File System Permissions</a>
+    <li><a href="#ref-for-dom-window-showsavefilepicker">3. Accessing Local File System</a> <a href="#ref-for-dom-window-showsavefilepicker①">(2)</a>
+    <li><a href="#ref-for-dom-window-showsavefilepicker②">3.1. Local File System Permissions</a>
     <li><a href="#ref-for-dom-window-showsavefilepicker③">3.3. The showSaveFilePicker() method</a> <a href="#ref-for-dom-window-showsavefilepicker④">(2)</a> <a href="#ref-for-dom-window-showsavefilepicker⑤">(3)</a>
     <li><a href="#ref-for-dom-window-showsavefilepicker⑥">3.4. FilePickerOptions.types</a>
    </ul>
@@ -5579,7 +6685,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
   <aside class="dfn-panel" data-for="dom-window-showdirectorypicker">
    <b><a href="#dom-window-showdirectorypicker">#dom-window-showdirectorypicker</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-window-showdirectorypicker">3. Accessing Native File System</a> <a href="#ref-for-dom-window-showdirectorypicker①">(2)</a>
+    <li><a href="#ref-for-dom-window-showdirectorypicker">3. Accessing Local File System</a> <a href="#ref-for-dom-window-showdirectorypicker①">(2)</a>
     <li><a href="#ref-for-dom-window-showdirectorypicker②">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-dom-window-showdirectorypicker③">(2)</a>
    </ul>
   </aside>
