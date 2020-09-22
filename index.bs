@@ -114,7 +114,7 @@ if it was returned by {{StorageManager/getDirectory()|navigator.storage.getDirec
 or one of the [=local file system handle factories=],
 and an entry will have a parent in all other cases.
 
-[=/Entries=] can (but don't have to) be backed by files on the host operating systems local file system,
+[=/Entries=] can (but don't have to) be backed by files on the host operating system's local file system,
 so it is possible for the [=binary data=], [=modification timestamp=],
 and [=children=] of entries to be modified by applications outside of this specification.
 Exactly how external changes are reflected in the data structures defined by this specification,
