@@ -811,7 +811,7 @@ const dir_ref = current_project_dir;
 if (!dir_ref) return;
 
 // Now get a file reference by showing a file picker:
-const file_ref = await self.chooseFileSystemEntries({type: 'openFile'});
+const file_ref = await showOpenFilePicker();
 if (!file_ref) {
     // User cancelled, or otherwise failed to open a file.
     return;
@@ -828,9 +828,9 @@ if (relative_path === null) {
 
     let entry = dir_ref;
     for (const name of relative_path) {
-        entry = await entry.getDirectory(name);
+        entry = await entry.getDirectoryHandle(name);
     }
-    entry = await entry.getFile(file_ref.name);
+    entry = await entry.getFileHandle(file_ref.name);
 
     // Now |entry| will represent the same file on disk as |file_ref|.
     assert await entry.isSameEntry(file_ref) === true;
