@@ -1612,6 +1612,14 @@ Note: In Chrome the directory entry returned by the above algorithm refers to th
 <a href="https://dev.w3.org/2009/dap/file-system/file-dir-sys.html#dfn-temporary">temporary
 file system</a> as used to be defined in [[file-system-api|File API: Directories and System]].
 
+# Accessibility Considerations # {#accessibility-considerations}
+
+*This section is non-normative.*
+
+When this specification is used to present information in the user interface,
+implementors will want to follow the OS level accessibility guidelines for the platform.
+
+
 # Privacy Considerations # {#privacy-considerations}
 
 *This section is non-normative.*
