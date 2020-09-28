@@ -811,7 +811,7 @@ const dir_ref = current_project_dir;
 if (!dir_ref) return;
 
 // Now get a file reference by showing a file picker:
-const file_ref = await self.chooseFileSystemEntries({type: 'openFile'});
+const file_ref = await self.showOpenFilePicker();
 if (!file_ref) {
     // User cancelled, or otherwise failed to open a file.
     return;
@@ -1153,8 +1153,7 @@ strictly refer to the file system on the local device. What we call the local fi
 could just as well be backed by a cloud provider. For example on Chrome OS these
 file pickers will also let you pick files and directories on Google Drive.
 
-Advisement: In Chrome this is currently implemented as a `chooseFileSystemEntries` method.
-Starting in Chrome 85 these new methods will also become available.
+Advisement: In Chrome versions earlier than 85, this was implemented as a generic `chooseFileSystemEntries` method.
 
 ## Local File System Permissions ## {#local-file-system-permissions}
 
