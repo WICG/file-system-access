@@ -1324,7 +1324,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version e632b349, updated Mon Sep 28 10:02:40 2020 -0700" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="4a826a1c18c43cc8aee36c7643662acd06e11b72" name="document-revision">
+  <meta content="848a4e909948d920601062b3ae660e7b10515db3" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -2000,18 +2000,19 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       <li><a href="#drag-and-drop"><span class="secno">3.6</span> <span class="content">Drag and Drop</span></a>
      </ol>
     <li><a href="#sandboxed-filesystem"><span class="secno">4</span> <span class="content">Accessing the Origin Private File System</span></a>
+    <li><a href="#accessibility-considerations"><span class="secno">5</span> <span class="content">Accessibility Considerations</span></a>
     <li>
-     <a href="#privacy-considerations"><span class="secno">5</span> <span class="content">Privacy Considerations</span></a>
+     <a href="#privacy-considerations"><span class="secno">6</span> <span class="content">Privacy Considerations</span></a>
      <ol class="toc">
-      <li><a href="#privacy-wide-access"><span class="secno">5.1</span> <span class="content">Users giving access to more, or more sensitive files than they intended.</span></a>
-      <li><a href="#privacy-tracking"><span class="secno">5.2</span> <span class="content">Websites trying to use this API for tracking.</span></a>
-      <li><a href="#privacy-third-party"><span class="secno">5.3</span> <span class="content">First-party vs third-party contexts.</span></a>
+      <li><a href="#privacy-wide-access"><span class="secno">6.1</span> <span class="content">Users giving access to more, or more sensitive files than they intended.</span></a>
+      <li><a href="#privacy-tracking"><span class="secno">6.2</span> <span class="content">Websites trying to use this API for tracking.</span></a>
+      <li><a href="#privacy-third-party"><span class="secno">6.3</span> <span class="content">First-party vs third-party contexts.</span></a>
      </ol>
     <li>
-     <a href="#security-considerations"><span class="secno">6</span> <span class="content">Security Considerations</span></a>
+     <a href="#security-considerations"><span class="secno">7</span> <span class="content">Security Considerations</span></a>
      <ol class="toc">
-      <li><a href="#security-malware"><span class="secno">6.1</span> <span class="content">Malware</span></a>
-      <li><a href="#security-ransomware"><span class="secno">6.2</span> <span class="content">Ransomware attacks</span></a>
+      <li><a href="#security-malware"><span class="secno">7.1</span> <span class="content">Malware</span></a>
+      <li><a href="#security-ransomware"><span class="secno">7.2</span> <span class="content">Ransomware attacks</span></a>
      </ol>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
     <li>
@@ -3769,12 +3770,16 @@ invoked, must run these steps:
    </div>
    <p class="note" role="note"><span>Note:</span> In Chrome the directory entry returned by the above algorithm refers to the same storage as the <a href="https://dev.w3.org/2009/dap/file-system/file-dir-sys.html#dfn-temporary">temporary
 file system</a> as used to be defined in <a data-link-type="biblio" href="#biblio-file-system-api">File API: Directories and System</a>.</p>
-   <h2 class="heading settled" data-level="5" id="privacy-considerations"><span class="secno">5. </span><span class="content">Privacy Considerations</span><a class="self-link" href="#privacy-considerations"></a></h2>
+   <h2 class="heading settled" data-level="5" id="accessibility-considerations"><span class="secno">5. </span><span class="content">Accessibility Considerations</span><a class="self-link" href="#accessibility-considerations"></a></h2>
+   <p><em>This section is non-normative.</em></p>
+   <p>When this specification is used to present information in the user interface,
+implementors will want to follow the OS level accessibility guidelines for the platform.</p>
+   <h2 class="heading settled" data-level="6" id="privacy-considerations"><span class="secno">6. </span><span class="content">Privacy Considerations</span><a class="self-link" href="#privacy-considerations"></a></h2>
    <p><em>This section is non-normative.</em></p>
    <p>This API does not give websites any more read access to data than the existing <code>&lt;input type=file></code> and <code>&lt;input type=file webkitdirectory></code> APIs already do. Furthermore similarly to those APIs, all
 access to files and directories is explicitly gated behind a file or directory picker.</p>
    <p>There are however several major privacy risks with this new API:</p>
-   <h3 class="heading settled" data-level="5.1" id="privacy-wide-access"><span class="secno">5.1. </span><span class="content">Users giving access to more, or more sensitive files than they intended.</span><a class="self-link" href="#privacy-wide-access"></a></h3>
+   <h3 class="heading settled" data-level="6.1" id="privacy-wide-access"><span class="secno">6.1. </span><span class="content">Users giving access to more, or more sensitive files than they intended.</span><a class="self-link" href="#privacy-wide-access"></a></h3>
    <p>This isn’t a new risk with this API, but user agents should try to make sure that users are aware
 of what exactly they’re giving websites access to. This is particularly important when giving
 access to a directory, where it might not be immediately clear to a user just how many files
@@ -3806,7 +3811,7 @@ but user agents should not generally let users give blanket access to the entire
      <p>The default directory for downloads, if the user agent has such a thing.
 Individual files inside the directory again should be allowed, but the whole directory would risk leaking more data than a user realizes.</p>
    </ul>
-   <h3 class="heading settled" data-level="5.2" id="privacy-tracking"><span class="secno">5.2. </span><span class="content">Websites trying to use this API for tracking.</span><a class="self-link" href="#privacy-tracking"></a></h3>
+   <h3 class="heading settled" data-level="6.2" id="privacy-tracking"><span class="secno">6.2. </span><span class="content">Websites trying to use this API for tracking.</span><a class="self-link" href="#privacy-tracking"></a></h3>
    <p>This API could be used by websites to track the user across clearing browsing
 data. This is because, in contrast with existing file access APIs, user agents are
 able to grant persistent access to files or directories and can re-prompt. In
@@ -3821,18 +3826,18 @@ access to, and to automatically expire permission grants except for particularly
 origins (for example persistent permissions could be limited to "installed" web applications).</p>
    <p>User agents also are encouraged to provide a way for users to revoke permissions granted.
 Clearing browsing data is expected to revoke all permissions as well.</p>
-   <h3 class="heading settled" data-level="5.3" id="privacy-third-party"><span class="secno">5.3. </span><span class="content">First-party vs third-party contexts.</span><a class="self-link" href="#privacy-third-party"></a></h3>
+   <h3 class="heading settled" data-level="6.3" id="privacy-third-party"><span class="secno">6.3. </span><span class="content">First-party vs third-party contexts.</span><a class="self-link" href="#privacy-third-party"></a></h3>
    <p>In third-party contexts (e.g. an iframe whose origin does not match that of the top-level frame)
 websites can’t gain access to data they don’t already have access to. This includes both getting
 access to new files or directories via the <a data-link-type="dfn" href="#local-file-system-handle-factories" id="ref-for-local-file-system-handle-factories⑤">local file system handle factories</a>, as well as requesting
 more permissions to existing handles via the <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission⑦">requestPermission</a></code> API.</p>
    <p>Handles can also only be post-messaged to same-origin destinations. Attempts to send a handle to
 a cross-origin destination will result in a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/indices.html#event-messageerror" id="ref-for-event-messageerror">messageerror</a></code> event.</p>
-   <h2 class="heading settled" data-level="6" id="security-considerations"><span class="secno">6. </span><span class="content">Security Considerations</span><a class="self-link" href="#security-considerations"></a></h2>
+   <h2 class="heading settled" data-level="7" id="security-considerations"><span class="secno">7. </span><span class="content">Security Considerations</span><a class="self-link" href="#security-considerations"></a></h2>
    <p><em>This section is non-normative.</em></p>
    <p>This API gives websites the ability to modify existing files on disk, as well as write to new
 files. This has a couple of important security considerations:</p>
-   <h3 class="heading settled" data-level="6.1" id="security-malware"><span class="secno">6.1. </span><span class="content">Malware</span><a class="self-link" href="#security-malware"></a></h3>
+   <h3 class="heading settled" data-level="7.1" id="security-malware"><span class="secno">7.1. </span><span class="content">Malware</span><a class="self-link" href="#security-malware"></a></h3>
    <p>This API could be used by websites to try to store and/or execute malware on the users system.
 To mitigate this risk, this API does not provide any way to mark files as executable (on the other
 hand files that are already executable likely remain that way, even after the files are modified
@@ -3841,7 +3846,7 @@ files created or modified by this API.</p>
    <p>Finally, user agents are encouraged to verify the contents of files modified by this API via <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="malware scans and safe browsing checks" data-noexport id="malware-scans-and-safe-browsing-checks">malware
 scans and safe browsing checks</dfn>, unless some kind of external strong trust relation already exists.
 This of course has effects on the performance characteristics of this API.</p>
-   <h3 class="heading settled" data-level="6.2" id="security-ransomware"><span class="secno">6.2. </span><span class="content">Ransomware attacks</span><a class="self-link" href="#security-ransomware"></a></h3>
+   <h3 class="heading settled" data-level="7.2" id="security-ransomware"><span class="secno">7.2. </span><span class="content">Ransomware attacks</span><a class="self-link" href="#security-ransomware"></a></h3>
    <p>Another risk factor is that of ransomware attacks. The limitations described above regarding
 blocking access to certain sensitive directories helps limit the damage such an attack can do.
 Additionally user agents can grant write access to files at whatever granularity they deem
@@ -4055,7 +4060,7 @@ appropriate.</p>
    <li><a href="#dom-filesystemcreatewritableoptions-keepexistingdata">keepExistingData</a><span>, in §2.4</span>
    <li><a href="#dom-filesystemhandle-kind">kind</a><span>, in §2.3</span>
    <li><a href="#local-file-system-handle-factories">local file system handle factories</a><span>, in §3</span>
-   <li><a href="#malware-scans-and-safe-browsing-checks">malware scans and safe browsing checks</a><span>, in §6.1</span>
+   <li><a href="#malware-scans-and-safe-browsing-checks">malware scans and safe browsing checks</a><span>, in §7.1</span>
    <li>
     mode
     <ul>
@@ -4103,7 +4108,7 @@ appropriate.</p>
    <li><a href="#dom-window-showsavefilepicker">showSaveFilePicker(options)</a><span>, in §3.3</span>
    <li><a href="#dom-writeparams-size">size</a><span>, in §2.6</span>
    <li><a href="#entry-the-same-as">the same as</a><span>, in §2.1</span>
-   <li><a href="#too-sensitive-or-dangerous">too sensitive or dangerous</a><span>, in §5.1</span>
+   <li><a href="#too-sensitive-or-dangerous">too sensitive or dangerous</a><span>, in §6.1</span>
    <li><a href="#dom-writecommandtype-truncate">"truncate"</a><span>, in §2.6</span>
    <li><a href="#dom-filesystemwritablefilestream-truncate">truncate(size)</a><span>, in §2.6.3</span>
    <li><a href="#dom-writeparams-type">type</a><span>, in §2.6</span>
@@ -4259,7 +4264,7 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-event-messageerror">
    <a href="https://html.spec.whatwg.org/multipage/indices.html#event-messageerror">https://html.spec.whatwg.org/multipage/indices.html#event-messageerror</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-event-messageerror">5.3. First-party vs third-party contexts.</a>
+    <li><a href="#ref-for-event-messageerror">6.3. First-party vs third-party contexts.</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-origin-opaque">
@@ -4632,7 +4637,7 @@ appropriate.</p>
   <aside class="dfn-panel" data-for="term-for-site-storage">
    <a href="https://storage.spec.whatwg.org/#site-storage">https://storage.spec.whatwg.org/#site-storage</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-site-storage">5.1. Users giving access to more, or more sensitive files than they intended.</a>
+    <li><a href="#ref-for-site-storage">6.1. Users giving access to more, or more sensitive files than they intended.</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-storage-endpoint">
@@ -5656,7 +5661,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
     <li><a href="#ref-for-dom-filesystemhandle-requestpermission">2.3. The FileSystemHandle interface</a>
     <li><a href="#ref-for-dom-filesystemhandle-requestpermission①">2.3.2. The queryPermission() method</a> <a href="#ref-for-dom-filesystemhandle-requestpermission②">(2)</a>
     <li><a href="#ref-for-dom-filesystemhandle-requestpermission③">2.3.3. The requestPermission() method</a> <a href="#ref-for-dom-filesystemhandle-requestpermission④">(2)</a> <a href="#ref-for-dom-filesystemhandle-requestpermission⑤">(3)</a> <a href="#ref-for-dom-filesystemhandle-requestpermission⑥">(4)</a>
-    <li><a href="#ref-for-dom-filesystemhandle-requestpermission⑦">5.3. First-party vs third-party contexts.</a>
+    <li><a href="#ref-for-dom-filesystemhandle-requestpermission⑦">6.3. First-party vs third-party contexts.</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-filesystemcreatewritableoptions">
@@ -5984,7 +5989,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
     <li><a href="#ref-for-local-file-system-handle-factories①">2.3.2. The queryPermission() method</a>
     <li><a href="#ref-for-local-file-system-handle-factories②">3.1. Local File System Permissions</a> <a href="#ref-for-local-file-system-handle-factories③">(2)</a>
     <li><a href="#ref-for-local-file-system-handle-factories④">3.6. Drag and Drop</a>
-    <li><a href="#ref-for-local-file-system-handle-factories⑤">5.3. First-party vs third-party contexts.</a>
+    <li><a href="#ref-for-local-file-system-handle-factories⑤">6.3. First-party vs third-party contexts.</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="is-allowed-to-show-a-file-picker">
