@@ -366,14 +366,14 @@ The <dfn method for=FileSystemHandle>queryPermission(|descriptor|)</dfn> method,
 ### The {{FileSystemHandle/requestPermission()}} method ### {#api-filesystemhandle-requestpermission}
 
 <div class="note domintro">
-  : |status| = await |handle| . {{FileSystemHandle/requestPermission()|requestPermission}}({ {{FileSystemHandlePermissionDescriptor/mode}} = {{"read"}} })
+  : |status| = await |handle| . {{FileSystemHandle/requestPermission()|requestPermission}}({ {{FileSystemHandlePermissionDescriptor/mode}} : {{"read"}} })
   : |status| = await |handle| . {{FileSystemHandle/requestPermission()}}
   :: If the state of the read permission of this handle is anything other than `"prompt"`, this
      will return that state directly. If it is `"prompt"` however, user activation is needed and
      this will show a confirmation prompt to the user. The new read permission state is then
      returned, depending on the user's response to the prompt.
 
-  : |status| = await |handle| . {{FileSystemHandle/requestPermission()|requestPermission}}({ {{FileSystemHandlePermissionDescriptor/mode}} = {{"readwrite"}} })
+  : |status| = await |handle| . {{FileSystemHandle/requestPermission()|requestPermission}}({ {{FileSystemHandlePermissionDescriptor/mode}} : {{"readwrite"}} })
   :: If the state of the write permission of this handle is anything other than `"prompt"`, this
      will return that state directly. If the status of the read permission of this handle is
      `"denied"` this will return that.
