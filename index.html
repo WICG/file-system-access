@@ -1485,9 +1485,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version ef4bc2af, updated Fri Nov 13 17:15:45 2020 -0800" name="generator">
+  <meta content="Bikeshed version dcd6d516, updated Tue Nov 17 14:40:21 2020 -0800" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="7b3f9f9254851a5dccc126fb0f1821a1885174b2" name="document-revision">
+  <meta content="94472cf1268268244491cdd116e9517ac5ab8f17" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -2078,7 +2078,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">File System Access</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-11-16">16 November 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-11-18">18 November 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -3622,8 +3622,8 @@ for filtering the files displayed in the file picker.</p>
     <p>Each option consists of an <span class="allow-2119">optional</span> <code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-description" id="ref-for-dom-filepickeraccepttype-description">description</a></code> and a number of MIME types and extensions (specified as a mapping of
 MIME type to a list of extensions). If no description is provided one will be generated.
 Extensions have to be strings that start with a ".".</p>
-    <p>In addition to complete MIME types, "<em>" can be used as the subtype of a MIME type to match
-for example all image formats with "image/</em>".</p>
+    <p>In addition to complete MIME types, "*" can be used as the subtype of a MIME type to match
+for example all image formats with "image/*".</p>
     <p>Websites <span class="allow-2119">should</span> always provide both MIME types and file
 extensions for each option. On platforms that only use file extensions to describe file types
 user agents can match on the extensions, while on platforms that don’t use extensions,
