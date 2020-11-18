@@ -1327,8 +1327,8 @@ and a number of MIME types and extensions (specified as a mapping of
 MIME type to a list of extensions). If no description is provided one will be generated.
 Extensions have to be strings that start with a ".".
 
-In addition to complete MIME types, "*" can be used as the subtype of a MIME type to match
-for example all image formats with "image/*".
+In addition to complete MIME types, "\*" can be used as the subtype of a MIME type to match
+for example all image formats with "image/\*".
 
 Websites <span class=allow-2119>should</span> always provide both MIME types and file
 extensions for each option. On platforms that only use file extensions to describe file types
