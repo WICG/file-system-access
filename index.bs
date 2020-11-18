@@ -96,6 +96,13 @@ other operating systems. Additionally underlying file systems might have further
 on what names are or aren't allowed, so a string merely being a [=valid file name=] is not
 a guarantee that creating a file or directory with that name will succeed.
 
+Issue: We should consider having further normative restrictions on file names that will
+never be allowed using this API, rather than leaving it entirely up to underlying file
+systems.
+
+A <dfn>valid suffix code point</dfn> is a [=code point=] that is [=ASCII alphanumeric=],
+or U+0021 (!), U+0023 (#), U+0024 ($), U+002B (+), U+002D (-), U+002E (.), or U+005F (_).
+
 A <dfn lt="file|file entry">file entry</dfn> additionally consists of
 <dfn for="file entry">binary data</dfn> (a [=byte sequence=]) and a
 <dfn for="file entry">modification timestamp</dfn> (a number representing the number of milliseconds since the <a spec=FileAPI>Unix Epoch</a>).
@@ -1325,7 +1332,8 @@ for filtering the files displayed in the file picker.
 Each option consists of an <span class=allow-2119>optional</span> {{FilePickerAcceptType/description}}
 and a number of MIME types and extensions (specified as a mapping of
 MIME type to a list of extensions). If no description is provided one will be generated.
-Extensions have to be strings that start with a ".".
+Extensions have to be strings that start with a "." and only contain [=valid suffix code points=].
+Additionally extensions are limited to a length of 16 code points.
 
 In addition to complete MIME types, "\*" can be used as the subtype of a MIME type to match
 for example all image formats with "image/\*".
@@ -1393,9 +1401,9 @@ run these steps:
     1. If |parsedType| is failure, throw a {{TypeError}}.
     1. If |parsedType|'s [=MIME type/parameters=] are not empty, throw a {{TypeError}}.
     1. If |suffixes| is a string:
-      1. If |suffixes| does not start with ".", throw a {{TypeError}}.
+      1. [=Validate a suffix=] given |suffixes|.
     1. Otherwise, [=list/for each=] |suffix| of |suffixes|:
-      1. If |suffix| does not start with ".", throw a {{TypeError}}.
+      1. [=Validate a suffix=] given |suffix|.
 
   1. Let |filter| be the following steps, given a |filename| (a [=string=]), and a |type| (a [=MIME type=]):
     1. [=map/For each=] |typeString| → |suffixes| of |type|.{{FilePickerAcceptType/accept}}:
@@ -1423,6 +1431,17 @@ run these steps:
 1. If |accepts options| is empty, throw a {{TypeError}}.
 
 1. Return |accepts options|.
+
+</div>
+
+<div algorithm>
+To <dfn>validate a suffix</dfn> |suffix|, run the following steps:
+
+1. If |suffix| does not [=string/starts with|start with=] ".", throw a {{TypeError}}.
+1. If |suffix| contains any [=code points=] that are not [=valid suffix code points=],
+   throw a {{TypeError}}.
+1. If |suffix| ends with ".", ".local" or ".lnk", throw a {{TypeError}}.
+1. If |suffix|'s [=string/length=] is more than 16, throw a {{TypeError}}.
 
 </div>
 
