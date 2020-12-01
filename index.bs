@@ -101,7 +101,12 @@ never be allowed using this API, rather than leaving it entirely up to underlyin
 systems.
 
 A <dfn>valid suffix code point</dfn> is a [=code point=] that is [=ASCII alphanumeric=],
-or U+0021 (!), U+0023 (#), U+0024 ($), U+002B (+), U+002D (-), U+002E (.), or U+005F (_).
+U+002B (+), or U+002E (.).
+
+Note: These code points were chosen to support most pre-existing file formats. The vast
+majority of file extensions are purely alphanumeric, but compound extensions (such as
+`.tar.gz`) and extensions such as `.c++` for C++ source code are also fairly common,
+hence the inclusion of + and . as allowed code points.
 
 A <dfn lt="file|file entry">file entry</dfn> additionally consists of
 <dfn for="file entry">binary data</dfn> (a [=byte sequence=]) and a
@@ -1290,6 +1295,9 @@ these steps:
 
      The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
      Exactly how this is implemented, and what this prompt looks like is left up to the user agent.
+     If |accepts options| are displayed in the UI, the selected option should also be used to suggest an extension
+     to append to a user provided file name, but this is not required. In particular user agents are free to ignore
+     potentially dangerous suffixes such as those ending in `".lnk"` or `".local"`.
 
   1. Wait for the user to have made their selection.
 
@@ -1440,7 +1448,7 @@ To <dfn>validate a suffix</dfn> |suffix|, run the following steps:
 1. If |suffix| does not [=string/starts with|start with=] ".", throw a {{TypeError}}.
 1. If |suffix| contains any [=code points=] that are not [=valid suffix code points=],
    throw a {{TypeError}}.
-1. If |suffix| ends with ".", ".local" or ".lnk", throw a {{TypeError}}.
+1. If |suffix| ends with ".", throw a {{TypeError}}.
 1. If |suffix|'s [=string/length=] is more than 16, throw a {{TypeError}}.
 
 </div>
@@ -1678,6 +1686,12 @@ Examples of directories that user agents might want to restrict as being
   but user agents should not generally let users give blanket access to the entire directory.
 * The default directory for downloads, if the user agent has such a thing.
   Individual files inside the directory again should be allowed, but the whole directory would risk leaking more data than a user realizes.
+* Files with names that end in `.lnk`, when selecting a file to write to. Writing to
+  these files on Windows is similar to creating symlinks on other operating systems,
+  and as such can be used to attempt to trick users into giving access to files they didn't intend to expose.
+* Files with names that end in `.local`, when selecting a file to write to.
+  Windows uses these files to decide what DLLs to load, and as such writing to
+  these files could be used to cause code to be executed.
 
 ## Websites trying to use this API for tracking. ## {#privacy-tracking}
 
