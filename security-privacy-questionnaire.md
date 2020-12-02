@@ -48,7 +48,7 @@ Not really. The exception would be devices that are exposed as files or director
 
 ### 2.11. Does this specification allow an origin some measure of control over a user agent’s native UI?
 
-Not really. The origin can pop up native file or directory pickers, and have some control over what appears inside that native UI (e.g. accepted file types), but that control is very limited.
+The origin can pop up native file or directory pickers, and have some control over what appears inside that native UI (e.g. accepted file types), but that control is very limited. The spec does put limitations on what is allowed as an accepted file type to limit the security impact of allowing websites to control the native UI.
 
 ### 2.12. What temporary identifiers might this this specification create or expose to the web?
 
