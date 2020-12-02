@@ -96,6 +96,18 @@ other operating systems. Additionally underlying file systems might have further
 on what names are or aren't allowed, so a string merely being a [=valid file name=] is not
 a guarantee that creating a file or directory with that name will succeed.
 
+Issue: We should consider having further normative restrictions on file names that will
+never be allowed using this API, rather than leaving it entirely up to underlying file
+systems.
+
+A <dfn>valid suffix code point</dfn> is a [=code point=] that is [=ASCII alphanumeric=],
+U+002B (+), or U+002E (.).
+
+Note: These code points were chosen to support most pre-existing file formats. The vast
+majority of file extensions are purely alphanumeric, but compound extensions (such as
+`.tar.gz`) and extensions such as `.c++` for C++ source code are also fairly common,
+hence the inclusion of + and . as allowed code points.
+
 A <dfn lt="file|file entry">file entry</dfn> additionally consists of
 <dfn for="file entry">binary data</dfn> (a [=byte sequence=]) and a
 <dfn for="file entry">modification timestamp</dfn> (a number representing the number of milliseconds since the <a spec=FileAPI>Unix Epoch</a>).
@@ -1283,6 +1295,9 @@ these steps:
 
      The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
      Exactly how this is implemented, and what this prompt looks like is left up to the user agent.
+     If |accepts options| are displayed in the UI, the selected option should also be used to suggest an extension
+     to append to a user provided file name, but this is not required. In particular user agents are free to ignore
+     potentially dangerous suffixes such as those ending in `".lnk"` or `".local"`.
 
   1. Wait for the user to have made their selection.
 
@@ -1325,7 +1340,8 @@ for filtering the files displayed in the file picker.
 Each option consists of an <span class=allow-2119>optional</span> {{FilePickerAcceptType/description}}
 and a number of MIME types and extensions (specified as a mapping of
 MIME type to a list of extensions). If no description is provided one will be generated.
-Extensions have to be strings that start with a ".".
+Extensions have to be strings that start with a "." and only contain [=valid suffix code points=].
+Additionally extensions are limited to a length of 16 code points.
 
 In addition to complete MIME types, "\*" can be used as the subtype of a MIME type to match
 for example all image formats with "image/\*".
@@ -1393,9 +1409,9 @@ run these steps:
     1. If |parsedType| is failure, throw a {{TypeError}}.
     1. If |parsedType|'s [=MIME type/parameters=] are not empty, throw a {{TypeError}}.
     1. If |suffixes| is a string:
-      1. If |suffixes| does not start with ".", throw a {{TypeError}}.
+      1. [=Validate a suffix=] given |suffixes|.
     1. Otherwise, [=list/for each=] |suffix| of |suffixes|:
-      1. If |suffix| does not start with ".", throw a {{TypeError}}.
+      1. [=Validate a suffix=] given |suffix|.
 
   1. Let |filter| be the following steps, given a |filename| (a [=string=]), and a |type| (a [=MIME type=]):
     1. [=map/For each=] |typeString| → |suffixes| of |type|.{{FilePickerAcceptType/accept}}:
@@ -1423,6 +1439,17 @@ run these steps:
 1. If |accepts options| is empty, throw a {{TypeError}}.
 
 1. Return |accepts options|.
+
+</div>
+
+<div algorithm>
+To <dfn>validate a suffix</dfn> |suffix|, run the following steps:
+
+1. If |suffix| does not [=string/starts with|start with=] ".", throw a {{TypeError}}.
+1. If |suffix| contains any [=code points=] that are not [=valid suffix code points=],
+   throw a {{TypeError}}.
+1. If |suffix| ends with ".", throw a {{TypeError}}.
+1. If |suffix|'s [=string/length=] is more than 16, throw a {{TypeError}}.
 
 </div>
 
@@ -1659,6 +1686,12 @@ Examples of directories that user agents might want to restrict as being
   but user agents should not generally let users give blanket access to the entire directory.
 * The default directory for downloads, if the user agent has such a thing.
   Individual files inside the directory again should be allowed, but the whole directory would risk leaking more data than a user realizes.
+* Files with names that end in `.lnk`, when selecting a file to write to. Writing to
+  these files on Windows is similar to creating symlinks on other operating systems,
+  and as such can be used to attempt to trick users into giving access to files they didn't intend to expose.
+* Files with names that end in `.local`, when selecting a file to write to.
+  Windows uses these files to decide what DLLs to load, and as such writing to
+  these files could be used to cause code to be executed.
 
 ## Websites trying to use this API for tracking. ## {#privacy-tracking}
 
