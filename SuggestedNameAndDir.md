@@ -147,6 +147,12 @@ const file_ref1 = await self.showSaveFilePicker({
 const file_ref2 = await self.showSaveFilePicker({
   id: 'flower'
 });
+
+// Picker should start out in the directory `file_ref1` was picked from.
+const file_ref3 = await self.showOpenFilePicker({
+  id: 'fruit'
+});
+
 ```
 
 ## Detailed design discussion
