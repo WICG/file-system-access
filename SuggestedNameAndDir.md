@@ -127,7 +127,7 @@ The possible values for `startIn` would be:
 - `home`: The user's Home directory.
 - `music`: Directory where audio files would typically be stored.
 - `pictures`: Directory where photos and other still images would typically be stored.
-- `videos`: Directory where videos would typically be stored.
+- `videos`: Directory where videos/movies would typically be stored.
 
 ### Distinguishing the "purpose" of different file picker invocations.
 
@@ -243,4 +243,4 @@ to deal with otherwise simplifies the API somewhat.
 
 Many thanks for valuable feedback and advice from:
 
-Austin Sullivan
+Austin Sullivan, Thomas Steiner
