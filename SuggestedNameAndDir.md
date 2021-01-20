@@ -8,6 +8,35 @@
 
 * [Issue tracker](https://github.com/WICG/file-system-access/issues)
 
+## Table of Contents
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Introduction](#introduction)
+- [Goals and Use Cases](#goals-and-use-cases)
+  - [Save an existing file in a different directory](#save-an-existing-file-in-a-different-directory)
+  - [Save a file using a different name in the same directory](#save-a-file-using-a-different-name-in-the-same-directory)
+  - [Open a file from the same directory as a currently open file or project](#open-a-file-from-the-same-directory-as-a-currently-open-file-or-project)
+  - [Prompt a user to open a image (or video, or audio file)](#prompt-a-user-to-open-a-image-or-video-or-audio-file)
+  - [Remember different last-used directories for different purposes](#remember-different-last-used-directories-for-different-purposes)
+- [Non-goals](#non-goals)
+- [Proposed API](#proposed-api)
+  - [Specifying suggested file name to save as](#specifying-suggested-file-name-to-save-as)
+  - [Specifying starting directory based on an existing handle.](#specifying-starting-directory-based-on-an-existing-handle)
+  - [Specifying a well-known starting directory](#specifying-a-well-known-starting-directory)
+  - [Distinguishing the "purpose" of different file picker invocations.](#distinguishing-the-purpose-of-different-file-picker-invocations)
+- [Detailed design discussion](#detailed-design-discussion)
+  - [Interaction of `suggestedName` and accepted file types](#interaction-of-suggestedname-and-accepted-file-types)
+    - [Considered alternatives](#considered-alternatives)
+  - [Interaction between `startIn` and `id`](#interaction-between-startin-and-id)
+    - [Considered alternatives](#considered-alternatives-1)
+  - [Start in directory vs start in parent of directory](#start-in-directory-vs-start-in-parent-of-directory)
+- [Stakeholder Feedback / Opposition](#stakeholder-feedback--opposition)
+- [References & acknowledgements](#references--acknowledgements)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Introduction
 
 When initially shipping the File System Access API we shipped a bare minimum API
