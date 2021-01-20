@@ -159,7 +159,7 @@ const file_ref3 = await self.showOpenFilePicker({
 
 ### Interaction of `suggestedName` and accepted file types
 
-It is possible for `suggestedName` to be inconssitent with the file types a
+It is possible for `suggestedName` to be inconsistent with the file types a
 website declared as being the accepted file types for a file picker. There are
 a couple of cases worth highlighting here:
 
@@ -196,7 +196,7 @@ as such it isn't immediately obvious what should happen if all are provided.
 Our proposal is for it to be an error to provide both `startIn` and
 `startInParentOf`. It should not be an error to provide both `startIn*` and
 `id`. If both are provided, `startIn*` will specify what directory the file
-picker should start out it, and the ultimately picked directory will be recorded
+picker should start out in, and the ultimately picked directory will be recorded
 as the last selected directory for the given `id`, such that future invocations
 with that `id` but no `startIn*` value will use the directory.
 
@@ -212,9 +212,9 @@ We could also not reject if both `startIn` and `startInParentOf` are provided.
 This might have benefits if browsers only implement one of them. Websites
 could still get some of the behavior they want without having to do tricky
 feature detection to figure out which feature is and isn't supported. On the
-other hand, allowing both would mean we'd have to specify a ordering between
+other hand, allowing both would mean we'd have to specify an ordering between
 them, and unless the ordering we specify happens to match the fallback behavior
-a website wants, websites would still need to feature detect. Only allowing one
+a website wants, websites would still need to feature-detect. Only allowing one
 is simpler to reason about.
 
 We could allow file handles to be passed to `startIn` as well. This could behave
@@ -237,7 +237,7 @@ to deal with otherwise simplifies the API somewhat.
 * Chrome : Positive, authoring this explainer
 * Gecko : No signals
 * WebKit : No signals
-* Web developers : Positive, frequently requested
+* Web developers : Positive, frequently requested (See #85, #144, #94 and #80.)
 
 ## References & acknowledgements
 
