@@ -32,6 +32,7 @@
   - [Interaction between `startIn` and `id`](#interaction-between-startin-and-id)
     - [Considered alternatives](#considered-alternatives-1)
   - [Start in directory vs start in parent of directory](#start-in-directory-vs-start-in-parent-of-directory)
+  - [Security considerations](#security-considerations)
 - [Stakeholder Feedback / Opposition](#stakeholder-feedback--opposition)
 - [References & acknowledgements](#references--acknowledgements)
 
