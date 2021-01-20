@@ -40,6 +40,13 @@ to save a file as. Specifically to help address the following use cases:
 3. User saves the file using a different name, in the directory the original
    file exists (without having to re-navigate to that directory).
 
+### Open a file from the same directory as a currently open file or project
+
+1. User is editing a file from their local file system.
+2. User then picks the "Open" option from the web application to open another file.
+3. User can pick files from the same directory the currently open file is in
+   without having to re-navigate to that directory.
+
 ### Prompt a user to open a image (or video, or audio file)
 
 1. User picks "Insert image" in a web application
@@ -81,30 +88,51 @@ const file_ref = await self.showSaveFilePicker({
 
 ### Specifying starting directory based on an existing handle.
 
-There are two cases where it is useful to be able to specify a starting
-directory based on an existing handle. The first of these if a website wants to
-let a user pick a sibling to an existing file or directory. For this purpose we
-propose adding a `startInParentOf` option, that can be passed to any of the file
-and directory picker methods:
+We propose adding a `startIn` option, that can be either a file or a directory
+handle. If the passed in handle is a file handle, the picker will start out in
+the parent directory of the file, while if the passed in handle is a directory
+handle the picker will start out in the passed in directory itself.
+
+Additionally, in a save file picker, if `startIn` is a file, and no explicit
+`suggestedName` is also passed in, the name from the passed in file handle
+will be treated as if it was passed as `suggestedName`.
+
+This lets you use `startIn` for typical "Save as" UI flows:
 
 ```javascript
-const existing_handle = /* some FileSystemHandle, could be either a file or a directory */;
-const file_ref = await self.showSaveFilePicker({
-  startInParentOf: existing_handle
-});
+async function saveFileAs(file_handle) {
+  return await self.showSaveFilePicker({
+    startIn: file_handle
+  });
+}
 ```
 
-The second situation is where a website wants to prompt the user to open a file
-in a directory it already has a handle to. For example if a website has a
-"project" directory open, it might make sense for a "Save" dialog to start out
-in that directory. For this purpose we propose additionally adding a `startIn`
-option:
+And is also useful for cases where you a user is likely to want to open a file
+from the same directory as a currently open file or directory:
 
 ```javascript
-const existing_dir_handle = /* some FileSystemDirectoryHandle */;
-const file_ref = await self.showSaveFilePicker({
-  startIn: existing_dir_handle
-});
+async function openFileFromDirectory(project_dir) {
+  return await self.showOpenFilePicker({
+    startIn: project_dir
+  });
+}
+
+// Used when prompting the user to open a new file, starting out in the
+// directory containing a currently open file.
+async function openFileFromDirectoryContainingFile(open_file) {
+  return await self.showOpenFilePicker({
+    startIn: open_file
+  });
+}
+
+// Used for example in a flow where a website wants to prompt the user to open
+// the directory containing the currently opened file (for example for file
+// formats that contain relative paths to other files in the same directory).
+async function openDirectoryContainingFile(open_file) {
+  return await self.showDirectoryPicker({
+    startIn: open_file
+  });
+}
 ```
 
 ### Specifying a well-known starting directory
@@ -188,17 +216,22 @@ optional as long as `excludeAcceptAllOption` is set to true, but then later
 changing `excludeAcceptAllOption` to false would suddenly change behavior and
 possibly break existing API usage.
 
-### Interaction between `startIn`, `startInParentOf` and `id`
+### Interaction between `startIn` and `id`
 
-All these attributes influence what directory the file picker should start with,
+Both these attributes influence what directory the file picker should start with,
 as such it isn't immediately obvious what should happen if all are provided.
 
-Our proposal is for it to be an error to provide both `startIn` and
-`startInParentOf`. It should not be an error to provide both `startIn*` and
-`id`. If both are provided, `startIn*` will specify what directory the file
-picker should start out in, and the ultimately picked directory will be recorded
-as the last selected directory for the given `id`, such that future invocations
-with that `id` but no `startIn*` value will use the directory.
+Our proposal is for it to not be an error to provide both `startIn` and
+`id`. If a well-known directory is provide for `startIn`, `id` will take
+precedence. That means that if a previously recorded path for the same `id`
+exists, it will be used as starting directory, and only if no such path is
+known will `startIn` be used.
+
+On the other hand if `startIn` is a file or directory handle, it will take
+precedence over `id`. In this case `startIn` specifies what directory the
+file picker should start out in, and the ultimately picked directory will be
+recorded as the last selected directory for the given `id`, such that future
+invocations with that `id` but no `startIn` will use the directory.
 
 #### Considered alternatives
 
@@ -208,29 +241,32 @@ downsides to allowing both though, as recording the last used directory for
 future invocations of a file picker without a `startIn` option still seems
 useful.
 
-We could also not reject if both `startIn` and `startInParentOf` are provided.
-This might have benefits if browsers only implement one of them. Websites
-could still get some of the behavior they want without having to do tricky
-feature detection to figure out which feature is and isn't supported. On the
-other hand, allowing both would mean we'd have to specify an ordering between
-them, and unless the ordering we specify happens to match the fallback behavior
-a website wants, websites would still need to feature-detect. Only allowing one
-is simpler to reason about.
+We could also have either `id` or `startIn` always take precedence over the
+other. In some ways this might be less confusing, as it would always be clear
+which one takes precedence, without having to know the type of what is passed to
+`startIn`. We've chosen not to do so though. Using a well-known directory only
+as a fallback mechanism for the `id` based directory matches what other similar
+APIs do. Simultanously if a website explicitly specifies a concrete directory to
+open the picker in by passing a file or directory handle to `startIn` we also
+want to respect that. Hence the precedence depending on the type of the `startIn`
+option.
 
-We could allow file handles to be passed to `startIn` as well. This could behave
-as if the file handle was passed to `startInParentOf`, while the name of the
-file was passed as `suggestedName`. This would perhaps make the Save As use
-cases somewhat simpler, but is also redundant with what is already possible with
-the proposed API. Furthermore we would then have to specify what happens if both
-a `startIn` file, and an explicit `suggestedName` is specified.
+### Start in directory vs start in parent of directory
 
-Finally, rather than having both `startIn` and `startInParentOf`, we could have
-a single option that accepts both a file or a directory handle. If a file is
-passed in, it behaves as the above described `startInParentOf`, but if a
-directory is passed in it behaves as `startIn`. This means we would lose the
-ability to start a picker in the parent directory of a given directory handle,
-but that is also one of the more edge use cases, and only having a single option
-to deal with otherwise simplifies the API somewhat.
+An earlier version of this document had separate `startIn` and `startInParentOf`
+options. This would enable websites to not only open file or directory pickers
+in the same directory as a passed in directory handle, but also in the parent
+directory of such a directory (without needing to have access to a handle for
+the parent directory).
+
+Having a single `startIn` option results in a simpler and easier to explain and
+understand API, whil still supporting all the major use cases. Websites will be
+able to start file or directory pickers in any directory they have a handle to,
+as well as any directory for which they have a handle to a file in said
+directory. The only hypothetical use case that isn't covered by this is for
+cases where the website wants the user to select a sibling directory to a
+previously selected directory, but we're not aware of any concrete use cases
+where that would be beneficial.
 
 ## Stakeholder Feedback / Opposition
 
