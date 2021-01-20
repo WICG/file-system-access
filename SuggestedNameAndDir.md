@@ -297,6 +297,16 @@ cases where the website wants the user to select a sibling directory to a
 previously selected directory, but we're not aware of any concrete use cases
 where that would be beneficial.
 
+### Security considerations
+
+As mentioned in the non-goals section, all these attributes should be considered
+suggestions or hints. This is particularly relevant for the `suggestedName`
+option. The same concerns around writing to files ending in `.lnk` or `.local`
+as mentioned in https://wicg.github.io/file-system-access/#privacy-wide-access
+also apply to letting the website suggest a user save files with these names.
+User agents should do similar sanitization as to how the `download` attribute
+of `<a>` tags is processed in https://html.spec.whatwg.org/multipage/links.html#as-a-download.
+
 ## Stakeholder Feedback / Opposition
 
 * Chrome : Positive, authoring this explainer
