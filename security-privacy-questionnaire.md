@@ -26,6 +26,8 @@ Furthermore, the user will be able to clear storage (storage is file handles in 
 
 Websites can also store any state they like in files they get write access to via this API. Since files written to using this API are considered to be data owned by the user, not by the application, this state would not be cleared when clearing browser data. However access to this state would be removed. If a user later picks the same files or directories again to give the website access to them, the websites will regain access to whatever state they persisted.
 
+Additionally, user agents could also choose to persist the last directory a file was picked from using this API on a per origin (and per purpose via the `FilePickerOption.id` option) basis. This state will not be exposed to the website, it only changes the UI that is presented to the user. A website will have no way of telling if a user picked a file in a certain directory because of this state or because the user manually navigated to the directory.
+
 ### 2.6. What information from the underlying platform, e.g. configuration data, is exposed by this specification to an origin?
 
 Anything that exists on disk in files could be exposed by the user to the web. However, user agents are encouraged to maintain a block list of certain directories with particularly sensitive files, and thus somewhat restrict which files and directories the user is allowed to select. For example, things like Chrome's "Profile" directory, and other platform configuration data directories are likely going to be on this block list.
@@ -48,7 +50,7 @@ Not really. The exception would be devices that are exposed as files or director
 
 ### 2.11. Does this specification allow an origin some measure of control over a user agent’s native UI?
 
-The origin can pop up native file or directory pickers, and have some control over what appears inside that native UI (e.g. accepted file types), but that control is very limited. The spec does put limitations on what is allowed as an accepted file type to limit the security impact of allowing websites to control the native UI.
+The origin can pop up native file or directory pickers, and have some control over what appears inside that native UI (e.g. accepted file types, starting directory and suggested file names), but that control is very limited. The spec does put limitations on what is allowed as an accepted file type and suggested file name to limit the security impact of allowing websites to control the native UI. User agents are expected to employ similar mechanisms to sanitize the sugessted file names as are used to sanitize for example suggested file names in `<a download="foo.ln">` today.
 
 ### 2.12. What temporary identifiers might this this specification create or expose to the web?
 
