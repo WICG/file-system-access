@@ -182,7 +182,6 @@ The possible values for `startIn` would be:
 - `desktop`: The user's Desktop directory, if such a thing exists.
 - `documents`: Directory in which documents created by the user would typically be stored.
 - `downloads`: Directory where downloaded files would typically be stored.
-- `home`: The user's Home directory.
 - `music`: Directory where audio files would typically be stored.
 - `pictures`: Directory where photos and other still images would typically be stored.
 - `videos`: Directory where videos/movies would typically be stored.
