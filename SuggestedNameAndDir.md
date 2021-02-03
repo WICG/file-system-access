@@ -151,7 +151,7 @@ async function openFileFromDirectory(project_dir) {
 // directory containing a currently open file.
 async function openFileFromDirectoryContainingFile(open_file) {
   return await self.showOpenFilePicker({
-    startIn: open_file
+    startIn: project_dir
   });
 }
 
