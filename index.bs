@@ -976,12 +976,6 @@ runs these steps:
       1. If |input| is a {{WriteParams}} and |input|.{{WriteParams/position}} is not `undefined`,
          set |writePosition| to |input|.{{WriteParams/position}}.
       1. Let |oldSize| be |stream|.[=[[buffer]]=]'s [=byte sequence/length=].
-      1. If |writePosition| is larger than |oldSize|,
-         [=/reject=] |p| with a {{InvalidStateError}} and abort.
-
-         Issue: Not clear if this should reject, and if it does, is this really the right error type?
-         Chrome's implementation is actually inconsistent about this rejecting or not.
-
       1. If |data| is a {{BufferSource}},
          let |dataBytes| be [=get a copy of the buffer source|a copy of=] |data|.
       1. Else if |data| is a {{Blob}}:
@@ -991,6 +985,13 @@ runs these steps:
       1. Else:
          1. [=Assert=]: |data| is a {{USVString}}.
          1. Let |dataBytes| be the result of [=UTF-8 encoding=] |data|.
+      1. If |writePosition| is larger than |oldSize|,
+         append |writePosition| - |oldSize| `0x00` (NUL) bytes to the end of |stream|.[=[[buffer]]=].
+
+         Note: Implementations are expected to behave as if the skipped over file contents
+         are indeed filled with NUL bytes. That doesn't mean these bytes have to actually be
+         written to disk and take up disk space. Instead most file systems support so called
+         sparse files, where these NUL bytes don't take up actual disk space.
 
       1. Let |head| be a [=byte sequence=] containing the first |writePosition| bytes of |stream|.[=[[buffer]]=].
       1. Let |tail| be an empty [=byte sequence=].
