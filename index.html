@@ -1487,7 +1487,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version c5172e83, updated Fri Nov 20 15:35:20 2020 -0800" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="edc4d884deb23ab999334abdf221215aca359730" name="document-revision">
+  <meta content="e74baf793e0d529882a8236748e8b57398ca24c0" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -2078,7 +2078,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">File System Access</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2021-02-04">4 February 2021</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2021-02-18">18 February 2021</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2178,6 +2178,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <ol class="toc">
       <li><a href="#security-malware"><span class="secno">7.1</span> <span class="content">Malware</span></a>
       <li><a href="#security-ransomware"><span class="secno">7.2</span> <span class="content">Ransomware attacks</span></a>
+      <li><a href="#filling-up-disk"><span class="secno">7.3</span> <span class="content">Filling up a users disk</span></a>
      </ol>
     <li>
      <a href="#w3c-conformance"><span class="secno"></span> <span class="content">Conformance</span></a>
@@ -3281,6 +3282,13 @@ runs these steps:
          <li data-md>
           <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑥">[[buffer]]</a> to the concatenation of <var>head</var>, <var>data</var> and <var>tail</var>.</p>
          <li data-md>
+          <p>If the operations modifying <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑦">[[buffer]]</a> in the previous steps failed
+ due to exceeding the <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota">storage quota</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⓪">reject</a> <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#quotaexceedederror" id="ref-for-quotaexceedederror">QuotaExceededError</a></code> and abort,
+ leaving <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑧">[[buffer]]</a> unmodified.</p>
+          <p class="note" role="note"><span>Note:</span> <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota①">Storage quota</a> only applies to files stored in the <a data-link-type="dfn" href="#origin-private-file-system" id="ref-for-origin-private-file-system①">origin private file system</a>.
+ However this operation could still fail for other files, for example if the disk being written
+ to runs out of disk space.</p>
+         <li data-md>
           <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-seekoffset" id="ref-for-filesystemwritablefilestream-seekoffset①">[[seekOffset]]</a> to <var>writePosition</var> + <var>data</var>.<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length③">length</a>.</p>
          <li data-md>
           <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#resolve" id="ref-for-resolve①⑦">Resolve</a> <var>p</var>.</p>
@@ -3289,7 +3297,7 @@ runs these steps:
         <p>Else if <var>command</var> is <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-seek" id="ref-for-dom-writecommandtype-seek">"seek"</a></code>:</p>
         <ol>
          <li data-md>
-          <p>If <var>chunk</var>.<code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position②">position</a></code> is <code>undefined</code>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⓪">reject</a> <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror④">TypeError</a></code> and abort.</p>
+          <p>If <var>chunk</var>.<code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position②">position</a></code> is <code>undefined</code>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②①">reject</a> <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror④">TypeError</a></code> and abort.</p>
          <li data-md>
           <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-seekoffset" id="ref-for-filesystemwritablefilestream-seekoffset②">[[seekOffset]]</a> to <var>chunk</var>.<code class="idl"><a data-link-type="idl" href="#dom-writeparams-position" id="ref-for-dom-writeparams-position③">position</a></code>.</p>
          <li data-md>
@@ -3299,23 +3307,29 @@ runs these steps:
         <p>Else if <var>command</var> is <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate">"truncate"</a></code>:</p>
         <ol>
          <li data-md>
-          <p>If <var>chunk</var>.<code class="idl"><a data-link-type="idl" href="#dom-writeparams-size" id="ref-for-dom-writeparams-size">size</a></code> is <code>undefined</code>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②①">reject</a> <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑤">TypeError</a></code> and abort.</p>
+          <p>If <var>chunk</var>.<code class="idl"><a data-link-type="idl" href="#dom-writeparams-size" id="ref-for-dom-writeparams-size">size</a></code> is <code>undefined</code>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②②">reject</a> <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑤">TypeError</a></code> and abort.</p>
          <li data-md>
           <p>Let <var>newSize</var> be <var>chunk</var>.<code class="idl"><a data-link-type="idl" href="#dom-writeparams-size" id="ref-for-dom-writeparams-size①">size</a></code>.</p>
          <li data-md>
-          <p>Let <var>oldSize</var> be <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑦">[[buffer]]</a>'s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length④">length</a>.</p>
+          <p>Let <var>oldSize</var> be <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑨">[[buffer]]</a>'s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length④">length</a>.</p>
          <li data-md>
           <p>If <var>newSize</var> is larger than <var>oldSize</var>:</p>
           <ol>
            <li data-md>
-            <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑧">[[buffer]]</a> to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑥">byte sequence</a> formed by concating <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑨">[[buffer]]</a> with a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑦">byte sequence</a> containing <var>newSize</var>-<var>oldSize</var> <code>0x00</code> bytes.</p>
+            <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer①⓪">[[buffer]]</a> to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑥">byte sequence</a> formed by concating <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer①①">[[buffer]]</a> with a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑦">byte sequence</a> containing <var>newSize</var>-<var>oldSize</var> <code>0x00</code> bytes.</p>
+           <li data-md>
+            <p>If the operation in the previous step failed due to exceeding the <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota②">storage quota</a>, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②③">reject</a> <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#quotaexceedederror" id="ref-for-quotaexceedederror①">QuotaExceededError</a></code> and abort,
+  leaving <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer①②">[[buffer]]</a> unmodified.</p>
+            <p class="note" role="note"><span>Note:</span> <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota③">Storage quota</a> only applies to files stored in the <a data-link-type="dfn" href="#origin-private-file-system" id="ref-for-origin-private-file-system②">origin private file system</a>.
+  However this operation could still fail for other files, for example if the disk being written
+  to runs out of disk space.</p>
           </ol>
          <li data-md>
           <p>Else if <var>newSize</var> is smaller than <var>oldSize</var>:</p>
           <ol>
            <li data-md>
-            <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer①⓪">[[buffer]]</a> to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑧">byte sequence</a> containing the first <var>newSize</var> bytes
-  in <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer①①">[[buffer]]</a>.</p>
+            <p>Set <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer①③">[[buffer]]</a> to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑧">byte sequence</a> containing the first <var>newSize</var> bytes
+  in <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer①④">[[buffer]]</a>.</p>
           </ol>
          <li data-md>
           <p>If <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-seekoffset" id="ref-for-filesystemwritablefilestream-seekoffset③">[[seekOffset]]</a> is bigger than <var>newSize</var>,
@@ -3525,7 +3539,7 @@ these steps:
        <li data-md>
         <p>Wait for the user to have made their selection.</p>
        <li data-md>
-        <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②②">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror①">AbortError</a></code> and abort.</p>
+        <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②④">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror①">AbortError</a></code> and abort.</p>
        <li data-md>
         <p>Let <var>entries</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list">list</a> of <a data-link-type="dfn" href="#file" id="ref-for-file⑨">file entries</a> representing the selected files or directories.</p>
        <li data-md>
@@ -3541,7 +3555,7 @@ these steps:
            <li data-md>
             <p>At the discretion of the user agent,
  either go back to the beginning of these <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel①②">in parallel</a> steps,
- or <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②③">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror②">AbortError</a></code> and abort.</p>
+ or <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⑤">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror②">AbortError</a></code> and abort.</p>
           </ol>
          <li data-md>
           <p>Add a new <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle①⓪">FileSystemFileHandle</a></code> associated with <var>entry</var> to <var>result</var>.</p>
@@ -3599,7 +3613,7 @@ these steps:
        <li data-md>
         <p>Wait for the user to have made their selection.</p>
        <li data-md>
-        <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②④">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror③">AbortError</a></code> and abort.</p>
+        <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⑥">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror③">AbortError</a></code> and abort.</p>
        <li data-md>
         <p>Let <var>entry</var> be a <a data-link-type="dfn" href="#file" id="ref-for-file①⓪">file entry</a> representing the selected file.</p>
        <li data-md>
@@ -3610,7 +3624,7 @@ these steps:
          <li data-md>
           <p>At the discretion of the user agent,
  either go back to the beginning of these <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel①④">in parallel</a> steps,
- or <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⑤">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror④">AbortError</a></code> and abort.</p>
+ or <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⑦">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror④">AbortError</a></code> and abort.</p>
         </ol>
        <li data-md>
         <p>Set <var>entry</var>’s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑤">binary data</a> to an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑨">byte sequence</a>.</p>
@@ -3814,7 +3828,7 @@ these steps:
        <li data-md>
         <p>Wait for the user to have made their selection.</p>
        <li data-md>
-        <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⑥">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror⑤">AbortError</a></code> and abort.</p>
+        <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⑧">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror⑤">AbortError</a></code> and abort.</p>
        <li data-md>
         <p>Let <var>entry</var> be a <a data-link-type="dfn" href="#directory" id="ref-for-directory⑧">directory entry</a> representing the selected directory.</p>
        <li data-md>
@@ -3825,7 +3839,7 @@ these steps:
          <li data-md>
           <p>At the discretion of the user agent,
  either go back to the beginning of these <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel①⑥">in parallel</a> steps,
- or <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⑦">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror⑥">AbortError</a></code> and abort.</p>
+ or <a data-link-type="dfn" href="https://heycam.github.io/webidl/#reject" id="ref-for-reject②⑨">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#aborterror" id="ref-for-aborterror⑥">AbortError</a></code> and abort.</p>
         </ol>
        <li data-md>
         <p>Set <var>result</var> to a new <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①①">FileSystemDirectoryHandle</a></code> associated with <var>entry</var>.</p>
@@ -3924,9 +3938,9 @@ with the <a data-link-type="dfn" href="#local-file-system-handle-factories" id="
 and <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint-quota" id="ref-for-storage-endpoint-quota">quota</a> is null.</p>
    <p class="issue" id="issue-9c98e739"><a class="self-link" href="#issue-9c98e739"></a> Storage endpoints should be defined in <a data-link-type="biblio" href="#biblio-storage">[storage]</a> itself, rather
 than being defined here. So merge this into the table there.</p>
-   <p class="note" role="note"><span>Note:</span> While user agents will typically implement this by persisting the contents of this <a data-link-type="dfn" href="#origin-private-file-system" id="ref-for-origin-private-file-system①">origin private file system</a> to disk, it is not intended that the contents are easily
+   <p class="note" role="note"><span>Note:</span> While user agents will typically implement this by persisting the contents of this <a data-link-type="dfn" href="#origin-private-file-system" id="ref-for-origin-private-file-system③">origin private file system</a> to disk, it is not intended that the contents are easily
 user accessible. Similarly there is no expectation that files or directories with names
-matching the names of children of the <a data-link-type="dfn" href="#origin-private-file-system" id="ref-for-origin-private-file-system②">origin private file system</a> exist.</p>
+matching the names of children of the <a data-link-type="dfn" href="#origin-private-file-system" id="ref-for-origin-private-file-system④">origin private file system</a> exist.</p>
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SecureContext" id="ref-for-SecureContext⑤"><c- g>SecureContext</c-></a>]
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://storage.spec.whatwg.org/#storagemanager" id="ref-for-storagemanager"><c- g>StorageManager</c-></a> {
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise" id="ref-for-idl-promise①⑥"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①④"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-storagemanager-getdirectory" id="ref-for-dom-storagemanager-getdirectory②"><c- g>getDirectory</c-></a>();
@@ -4058,6 +4072,23 @@ This of course has effects on the performance characteristics of this API.</p>
 blocking access to certain sensitive directories helps limit the damage such an attack can do.
 Additionally user agents can grant write access to files at whatever granularity they deem
 appropriate.</p>
+   <h3 class="heading settled" data-level="7.3" id="filling-up-disk"><span class="secno">7.3. </span><span class="content">Filling up a users disk</span><a class="self-link" href="#filling-up-disk"></a></h3>
+   <p>Other than files in the <a data-link-type="dfn" href="#origin-private-file-system" id="ref-for-origin-private-file-system⑤">origin private file system</a>, files written by this API are not subject
+to <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota④">storage quota</a>. As such websites can fill up a users disk without being limited by
+quota, which could leave a users device in a bad state (do note that even with storage that is
+subject to <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota⑤">storage quota</a> it is still possible to fill up, or come close to filling up, a users
+disk, since <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota⑥">storage quota</a> in general is not dependent on the amount of available disk
+space).</p>
+   <p>Without this API websites can write data to disk not subject to quota limitations already
+by triggering downloads of large files (potentially created client side, to not incur any network
+overhead). While the presence of <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritablefilestream-truncate" id="ref-for-dom-filesystemwritablefilestream-truncate③">truncate()</a></code> and writing at a
+potentially really large offset past the end of a file makes it much easier and lower cost to
+create large files, on most file systems such files should not actually take up as much disk space as
+most commonly used file systems support sparse files (and thus wouldn’t actually store the NUL
+bytes generated by resizing a file or seeking past the end of it).</p>
+   <p>Whatever mitigations user agents use to guard against websites filling up a disk via either
+quota managed storage or the existing downloads mechanism should also be employed when websites
+use this API to write to disk.</p>
   </main>
   <div data-fill-with="conformance">
    <h2 class="no-ref no-num heading settled" id="w3c-conformance"><span class="content">Conformance</span><a class="self-link" href="#w3c-conformance"></a></h2>
@@ -4770,6 +4801,13 @@ appropriate.</p>
     <li><a href="#ref-for-storage-endpoint">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-storage-quota">
+   <a href="https://storage.spec.whatwg.org/#storage-quota">https://storage.spec.whatwg.org/#storage-quota</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-storage-quota">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-storage-quota①">(2)</a> <a href="#ref-for-storage-quota②">(3)</a> <a href="#ref-for-storage-quota③">(4)</a>
+    <li><a href="#ref-for-storage-quota④">7.3. Filling up a users disk</a> <a href="#ref-for-storage-quota⑤">(2)</a> <a href="#ref-for-storage-quota⑥">(3)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-storage-endpoint-types">
    <a href="https://storage.spec.whatwg.org/#storage-endpoint-types">https://storage.spec.whatwg.org/#storage-endpoint-types</a><b>Referenced in:</b>
    <ul>
@@ -4928,6 +4966,12 @@ appropriate.</p>
     <li><a href="#ref-for-idl-promise①⑥">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-quotaexceedederror">
+   <a href="https://heycam.github.io/webidl/#quotaexceedederror">https://heycam.github.io/webidl/#quotaexceedederror</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-quotaexceedederror">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-quotaexceedederror①">(2)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-SecureContext">
    <a href="https://heycam.github.io/webidl/#SecureContext">https://heycam.github.io/webidl/#SecureContext</a><b>Referenced in:</b>
    <ul>
@@ -5055,10 +5099,10 @@ appropriate.</p>
     <li><a href="#ref-for-reject②">2.5.2. The getFileHandle() method</a> <a href="#ref-for-reject③">(2)</a> <a href="#ref-for-reject④">(3)</a> <a href="#ref-for-reject⑤">(4)</a> <a href="#ref-for-reject⑥">(5)</a>
     <li><a href="#ref-for-reject⑦">2.5.3. The getDirectoryHandle() method</a> <a href="#ref-for-reject⑧">(2)</a> <a href="#ref-for-reject⑨">(3)</a> <a href="#ref-for-reject①⓪">(4)</a> <a href="#ref-for-reject①①">(5)</a>
     <li><a href="#ref-for-reject①②">2.5.4. The removeEntry() method</a> <a href="#ref-for-reject①③">(2)</a> <a href="#ref-for-reject①④">(3)</a> <a href="#ref-for-reject①⑤">(4)</a> <a href="#ref-for-reject①⑥">(5)</a>
-    <li><a href="#ref-for-reject①⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-reject①⑧">(2)</a> <a href="#ref-for-reject①⑨">(3)</a> <a href="#ref-for-reject②⓪">(4)</a> <a href="#ref-for-reject②①">(5)</a>
-    <li><a href="#ref-for-reject②②">3.2. The showOpenFilePicker() method</a> <a href="#ref-for-reject②③">(2)</a>
-    <li><a href="#ref-for-reject②④">3.3. The showSaveFilePicker() method</a> <a href="#ref-for-reject②⑤">(2)</a>
-    <li><a href="#ref-for-reject②⑥">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-reject②⑦">(2)</a>
+    <li><a href="#ref-for-reject①⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-reject①⑧">(2)</a> <a href="#ref-for-reject①⑨">(3)</a> <a href="#ref-for-reject②⓪">(4)</a> <a href="#ref-for-reject②①">(5)</a> <a href="#ref-for-reject②②">(6)</a> <a href="#ref-for-reject②③">(7)</a>
+    <li><a href="#ref-for-reject②④">3.2. The showOpenFilePicker() method</a> <a href="#ref-for-reject②⑤">(2)</a>
+    <li><a href="#ref-for-reject②⑥">3.3. The showSaveFilePicker() method</a> <a href="#ref-for-reject②⑦">(2)</a>
+    <li><a href="#ref-for-reject②⑧">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-reject②⑨">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-resolve">
@@ -5250,6 +5294,7 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-storage-endpoint-quota">quota</span>
      <li><span class="dfn-paneled" id="term-for-site-storage">storage</span>
      <li><span class="dfn-paneled" id="term-for-storage-endpoint">storage endpoint</span>
+     <li><span class="dfn-paneled" id="term-for-storage-quota">storage quota</span>
      <li><span class="dfn-paneled" id="term-for-storage-endpoint-types">types</span>
     </ul>
    <li>
@@ -5280,6 +5325,7 @@ appropriate.</p>
      <li><span class="dfn-paneled" id="term-for-notallowederror">NotAllowedError</span>
      <li><span class="dfn-paneled" id="term-for-notfounderror">NotFoundError</span>
      <li><span class="dfn-paneled" id="term-for-idl-promise">Promise</span>
+     <li><span class="dfn-paneled" id="term-for-quotaexceedederror">QuotaExceededError</span>
      <li><span class="dfn-paneled" id="term-for-SecureContext">SecureContext</span>
      <li><span class="dfn-paneled" id="term-for-securityerror">SecurityError</span>
      <li><span class="dfn-paneled" id="term-for-exceptiondef-typeerror">TypeError</span>
@@ -6006,7 +6052,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
    <b><a href="#filesystemwritablefilestream-buffer">#filesystemwritablefilestream-buffer</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-filesystemwritablefilestream-buffer">2.4.2. The createWritable() method</a>
-    <li><a href="#ref-for-filesystemwritablefilestream-buffer①">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-filesystemwritablefilestream-buffer②">(2)</a> <a href="#ref-for-filesystemwritablefilestream-buffer③">(3)</a> <a href="#ref-for-filesystemwritablefilestream-buffer④">(4)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑤">(5)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑥">(6)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑦">(7)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑧">(8)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑨">(9)</a> <a href="#ref-for-filesystemwritablefilestream-buffer①⓪">(10)</a> <a href="#ref-for-filesystemwritablefilestream-buffer①①">(11)</a>
+    <li><a href="#ref-for-filesystemwritablefilestream-buffer①">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-filesystemwritablefilestream-buffer②">(2)</a> <a href="#ref-for-filesystemwritablefilestream-buffer③">(3)</a> <a href="#ref-for-filesystemwritablefilestream-buffer④">(4)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑤">(5)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑥">(6)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑦">(7)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑧">(8)</a> <a href="#ref-for-filesystemwritablefilestream-buffer⑨">(9)</a> <a href="#ref-for-filesystemwritablefilestream-buffer①⓪">(10)</a> <a href="#ref-for-filesystemwritablefilestream-buffer①①">(11)</a> <a href="#ref-for-filesystemwritablefilestream-buffer①②">(12)</a> <a href="#ref-for-filesystemwritablefilestream-buffer①③">(13)</a> <a href="#ref-for-filesystemwritablefilestream-buffer①④">(14)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="filesystemwritablefilestream-seekoffset">
@@ -6046,6 +6092,7 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
    <ul>
     <li><a href="#ref-for-dom-filesystemwritablefilestream-truncate">2.6. The FileSystemWritableFileStream interface</a>
     <li><a href="#ref-for-dom-filesystemwritablefilestream-truncate①">2.6.3. The truncate() method</a> <a href="#ref-for-dom-filesystemwritablefilestream-truncate②">(2)</a>
+    <li><a href="#ref-for-dom-filesystemwritablefilestream-truncate③">7.3. Filling up a users disk</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-filepickeraccepttype">
@@ -6174,7 +6221,9 @@ than being defined here. So merge this into the table there.<a href="#issue-9c98
    <b><a href="#origin-private-file-system">#origin-private-file-system</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-origin-private-file-system">2.2. Permissions</a>
-    <li><a href="#ref-for-origin-private-file-system①">4. Accessing the Origin Private File System</a> <a href="#ref-for-origin-private-file-system②">(2)</a>
+    <li><a href="#ref-for-origin-private-file-system①">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-origin-private-file-system②">(2)</a>
+    <li><a href="#ref-for-origin-private-file-system③">4. Accessing the Origin Private File System</a> <a href="#ref-for-origin-private-file-system④">(2)</a>
+    <li><a href="#ref-for-origin-private-file-system⑤">7.3. Filling up a users disk</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-storagemanager-getdirectory">
