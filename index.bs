@@ -1526,22 +1526,61 @@ or directory was picked from, and new pickers will start out in that directory. 
 {{FilePickerOptions/id}} the user agent can remember different directories for different IDs
 (user agents will only remember directories for a limited number of IDs).
 
-Specifying {{FilePickerOptions/startIn}} as a {{WellKnownDirectory}} will result in the dialog
-starting in that directory, unless an explicit ID was also passed and something...
+<pre class=example id="filepickeroptions-starting-directory-example1" highlight=js>
+// If a mapping exists from this ID to a previousy picked directory, start in
+// this directory. Otherwise, a mapping will be created from this ID to the
+// directory of the resulting file picker invocation.
+const options = {
+  <l>{{FilePickerOptions/id}}</l>: 'foo',
+};
+</pre>
 
 Specifying {{FilePickerOptions/startIn}} as a {{FileSystemFileHandle}} will result in the dialog
 starting in the parent directory of that file, while passing in a {{FileSystemDirectoryHandle}}
 will result in the dialog to start in the passed in directory. These take precedence even if
 an explicit {{FilePickerOptions/id}} is also passed in.
 
-(TODO: maybe a note about how this is merely where the picker STARTS at, not where it finishes? Particularly with saving files)
-
-For example, given a {{FileSystemDirectoryHandle}} <var ignore>project_dir</var>, the following will show
+For example, given a {{FileSystemDirectoryHandle}} <var>project_dir</var>, the following will show
 a file picker that starts out in that directory:
-<pre class=example id="filepickeroptions-starting-directory-example1" highlight=js>
+
+<pre class=example id="filepickeroptions-starting-directory-example2" highlight=js>
+// The picker will open to the directory of |project_dir| regardless of whether
+// 'foo' has a valid mapping.
 const options = {
   <l>{{FilePickerOptions/id}}</l>: 'foo',
   <l>{{FilePickerOptions/startIn}}</l>: |project_dir|,
+};
+</pre>
+
+NOTE: The {{FilePickerOptions/id}} and {{FilePickerOptions/startIn}} fields control only
+the directory the picker opens to. In the above example, it cannot be assumed that
+the {{FilePickerOptions/id}} 'foo' will map to the same directory as |project_dir|
+once the file picker operation has completed.
+
+Specifying {{FilePickerOptions/startIn}} as a {{WellKnownDirectory}} will result in the dialog
+starting in that directory, unless an explicit ID was also passed in which has a mapping to a
+valid directory.
+
+Below is an example of specifying both an {{FilePickerOptions/id}} and
+{{FilePickerOptions/startIn}} as a {{WellKnownDirectory}}. If there is an existing
+mapping from the given ID to a path, this mapping is used. Otherwise, the path suggested
+via the {{WellKnownDirectory}} is used.
+
+<pre class=example id="filepickeroptions-starting-directory-example3" highlight=js>
+// First time specifying the ID 'foo'. It is not mapped to a directory.
+// The file picker will fall back to opening to the Downloads directory. TODO: link this.
+const options = {
+  <l>{{FilePickerOptions/id}}</l>: 'foo',  // Unmapped.
+  <l>{{FilePickerOptions/startIn}}</l>: 'downloads',  // Start here.
+};
+
+// Later...
+
+// The ID 'foo' may or may not be mapped. For example, the mapping for this ID
+// may have been evicted.
+const options = {
+  <l>{{FilePickerOptions/id}}</l>: 'foo',  // Maybe mapped. If so, start here.
+  <l>{{FilePickerOptions/startIn}}</l>: 'downloads',  // Otherwise, start here.
 };
 </pre>
 
