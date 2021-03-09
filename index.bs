@@ -1153,6 +1153,8 @@ enum WellKnownDirectory {
   "videos",
 };
 
+typedef (WellKnownDirectory or FileSystemHandle) StartInDirectory;
+
 dictionary FilePickerAcceptType {
     USVString description;
     record<USVString, (USVString or sequence<USVString>)> accept;
@@ -1162,7 +1164,7 @@ dictionary FilePickerOptions {
     sequence<FilePickerAcceptType> types;
     boolean excludeAcceptAllOption = false;
     USVString id;
-    (WellKnownDirectory or FileSystemHandle)? startIn;
+    StartInDirectory? startIn;
 };
 
 dictionary OpenFilePickerOptions : FilePickerOptions {
@@ -1175,7 +1177,7 @@ dictionary SaveFilePickerOptions : FilePickerOptions {
 
 dictionary DirectoryPickerOptions {
     USVString id;
-    (WellKnownDirectory or FileSystemHandle)? startIn;
+    StartInDirectory? startIn;
 };
 
 [SecureContext]
@@ -1249,9 +1251,12 @@ To verify that an |environment| <dfn>is allowed to show a file picker</dfn>, run
 The <dfn method for=Window>showOpenFilePicker(|options|)</dfn> method, when invoked, must run
 these steps:
 
-1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
-
 1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
+
+1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
+1. Let |starting directory| be the result of [=determine the directory the picker will start in|determining the directory the picker will start in=]
+   given |options|.{{FilePickerOptions/id}}, |options|.{{FilePickerOptions/startIn}} and |environment|.
+
 1. Let |global| be |environment|'s [=environment settings object/global object=].
 1. Verify that |environment| [=is allowed to show a file picker=].
 
@@ -1266,6 +1271,8 @@ these steps:
 
      The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
      Exactly how this is implemented, and what this prompt looks like is left up to the user agent.
+
+     TODO Something about |starting directory|.
 
   1. Wait for the user to have made their selection.
 
@@ -1283,6 +1290,8 @@ these steps:
          or [=/reject=] |p| with an {{AbortError}} and abort.
 
     1. Add a new {{FileSystemFileHandle}} associated with |entry| to |result|.
+
+  1. [=Remember a picked directory=] given |options|.{{FilePickerOptions/id}}, |entries|[0] and |environment|.
 
   1. Perform the <a spec=html>activation notification</a> steps in |global|'s [=Window/browsing context=].
 
@@ -1318,9 +1327,12 @@ these steps:
 The <dfn method for=Window>showSaveFilePicker(|options|)</dfn> method, when invoked, must run
 these steps:
 
-1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
-
 1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
+
+1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
+1. Let |starting directory| be the result of [=determine the directory the picker will start in|determining the directory the picker will start in=]
+   given |options|.{{FilePickerOptions/id}}, |options|.{{FilePickerOptions/startIn}} and |environment|.
+
 1. Let |global| be |environment|'s [=environment settings object/global object=].
 1. Verify that |environment| [=is allowed to show a file picker=].
 
@@ -1336,9 +1348,11 @@ these steps:
      to append to a user provided file name, but this is not required. In particular user agents are free to ignore
      potentially dangerous suffixes such as those ending in `".lnk"` or `".local"`.
 
-      If {{SaveFilePickerOptions/suggestedName}} is specified, the file picker prompt will be pre-filled with the
-     {{SaveFilePickerOptions/suggestedName}} as the default name to save as. The interaction between the
+     If |options|.{{SaveFilePickerOptions/suggestedName}} is specified, the file picker prompt will be pre-filled with the
+     |options|.{{SaveFilePickerOptions/suggestedName}} as the default name to save as. The interaction between the
      {{SaveFilePickerOptions/suggestedName}} and |accepts options| is left up to the user agent.
+
+     TODO Something about |starting directory|.
 
   1. Wait for the user to have made their selection.
 
@@ -1356,6 +1370,8 @@ these steps:
   1. Set |entry|'s [=binary data=] to an empty [=byte sequence=].
 
   1. Set |result| to a new {{FileSystemFileHandle}} associated with |entry|.
+
+  1. [=Remember a picked directory=] given |options|.{{FilePickerOptions/id}}, |entry| and |environment|.
 
   1. Perform the <a spec=html>activation notification</a> steps in |global|'s [=Window/browsing context=].
 
@@ -1505,46 +1521,82 @@ To <dfn>validate a suffix</dfn> |suffix|, run the following steps:
 The {{FilePickerOptions/id}} and {{FilePickerOptions/startIn}} fields can be specified to suggest
 the directory which the file picker opens to.
 
+If neither of these options are specified, the user agent remembers the last directory a file
+or directory was picked from, and new pickers will start out in that directory. By specifying an
+{{FilePickerOptions/id}} the user agent can remember different directories for different IDs
+(user agents will only remember directories for a limited number of IDs).
+
+Specifying {{FilePickerOptions/startIn}} as a {{WellKnownDirectory}} will result in the dialog
+starting in that directory, unless an explicit ID was also passed and something...
+
+Specifying {{FilePickerOptions/startIn}} as a {{FileSystemFileHandle}} will result in the dialog
+starting in the parent directory of that file, while passing in a {{FileSystemDirectoryHandle}}
+will result in the dialog to start in the passed in directory. These take precedence even if
+an explicit {{FilePickerOptions/id}} is also passed in.
+
 (TODO: maybe a note about how this is merely where the picker STARTS at, not where it finishes? Particularly with saving files)
 
+For example, given a {{FileSystemDirectoryHandle}} <var ignore>project_dir</var>, the following will show
+a file picker that starts out in that directory:
 <pre class=example id="filepickeroptions-starting-directory-example1" highlight=js>
 const options = {
   <l>{{FilePickerOptions/id}}</l>: 'foo',
-  <l>{{FilePickerOptions/startIn}}</l>: {{FileSystemHandle}},  (TODO: how to represent existing Handle?)
+  <l>{{FilePickerOptions/startIn}}</l>: |project_dir|,
 };
 </pre>
 
 </div>
 
+A user agent holds a <dfn>recently picked directory map</dfn>, which is a
+[=map=] of [=/origins=] to [=path id maps=].
+
+A <dfn>path id map</dfn> is a [=map=] of [=valid path ids=] to paths.
+
+A <dfn>valid path id</dfn> is a [=string=] where each character is [=ASCII alphanumeric=] or "_" or "-".
+
 <div algorithm>
-To <dfn>determine the directory the file picker will start in</dfn>, run the following steps:
+To <dfn>determine the directory the picker will start in</dfn>, given an optional [=string=] |id|,
+an optional {{StartInDirectory}} |startIn| and an [=environment settings object=] |environment|,
+run the following steps:
 
-(TODO: This is just a sketch.
- - The wording here is much more loose and colloquial than it should be
- - URL vs Path?
-)
+1. If |id| given, and is not a [=valid path id=], throw a {{TypeError}}.
+1. If |id|'s [=string/length=] is more than 32, throw a {{TypeError}}.
 
-1. If {{FilePickerOptions/startIn}} is a {{FileSystemHandle}}, resolve to a path.
+1. Let |origin| be |environment|'s [=environment settings object/origin=].
+
+1. If |startIn| is a {{FileSystemHandle}}, resolve to a path.
   1. Is this directory not valid (Sandboxed URL), ignore.
   1. If {{FileSystemFileHandle}}, return parent's path
   1. If {{FileSystemDirectoryHandle}}, return path
 
-1. If {{FilePickerOptions/id}} is non-empty
-  1. If mapping exists ID-> path, return this stored path
+1. If |id| is non-empty:
+  1. If [=recently picked directory map=][|origin|] [=map/exists=]:
+    1. Let |path map| be [=recently picked directory map=][|origin|].
+    1. If |path map|[|id|] [=map/exists=], then return |path map|[|id|].
 
-1. If {{FilePickerOptions/startIn}} is a {{WellKnownDirectory}}...
-  1. If invalid, ignore.
-  1. Otherwise return corresponding path
+1. If |startIn| is a {{WellKnownDirectory}}:
+  1. TODO Return the corresponding path.
 
-1. If mapping default ID -> stored path exists, return stored path
+1. If |id| is not specified, or is an empty string:
+  1. If [=recently picked directory map=][|origin|] [=map/exists=]:
+    1. Let |path map| be [=recently picked directory map=][|origin|].
+    1. If |path map|[""] [=map/exists=], then return |path map|[""].
 
-1. Return a default path (ex: Documents)
+1. Return a default path in a user agent specific manner.
 
-If file picker operation succeeded:
+</div>
 
-1. If {{FilePickerOptions/id}} is non-empty, store mapping from ID -> picked path
-1. If {{FilePickerOptions/id}} is empty, store mapping from default ID -> picked path
-(TODO: do we need to mention the limit here?)
+<div algorithm>
+To <dfn>remember a picked directory</dfn>, given an optional [=string=] |id|,
+an [=/entry=] |entry|, and an [=environment settings object=] |environment|,
+run the following steps:
+
+1. Let |origin| be |environment|'s [=environment settings object/origin=].
+1. If [=recently picked directory map=][|origin|] does not [=map/exist=],
+  then set [=recently picked directory map=][|origin|] to a empty [=path id map=].
+1. Set [=recently picked directory map=][|origin|][|id|] to |entry|'s path.
+
+(TODO: We should mention the limit here?)
 
 </div>
 
@@ -1555,16 +1607,20 @@ If file picker operation succeeded:
   :: Shows a directory picker that lets the user select a single directory, returning a handle for
     the selected directory.
 
-  The {{DirectoryPickerOptions\id}} and {{DirectoryPickerOptions\startIn}} fields behave
-  identically to the {{FilePickerOptions\id}} and {{FilePickerOptions\startIn}} fields, respectively.
+  The {{DirectoryPickerOptions/id}} and {{DirectoryPickerOptions/startIn}} fields behave
+  identically to the {{FilePickerOptions/id}} and {{FilePickerOptions/startIn}} fields, respectively.
   See [[#api-filepickeroptions-starting-directory]] for details on how to use these fields.
 </div>
 
 <div algorithm>
-The <dfn method for=Window>showDirectoryPicker(<var ignore>options</var>)</dfn> method, when invoked, must run
+The <dfn method for=Window>showDirectoryPicker(<var>options</var>)</dfn> method, when invoked, must run
 these steps:
 
 1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
+
+1. Let |starting directory| be the result of [=determine the directory the picker will start in|determining the directory the picker will start in=]
+   given |options|.{{DirectoryPickerOptions/id}}, |options|.{{DirectoryPickerOptions/startIn}} and |environment|.
+
 1. Let |global| be |environment|'s [=environment settings object/global object=].
 1. Verify that |environment| [=is allowed to show a file picker=].
 
@@ -1574,7 +1630,7 @@ these steps:
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
   1. Display a prompt to the user requesting that the user pick a directory.
-    (TODO: mention starting directory here)
+     This prompt should start out showing |starting directory|, if that is a valid directory.
 
   1. Wait for the user to have made their selection.
 
@@ -1590,6 +1646,8 @@ these steps:
        or [=/reject=] |p| with an {{AbortError}} and abort.
 
   1. Set |result| to a new {{FileSystemDirectoryHandle}} associated with |entry|.
+
+  1. [=Remember a picked directory=] given |options|.{{DirectoryPickerOptions/id}}, |entry| and |environment|.
 
   1. Perform the <a spec=html>activation notification</a> steps in |global|'s [=Window/browsing context=].
 
