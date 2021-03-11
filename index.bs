@@ -1228,162 +1228,6 @@ To verify that an |environment| <dfn>is allowed to show a file picker</dfn>, run
 
 </div>
 
-## The {{showOpenFilePicker()}} method ## {#api-showopenfilepicker}
-
-<div class="note domintro">
-  : [ |handle| ] = await window . {{showOpenFilePicker()}}
-  : [ |handle| ] = await window . {{showOpenFilePicker()|showOpenFilePicker}}({ {{OpenFilePickerOptions/multiple}}: false })
-  :: Shows a file picker that lets a user select a single existing file, returning a handle for
-    the selected file.
-
-  : handles = await window . {{showOpenFilePicker()|showOpenFilePicker}}({ {{OpenFilePickerOptions/multiple}}: true })
-  :: Shows a file picker that lets a user select multiple existing files, returning handles for
-    the selected files.
-
-    Additional options can be passed to {{showOpenFilePicker()}} to indicate the types of files
-    the website wants the user to select and the preferred directory which the
-    file picker will open to. See [[#api-filepickeroptions]] for details.
-</div>
-
-<div algorithm>
-The <dfn method for=Window>showOpenFilePicker(|options|)</dfn> method, when invoked, must run
-these steps:
-
-1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
-
-1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
-1. Let |starting directory| be the result of [=determine the directory the picker will start in|determining the directory the picker will start in=]
-   given |options|.{{FilePickerOptions/id}}, |options|.{{FilePickerOptions/startIn}} and |environment|.
-
-1. Let |global| be |environment|'s [=environment settings object/global object=].
-1. Verify that |environment| [=is allowed to show a file picker=].
-
-1. Let |p| be [=a new promise=].
-1. Run the following steps [=in parallel=]:
-
-  1. Optionally, wait until any prior execution of this algorithm has terminated.
-
-  1. Display a prompt to the user requesting that the user pick some files.
-     If |options|.{{OpenFilePickerOptions/multiple}} is false, there must be no more than one file selected;
-     otherwise any number may be selected.
-
-     The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
-     Exactly how this is implemented, and what this prompt looks like is left up to the user agent.
-
-     When possible, this prompt should start out showing |starting directory|.
-
-  1. Wait for the user to have made their selection.
-
-  1. If the user dismissed the prompt without making a selection,
-     [=/reject=] |p| with an {{AbortError}} and abort.
-
-  1. Let |entries| be a [=/list=] of [=file entries=] representing the selected files or directories.
-  1. Let |result| be a empty [=/list=].
-
-  1. [=list/For each=] |entry| of |entries|:
-    1. If |entry| is deemed [=too sensitive or dangerous=] to be exposed to this website by the user agent:
-      1. Inform the user that the selected files or directories can't be exposed to this website.
-      1. At the discretion of the user agent,
-         either go back to the beginning of these [=in parallel=] steps,
-         or [=/reject=] |p| with an {{AbortError}} and abort.
-
-    1. Add a new {{FileSystemFileHandle}} associated with |entry| to |result|.
-
-  1. [=Remember a picked directory=] given |options|.{{FilePickerOptions/id}}, |entries|[0] and |environment|.
-
-  1. Perform the <a spec=html>activation notification</a> steps in |global|'s [=Window/browsing context=].
-
-     Note: This lets a website immediately perform operations on the returned handles that
-     might require user activation, such as requesting more permissions.
-
-  1. [=/Resolve=] |p| with |result|.
-
-1. Return |p|.
-
-</div>
-
-## The {{Window/showSaveFilePicker()}} method ## {#api-showsavefilepicker}
-
-<div class="note domintro">
-  : |handle| = await window . {{showSaveFilePicker()|showSaveFilePicker}}( |options| )
-  :: Shows a file picker that lets a user select a single file, returning a handle for
-    the selected file. The selected file does not have to exist already. If the selected
-    file does not exist a new empty file is created before this method returns, otherwise
-    the existing file is cleared before this method returned.
-
-  : |handle| = await window . {{showSaveFilePicker()|showSaveFilePicker}}({ {{SaveFilePickerOptions/suggestedName}}: "README.md" })
-  :: Shows a file picker with the suggested "README.md" file name pre-filled as the default file name to save as.
-
-    Additional |options| can be passed to {{showSaveFilePicker()}} to indicate the types of files
-    the website wants the user to select and the preferred directory which the
-    file picker will open to. See [[#api-filepickeroptions]] for details.
-</div>
-
-Advisement: The {{SaveFilePickerOptions/suggestedName}} option was first introduced in Chrome 91.
-
-<div algorithm>
-The <dfn method for=Window>showSaveFilePicker(|options|)</dfn> method, when invoked, must run
-these steps:
-
-1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
-
-1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
-1. Let |starting directory| be the result of [=determine the directory the picker will start in|determining the directory the picker will start in=]
-   given |options|.{{FilePickerOptions/id}}, |options|.{{FilePickerOptions/startIn}} and |environment|.
-
-1. Let |global| be |environment|'s [=environment settings object/global object=].
-1. Verify that |environment| [=is allowed to show a file picker=].
-
-1. Let |p| be [=a new promise=].
-1. Run the following steps [=in parallel=]:
-
-  1. Optionally, wait until any prior execution of this algorithm has terminated.
-
-  1. Display a prompt to the user requesting that the user pick exactly one file.
-     The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
-     Exactly how this is implemented, and what this prompt looks like is left up to the user agent.
-     If |accepts options| are displayed in the UI, the selected option should also be used to suggest an extension
-     to append to a user provided file name, but this is not required. In particular user agents are free to ignore
-     potentially dangerous suffixes such as those ending in `".lnk"` or `".local"`.
-
-     When possible, this prompt should start out showing |starting directory|.
-
-     If |options|.{{SaveFilePickerOptions/suggestedName}} is specified, the file picker prompt will be pre-filled with the
-     |options|.{{SaveFilePickerOptions/suggestedName}} as the default name to save as. The interaction between the
-     {{SaveFilePickerOptions/suggestedName}} and |accepts options| is left up to the user agent.
-     If the {{SaveFilePickerOptions/suggestedName}} is deemed too dangerous, user agents should ignore or sanitize the
-     suggested file name, similar to the sanitization done when fetching something <a spec=html>as a download</a>.
-
-  1. Wait for the user to have made their selection.
-
-  1. If the user dismissed the prompt without making a selection,
-     [=/reject=] |p| with an {{AbortError}} and abort.
-
-  1. Let |entry| be a [=file entry=] representing the selected file.
-
-  1. If |entry| is deemed [=too sensitive or dangerous=] to be exposed to this website by the user agent:
-    1. Inform the user that the selected files or directories can't be exposed to this website.
-    1. At the discretion of the user agent,
-       either go back to the beginning of these [=in parallel=] steps,
-       or [=/reject=] |p| with an {{AbortError}} and abort.
-
-  1. Set |entry|'s [=binary data=] to an empty [=byte sequence=].
-
-  1. Set |result| to a new {{FileSystemFileHandle}} associated with |entry|.
-
-  1. [=Remember a picked directory=] given |options|.{{FilePickerOptions/id}}, |entry| and |environment|.
-
-  1. Perform the <a spec=html>activation notification</a> steps in |global|'s [=Window/browsing context=].
-
-     Note: This lets a website immediately perform operations on the returned handles that
-     might require user activation, such as requesting more permissions.
-
-  1. [=/Resolve=] |p| with |result|.
-
-1. Return |p|.
-
-</div>
-
 ## File picker options ## {#api-filepickeroptions}
 
 ### Accepted file types ### {#api-filepickeroptions-types}
@@ -1668,6 +1512,162 @@ run the following steps:
 1. If |id| is not specified, let |id| be an empty string.
 1. Set [=recently picked directory map=][|origin|][|id|] to the path on the local file system corresponding to |entry|,
    if such a path can be determined.
+
+</div>
+
+## The {{showOpenFilePicker()}} method ## {#api-showopenfilepicker}
+
+<div class="note domintro">
+  : [ |handle| ] = await window . {{showOpenFilePicker()}}
+  : [ |handle| ] = await window . {{showOpenFilePicker()|showOpenFilePicker}}({ {{OpenFilePickerOptions/multiple}}: false })
+  :: Shows a file picker that lets a user select a single existing file, returning a handle for
+    the selected file.
+
+  : handles = await window . {{showOpenFilePicker()|showOpenFilePicker}}({ {{OpenFilePickerOptions/multiple}}: true })
+  :: Shows a file picker that lets a user select multiple existing files, returning handles for
+    the selected files.
+
+    Additional options can be passed to {{showOpenFilePicker()}} to indicate the types of files
+    the website wants the user to select and the preferred directory which the
+    file picker will open to. See [[#api-filepickeroptions]] for details.
+</div>
+
+<div algorithm>
+The <dfn method for=Window>showOpenFilePicker(|options|)</dfn> method, when invoked, must run
+these steps:
+
+1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
+
+1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
+1. Let |starting directory| be the result of [=determine the directory the picker will start in|determining the directory the picker will start in=]
+   given |options|.{{FilePickerOptions/id}}, |options|.{{FilePickerOptions/startIn}} and |environment|.
+
+1. Let |global| be |environment|'s [=environment settings object/global object=].
+1. Verify that |environment| [=is allowed to show a file picker=].
+
+1. Let |p| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+
+  1. Optionally, wait until any prior execution of this algorithm has terminated.
+
+  1. Display a prompt to the user requesting that the user pick some files.
+     If |options|.{{OpenFilePickerOptions/multiple}} is false, there must be no more than one file selected;
+     otherwise any number may be selected.
+
+     The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
+     Exactly how this is implemented, and what this prompt looks like is left up to the user agent.
+
+     When possible, this prompt should start out showing |starting directory|.
+
+  1. Wait for the user to have made their selection.
+
+  1. If the user dismissed the prompt without making a selection,
+     [=/reject=] |p| with an {{AbortError}} and abort.
+
+  1. Let |entries| be a [=/list=] of [=file entries=] representing the selected files or directories.
+  1. Let |result| be a empty [=/list=].
+
+  1. [=list/For each=] |entry| of |entries|:
+    1. If |entry| is deemed [=too sensitive or dangerous=] to be exposed to this website by the user agent:
+      1. Inform the user that the selected files or directories can't be exposed to this website.
+      1. At the discretion of the user agent,
+         either go back to the beginning of these [=in parallel=] steps,
+         or [=/reject=] |p| with an {{AbortError}} and abort.
+
+    1. Add a new {{FileSystemFileHandle}} associated with |entry| to |result|.
+
+  1. [=Remember a picked directory=] given |options|.{{FilePickerOptions/id}}, |entries|[0] and |environment|.
+
+  1. Perform the <a spec=html>activation notification</a> steps in |global|'s [=Window/browsing context=].
+
+     Note: This lets a website immediately perform operations on the returned handles that
+     might require user activation, such as requesting more permissions.
+
+  1. [=/Resolve=] |p| with |result|.
+
+1. Return |p|.
+
+</div>
+
+## The {{Window/showSaveFilePicker()}} method ## {#api-showsavefilepicker}
+
+<div class="note domintro">
+  : |handle| = await window . {{showSaveFilePicker()|showSaveFilePicker}}( |options| )
+  :: Shows a file picker that lets a user select a single file, returning a handle for
+    the selected file. The selected file does not have to exist already. If the selected
+    file does not exist a new empty file is created before this method returns, otherwise
+    the existing file is cleared before this method returned.
+
+  : |handle| = await window . {{showSaveFilePicker()|showSaveFilePicker}}({ {{SaveFilePickerOptions/suggestedName}}: "README.md" })
+  :: Shows a file picker with the suggested "README.md" file name pre-filled as the default file name to save as.
+
+    Additional |options| can be passed to {{showSaveFilePicker()}} to indicate the types of files
+    the website wants the user to select and the preferred directory which the
+    file picker will open to. See [[#api-filepickeroptions]] for details.
+</div>
+
+Advisement: The {{SaveFilePickerOptions/suggestedName}} option was first introduced in Chrome 91.
+
+<div algorithm>
+The <dfn method for=Window>showSaveFilePicker(|options|)</dfn> method, when invoked, must run
+these steps:
+
+1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
+
+1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
+1. Let |starting directory| be the result of [=determine the directory the picker will start in|determining the directory the picker will start in=]
+   given |options|.{{FilePickerOptions/id}}, |options|.{{FilePickerOptions/startIn}} and |environment|.
+
+1. Let |global| be |environment|'s [=environment settings object/global object=].
+1. Verify that |environment| [=is allowed to show a file picker=].
+
+1. Let |p| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+
+  1. Optionally, wait until any prior execution of this algorithm has terminated.
+
+  1. Display a prompt to the user requesting that the user pick exactly one file.
+     The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
+     Exactly how this is implemented, and what this prompt looks like is left up to the user agent.
+     If |accepts options| are displayed in the UI, the selected option should also be used to suggest an extension
+     to append to a user provided file name, but this is not required. In particular user agents are free to ignore
+     potentially dangerous suffixes such as those ending in `".lnk"` or `".local"`.
+
+     When possible, this prompt should start out showing |starting directory|.
+
+     If |options|.{{SaveFilePickerOptions/suggestedName}} is specified, the file picker prompt will be pre-filled with the
+     |options|.{{SaveFilePickerOptions/suggestedName}} as the default name to save as. The interaction between the
+     {{SaveFilePickerOptions/suggestedName}} and |accepts options| is left up to the user agent.
+     If the {{SaveFilePickerOptions/suggestedName}} is deemed too dangerous, user agents should ignore or sanitize the
+     suggested file name, similar to the sanitization done when fetching something <a spec=html>as a download</a>.
+
+  1. Wait for the user to have made their selection.
+
+  1. If the user dismissed the prompt without making a selection,
+     [=/reject=] |p| with an {{AbortError}} and abort.
+
+  1. Let |entry| be a [=file entry=] representing the selected file.
+
+  1. If |entry| is deemed [=too sensitive or dangerous=] to be exposed to this website by the user agent:
+    1. Inform the user that the selected files or directories can't be exposed to this website.
+    1. At the discretion of the user agent,
+       either go back to the beginning of these [=in parallel=] steps,
+       or [=/reject=] |p| with an {{AbortError}} and abort.
+
+  1. Set |entry|'s [=binary data=] to an empty [=byte sequence=].
+
+  1. Set |result| to a new {{FileSystemFileHandle}} associated with |entry|.
+
+  1. [=Remember a picked directory=] given |options|.{{FilePickerOptions/id}}, |entry| and |environment|.
+
+  1. Perform the <a spec=html>activation notification</a> steps in |global|'s [=Window/browsing context=].
+
+     Note: This lets a website immediately perform operations on the returned handles that
+     might require user activation, such as requesting more permissions.
+
+  1. [=/Resolve=] |p| with |result|.
+
+1. Return |p|.
 
 </div>
 
