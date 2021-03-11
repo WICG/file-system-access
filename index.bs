@@ -1319,7 +1319,7 @@ these steps:
     file picker will open to. See [[#api-filepickeroptions]] for details.
 </div>
 
-Advisement: The {{FilePickerOptions/suggestedName}} option was first introduced in Chrome 91.
+Advisement: The {{SaveFilePickerOptions/suggestedName}} option was first introduced in Chrome 91.
 
 <div algorithm>
 The <dfn method for=Window>showSaveFilePicker(|options|)</dfn> method, when invoked, must run
@@ -1549,14 +1549,14 @@ const options = {
 };
 </pre>
 
-NOTE: The {{FilePickerOptions/id}} and {{FilePickerOptions/startIn}} fields control only
+The {{FilePickerOptions/id}} and {{FilePickerOptions/startIn}} fields control only
 the directory the picker opens to. In the above example, it cannot be assumed that
 the {{FilePickerOptions/id}} 'foo' will map to the same directory as |project_dir|
 once the file picker operation has completed.
 
 Specifying {{FilePickerOptions/startIn}} as a {{WellKnownDirectory}} will result in the dialog
-starting in that directory, unless an explicit ID was also passed in which has a mapping to a
-valid directory.
+starting in that directory, unless an explicit {{FilePickerOptions/id}} was also passed
+in which has a mapping to a valid directory.
 
 Below is an example of specifying both an {{FilePickerOptions/id}} and
 {{FilePickerOptions/startIn}} as a {{WellKnownDirectory}}. If there is an existing
@@ -1568,16 +1568,16 @@ via the {{WellKnownDirectory}} is used.
 // The file picker will fall back to opening to the Downloads directory. TODO: link this.
 const options = {
   <l>{{FilePickerOptions/id}}</l>: 'foo',  // Unmapped.
-  <l>{{FilePickerOptions/startIn}}</l>: 'downloads',  // Start here.
+  <l>{{FilePickerOptions/startIn}}</l>: <l>{{WellKnownDirectory/"downloads"}}</l>,  // Start here.
 };
 
 // Later...
 
-// The ID 'foo' may or may not be mapped. For example, the mapping for this ID
-// may have been evicted.
+// The ID 'foo' might or might not be mapped. For example, the mapping for this ID
+// might have been evicted.
 const options = {
   <l>{{FilePickerOptions/id}}</l>: 'foo',  // Maybe mapped. If so, start here.
-  <l>{{FilePickerOptions/startIn}}</l>: 'downloads',  // Otherwise, start here.
+  <l>{{FilePickerOptions/startIn}}</l>: <l>{{WellKnownDirectory/"downloads"}}</l>,  // Otherwise, start here.
 };
 </pre>
 
