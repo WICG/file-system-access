@@ -1639,12 +1639,12 @@ run the following steps:
 1. If |startIn| is a {{FileSystemHandle}}:
   1. Let |entry| be |startIn|'s [=FileSystemHandle/entry=].
   1. If |entry| does not represent an [=/entry=] in an [=origin private file system=]:
-    1. If |entry| is a [=file entry=],
-       return the path on the local file system corresponding to the parent directory of |entry|,
-       if such a path can be determined.
-    1. If |entry| is a [=directory entry=],
-       return the path on the local file system corresponding to |entry|,
-       if such a path can be determined.
+    1. If |entry| is a [=file entry=], and a path on the local file system
+       corresponding to the parent directory if |entry| can be determined,
+       then return that path.
+    1. If |entry| is a [=directory entry=], and a path on the local file system
+       corresponding to |entry| can be determined,
+       then return that path.
 
 1. If |id| is non-empty:
   1. If [=recently picked directory map=][|origin|] [=map/exists=]:
