@@ -1163,8 +1163,8 @@ dictionary FilePickerAcceptType {
 dictionary FilePickerOptions {
     sequence<FilePickerAcceptType> types;
     boolean excludeAcceptAllOption = false;
-    USVString id;
-    StartInDirectory? startIn;
+    DOMString id;
+    StartInDirectory startIn;
 };
 
 dictionary OpenFilePickerOptions : FilePickerOptions {
@@ -1176,8 +1176,8 @@ dictionary SaveFilePickerOptions : FilePickerOptions {
 };
 
 dictionary DirectoryPickerOptions {
-    USVString id;
-    StartInDirectory? startIn;
+    DOMString id;
+    StartInDirectory startIn;
 };
 
 [SecureContext]
@@ -1241,8 +1241,8 @@ To verify that an |environment| <dfn>is allowed to show a file picker</dfn>, run
     the selected files.
 
     Additional options can be passed to {{showOpenFilePicker()}} to indicate the types of files
-    the website wants the user to select and the preferred directory which the
-    file picker will open to. See [[#api-filepickeroptions]] for details.
+    the website wants the user to select and the directory in which the
+    file picker will open. See [[#api-filepickeroptions]] for details.
 </div>
 
 <div algorithm>
@@ -1268,7 +1268,7 @@ these steps:
      otherwise any number may be selected.
 
      The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
-     Exactly how this is implemented, and what this prompt looks like is left up to the user agent.
+     Exactly how this is implemented, and what this prompt looks like is [=implementation-defined=].
 
      When possible, this prompt should start out showing |starting directory|.
 
@@ -1315,8 +1315,8 @@ these steps:
   :: Shows a file picker with the suggested "README.md" file name pre-filled as the default file name to save as.
 
     Additional |options| can be passed to {{showSaveFilePicker()}} to indicate the types of files
-    the website wants the user to select and the preferred directory which the
-    file picker will open to. See [[#api-filepickeroptions]] for details.
+    the website wants the user to select and the directory in which the
+    file picker will open. See [[#api-filepickeroptions]] for details.
 </div>
 
 Advisement: The {{SaveFilePickerOptions/suggestedName}} option was first introduced in Chrome 91.
@@ -1341,18 +1341,22 @@ these steps:
 
   1. Display a prompt to the user requesting that the user pick exactly one file.
      The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
-     Exactly how this is implemented, and what this prompt looks like is left up to the user agent.
+     Exactly how this is implemented, and what this prompt looks like is [=implementation-defined=].
      If |accepts options| are displayed in the UI, the selected option should also be used to suggest an extension
      to append to a user provided file name, but this is not required. In particular user agents are free to ignore
      potentially dangerous suffixes such as those ending in `".lnk"` or `".local"`.
 
      When possible, this prompt should start out showing |starting directory|.
 
-     If |options|.{{SaveFilePickerOptions/suggestedName}} is specified, the file picker prompt will be pre-filled with the
+     If |options|.{{SaveFilePickerOptions/suggestedName}} is specified and not null,
+     the file picker prompt will be pre-filled with the
      |options|.{{SaveFilePickerOptions/suggestedName}} as the default name to save as. The interaction between the
-     {{SaveFilePickerOptions/suggestedName}} and |accepts options| is left up to the user agent.
+     {{SaveFilePickerOptions/suggestedName}} and |accepts options| is [=implementation-defined=].
      If the {{SaveFilePickerOptions/suggestedName}} is deemed too dangerous, user agents should ignore or sanitize the
      suggested file name, similar to the sanitization done when fetching something <a spec=html>as a download</a>.
+
+     Note: A user agent could for example pick whichever option in |accepts options| that matches
+     {{SaveFilePickerOptions/suggestedName}} as the default filter.
 
   1. Wait for the user to have made their selection.
 
@@ -1516,7 +1520,7 @@ To <dfn>validate a suffix</dfn> |suffix|, run the following steps:
 
 <div class="note domintro">
 The {{FilePickerOptions/id}} and {{FilePickerOptions/startIn}} fields can be specified to suggest
-the directory which the file picker opens to.
+the directory in which the file picker opens.
 
 If neither of these options are specified, the user agent remembers the last directory a file
 or directory was picked from, and new pickers will start out in that directory. By specifying an
@@ -1595,9 +1599,11 @@ A <dfn>valid path id</dfn> is a [=string=] where each character is [=ASCII alpha
 To prevent a [=path id map=] from growing without a bound, user agents should implement
 some mechanism to limit how many recently picked directories will be remembered. This
 can for example be done by evicting least recently used entries.
+User agents should allow at least 16 entries to be stored in a [=path id map=].
 
 The <dfn enum>WellKnownDirectory</dfn> enum lets a website pick one of several well-known
-paths. The exact paths the various values of this enum map to is left up to the user agent.
+directories. The exact paths the various values of this enum map to is [=implementation-defined=]
+(and in some cases these might not even represent actual paths on disk).
 The following list describes the meaning of each of the values, and gives possible example paths on different operating systems:
 
 <dl dfn-for=WellKnownDirectory>
@@ -1636,7 +1642,7 @@ run the following steps:
     1. If |entry| is a [=file entry=],
        return the path on the local file system corresponding to the parent directory of |entry|,
        if such a path can be determined.
-    1. Else, if |entry| is a [=directory entry=],
+    1. If |entry| is a [=directory entry=],
        return the path on the local file system corresponding to |entry|,
        if such a path can be determined.
 
@@ -1664,7 +1670,7 @@ run the following steps:
 
 1. Let |origin| be |environment|'s [=environment settings object/origin=].
 1. If [=recently picked directory map=][|origin|] does not [=map/exist=],
-   then set [=recently picked directory map=][|origin|] to a empty [=path id map=].
+   then set [=recently picked directory map=][|origin|] to an empty [=path id map=].
 1. If |id| is not specified, let |id| be an empty string.
 1. Set [=recently picked directory map=][|origin|][|id|] to the path on the local file system corresponding to |entry|,
    if such a path can be determined.
