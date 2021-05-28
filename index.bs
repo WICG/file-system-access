@@ -1162,6 +1162,7 @@ dictionary SaveFilePickerOptions : FilePickerOptions {
 };
 
 dictionary DirectoryPickerOptions {
+  boolean requestWritable = false;
 };
 
 [SecureContext]
@@ -1472,8 +1473,13 @@ To <dfn>validate a suffix</dfn> |suffix|, run the following steps:
 
 <div class="note domintro">
   : |handle| = await window . {{Window/showDirectoryPicker()}}
+  : |handle| = await window . {{Window/showDirectoryPicker()}}({ {{OpenDirectoryPickerOptions/requestWritable}}: false })
   :: Shows a directory picker that lets the user select a single directory, returning a handle for
     the selected directory.
+
+  : handles = await window . {{Window/showDirectoryPicker()}}({ {{OpenDirectoryPickerOptions/requestWritable}}: true })
+  :: Shows a directory picker that lets the user select a single directory, returning a handle for
+    the selected directory. The website can ask for read and write permissions on this handle in one step.
 </div>
 
 <div algorithm>
@@ -1511,8 +1517,8 @@ these steps:
      Note: This lets a website immediately perform operations on the returned handles that
      might require user activation, such as requesting more permissions.
 
-     Issue(89): Rather than requiring the website to prompt separately for a writable directory,
-     we should provide some kind of API to request a writable directory in one step.
+     If |options|.{{OpenDirectoryPickerOptions/requestWritable}} is true, the
+     website can prompt for read and write permissions in one step.
 
   1. [=/Resolve=] |p| with |result|.
 
