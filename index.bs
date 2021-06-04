@@ -1473,11 +1473,11 @@ To <dfn>validate a suffix</dfn> |suffix|, run the following steps:
 
 <div class="note domintro">
   : |handle| = await window . {{Window/showDirectoryPicker()}}
-  : |handle| = await window . {{Window/showDirectoryPicker()}}({ {{OpenDirectoryPickerOptions/mode}}: 'read' })
+  : |handle| = await window . {{Window/showDirectoryPicker()}}({ {{DirectoryPickerOptions/mode}}: 'read' })
   :: Shows a directory picker that lets the user select a single directory, returning a handle for
     the selected directory.
 
-  : handles = await window . {{Window/showDirectoryPicker()}}({ {{OpenDirectoryPickerOptions/mode}}: 'readwrite' })
+  : handles = await window . {{Window/showDirectoryPicker()}}({ {{DirectoryPickerOptions/mode}}: 'readwrite' })
   :: Shows a directory picker that lets the user select a single directory, returning a handle for
     the selected directory. The user agent can combine read and write permission requests on this handle into one prompt.
 </div>
@@ -1513,7 +1513,7 @@ these steps:
   1. Set |result| to a new {{FileSystemDirectoryHandle}} associated with |entry|.
 
   1. Let |desc| be a {{FileSystemPermissionDescriptor}} with |entry| as {{FileSystemPermissionDescriptor/handle}}
-     and |options|.{{OpenDirectoryPickerOptions/mode}} as {{FileSystemPermissionDescriptor/mode}}.
+     and |options|.{{DirectoryPickerOptions/mode}} as {{FileSystemPermissionDescriptor/mode}}.
   1. Let |status| be the result of running <a spec=permissions>create a PermissionStatus</a> for |desc|.
 
   1. [=Request permission to use=] |desc|.
