@@ -262,7 +262,7 @@ interface FileSystemHandle {
   readonly attribute FileSystemHandleKind kind;
   readonly attribute USVString name;
 
-  Promise<void> remove();
+  Promise<void> remove(optional FileSystemRemoveOptions options = {});
 
   Promise<boolean> isSameEntry(FileSystemHandle other);
 
@@ -321,15 +321,26 @@ associated [=FileSystemHandle/entry=].
 
 <div class="note domintro">
   : await |handle| . {{FileSystemHandle/remove()|remove}}()
+  : await |handle| . {{FileSystemHandle/remove()|remove}}({ {{FileSystemRemoveOptions/recursive}}: false })
   :: Attempts to remove the entry represented by |handle| from the underlying file system.
 
      For files or directories with multiple hardlinks or symlinks, the entry which is deleted
      is the entry corresponding to the path which was used to obtain the handle.
+
+     Attempting to delete a file or directory that does not exist is considered success,
+     while attempting to delete a non-empty directory will result in a promise rejection.
+
+  : await |handle| . {{FileSystemHandle/remove()|remove}}({ {{FileSystemRemoveOptions/recursive}}: true })
+  :: Attempts to remove the entry represented by |handle| from the underlying file system.
+
+     If the entry is a directory, its contents will also be deleted recursively.
+
+     Attempting to delete a file or directory that does not exist is considered success.
 </div>
 
 <div algorithm>
-The <dfn method for=FileSystemHandle>remove()</dfn> method, when invoked, must run
-these steps:
+The <dfn method for=FileSystemHandle>remove(|options|)</dfn> method,
+when invoked, must run these steps:
 
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
@@ -342,18 +353,21 @@ these steps:
 
   1. Attempt to remove |entry| from the underlying file system.
   1. If |entry| is a [=directory entry=]:
-    1. If |entry|'s path does not exists, [=/reject=] |result| with a
-        {{NotFoundError}} and abort
-    1. If |entry|'s path is not a directory, [=/reject=] |result| with a
-        {{NotADirectoryError}} and abort
-    1. If |entry| is not an empty directory, [=/reject=] |result| with a
-        {{NotEmptyError}} and abort
-
+    1. If |entry|'s path does not exist:
+      1. [=/Reject=] |result| with a {{NotFoundError}} and abort.
+    1. If |entry|'s path is not a directory:
+      1. [=/Reject=] |result| with a {{TypeMismatchError}} and abort.
+    1. If |entry| is not an empty directory and |options|.{{FileSystemRemoveOptions/recursive}} is `false`:
+      1. [=/Reject=] |result| with an {{InvalidModificationError}} and abort.
   1. If |entry| is a [=file entry=]:
-    1. If |entry|'s path does not exists, [=/reject=] |result| with a
-        {{NotFoundError}} and abort
-    1. If |entry|'s path is not a file, [=/reject=] |result| with a
-        {{NotAFileError}} and abort
+    1. If |entry|'s path does not exist:
+      1. [=/Reject=] |result| with a {{NotFoundError}} and abort.
+    1. If |entry|'s path is not a file:
+      1. [=/Reject=] |result| with a {{TypeMismatchError}} and abort.
+
+     Note: If {{FileSystemRemoveOptions/recursive}} is `true`, the removal can fail
+     non-atomically. Some files or directories might have been removed while other files
+     or directories still exist.
 
   1. [=/Resolve=] |result| with `undefined`.
 
@@ -802,7 +816,6 @@ invoked, must run these steps:
   : await |directoryHandle| . {{FileSystemDirectoryHandle/removeEntry()|removeEntry}}(|name|, { {{FileSystemRemoveOptions/recursive}}: true })
   :: Removes the entry named |name| in the directory represented by |directoryHandle|.
      If that entry is a directory, its contents will also be deleted recursively.
-     recursively.
 
      Attempting to delete a file or directory that does not exist is considered success.
 </div>
@@ -830,17 +843,16 @@ these steps:
       1. [=set/Remove=] |child| from |entry|'s [=directory entry/children=].
 
       1. If |child| is a [=directory entry=]:
-        1. If |child|'s path does not exists, [=/reject=] |result| with a
-            {{NotFoundError}} and abort
-        1. If |child|'s path is not a directory, [=/reject=] |result| with a
-            {{NotADirectoryError}} and abort
-        1. If |child| is not an empty directory, [=/reject=] |result| with a
-            {{NotEmptyError}} and abort
+        1. If |child|'s path does not exist:
+          1. [=/Reject=] |result| with a {{NotFoundError}} and abort.
+        1. If |child|'s path is not a directory:
+          1. [=/Reject=] |result| with a {{TypeMismatchError}} and abort.
+
       1. If |child| is a [=file entry=]:
-        1. If |child|'s path does not exists, [=/reject=] |result| with a
-            {{NotFoundError}} and abort
-        1. If |child|'s path is not a file, [=/reject=] |result| with a
-            {{NotAFileError}} and abort
+        1. If |child|'s path does not exist:
+          1. [=/Reject=] |result| with a {{NotFoundError}} and abort.
+        1. If |child|'s path is not a file:
+          1. [=/Reject=] |result| with a {{TypeMismatchError}} and abort.
 
          Note: If {{FileSystemRemoveOptions/recursive}} is `true`, the removal can fail
          non-atomically. Some files or directories might have been removed while other files
