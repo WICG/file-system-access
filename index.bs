@@ -828,14 +828,24 @@ these steps:
         1. If |child|'s [=directory entry/children=] is not [=set/is empty|empty=] and |options|.{{FileSystemRemoveOptions/recursive}} is `false`:
           1. [=/Reject=] |result| with an {{InvalidModificationError}} and abort.
       1. [=set/Remove=] |child| from |entry|'s [=directory entry/children=].
-      1. If removing |child| in the underlying file system throws an exception,
-         [=/reject=] |result| with that exception and abort.
+
+      1. If |child| is a [=directory entry=]:
+        1. If |child|'s path does not exists, [=/reject=] |result| with a
+            {{NotFoundError}} and abort
+        1. If |child|'s path is not a directory, [=/reject=] |result| with a
+            {{NotADirectoryError}} and abort
+        1. If |child| is not an empty directory, [=/reject=] |result| with a
+            {{NotEmptyError}} and abort
+      1. If |child| is a [=file entry=]:
+        1. If |child|'s path does not exists, [=/reject=] |result| with a
+            {{NotFoundError}} and abort
+        1. If |child|'s path is not a file, [=/reject=] |result| with a
+            {{NotAFileError}} and abort
 
          Note: If {{FileSystemRemoveOptions/recursive}} is `true`, the removal can fail
          non-atomically. Some files or directories might have been removed while other files
          or directories still exist.
 
-         Issue(68): Better specify what possible exceptions this could throw.
       1. [=/Resolve=] |result| with `undefined`.
   1. [=/Reject=] |result| with a {{NotFoundError}}.
 1. Return |result|.
