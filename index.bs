@@ -1073,7 +1073,7 @@ runs these steps:
   :: Resizes the file associated with |stream| to be |size| bytes long. If |size| is larger than
      the current file size this pads the file with null bytes, otherwise it truncates the file.
 
-     The file cursor is updated when {{truncate}} is called. If the offset is smaller than offset,
+     The file cursor is updated when {{truncate}} is called. If the offset is smaller than |size|,
      it remains unchanged. If the offset is larger than |size|, the offset is set to |size| to
      ensure that subsequent writes do not error.
 
@@ -1120,7 +1120,7 @@ steps:
   :: Resizes the file associated with |stream| to be |size| bytes long. If |size| is larger than
      the current file size this pads the file with null bytes, otherwise it truncates the file.
 
-     The file cursor is updated when {{truncate}} is called. If the offset is smaller than offset,
+     The file cursor is updated when {{truncate}} is called. If the offset is smaller than |size|,
      it remains unchanged. If the offset is larger than |size|, the offset is set to |size| to
      ensure that subsequent writes do not error.
 
