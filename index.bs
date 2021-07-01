@@ -473,7 +473,7 @@ Advisement: In the Origin Trial as available in Chrome 82, createWritable replac
   :: Returns a {{FileSystemWritableFileStream}} that can be used to write to the file. Any changes made through
      |stream| won't be reflected in the file represented by |fileHandle| until the stream has been closed.
      User agents try to ensure that no partial writes happen, i.e. the file represented by
-     |fileHandle| will either contains its old contents or it will contain whatever data was written
+     |fileHandle| will either contain its old contents or it will contain whatever data was written
      through |stream| up until the stream has been closed.
 
      This is typically implemented by writing data to a temporary file, and only replacing the file
