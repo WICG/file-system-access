@@ -114,13 +114,15 @@ var writtenBytes = handle.write(buffer);
 var readBytes = handle.read(buffer {at: 1});
 ```
 
-A new *createAccessHandle()* (a placeholder name) method would be added.
-*createAccessHandle()* would return an object that contains a duplex stream,
-offering a readable/writable pair that communicates with the same backing file,
-allowing the user to read unflushed contents. Another new method,
-*createSyncAccessHandle()*, would be only exposed on Worker threads. This method
-would offer a more buffer based surface for read and write. An IDL description
-of the new interface can be found in the [Appendix](#appendix).
+A new *createAccessHandle()* method would be added to *FileSystemFileHandle*.
+It  would return an *AccessHandle* that contains a
+[duplex stream](https://streams.spec.whatwg.org/#other-specs-duplex) and
+auxilliary methods. The readable/writable pair in the duplex stream would
+communicate with the same backing file, allowing the user to read unflushed
+contents. Another new method, *createSyncAccessHandle()*, would be only exposed
+on Worker threads. This method would offer a more buffer based surface for read
+and write. An IDL description of the new interface can be found in the
+[Appendix](#appendix).
 
 The reason for offering a Worker-only synchronous interface, is that consuming
 asynchronous APIs from Wasm has severe performance implications (more details
@@ -148,13 +150,12 @@ try {
   //This catch will always be executed, since there is an open access handle
 }
 await handle1.close();
-
 //Now a new access handle may be created
 ```
 
 In order to avoid multiple contexts modifying a file at the same time, locking
 semantics would be added to the new surface. At any given time, and across
-execution contexts, there would only either be a single *AccessHandle* per
+execution contexts, there would only be either a single *AccessHandle* per
 FileHandle, or potentially multiple Writables created through
 *createWritable()*.
 
@@ -173,15 +174,15 @@ There are some important edge cases to mention:
     means that Files created while there is an active handle will be invalidated
     when a flush is executed (either explicitly through flush() or implicitly by
     the OS). It also means that these Files could be used to observe flushed
-    changes done through the new API, even if a lock is still being held.)
+    changes done through the new API, even if a lock is still being held.
 
 ## Open Questions
 
 ### Naming
 
 The exact name of the new methods hasn’t been defined. The current placeholder
-for data access is createAccessHandle() and createSyncAccessHandle().
-createUnflushedStreams() and createDuplexStream() have been suggested.
+for data access is *createAccessHandle()* and *createSyncAccessHandle()*.
+*createUnflushedStreams()* and *createDuplexStream()* have been suggested.
 
 ### Assurances on non-awaited consistency
 
@@ -238,13 +239,6 @@ dictionary FilesystemReadWriteOptions {
   [EnforceRange] unsigned long long at;
 };
 ```
-
-## Stakeholder Feedback / Opposition
-
-* Chrome : Positive, authoring this explainer
-* Gecko : No signals
-* WebKit : No signals
-* Web developers : Positive, frequently requested (See #85, #144, #94 and #80.)
 
 ## References & acknowledgements
 
