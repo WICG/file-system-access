@@ -56,7 +56,7 @@ that primarily contribute to Storage Foundation’s performance:
 
 In order to bring this use cases to OPFS, we propose adding a method to
 *FileSystemFileHandle* that returns an *AccessHandle*, a new interface.
-AccessHandles provide the right kind of access and locking semantics to achieve
+*AccessHandles* provide the right kind of access and locking semantics to achieve
 similar performance to Storage Foundation API.
 
 Further details on the origins of this proposal, and alternatives considered,
@@ -74,7 +74,7 @@ new surface is particularly well suited for Wasm-based libraries and
 applications that want to use custom storage algorithms to fine-tune execution
 speed and memory usage.
 
-A few examples of what could be done with AccessHandles:
+A few examples of what could be done with *AccessHandles*:
 
 *   Allow tried and true technologies to be performantly used as part of web
     applications e.g. using a port of your favorite storage library
@@ -154,12 +154,12 @@ await handle1.close();
 
 In order to avoid multiple contexts modifying a file at the same time, locking
 semantics would be added to the new surface. At any given time, and across
-execution contexts, there would only either be a single AccessHandle per
+execution contexts, there would only either be a single *AccessHandle* per
 FileHandle, or potentially multiple Writables created through
 *createWritable()*.
 
-When creating an AccessHandle, a lock will be taken. This lock will be released
-when the AccessHandle is closed or destroyed. When a Writable is created, a
+When creating an *AccessHandle*, a lock will be taken. This lock will be released
+when the *AccessHandle* is closed or destroyed. When a Writable is created, a
 lock is taken if there are no other open Writables. This lock will be released
 once the last Writable closed or destroyed. Only one lock may be taken at a
 given time for a given FileHandle.
