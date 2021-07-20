@@ -1,144 +1,112 @@
-# Adding AccessHandles to files
-
-## Authors:
-
-* Emanuel Krivoy (fivedots@chromium.org)
-* Richard Stotz (rstz@chromium.org)
-
-## Participate
-
-* [Issue tracker](https://github.com/WICG/file-system-access/issues)
-
-## Table of Contents
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-- [Introduction](#introduction)
-- [Goals and Use Cases](#goals-and-use-cases)
-- [Non-goals](#non-goals)
-- [Proposed API](#proposed-api)
-  - [New data access surface](#new-data-access-surface)
-  - [Locking semantics](#locking-semantics)
-- [Open Questions](#open-questions)
-  - [Naming](#naming)
-  - [Assurances on non-awaited consistency](#assurances-on-non-awaited-consistency)
-- [Appendix](#appendix)
-  - [AccessHandle IDL](#accesshandle-idl)
-- [Stakeholder Feedback / Opposition](#stakeholder-feedback--opposition)
-- [References & acknowledgements](#references--acknowledgements)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Introduction
 
-This is a proposal to support
-[Storage Foundation API's](https://github.com/WICG/storage-foundation-api-explainer)
-use cases through the Origin Private File System (OPFS), to provide a unified
-interface and a simpler model to developers.
+We propose augmenting the Origin Private File System (OPFS) with a new surface
+that brings very performant access to data. This new surface differs from
+existing ones by offering in-place and exclusive write access to a file’s
+content. This change, along with the ability to consistently read unflushed
+modifications and the availability of a synchronous variant on dedicated
+workers, significantly improves performance and unblocks new use cases for the
+File System Access API.
 
-Storage Foundation’s main objective is to support performance-sensitive
-applications through a very fast and generic storage backend. It especially
-focuses on ported WebAssembly programs for which existing storage web APIs
-don’t match the expectations of native code. There are a few design choices
-that primarily contribute to Storage Foundation’s performance:
+More concretely, we would add a *createAccessHandle()* method to the
+*FileSystemFileHandle* object. It would return an *AccessHandle* that contains
+a [duplex stream](https://streams.spec.whatwg.org/#other-specs-duplex) and
+auxiliary methods. The readable/writable pair in the duplex stream communicates
+with the same backing file, allowing the user to read unflushed contents.
+Another new method, *createSyncAccessHandle()*, would only be exposed on Worker
+threads. This method would offer a more buffer-based surface for reading and
+writing. The creation of AccessHandle also creates a lock that prevents write
+access to the file across (and within the same) execution contexts.
 
-*   Developers get control of when data is flushed to disk, and reads can be
-    executed consistently without flushing. This allows programs to only schedule
-    time consuming flushes when they are required for persistency, and not as a
-    precondition to operate on recently written data.
-*   Its design ensures that implementations can access data from “the renderer
-    process” (i.e. without needing to rely on a component that coordinates
-    between execution contexts) to avoid costly inter-process communication
-    (IPCs). Examples of this approach include the allocation-based quota system
-    and only allowing one open file handle per file.
-*   We avoid extra memory allocations by taking a buffer when reading.
+This proposal is part of our effort to merge [Storage Foundation
+API](https://github.com/WICG/storage-foundation-api-explainer) and File System
+Access API. For more context the origins of this proposal, and alternatives
+considered, please check out: [Merging Storage Foundation API and the Origin
+Private File
+System](https://docs.google.com/document/d/121OZpRk7bKSF7qU3kQLqAEUVSNxqREnE98malHYwWec),
+[Recommendation for Augmented
+OPFS](https://docs.google.com/document/d/1g7ZCqZ5NdiU7oqyCpsc2iZ7rRAY1ZXO-9VoG4LfP7fM).
 
-In order to bring this use cases to OPFS, we propose adding a method to
-*FileSystemFileHandle* that returns an *AccessHandle*, a new interface.
-*AccessHandles* provide the right kind of access and locking semantics to achieve
-similar performance to Storage Foundation API.
+## Goals & Use Cases
 
-Further details on the origins of this proposal, and alternatives considered,
-can be found in the following documents:
-[Merging Storage Foundation API and the Origin Private File System](https://docs.google.com/document/d/121OZpRk7bKSF7qU3kQLqAEUVSNxqREnE98malHYwWec),
-[Recommendation for Augmented OPFS](https://docs.google.com/document/d/1g7ZCqZ5NdiU7oqyCpsc2iZ7rRAY1ZXO-9VoG4LfP7fM).
-
-## Goals and Use Cases
-
-Out goals and use cases are the same as
-[Storage Foundation API](https://github.com/WICG/storage-foundation-api-explainer),
-namely to give developers flexibility by providing generic, simple, and
-performant primitives upon which they can build higher-level components. The
-new surface is particularly well suited for Wasm-based libraries and
-applications that want to use custom storage algorithms to fine-tune execution
-speed and memory usage.
+Our goal is to give developers flexibility by providing generic, simple, and
+performant primitives upon which they can build higher-level storage
+components. The new surface is particularly well suited for Wasm-based
+libraries and applications that want to use custom storage algorithms to
+fine-tune execution speed and memory usage.
 
 A few examples of what could be done with *AccessHandles*:
 
-*   Allow tried and true technologies to be performantly used as part of web
-    applications e.g. using a port of your favorite storage library
-    within a website
-*   Distribute a Wasm module for WebSQL, allowing developers to us it across
-    browsers and opening the door to removing the unsupported API from Chrome
+*   Distribute a performant Wasm port of SQLite. This gives developers the
+    ability to use a persistent and fast SQL engine without having to rely on
+    the deprecated WebSQL API.
 *   Allow a music production website to operate on large amounts of media, by
-    relying on the new surface's performance and direct buffered access
-    to offload sound segments to disk instead of holding them in memory
-*   Provide a persistent [Emscripten](https://emscripten.org/) filesystem that
-    outperforms
-    [IDBFS](https://emscripten.org/docs/api_reference/Filesystem-API.html#filesystem-api-idbfs)
-    and has a simpler implementation
+    relying on the new surface's performance and direct buffered access to
+    offload sound segments to disk instead of holding them in memory.
+*   Provide a fast and persistent [Emscripten](https://emscripten.org/)
+    filesystem to act as generic and easily accessible storage for Wasm.
 
 ## Non-goals
 
-This proposal is focused only on additions to the
-[Origin Private File System](https://wicg.github.io/file-system-access/#sandboxed-filesystem),
-and doesn't currently consider changes to the rest of File System Access API or
-how files in the host machine are accessed.
+This proposal is focused only on additions to the [Origin Private File
+System](https://wicg.github.io/file-system-access/#sandboxed-filesystem), and
+doesn't currently consider changes to the rest of File System Access API or how
+files in the host machine are accessed.
+
+## What makes the new surface fast?
+
+There are a few design choices that primarily contribute to the performance of
+AccessHandles:
+
+*   Write operations are not guaranteed to be immediately persistent, rather
+    persistency is achieved through calls to *flush()*. At the same time, data
+can be consistently read before flushing. This allows applications to only
+schedule time consuming flushes when they are required for long-term data
+storage, and not as a precondition to operate on recently written data.
+*   The exclusive write lock held by the AccessHandle saves implementations
+    from having to provide a central data access point across execution
+contexts. In multi-process browsers, such as Chrome, this helps avoid costly
+inter-process communication (IPCs) between renderer and browser processes.
+*   Data copies are avoided when reading or writing. In the async surface this
+    is achieved through SharedArrayBuffers and BYOB readers. In the sync
+surface, we rely on user-allocated buffers to hold the data.
+
+For more information on what affects the performance of similar storage APIs,
+see [Design considerations for the Storage Foundation
+API](https://docs.google.com/document/d/1cOdnvuNIWWyJHz1uu8K_9DEgntMtedxfCzShI7d01cs)
 
 ## Proposed API
 
 ### New data access surface
 
 ```javascript
-//In all contexts
+// In all contexts
 const handle = await file.createAccessHandle();
 await handle.writable.getWriter().write(buffer);
 const reader = handle.readable.getReader({mode: "byob"});
-//Assumes seekable streams are available
-var {value: buffer, done} = await reader.read(buffer, {at: 1});
+// Assumes seekable streams, and SharedArrayBuffer support are available
+var done = await reader.read(buffer, {at: 1});
 
-//Only in a worker context
-const handle = file.createSyncAccessHandle();
+// Only in a worker context
+const handle = await file.createSyncAccessHandle();
 var writtenBytes = handle.write(buffer);
 var readBytes = handle.read(buffer {at: 1});
 ```
 
-A new *createAccessHandle()* method would be added to *FileSystemFileHandle*.
-It  would return an *AccessHandle* that contains a
-[duplex stream](https://streams.spec.whatwg.org/#other-specs-duplex) and
-auxilliary methods. The readable/writable pair in the duplex stream would
-communicate with the same backing file, allowing the user to read unflushed
-contents. Another new method, *createSyncAccessHandle()*, would be only exposed
-on Worker threads. This method would offer a more buffer based surface for read
-and write. An IDL description of the new interface can be found in the
-[Appendix](#appendix).
+As mentioned above, a new *createAccessHandle()* method would be added to
+*FileSystemFileHandle*. Another method, *createSyncAccessHandle()*, would be
+only exposed on Worker threads. An IDL description of the new interface can be
+found in the [Appendix](#appendix).
 
 The reason for offering a Worker-only synchronous interface, is that consuming
 asynchronous APIs from Wasm has severe performance implications (more details
 [here](https://docs.google.com/document/d/1lsQhTsfcVIeOW80dr467Auud_VCeAUv2ZOkC63oSyKo)).
-We've opted for slightly different interfaces between the async and sync
-versions, because there currently isn’t support for synchronous streams. The
-amount of effort that would be required to spec them in a way that makes them
-compatible with asynchronous streams would be prohibitively high, and likely
-not worth it to support a single API.  Furthermore, we hope to discourage the
-use of the sync surface unless a developer is dealing with legacy Wasm ports,
-and therefore there is not much benefit to adding them.
 
-This proposal assumes that
-[seekable streams](https://github.com/whatwg/streams/issues/1128) will be
-available. If this doesn’t happen, We can emulate the seeking behavior by
-extending the default reader and writer with a *seek()* method.
+This proposal assumes that [seekable
+streams](https://github.com/whatwg/streams/issues/1128) will be available. If
+this doesn’t happen, we can emulate the seeking behavior by extending the
+default reader and writer with a *seek()* method.
 
 ### Locking semantics
 
@@ -147,34 +115,25 @@ const handle1 = await file.createAccessHandle();
 try {
   const handle2 = await file.createAccessHandle();
 } catch(e) {
-  //This catch will always be executed, since there is an open access handle
+  // This catch will always be executed, since there is an open access handle
 }
 await handle1.close();
-//Now a new access handle may be created
+// Now a new access handle may be created
 ```
 
-In order to avoid multiple contexts modifying a file at the same time, locking
-semantics would be added to the new surface. At any given time, and across
-execution contexts, there would only be either a single *AccessHandle* per
-FileHandle, or potentially multiple Writables created through
-*createWritable()*.
+*createAccessHandle()* would take an exclusive write lock on the file that
+prevents the creation of any other access handles or  *WritableFileStreams*.
+Similarly *createWritable()* would take a shared write lock that blocks the
+creation of access handles, but not of other writable streams. This prevents
+the file from being modified from multiple contexts, while still being
+backwards compatible with the current OPFS spec and supporting multiple
+*WritableFileStreams* at once.
 
-When creating an *AccessHandle*, a lock will be taken. This lock will be released
-when the *AccessHandle* is closed or destroyed. When a Writable is created, a
-lock is taken if there are no other open Writables. This lock will be released
-once the last Writable closed or destroyed. Only one lock may be taken at a
-given time for a given FileHandle.
-
-There are some important edge cases to mention:
-
-*   Locks acquired by creating a sync handle also prevent the creation of async handles.
-*   Creating a File through *getFile()* is possible when a lock is in place. The
-    returned File behaves as it currently does in OPFS i.e. it is invalidated
-    if file contents change after it was created.  In our particular case this
-    means that Files created while there is an active handle will be invalidated
-    when a flush is executed (either explicitly through flush() or implicitly by
-    the OS). It also means that these Files could be used to observe flushed
-    changes done through the new API, even if a lock is still being held.
+Creating a [File](https://www.w3.org/TR/FileAPI/#dfn-file) through *getFile()*
+would be possible when a lock is in place. The returned File behaves as it
+currently does in OPFS i.e., it is invalidated if file contents are changed
+after it was created. It is worth noting that these Files could be used to
+observe changes done through the new API, even if a lock is still being held.
 
 ## Open Questions
 
@@ -187,9 +146,9 @@ for data access is *createAccessHandle()* and *createSyncAccessHandle()*.
 ### Assurances on non-awaited consistency
 
 It would be possible to clearly specify the behavior of an immediate async read
-after a non-awaited write, by serializing file operations (as is currently done
-in Storage Foundation API). We should decide if this is convenient, both from a
-specification and performance point of view.
+operation after a non-awaited write operation, by serializing file operations
+(as is currently done in Storage Foundation API). We should decide if this is
+convenient, both from a specification and performance point of view.
 
 ## Appendix
 
@@ -206,19 +165,19 @@ interface FileSystemFileHandle : FileSystemHandle {
 };
 
 interface FileSystemAccessHandle {
-  //Assumes seekable streams are available. The
-  //Seekable extended attribute is ad-hoc notation for this proposal.
+  // Assumes seekable streams are available. The
+  // Seekable extended attribute is ad-hoc notation for this proposal.
   [Seekable] readonly attribute WritableStream writable;
   [Seekable] readonly attribute ReadableStream readable;
 
-  //Resizes the file to be size bytes long. If size is larger than the current
-  //size the file is padded with null bytes, otherwise it is truncated.
+  // Resizes the file to be size bytes long. If size is larger than the current
+  // size the file is padded with null bytes, otherwise it is truncated.
   Promise<undefined> truncate([EnforceRange] unsigned long long size);
-  //Returns the current size of the file.
+  // Returns the current size of the file.
   Promise<unsigned long long> getSize();
-  //Persists the changes that have been written to disk
+  // Persists the changes that have been written to disk
   Promise<undefined> flush();
-  //Cancels the streams and releases the lock on the file
+  // Flushes and closes the streams, then releases the lock on the file
   Promise<undefined> close();
 };
 
