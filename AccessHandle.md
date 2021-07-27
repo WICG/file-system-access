@@ -1,3 +1,34 @@
+# Adding AccessHandles
+
+## Authors:
+
+* Emanuel Krivoy (fivedots@chromium.org)
+* Richard Stotz (rstz@chromium.org)
+
+## Participate
+
+* [Issue tracker](https://github.com/WICG/file-system-access/issues)
+
+## Table of Contents
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Introduction](#introduction)
+- [Goals & Use Cases](#goals--use-cases)
+- [Non-goals](#non-goals)
+- [What makes the new surface fast?](#what-makes-the-new-surface-fast)
+- [Proposed API](#proposed-api)
+  - [New data access surface](#new-data-access-surface)
+  - [Locking semantics](#locking-semantics)
+- [Open Questions](#open-questions)
+  - [Naming](#naming)
+  - [Assurances on non-awaited consistency](#assurances-on-non-awaited-consistency)
+- [Appendix](#appendix)
+  - [AccessHandle IDL](#accesshandle-idl)
+- [References & acknowledgements](#references--acknowledgements)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Introduction
 
@@ -19,8 +50,8 @@ threads. This method would offer a more buffer-based surface for reading and
 writing. The creation of AccessHandle also creates a lock that prevents write
 access to the file across (and within the same) execution contexts.
 
-This proposal is part of our effort to merge [Storage Foundation
-API](https://github.com/WICG/storage-foundation-api-explainer) and File System
+This proposal is part of our effort to integrate [Storage Foundation
+API](https://github.com/WICG/storage-foundation-api-explainer) into File System
 Access API. For more context the origins of this proposal, and alternatives
 considered, please check out: [Merging Storage Foundation API and the Origin
 Private File
@@ -61,16 +92,16 @@ AccessHandles:
 
 *   Write operations are not guaranteed to be immediately persistent, rather
     persistency is achieved through calls to *flush()*. At the same time, data
-can be consistently read before flushing. This allows applications to only
-schedule time consuming flushes when they are required for long-term data
-storage, and not as a precondition to operate on recently written data.
+    can be consistently read before flushing. This allows applications to only
+    schedule time consuming flushes when they are required for long-term data
+    storage, and not as a precondition to operate on recently written data.
 *   The exclusive write lock held by the AccessHandle saves implementations
     from having to provide a central data access point across execution
-contexts. In multi-process browsers, such as Chrome, this helps avoid costly
-inter-process communication (IPCs) between renderer and browser processes.
+    contexts. In multi-process browsers, such as Chrome, this helps avoid costly
+    inter-process communication (IPCs) between renderer and browser processes.
 *   Data copies are avoided when reading or writing. In the async surface this
     is achieved through SharedArrayBuffers and BYOB readers. In the sync
-surface, we rely on user-allocated buffers to hold the data.
+    surface, we rely on user-allocated buffers to hold the data.
 
 For more information on what affects the performance of similar storage APIs,
 see [Design considerations for the Storage Foundation
@@ -86,7 +117,7 @@ const handle = await file.createAccessHandle();
 await handle.writable.getWriter().write(buffer);
 const reader = handle.readable.getReader({mode: "byob"});
 // Assumes seekable streams, and SharedArrayBuffer support are available
-var done = await reader.read(buffer, {at: 1});
+await reader.read(buffer, {at: 1});
 
 // Only in a worker context
 const handle = await file.createSyncAccessHandle();
