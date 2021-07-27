@@ -46,9 +46,10 @@ a [duplex stream](https://streams.spec.whatwg.org/#other-specs-duplex) and
 auxiliary methods. The readable/writable pair in the duplex stream communicates
 with the same backing file, allowing the user to read unflushed contents.
 Another new method, *createSyncAccessHandle()*, would only be exposed on Worker
-threads. This method would offer a more buffer-based surface for reading and
-writing. The creation of AccessHandle also creates a lock that prevents write
-access to the file across (and within the same) execution contexts.
+threads. This method would offer a more buffer-based surface with synchronous
+reading and writing. The creation of AccessHandle also creates a lock that
+prevents write access to the file across (and within the same) execution
+contexts.
 
 This proposal is part of our effort to integrate [Storage Foundation
 API](https://github.com/WICG/storage-foundation-api-explainer) into File System
@@ -133,6 +134,11 @@ found in the [Appendix](#appendix).
 The reason for offering a Worker-only synchronous interface, is that consuming
 asynchronous APIs from Wasm has severe performance implications (more details
 [here](https://docs.google.com/document/d/1lsQhTsfcVIeOW80dr467Auud_VCeAUv2ZOkC63oSyKo)).
+Since this overhead is most impactful on methods that are called often, we've
+only made *read()* and *write()* synchronous. This allows us to keep a simpler
+mental model (where the sync and async handle are identical, except reading and
+writing) and reduce the number of new sync methods, while avoiding the most
+important perfomance penalties.
 
 This proposal assumes that [seekable
 streams](https://github.com/whatwg/streams/issues/1128) will be available. If
@@ -221,7 +227,7 @@ interface FileSystemSyncAccessHandle {
 
   Promise<undefined> truncate([EnforceRange] unsigned long long size);
   Promise<unsigned long long> getSize();
-  Promise<undefined> flush(); 
+  Promise<undefined> flush();
   Promise<undefined> close();
 };
 
