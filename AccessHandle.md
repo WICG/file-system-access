@@ -1,4 +1,4 @@
-# Adding AccessHandles
+# AccessHandle Proposal
 
 ## Authors:
 
@@ -114,7 +114,9 @@ API](https://docs.google.com/document/d/1cOdnvuNIWWyJHz1uu8K_9DEgntMtedxfCzShI7d
 
 ```javascript
 // In all contexts
-const handle = await file.createAccessHandle();
+// For details on the `mode` parameter see "Exposing AccessHandles on all
+// filesystems" below
+const handle = await file.createAccessHandle({ mode: 'in-place' });
 await handle.writable.getWriter().write(buffer);
 const reader = handle.readable.getReader({mode: "byob"});
 // Assumes seekable streams, and SharedArrayBuffer support are available
@@ -148,9 +150,9 @@ default reader and writer with a *seek()* method.
 ### Locking semantics
 
 ```javascript
-const handle1 = await file.createAccessHandle();
+const handle1 = await file.createAccessHandle({ mode: 'in-place' });
 try {
-  const handle2 = await file.createAccessHandle();
+  const handle2 = await file.createAccessHandle({ mode: 'in-place' });
 } catch(e) {
   // This catch will always be executed, since there is an open access handle
 }
@@ -180,6 +182,30 @@ The exact name of the new methods hasn’t been defined. The current placeholder
 for data access is *createAccessHandle()* and *createSyncAccessHandle()*.
 *createUnflushedStreams()* and *createDuplexStream()* have been suggested.
 
+### Exposing AccessHandles on all filesystems
+
+This proposal only currently considers additions to OPFS, but it would probably
+be worthwhile to expand the new functionality to arbitrary file handles. While
+the exact behavior of *AccessHandles* outside of OPFS would need to be defined
+in detail, it's almost certain that the one described in this proposal should
+not be the default. To avoid setting it as such, we propose adding an optional
+*mode* string parameter to *createAccessHandle()* and
+*createSyncAccessHandle()*. Some possible values *mode* could take are:
+
+*  'shared': The current behavior seen in File System Access API in general,
+   there is no locking and modifications are atomic (meaning that they would
+   only actually change the file when the *AccessHandle* is closed). This mode
+   would be a safe choice as a default value.
+*  'exclusive': An exclusive write lock is taken on the file, but modifications
+   are still atomic. This is a useful mode for developers that want to
+   coordinate various writing threads but still want "all or nothing" writes.
+*  'in-place': The behavior described in this proposal, allowing developers to
+   use high performance access to files at the cost of not having atomic writes.
+   It's possible that this mode would only be allowed in OPFS.
+
+Both the naming and semantics of the *mode* parameter have to be more concretely
+defined.
+
 ### Assurances on non-awaited consistency
 
 It would be possible to clearly specify the behavior of an immediate async read
@@ -196,10 +222,18 @@ interface FileSystemFileHandle : FileSystemHandle {
   Promise<File> getFile();
   Promise<FileSystemWritableFileStream> createWritable(optional FileSystemCreateWritableOptions options = {});
 
-  Promise<FileSystemAccessHandle> createAccessHandle();
+  Promise<FileSystemAccessHandle> createAccessHandle(optional FileSystemFileHandleCreateAccessHandleOptions options = {});
   [Exposed=DedicatedWorker]
-  Promise<FileSystemSyncAccessHandle> createSyncAccessHandle();
+  Promise<FileSystemSyncAccessHandle> createSyncAccessHandle(optional FileSystemFileHandleCreateAccessHandleOptions options = {});
 };
+
+dictionary FileSystemFileHandleCreateAccessHandleOptions {
+  AccessHandleMode mode;
+};
+
+// For more details and possible modes, see "Exposing AccessHandles on all
+// filesystems" above
+enum AccessHandleMode { "in-place" };
 
 interface FileSystemAccessHandle {
   // Assumes seekable streams are available. The
