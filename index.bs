@@ -262,6 +262,8 @@ interface FileSystemHandle {
   readonly attribute FileSystemHandleKind kind;
   readonly attribute USVString name;
 
+  Promise<void> move(USVString name);
+  Promise<void> move(FileSystemDirectoryHandle parent, USVString? name);
   Promise<void> remove(optional FileSystemRemoveOptions options = {});
 
   Promise<boolean> isSameEntry(FileSystemHandle other);
@@ -316,6 +318,43 @@ and return {{FileSystemHandleKind/"directory"}} otherwise.
 
 The <dfn attribute for=FileSystemHandle>name</dfn> attribute must return the [=entry/name=] of the
 associated [=FileSystemHandle/entry=].
+
+### The {{FileSystemHandle/move()}} method ### {#api-filesystemhandle-move}
+
+<div class="note domintro">
+  : await |handle| . {{FileSystemHandle/move()|move}}({|new_entry_name|})
+  :: Attempts to atomically rename the entry represented by |handle| to
+     |new_entry_name| in the underlying file system.
+
+  : await |handle| . {{FileSystemHandle/move()|move}}({|destination_directory|})
+  :: Attempts to move the entry represented by |handle| to |destination_directory|,
+     while keeping its existing name.
+
+  : await |handle| . {{FileSystemHandle/move()|move}}({|destination_directory|, |new_entry_name|})
+  :: Attempts to move the entry represented by |handle| to |destination_directory|,
+     as well as renaming to |new_entry_name|.
+
+     If |destination_directory| is on the same underlying filesystem, this move
+     will be atomic. Moves to non-local file systems will are not guaranteed to
+     be atomic and will involve duplicating data.
+
+     In all of these cases, for files or directories with multiple hardlinks or
+     symlinks, the entry which is renamed is the entry corresponding to the path
+     which was used to obtain the handle.
+
+     Attempting to rename a file or directory that does not exist or passing an
+     invalid name will result in a promise rejection.
+
+</div>
+
+<div algorithm>
+The <dfn method for=FileSystemHandle>move(|destination_directory|, |new_entry_name|)</dfn> method,
+when invoked, must run these steps:
+
+1. TODO
+
+</div>
+
 
 ### The {{FileSystemHandle/remove()}} method ### {#api-filesystemhandle-remove}
 
