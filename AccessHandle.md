@@ -213,6 +213,16 @@ operation after a non-awaited write operation, by serializing file operations
 (as is currently done in Storage Foundation API). We should decide if this is
 convenient, both from a specification and performance point of view.
 
+## Trying It Out
+
+A prototype of access handles is available in Chrome Canary (from at least
+version `94.0.4597.0`). To enable it, launch Chrome with the
+`--enable-features=FileSystemAccessAccessHandle` flag.
+
+We have also developed an Emscripten file system based on access handles.
+Instructions on how to use it can be found
+[here](https://github.com/rstz/emscripten-pthreadfs/blob/main/pthreadfs/README.md).
+
 ## Appendix
 
 ### AccessHandle IDL
