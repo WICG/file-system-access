@@ -123,7 +123,7 @@ const reader = handle.readable.getReader({mode: "byob"});
 await reader.read(buffer, {at: 1});
 
 // Only in a worker context
-const handle = await file.createSyncAccessHandle();
+const handle = file.createSyncAccessHandle();
 var writtenBytes = handle.write(buffer);
 var readBytes = handle.read(buffer {at: 1});
 ```
