@@ -233,7 +233,7 @@ const file_ref = await dir_ref.getFile('foo.js');
 const subdir = await dir_ref.getDirectory('bla', {create: true});
 
 // Rename a file and/or move it to another directory
-await file_ref.move('new_name');
+await file_ref.rename('new_name');
 await file_ref.move(other_dir_ref);
 await file_ref.move(dir_ref, 'newer_name');
 
