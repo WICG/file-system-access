@@ -262,8 +262,9 @@ interface FileSystemHandle {
   readonly attribute FileSystemHandleKind kind;
   readonly attribute USVString name;
 
-  Promise<void> move(USVString name);
-  Promise<void> move(FileSystemDirectoryHandle parent, USVString? name);
+  Promise<void> rename(USVString name);
+  Promise<void> move(FileSystemDirectoryHandle parent);
+  Promise<void> move(FileSystemDirectoryHandle parent, USVString name);
   Promise<void> remove(optional FileSystemRemoveOptions options = {});
 
   Promise<boolean> isSameEntry(FileSystemHandle other);
