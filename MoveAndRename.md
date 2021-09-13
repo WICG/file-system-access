@@ -39,16 +39,17 @@ Currently, the API does not support an efficient way to move or rename files or
 directories. This requires creating a new file/directory, copying over data
 (recursively, in the case of a directory), and removing the original. This
 process is slow, error prone (e.g. disk full), and can require re-uploading
-files in some cases (e.g. Google Drive files on ChromeOS).
+files in some cases (e.g. Google Drive files on Chrome OS).
 
 We propose adding new `FileSystemHandle::rename()` and
 `FileSystemHandle::move()` methods. `rename()` guarantees atomic moves of a file
 or directory without the need to duplicate data. `move()` only offers atomic
 moves of a file or directory if it is moved within the same file system, while
-moves to non-local file systems, will not be guaranteed to be atomic and may
+moves to non-local file systems will not be guaranteed to be atomic and may
 involve duplicating data. See the [Open Questions](#open-questions---move).
 
 # API Surface
+
 We propose adding a `rename()` method and a `move()` method with two variations.
 
 `rename()` will rename a file or directory. It is guaranteed to be atomic.
@@ -57,11 +58,11 @@ The first `move()` variation allows a user to specify a `destination_directory`
 to move to, which may or may not be on the same file system. The name of the
 original file or directory is retained. This is not guaranteed to be atomic,
 since the destination directory may be on a different file system and/or may be
-subject to other checks (ex: Safe Browsing in Chrome).
+subject to other checks (e.g. Safe Browsing in Chrome).
 
 The second `move()` variation allows a user to specify a `new_entry_name` as
 well as a `destination_directory` to move to. The same (lack of) atomicity
-guarantees apply here as the first `move()` variation.
+guarantees apply here as with the first `move()` variation.
 
 ```
 interface FileSystemHandle {
@@ -76,6 +77,7 @@ interface FileSystemHandle {
 ```
 
 ## Open Questions - Naming
+
 - Should we prefer `move()` to move verbose alternatives, such as `moveTo()` or
   `moveToDirectory()`?
 - Should we bother guaranteeing (in the spec) atomicity to all handles `move()`d
@@ -86,8 +88,9 @@ interface FileSystemHandle {
 There are three cases to consider when moving to other directories:
 
 ## (1) Moving to a Non-Local File System
+
 Moving across file systems cannot be guaranteed to be atomic if the operation
-cannot be completed successfully (ex: network connection issues, lack disk
+cannot be completed successfully (e.g. network connection issues, lack disk
 space, etc.). This may result in partial writes to the target directory.
 
 Note that this approach is no worse than what is available currently.
@@ -97,8 +100,8 @@ Note that this approach is no worse than what is available currently.
 [#310](https://github.com/WICG/file-system-access/pull/310) exposes a strong use
 case for fast, atomic moves to other directories on the same file system. Files
 can be written efficiently in the Origin Private File System using an
-AccessHandle, then efficiently moved to a directory of the user's choice.
-However, writes using an AccessHandle are not subjected to Safe Browsing checks
+`AccessHandle`, then efficiently moved to a directory of the user's choice.
+However, writes using an `AccessHandle` are not subjected to Safe Browsing checks
 in Chrome. Moving files out of the OPFS to a user's directory will require
 running Safe Browsing checks on all moved files.
 
@@ -115,7 +118,8 @@ may be confusing.
 
 ## Open Questions - Move
 
-### Should behavior be different when moving a file vs moving a directory?
+### Should behavior be different when moving a file vs. moving a directory?
+
 - For a file:
   - Atomicity is only guaranteed in (2) and (3), though is likely true for (1).
   - Speed is only guaranteed in (3).
@@ -127,6 +131,7 @@ may be confusing.
     (2) is much greater than when only moving a file.
 
 ### What should happen if the operation cannot be completed successfully?
+
 - Abort the operation
   - Least complexity for browser implementers, meaning less room for
     implementation-specific behavior.
