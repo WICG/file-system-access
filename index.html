@@ -4,9 +4,9 @@
   <title>File System Access</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version b2f668fca, updated Fri Aug 6 17:41:38 2021 -0700" name="generator">
+  <meta content="Bikeshed version a210b7d86, updated Thu Sep 16 13:45:19 2021 -0700" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="dd4fc6e26e7673f3216f4ee11fb8107e87df430a" name="document-revision">
+  <meta content="303d9d6579ca265deb287c4badf9f58a21e525d3" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -653,7 +653,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">File System Access</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2021-08-09">9 August 2021</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2021-09-21">21 September 2021</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -888,10 +888,10 @@ run the following steps:
     </ol>
    </div>
    <h3 class="heading settled" data-level="2.2" id="permissions"><span class="secno">2.2. </span><span class="content">Permissions</span><a class="self-link" href="#permissions"></a></h3>
-   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="PermissionName" data-dfn-type="enum-value" data-export id="dom-permissionname-file-system"><code>"file-system"</code></dfn> <a data-link-type="dfn" href="https://w3c.github.io/permissions/#powerful-feature" id="ref-for-powerful-feature">powerful feature</a>'s
+   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="PermissionName" data-dfn-type="enum-value" data-export id="dom-permissionname-file-system"><code>"file-system"</code></dfn> <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-powerful-feature" id="ref-for-dfn-powerful-feature">powerful feature</a>'s
 permission-related algorithms and types are defined as follows:</p>
    <dl>
-    <dt data-md><a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-descriptor-type" id="ref-for-permission-descriptor-type">permission descriptor type</a>
+    <dt data-md><a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-descriptor-type" id="ref-for-dfn-permission-descriptor-type">permission descriptor type</a>
     <dd data-md>
      <p><code class="idl"><a data-link-type="idl" href="#dictdef-filesystempermissiondescriptor" id="ref-for-dictdef-filesystempermissiondescriptor">FileSystemPermissionDescriptor</a></code>, defined as:</p>
 <pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-filesystempermissionmode"><code><c- g>FileSystemPermissionMode</c-></code></dfn> {
@@ -899,46 +899,46 @@ permission-related algorithms and types are defined as follows:</p>
   <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemPermissionMode" data-dfn-type="enum-value" data-export id="dom-filesystempermissionmode-readwrite"><code><c- s>"readwrite"</c-></code></dfn>
 };
 
-<c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystempermissiondescriptor"><code><c- g>FileSystemPermissionDescriptor</c-></code></dfn> : <a data-link-type="idl-name" href="https://w3c.github.io/permissions/#dictdef-permissiondescriptor" id="ref-for-dictdef-permissiondescriptor"><c- n>PermissionDescriptor</c-></a> {
+<c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystempermissiondescriptor"><code><c- g>FileSystemPermissionDescriptor</c-></code></dfn> : <a data-link-type="idl-name" href="https://w3c.github.io/permissions/#dom-permissiondescriptor" id="ref-for-dom-permissiondescriptor"><c- n>PermissionDescriptor</c-></a> {
   <c- b>required</c-> <a data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle"><c- n>FileSystemHandle</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemPermissionDescriptor" data-dfn-type="dict-member" data-export data-type="FileSystemHandle " id="dom-filesystempermissiondescriptor-handle"><code><c- g>handle</c-></code></dfn>;
   <a data-link-type="idl-name" href="#enumdef-filesystempermissionmode" id="ref-for-enumdef-filesystempermissionmode"><c- n>FileSystemPermissionMode</c-></a> <dfn class="dfn-paneled idl-code" data-default="&quot;read&quot;" data-dfn-for="FileSystemPermissionDescriptor" data-dfn-type="dict-member" data-export data-type="FileSystemPermissionMode " id="dom-filesystempermissiondescriptor-mode"><code><c- g>mode</c-></code></dfn> = "read";
 };
 </pre>
-    <dt data-md><a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state-constraints" id="ref-for-permission-state-constraints">permission state constraints</a>
+    <dt data-md><a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state-constraints" id="ref-for-dfn-permission-state-constraints">permission state constraints</a>
     <dd data-md>
      <div class="algorithm" data-algorithm="permission state constraints">
-       To determine <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state-constraints" id="ref-for-permission-state-constraints①">permission state constraints</a> for a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystempermissiondescriptor" id="ref-for-dictdef-filesystempermissiondescriptor①">FileSystemPermissionDescriptor</a></code> <var>desc</var>,
+       To determine <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state-constraints" id="ref-for-dfn-permission-state-constraints①">permission state constraints</a> for a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystempermissiondescriptor" id="ref-for-dictdef-filesystempermissiondescriptor①">FileSystemPermissionDescriptor</a></code> <var>desc</var>,
 run these steps: 
       <ol>
        <li data-md>
         <p>Let <var>entry</var> be <var>desc</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle">handle</a></code>'s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①">entry</a>.</p>
        <li data-md>
         <p>If <var>entry</var> represents an <a data-link-type="dfn" href="#entry" id="ref-for-entry⑨">entry</a> in an <a data-link-type="dfn" href="#wellknowndirectory-origin-private-file-system" id="ref-for-wellknowndirectory-origin-private-file-system">origin private file system</a>,
-this descriptor’s <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state" id="ref-for-permission-state">permission state</a> must always be <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted">"granted"</a></code>.</p>
+this descriptor’s <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state" id="ref-for-dfn-permission-state">permission state</a> must always be <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted">"granted"</a></code>.</p>
        <li data-md>
-        <p>Otherwise, if <var>entry</var>’s <a data-link-type="dfn" href="#entry-parent" id="ref-for-entry-parent①">parent</a> is not null, this descriptor’s <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state" id="ref-for-permission-state①">permission state</a> must be
-equal to the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state" id="ref-for-permission-state②">permission state</a> for a descriptor with the same <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-mode" id="ref-for-dom-filesystempermissiondescriptor-mode">mode</a></code>,
+        <p>Otherwise, if <var>entry</var>’s <a data-link-type="dfn" href="#entry-parent" id="ref-for-entry-parent①">parent</a> is not null, this descriptor’s <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state" id="ref-for-dfn-permission-state①">permission state</a> must be
+equal to the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state" id="ref-for-dfn-permission-state②">permission state</a> for a descriptor with the same <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-mode" id="ref-for-dom-filesystempermissiondescriptor-mode">mode</a></code>,
 and a <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle①">handle</a></code> representing <var>entry</var>’s <a data-link-type="dfn" href="#entry-parent" id="ref-for-entry-parent②">parent</a>.</p>
        <li data-md>
         <p>Otherwise, if <var>desc</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-mode" id="ref-for-dom-filesystempermissiondescriptor-mode①">mode</a></code> is <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-readwrite" id="ref-for-dom-filesystempermissionmode-readwrite">"readwrite"</a></code>:</p>
         <ol>
          <li data-md>
-          <p>Let <var>read state</var> be the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state" id="ref-for-permission-state③">permission state</a> for a descriptor
+          <p>Let <var>read state</var> be the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state" id="ref-for-dfn-permission-state③">permission state</a> for a descriptor
 with the same <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle②">handle</a></code>,
 but <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-mode" id="ref-for-dom-filesystempermissiondescriptor-mode②">mode</a></code> = <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-read" id="ref-for-dom-filesystempermissionmode-read">"read"</a></code>.</p>
          <li data-md>
-          <p>If <var>read state</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①">"granted"</a></code>, this descriptor’s <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state" id="ref-for-permission-state④">permission state</a> must be equal to <var>read state</var>.</p>
+          <p>If <var>read state</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①">"granted"</a></code>, this descriptor’s <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state" id="ref-for-dfn-permission-state④">permission state</a> must be equal to <var>read state</var>.</p>
         </ol>
       </ol>
      </div>
     <dt data-md><a data-link-type="dfn" href="https://wicg.github.io/permissions-request/#permission-request-algorithm" id="ref-for-permission-request-algorithm">permission request algorithm</a>
     <dd data-md>
      <div class="algorithm" data-algorithm="permission request algorithm">
-       Given a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystempermissiondescriptor" id="ref-for-dictdef-filesystempermissiondescriptor②">FileSystemPermissionDescriptor</a></code> <var>desc</var> and a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#permissionstatus" id="ref-for-permissionstatus">PermissionStatus</a></code> <var>status</var>,
+       Given a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystempermissiondescriptor" id="ref-for-dictdef-filesystempermissiondescriptor②">FileSystemPermissionDescriptor</a></code> <var>desc</var> and a <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstatus" id="ref-for-dom-permissionstatus">PermissionStatus</a></code> <var>status</var>,
 run these steps: 
       <ol>
        <li data-md>
-        <p>Run the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#boolean-permission-query-algorithm" id="ref-for-boolean-permission-query-algorithm">boolean permission query algorithm</a> on <var>desc</var> and <var>status</var>.</p>
+        <p>Run the <a data-link-type="dfn">boolean permission query algorithm</a> on <var>desc</var> and <var>status</var>.</p>
        <li data-md>
         <p>If <var>status</var>.<code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstatus-state" id="ref-for-dom-permissionstatus-state">state</a></code> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-prompt" id="ref-for-dom-permissionstate-prompt">"prompt"</a></code>, abort.</p>
        <li data-md>
@@ -953,9 +953,9 @@ run these steps:
         <p>If <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin">origin</a> is not <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#same-origin" id="ref-for-same-origin">same origin</a> with <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin" id="ref-for-concept-environment-top-level-origin">top-level origin</a>,
  throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#securityerror" id="ref-for-securityerror②">SecurityError</a></code>.</p>
        <li data-md>
-        <p><a data-link-type="dfn" href="https://w3c.github.io/permissions/#request-permission-to-use" id="ref-for-request-permission-to-use">Request permission to use</a> <var>desc</var>.</p>
+        <p><a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-request-permission-to-use" id="ref-for-dfn-request-permission-to-use">Request permission to use</a> <var>desc</var>.</p>
        <li data-md>
-        <p>Run the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#boolean-permission-query-algorithm" id="ref-for-boolean-permission-query-algorithm①">boolean permission query algorithm</a> on <var>desc</var> and <var>status</var>.</p>
+        <p>Run the <a data-link-type="dfn">boolean permission query algorithm</a> on <var>desc</var> and <var>status</var>.</p>
       </ol>
       <p class="issue" id="issue-88417955"><a class="self-link" href="#issue-88417955"></a> Ideally this user activation requirement would be defined upstream. <a href="https://github.com/WICG/permissions-request/issues/2">&lt;https://github.com/WICG/permissions-request/issues/2></a></p>
      </div>
@@ -972,7 +972,7 @@ run these steps:
      <li data-md>
       <p>Set <var>desc</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-mode" id="ref-for-dom-filesystempermissiondescriptor-mode③">mode</a></code> to <var>mode</var>.</p>
      <li data-md>
-      <p>Return <var>desc</var>’s <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state" id="ref-for-permission-state⑤">permission state</a>.</p>
+      <p>Return <var>desc</var>’s <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state" id="ref-for-dfn-permission-state⑤">permission state</a>.</p>
     </ol>
    </div>
    <div class="algorithm" data-algorithm="requesting file system permission">
@@ -987,11 +987,11 @@ run these steps:
      <li data-md>
       <p>Set <var>desc</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-mode" id="ref-for-dom-filesystempermissiondescriptor-mode④">mode</a></code> to <var>mode</var>.</p>
      <li data-md>
-      <p>Let <var>status</var> be the result of running <a data-link-type="dfn" href="https://w3c.github.io/permissions/#create-a-permissionstatus" id="ref-for-create-a-permissionstatus">create a PermissionStatus</a> for <var>desc</var>.</p>
+      <p>Let <var>status</var> be the result of running <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-create-a-permissionstatus" id="ref-for-dfn-create-a-permissionstatus">create a PermissionStatus</a> for <var>desc</var>.</p>
      <li data-md>
       <p>Run the <a data-link-type="dfn" href="https://wicg.github.io/permissions-request/#permission-request-algorithm" id="ref-for-permission-request-algorithm①">permission request algorithm</a> for the <code class="idl"><a data-link-type="idl" href="#dom-permissionname-file-system" id="ref-for-dom-permissionname-file-system②">"file-system"</a></code> feature, given <var>desc</var> and <var>status</var>.</p>
      <li data-md>
-      <p>Return <var>desc</var>’s <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state" id="ref-for-permission-state⑥">permission state</a>.</p>
+      <p>Return <var>desc</var>’s <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state" id="ref-for-dfn-permission-state⑥">permission state</a>.</p>
     </ol>
    </div>
    <p class="issue" id="issue-7fc2f5c7"><a class="self-link" href="#issue-7fc2f5c7"></a> Currently <code class="idl"><a data-link-type="idl" href="#enumdef-filesystempermissionmode" id="ref-for-enumdef-filesystempermissionmode③">FileSystemPermissionMode</a></code> can only be <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-read" id="ref-for-dom-filesystempermissionmode-read①">"read"</a></code> or <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-readwrite" id="ref-for-dom-filesystempermissionmode-readwrite①">"readwrite"</a></code>. In
@@ -1029,8 +1029,8 @@ the future we might want to add a "write" mode as well to support write-only han
 
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise" id="ref-for-idl-promise"><c- b>Promise</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean"><c- b>boolean</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-issameentry" id="ref-for-dom-filesystemhandle-issameentry"><c- g>isSameEntry</c-></a>(<a data-link-type="idl-name" href="#filesystemhandle" id="ref-for-filesystemhandle④"><c- n>FileSystemHandle</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/isSameEntry(other)" data-dfn-type="argument" data-export id="dom-filesystemhandle-issameentry-other-other"><code><c- g>other</c-></code><a class="self-link" href="#dom-filesystemhandle-issameentry-other-other"></a></dfn>);
 
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise" id="ref-for-idl-promise①"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="https://w3c.github.io/permissions/#enumdef-permissionstate" id="ref-for-enumdef-permissionstate"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission"><c- g>queryPermission</c-></a>(<c- b>optional</c-> <a data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/queryPermission(descriptor), FileSystemHandle/queryPermission()" data-dfn-type="argument" data-export id="dom-filesystemhandle-querypermission-descriptor-descriptor"><code><c- g>descriptor</c-></code><a class="self-link" href="#dom-filesystemhandle-querypermission-descriptor-descriptor"></a></dfn> = {});
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise" id="ref-for-idl-promise②"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="https://w3c.github.io/permissions/#enumdef-permissionstate" id="ref-for-enumdef-permissionstate①"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission"><c- g>requestPermission</c-></a>(<c- b>optional</c-> <a data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor①"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/requestPermission(descriptor), FileSystemHandle/requestPermission()" data-dfn-type="argument" data-export id="dom-filesystemhandle-requestpermission-descriptor-descriptor"><code><c- g>descriptor</c-></code><a class="self-link" href="#dom-filesystemhandle-requestpermission-descriptor-descriptor"></a></dfn> = {});
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise" id="ref-for-idl-promise①"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="https://w3c.github.io/permissions/#dom-permissionstate" id="ref-for-dom-permissionstate"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-querypermission" id="ref-for-dom-filesystemhandle-querypermission"><c- g>queryPermission</c-></a>(<c- b>optional</c-> <a data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/queryPermission(descriptor), FileSystemHandle/queryPermission()" data-dfn-type="argument" data-export id="dom-filesystemhandle-querypermission-descriptor-descriptor"><code><c- g>descriptor</c-></code><a class="self-link" href="#dom-filesystemhandle-querypermission-descriptor-descriptor"></a></dfn> = {});
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise" id="ref-for-idl-promise②"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="https://w3c.github.io/permissions/#dom-permissionstate" id="ref-for-dom-permissionstate①"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-requestpermission" id="ref-for-dom-filesystemhandle-requestpermission"><c- g>requestPermission</c-></a>(<c- b>optional</c-> <a data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor" id="ref-for-dictdef-filesystemhandlepermissiondescriptor①"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemHandle/requestPermission(descriptor), FileSystemHandle/requestPermission()" data-dfn-type="argument" data-export id="dom-filesystemhandle-requestpermission-descriptor-descriptor"><code><c- g>descriptor</c-></code><a class="self-link" href="#dom-filesystemhandle-requestpermission-descriptor-descriptor"></a></dfn> = {});
 };
 </pre>
    <p>A <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle⑤">FileSystemHandle</a></code> object represents an <a data-link-type="dfn" href="#entry" id="ref-for-entry①⓪">entry</a>. Each <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle⑥">FileSystemHandle</a></code> object is associated
@@ -1999,7 +1999,7 @@ When using <code class="idl"><a data-link-type="idl" href="#dom-filesystemwritab
         <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel⑨">in parallel</a>:</p>
         <ol>
          <li data-md>
-          <p>Let <var>permissionStatus</var> be the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state" id="ref-for-permission-state⑦">permission state</a> for a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystempermissiondescriptor" id="ref-for-dictdef-filesystempermissiondescriptor⑤">FileSystemPermissionDescriptor</a></code> with <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle⑧">handle</a></code> representing <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file①">[[file]]</a>,
+          <p>Let <var>permissionStatus</var> be the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state" id="ref-for-dfn-permission-state⑦">permission state</a> for a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystempermissiondescriptor" id="ref-for-dictdef-filesystempermissiondescriptor⑤">FileSystemPermissionDescriptor</a></code> with <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle⑧">handle</a></code> representing <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file①">[[file]]</a>,
  and <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-mode" id="ref-for-dom-filesystempermissiondescriptor-mode⑥">mode</a></code> = <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-readwrite" id="ref-for-dom-filesystempermissionmode-readwrite⑨">"readwrite"</a></code>.</p>
          <li data-md>
           <p>If <var>permissionStatus</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted⑨">"granted"</a></code>,
@@ -2042,7 +2042,7 @@ runs these steps:
       <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel①⓪">in parallel</a>:</p>
       <ol>
        <li data-md>
-        <p>Let <var>permissionStatus</var> be the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state" id="ref-for-permission-state⑧">permission state</a> for a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystempermissiondescriptor" id="ref-for-dictdef-filesystempermissiondescriptor⑥">FileSystemPermissionDescriptor</a></code> with <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle⑨">handle</a></code> representing <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file③">[[file]]</a>,
+        <p>Let <var>permissionStatus</var> be the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state" id="ref-for-dfn-permission-state⑧">permission state</a> for a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystempermissiondescriptor" id="ref-for-dictdef-filesystempermissiondescriptor⑥">FileSystemPermissionDescriptor</a></code> with <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle⑨">handle</a></code> representing <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file③">[[file]]</a>,
   and <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-mode" id="ref-for-dom-filesystempermissiondescriptor-mode⑦">mode</a></code> = <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-readwrite" id="ref-for-dom-filesystempermissionmode-readwrite①⓪">"readwrite"</a></code>.</p>
        <li data-md>
         <p>If <var>permissionStatus</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①⓪">"granted"</a></code>,
@@ -2362,9 +2362,9 @@ file pickers will also let you pick files and directories on Google Drive.</p>
    <h3 class="heading settled" data-level="3.1" id="local-file-system-permissions"><span class="secno">3.1. </span><span class="content">Local File System Permissions</span><a class="self-link" href="#local-file-system-permissions"></a></h3>
    <p>The fact that the user picked the specific files returned by the <a data-link-type="dfn" href="#local-file-system-handle-factories" id="ref-for-local-file-system-handle-factories②">local file system handle factories</a> in a prompt
 should be treated by the user agent as the user intending to grant read access to the website
-for the returned files. As such, at the time the promise returned by one of the <a data-link-type="dfn" href="#local-file-system-handle-factories" id="ref-for-local-file-system-handle-factories③">local file system handle factories</a> resolves, <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state" id="ref-for-permission-state⑨">permission state</a> for a descriptor with <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle①⓪">handle</a></code> set to the returned handle,
+for the returned files. As such, at the time the promise returned by one of the <a data-link-type="dfn" href="#local-file-system-handle-factories" id="ref-for-local-file-system-handle-factories③">local file system handle factories</a> resolves, <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state" id="ref-for-dfn-permission-state⑨">permission state</a> for a descriptor with <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle①⓪">handle</a></code> set to the returned handle,
 and <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-mode" id="ref-for-dom-filesystempermissiondescriptor-mode⑧">mode</a></code> set to <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-read" id="ref-for-dom-filesystempermissionmode-read⑨">"read"</a></code> should be <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①①">"granted"</a></code>.</p>
-   <p>Additionally for calls to <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker②">showSaveFilePicker</a></code> the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#permission-state" id="ref-for-permission-state①⓪">permission state</a> for a descriptor with <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle①①">handle</a></code> set to the returned handle,
+   <p>Additionally for calls to <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker②">showSaveFilePicker</a></code> the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state" id="ref-for-dfn-permission-state①⓪">permission state</a> for a descriptor with <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle①①">handle</a></code> set to the returned handle,
 and <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-mode" id="ref-for-dom-filesystempermissiondescriptor-mode⑨">mode</a></code> set to <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-readwrite" id="ref-for-dom-filesystempermissionmode-readwrite①①">readwrite</a></code> should be <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①②">"granted"</a></code>.</p>
    <div class="algorithm" data-algorithm="is allowed to show a file picker">
      To verify that an <var>environment</var> <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="is-allowed-to-show-a-file-picker">is allowed to show a file picker</dfn>, run these steps: 
@@ -3858,6 +3858,30 @@ use this API to write to disk.</p>
     <li><a href="#ref-for-type">3.2.1. Accepted file types</a> <a href="#ref-for-type①">(2)</a> <a href="#ref-for-type②">(3)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-dom-permissiondescriptor">
+   <a href="https://w3c.github.io/permissions/#dom-permissiondescriptor">https://w3c.github.io/permissions/#dom-permissiondescriptor</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-permissiondescriptor">2.2. Permissions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-dom-permissionstate">
+   <a href="https://w3c.github.io/permissions/#dom-permissionstate">https://w3c.github.io/permissions/#dom-permissionstate</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-permissionstate">2.3. The FileSystemHandle interface</a> <a href="#ref-for-dom-permissionstate①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-dom-permissionstatus">
+   <a href="https://w3c.github.io/permissions/#dom-permissionstatus">https://w3c.github.io/permissions/#dom-permissionstatus</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-permissionstatus">2.2. Permissions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-dfn-create-a-permissionstatus">
+   <a href="https://w3c.github.io/permissions/#dfn-create-a-permissionstatus">https://w3c.github.io/permissions/#dfn-create-a-permissionstatus</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dfn-create-a-permissionstatus">2.2. Permissions</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-dom-permissionstate-granted">
    <a href="https://w3c.github.io/permissions/#dom-permissionstate-granted">https://w3c.github.io/permissions/#dom-permissionstate-granted</a><b>Referenced in:</b>
    <ul>
@@ -3872,42 +3896,6 @@ use this API to write to disk.</p>
     <li><a href="#ref-for-dom-permissionstate-granted①①">3.1. Local File System Permissions</a> <a href="#ref-for-dom-permissionstate-granted①②">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-dom-permissionstate-prompt">
-   <a href="https://w3c.github.io/permissions/#dom-permissionstate-prompt">https://w3c.github.io/permissions/#dom-permissionstate-prompt</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dom-permissionstate-prompt">2.2. Permissions</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-dictdef-permissiondescriptor">
-   <a href="https://w3c.github.io/permissions/#dictdef-permissiondescriptor">https://w3c.github.io/permissions/#dictdef-permissiondescriptor</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dictdef-permissiondescriptor">2.2. Permissions</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-enumdef-permissionstate">
-   <a href="https://w3c.github.io/permissions/#enumdef-permissionstate">https://w3c.github.io/permissions/#enumdef-permissionstate</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-enumdef-permissionstate">2.3. The FileSystemHandle interface</a> <a href="#ref-for-enumdef-permissionstate①">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-permissionstatus">
-   <a href="https://w3c.github.io/permissions/#permissionstatus">https://w3c.github.io/permissions/#permissionstatus</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-permissionstatus">2.2. Permissions</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-boolean-permission-query-algorithm">
-   <a href="https://w3c.github.io/permissions/#boolean-permission-query-algorithm">https://w3c.github.io/permissions/#boolean-permission-query-algorithm</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-boolean-permission-query-algorithm">2.2. Permissions</a> <a href="#ref-for-boolean-permission-query-algorithm①">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-create-a-permissionstatus">
-   <a href="https://w3c.github.io/permissions/#create-a-permissionstatus">https://w3c.github.io/permissions/#create-a-permissionstatus</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-create-a-permissionstatus">2.2. Permissions</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-dom-permissiondescriptor-name">
    <a href="https://w3c.github.io/permissions/#dom-permissiondescriptor-name">https://w3c.github.io/permissions/#dom-permissiondescriptor-name</a><b>Referenced in:</b>
    <ul>
@@ -3915,24 +3903,24 @@ use this API to write to disk.</p>
     <li><a href="#ref-for-dom-permissiondescriptor-name②">2.3.2. The queryPermission() method</a> <a href="#ref-for-dom-permissiondescriptor-name③">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-permission-descriptor-type">
-   <a href="https://w3c.github.io/permissions/#permission-descriptor-type">https://w3c.github.io/permissions/#permission-descriptor-type</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-dfn-permission-descriptor-type">
+   <a href="https://w3c.github.io/permissions/#dfn-permission-descriptor-type">https://w3c.github.io/permissions/#dfn-permission-descriptor-type</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-permission-descriptor-type">2.2. Permissions</a>
+    <li><a href="#ref-for-dfn-permission-descriptor-type">2.2. Permissions</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-permission-state">
-   <a href="https://w3c.github.io/permissions/#permission-state">https://w3c.github.io/permissions/#permission-state</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-dfn-permission-state">
+   <a href="https://w3c.github.io/permissions/#dfn-permission-state">https://w3c.github.io/permissions/#dfn-permission-state</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-permission-state">2.2. Permissions</a> <a href="#ref-for-permission-state①">(2)</a> <a href="#ref-for-permission-state②">(3)</a> <a href="#ref-for-permission-state③">(4)</a> <a href="#ref-for-permission-state④">(5)</a> <a href="#ref-for-permission-state⑤">(6)</a> <a href="#ref-for-permission-state⑥">(7)</a>
-    <li><a href="#ref-for-permission-state⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-permission-state⑧">(2)</a>
-    <li><a href="#ref-for-permission-state⑨">3.1. Local File System Permissions</a> <a href="#ref-for-permission-state①⓪">(2)</a>
+    <li><a href="#ref-for-dfn-permission-state">2.2. Permissions</a> <a href="#ref-for-dfn-permission-state①">(2)</a> <a href="#ref-for-dfn-permission-state②">(3)</a> <a href="#ref-for-dfn-permission-state③">(4)</a> <a href="#ref-for-dfn-permission-state④">(5)</a> <a href="#ref-for-dfn-permission-state⑤">(6)</a> <a href="#ref-for-dfn-permission-state⑥">(7)</a>
+    <li><a href="#ref-for-dfn-permission-state⑦">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dfn-permission-state⑧">(2)</a>
+    <li><a href="#ref-for-dfn-permission-state⑨">3.1. Local File System Permissions</a> <a href="#ref-for-dfn-permission-state①⓪">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-permission-state-constraints">
-   <a href="https://w3c.github.io/permissions/#permission-state-constraints">https://w3c.github.io/permissions/#permission-state-constraints</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-dfn-permission-state-constraints">
+   <a href="https://w3c.github.io/permissions/#dfn-permission-state-constraints">https://w3c.github.io/permissions/#dfn-permission-state-constraints</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-permission-state-constraints">2.2. Permissions</a> <a href="#ref-for-permission-state-constraints①">(2)</a>
+    <li><a href="#ref-for-dfn-permission-state-constraints">2.2. Permissions</a> <a href="#ref-for-dfn-permission-state-constraints①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-navigator-permissions">
@@ -3941,10 +3929,16 @@ use this API to write to disk.</p>
     <li><a href="#ref-for-dom-navigator-permissions">2.3.2. The queryPermission() method</a> <a href="#ref-for-dom-navigator-permissions①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-powerful-feature">
-   <a href="https://w3c.github.io/permissions/#powerful-feature">https://w3c.github.io/permissions/#powerful-feature</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-dfn-powerful-feature">
+   <a href="https://w3c.github.io/permissions/#dfn-powerful-feature">https://w3c.github.io/permissions/#dfn-powerful-feature</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-powerful-feature">2.2. Permissions</a>
+    <li><a href="#ref-for-dfn-powerful-feature">2.2. Permissions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-dom-permissionstate-prompt">
+   <a href="https://w3c.github.io/permissions/#dom-permissionstate-prompt">https://w3c.github.io/permissions/#dom-permissionstate-prompt</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-permissionstate-prompt">2.2. Permissions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-permissions-query">
@@ -3953,10 +3947,10 @@ use this API to write to disk.</p>
     <li><a href="#ref-for-dom-permissions-query">2.3.2. The queryPermission() method</a> <a href="#ref-for-dom-permissions-query①">(2)</a> <a href="#ref-for-dom-permissions-query②">(3)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-request-permission-to-use">
-   <a href="https://w3c.github.io/permissions/#request-permission-to-use">https://w3c.github.io/permissions/#request-permission-to-use</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-dfn-request-permission-to-use">
+   <a href="https://w3c.github.io/permissions/#dfn-request-permission-to-use">https://w3c.github.io/permissions/#dfn-request-permission-to-use</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-request-permission-to-use">2.2. Permissions</a>
+    <li><a href="#ref-for-dfn-request-permission-to-use">2.2. Permissions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-permissionstatus-state">
@@ -4481,21 +4475,20 @@ use this API to write to disk.</p>
    <li>
     <a data-link-type="biblio">[permissions]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-dom-permissionstate-granted">"granted"</span>
-     <li><span class="dfn-paneled" id="term-for-dom-permissionstate-prompt">"prompt"</span>
-     <li><span class="dfn-paneled" id="term-for-dictdef-permissiondescriptor">PermissionDescriptor</span>
-     <li><span class="dfn-paneled" id="term-for-enumdef-permissionstate">PermissionState</span>
-     <li><span class="dfn-paneled" id="term-for-permissionstatus">PermissionStatus</span>
-     <li><span class="dfn-paneled" id="term-for-boolean-permission-query-algorithm">boolean permission query algorithm</span>
-     <li><span class="dfn-paneled" id="term-for-create-a-permissionstatus">create a permissionstatus</span>
+     <li><span class="dfn-paneled" id="term-for-dom-permissiondescriptor">PermissionDescriptor</span>
+     <li><span class="dfn-paneled" id="term-for-dom-permissionstate">PermissionState</span>
+     <li><span class="dfn-paneled" id="term-for-dom-permissionstatus">PermissionStatus</span>
+     <li><span class="dfn-paneled" id="term-for-dfn-create-a-permissionstatus">create a permissionstatus</span>
+     <li><span class="dfn-paneled" id="term-for-dom-permissionstate-granted">granted</span>
      <li><span class="dfn-paneled" id="term-for-dom-permissiondescriptor-name">name</span>
-     <li><span class="dfn-paneled" id="term-for-permission-descriptor-type">permission descriptor type</span>
-     <li><span class="dfn-paneled" id="term-for-permission-state">permission state</span>
-     <li><span class="dfn-paneled" id="term-for-permission-state-constraints">permission state constraints</span>
+     <li><span class="dfn-paneled" id="term-for-dfn-permission-descriptor-type">permission descriptor type</span>
+     <li><span class="dfn-paneled" id="term-for-dfn-permission-state">permission state</span>
+     <li><span class="dfn-paneled" id="term-for-dfn-permission-state-constraints">permission state constraints</span>
      <li><span class="dfn-paneled" id="term-for-dom-navigator-permissions">permissions</span>
-     <li><span class="dfn-paneled" id="term-for-powerful-feature">powerful feature</span>
-     <li><span class="dfn-paneled" id="term-for-dom-permissions-query">query(permissionDesc)</span>
-     <li><span class="dfn-paneled" id="term-for-request-permission-to-use">request permission to use</span>
+     <li><span class="dfn-paneled" id="term-for-dfn-powerful-feature">powerful feature</span>
+     <li><span class="dfn-paneled" id="term-for-dom-permissionstate-prompt">prompt</span>
+     <li><span class="dfn-paneled" id="term-for-dom-permissions-query">query()</span>
+     <li><span class="dfn-paneled" id="term-for-dfn-request-permission-to-use">request permission to use</span>
      <li><span class="dfn-paneled" id="term-for-dom-permissionstatus-state">state</span>
     </ul>
    <li>
@@ -4585,7 +4578,7 @@ use this API to write to disk.</p>
    <dt id="biblio-mimesniff">[MIMESNIFF]
    <dd>Gordon P. Hemsley. <a href="https://mimesniff.spec.whatwg.org/"><cite>MIME Sniffing Standard</cite></a>. Living Standard. URL: <a href="https://mimesniff.spec.whatwg.org/">https://mimesniff.spec.whatwg.org/</a>
    <dt id="biblio-permissions">[PERMISSIONS]
-   <dd>Mounir Lamouri; Marcos Caceres; Jeffrey Yasskin. <a href="https://www.w3.org/TR/permissions/"><cite>Permissions</cite></a>. 20 July 2021. WD. URL: <a href="https://www.w3.org/TR/permissions/">https://www.w3.org/TR/permissions/</a>
+   <dd>Marcos Caceres; Micheal Taylor; Jeffrey Yasskin. <a href="https://www.w3.org/TR/permissions/"><cite>Permissions</cite></a>. 7 September 2021. WD. URL: <a href="https://www.w3.org/TR/permissions/">https://www.w3.org/TR/permissions/</a>
    <dt id="biblio-permissions-request">[PERMISSIONS-REQUEST]
    <dd><a href="https://wicg.github.io/permissions-request/"><cite>Requesting Permissions</cite></a>. cg-draft. URL: <a href="https://wicg.github.io/permissions-request/">https://wicg.github.io/permissions-request/</a>
    <dt id="biblio-rfc2119">[RFC2119]
@@ -4610,7 +4603,7 @@ use this API to write to disk.</p>
   <a href="#dom-filesystempermissionmode-readwrite"><code><c- s>"readwrite"</c-></code></a>
 };
 
-<c- b>dictionary</c-> <a href="#dictdef-filesystempermissiondescriptor"><code><c- g>FileSystemPermissionDescriptor</c-></code></a> : <a data-link-type="idl-name" href="https://w3c.github.io/permissions/#dictdef-permissiondescriptor"><c- n>PermissionDescriptor</c-></a> {
+<c- b>dictionary</c-> <a href="#dictdef-filesystempermissiondescriptor"><code><c- g>FileSystemPermissionDescriptor</c-></code></a> : <a data-link-type="idl-name" href="https://w3c.github.io/permissions/#dom-permissiondescriptor"><c- n>PermissionDescriptor</c-></a> {
   <c- b>required</c-> <a data-link-type="idl-name" href="#filesystemhandle"><c- n>FileSystemHandle</c-></a> <a data-type="FileSystemHandle " href="#dom-filesystempermissiondescriptor-handle"><code><c- g>handle</c-></code></a>;
   <a data-link-type="idl-name" href="#enumdef-filesystempermissionmode"><c- n>FileSystemPermissionMode</c-></a> <a data-default="&quot;read&quot;" data-type="FileSystemPermissionMode " href="#dom-filesystempermissiondescriptor-mode"><code><c- g>mode</c-></code></a> = "read";
 };
@@ -4631,8 +4624,8 @@ use this API to write to disk.</p>
 
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise"><c- b>Promise</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-issameentry"><c- g>isSameEntry</c-></a>(<a data-link-type="idl-name" href="#filesystemhandle"><c- n>FileSystemHandle</c-></a> <a href="#dom-filesystemhandle-issameentry-other-other"><code><c- g>other</c-></code></a>);
 
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="https://w3c.github.io/permissions/#enumdef-permissionstate"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-querypermission"><c- g>queryPermission</c-></a>(<c- b>optional</c-> <a data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <a href="#dom-filesystemhandle-querypermission-descriptor-descriptor"><code><c- g>descriptor</c-></code></a> = {});
-  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="https://w3c.github.io/permissions/#enumdef-permissionstate"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-requestpermission"><c- g>requestPermission</c-></a>(<c- b>optional</c-> <a data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <a href="#dom-filesystemhandle-requestpermission-descriptor-descriptor"><code><c- g>descriptor</c-></code></a> = {});
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="https://w3c.github.io/permissions/#dom-permissionstate"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-querypermission"><c- g>queryPermission</c-></a>(<c- b>optional</c-> <a data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <a href="#dom-filesystemhandle-querypermission-descriptor-descriptor"><code><c- g>descriptor</c-></code></a> = {});
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="https://w3c.github.io/permissions/#dom-permissionstate"><c- n>PermissionState</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemhandle-requestpermission"><c- g>requestPermission</c-></a>(<c- b>optional</c-> <a data-link-type="idl-name" href="#dictdef-filesystemhandlepermissiondescriptor"><c- n>FileSystemHandlePermissionDescriptor</c-></a> <a href="#dom-filesystemhandle-requestpermission-descriptor-descriptor"><code><c- g>descriptor</c-></code></a> = {});
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-filesystemcreatewritableoptions"><code><c- g>FileSystemCreateWritableOptions</c-></code></a> {
