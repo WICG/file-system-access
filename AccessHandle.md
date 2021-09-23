@@ -215,9 +215,17 @@ convenient, both from a specification and performance point of view.
 
 ## Trying It Out
 
-A prototype of access handles is available in Chrome Canary (from at least
-version `94.0.4597.0`). To enable it, launch Chrome with the
+A prototype of access handles is available in Chrome. If you're using version
+95 or higher, you can enable it by launching Chrome with the
+`--enable-blink-features=FileSystemAccessAccessHandle` flag or enabling
+"Experimental Web Platform features" in "chrome://flags". If you're using
+version 94, launch chrome with the
 `--enable-features=FileSystemAccessAccessHandle` flag.
+
+Sync access handles are available in an Origin Trial, starting with Chrome 95.
+Sign up
+[here](https://developer.chrome.com/origintrials/#/view_trial/3378825620434714625)
+to participate.
 
 We have also developed an Emscripten file system based on access handles.
 Instructions on how to use it can be found
