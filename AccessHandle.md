@@ -60,6 +60,8 @@ System](https://docs.google.com/document/d/121OZpRk7bKSF7qU3kQLqAEUVSNxqREnE98ma
 [Recommendation for Augmented
 OPFS](https://docs.google.com/document/d/1g7ZCqZ5NdiU7oqyCpsc2iZ7rRAY1ZXO-9VoG4LfP7fM).
 
+Although this proposal is the successor "in spirit" to Storage Foundation API, the two APIs operate on entirely different sets of files. There exists no way of accessing a file stored through Storage Foundation API using the Origin Private File System, and vice versa.
+
 ## Goals & Use Cases
 
 Our goal is to give developers flexibility by providing generic, simple, and
@@ -85,6 +87,8 @@ This proposal is focused only on additions to the [Origin Private File
 System](https://wicg.github.io/file-system-access/#sandboxed-filesystem), and
 doesn't currently consider changes to the rest of File System Access API or how
 files in the host machine are accessed.
+
+This proposal does not consider accessing files stored using Storage Foundation API through OPFS or vice versa.
 
 ## What makes the new surface fast?
 
