@@ -215,11 +215,12 @@ convenient, both from a specification and performance point of view.
 
 ## Trying It Out
 
-A prototype of access handles is available in Chrome. If you're using version
-95 or higher, you can enable it by launching Chrome with the
+A prototype of the synchronous surface (i.e., *createSyncAccessHandles()* and
+the *FileSystemSyncAccessHandle* object) is available in Chrome. If you're
+using version 95 or higher, you can enable it by launching Chrome with the
 `--enable-blink-features=FileSystemAccessAccessHandle` flag or enabling
 "Experimental Web Platform features" in "chrome://flags". If you're using
-version 94, launch chrome with the
+version 94, launch Chrome with the
 `--enable-features=FileSystemAccessAccessHandle` flag.
 
 Sync access handles are available in an Origin Trial, starting with Chrome 95.
