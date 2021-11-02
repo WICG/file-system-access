@@ -84,6 +84,8 @@ is similar to the temporary file system as defined in earlier drafts of
 
 ## Concepts ## {#concepts}
 
+// TODO(fivedots): add concept of locks here.
+
 An <dfn>entry</dfn> is either a [=file entry=] or a [=directory entry=].
 
 Each [=/entry=] has an associated <dfn for=entry>name</dfn> (a [=string=]).
@@ -523,10 +525,21 @@ The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method,
 ### The {{FileSystemFileHandle/createSyncAccessHandle()}} method ### {#api-filesystemfilehandle-createsyncaccesshandle}
 
 <div class="note domintro">
-  : |stream| = await |fileHandle| . {{FileSystemFileHandle/createSyncAccessHandle()|createSyncAccessHandle}}({ {{FileSystemFileHandleCreateAccessHandleOptions/mode}}: "in-place" })
-  :: Returns a {{FileSystemSyncAccessHandle}}
+  : |handle| = await |fileHandle| . {{FileSystemFileHandle/createSyncAccessHandle()|createSyncAccessHandle}}({ {{FileSystemFileHandleCreateAccessHandleOptions/mode}}: "in-place" })
+  :: Returns a {{FileSystemSyncAccessHandle}} that can be used to read/write from/to the file.
+     Changes made through |handle| might be immediately reflected in the file represented by |fileHandle|.
+     To ensure the changes are reflected in this file, the handle must be flushed or closed.
 
-// TODO(fivedots): Add description, mentioning direct modifications of the file, locking, only OPFS, mode flag being there for future development, the syncyness of it.
+    The returned {{FileSystemSyncAccessHandle}} offers synchronous {{FileSystemFileHandle/read()}} and
+    {{FileSystemFileHandle/write()}} methods. This allows for higher performance for critical methods on
+    contexts where asynchronous operations come with high overhead i.e., WebAssembly.
+
+    For the time being, this method will only succeed when the |fileHandle| belongs to the
+    [=origin private file system=]. Also temporarily, the {{FileSystemFileHandleCreateAccessHandleOptions/mode}} parameter
+    must be set to "in-place". This prevents us from setting a default behavior and allows us to bring access handles to
+    other filesytems in the future.
+
+// TODO(fivedots): Mention that an exclusive lock will be taken.
 
 </div>
 
@@ -541,6 +554,8 @@ The <dfn method for=FileSystemFileHandle>createSyncAccessHandle(|options|)</dfn>
   1. If |permissionStatus| is not {{PermissionState/"granted"}},
      reject |result| with a {{NotAllowedError}} and abort.
   1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
+  1. If |entry| does not represent an [=/entry=] in an [=origin private file system=],
+     reject |result| with a {{InvalidStateError}} and abort.
   1. Let |handle| be the result of [=create a new FileSystemSyncAccessHandle|creating a new FileSystemSyncAccessHandle=]
      for |entry| in <b>[=this=]</b>'s [=relevant realm=].
   1. [=/Resolve=] |result| with |handle|.
@@ -1204,7 +1219,14 @@ interface FileSystemSyncAccessHandle {
 A {{FileSystemSyncAccessHandle}} has an associated <dfn for=FileSystemSyncAccessHandle>\[[file]]</dfn> (a [=file entry=]).
 
 <div class="note domintro">
-// TODO(fivedots): update.
+
+A {{FileSystemSyncAccessHandle}} is an object that is capable of reading/writing from/to,
+as well as obtaining and changing the size of, a single file.
+
+The {{FileSystemFileHandle/read()}} and {{FileSystemFileHandle/write()}} methods are synchronous.
+This allows for higher performance for critical methods on contexts where asynchronous
+operations come with high overhead i.e., WebAssembly.
+
 </div>
 
 <div algorithm>
@@ -1214,22 +1236,6 @@ in a [=/Realm=] |realm|, perform the following steps:
 1. Let |handle| be a [=new=] {{FileSystemSyncAccessHandle}} in |realm|.
 1. Set |handle|.[=FileSystemSyncAccessHandle/[[file]]=] to |file|.
 1. Return |handle|.
-
-</div>
-
-### The {{FileSystemSyncAccessHandle/write()}} method ### {#api-filesystemsyncaccesshandle-write}
-// TODO(fivedots): do we need to explicit interact with storage quota here?
-
-<div class="note domintro">
-  : |handle| . {{FileSystemSyncAccessHandle/write()|write}}(|buffer|, {{FilesystemReadWriteOptions/at}}: |position|)
-  :: Writes the content of |buffer| into the file associated with |handle| with |position| as the offset.
-</div>
-
-<div algorithm>
-The <dfn method for=FileSystemSyncAccessHandle>write(|buffer|, {{FilesystemReadWriteOptions/at}}: |position|)</dfn> method, when invoked, must run
-these steps:
-
-// TODO(fivedots): fill in.
 
 </div>
 
@@ -1243,6 +1249,22 @@ these steps:
 // TODO(fivedots): does this algorithm need to check that the access handle has not been closed?
 <div algorithm>
 The <dfn method for=FileSystemSyncAccessHandle>read(|buffer|, {{FilesystemReadWriteOptions/at}}: |position|)</dfn> method, when invoked, must run
+these steps:
+
+// TODO(fivedots): fill in.
+
+</div>
+
+### The {{FileSystemSyncAccessHandle/write()}} method ### {#api-filesystemsyncaccesshandle-write}
+// TODO(fivedots): do we need to explicit interact with storage quota here?
+
+<div class="note domintro">
+  : |handle| . {{FileSystemSyncAccessHandle/write()|write}}(|buffer|, {{FilesystemReadWriteOptions/at}}: |position|)
+  :: Writes the content of |buffer| into the file associated with |handle| with |position| as the offset.
+</div>
+
+<div algorithm>
+The <dfn method for=FileSystemSyncAccessHandle>write(|buffer|, {{FilesystemReadWriteOptions/at}}: |position|)</dfn> method, when invoked, must run
 these steps:
 
 // TODO(fivedots): fill in.
