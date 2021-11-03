@@ -84,8 +84,6 @@ is similar to the temporary file system as defined in earlier drafts of
 
 ## Concepts ## {#concepts}
 
-// TODO(fivedots): add concept of locks here.
-
 An <dfn>entry</dfn> is either a [=file entry=] or a [=directory entry=].
 
 Each [=/entry=] has an associated <dfn for=entry>name</dfn> (a [=string=]).
@@ -111,8 +109,44 @@ majority of file extensions are purely alphanumeric, but compound extensions (su
 hence the inclusion of + and . as allowed code points.
 
 A <dfn lt="file|file entry">file entry</dfn> additionally consists of
-<dfn for="file entry">binary data</dfn> (a [=byte sequence=]) and a
-<dfn for="file entry">modification timestamp</dfn> (a number representing the number of milliseconds since the <a spec=FileAPI>Unix Epoch</a>).
+<dfn for="file entry">binary data</dfn> (a [=byte sequence=]), a
+<dfn for="file entry">modification timestamp</dfn> (a number representing the number of milliseconds since the <a spec=FileAPI>Unix Epoch</a>)
+and a <dfn for="file entry">lock</dfn>. A lock is a string that may exclusively be "open", "taken-exclusive" and "taken-shared".
+
+<div algorithm>
+To <dfn for="file entry/lock">take</dfn> a [=lock=] with a |value| of "exclusive" or "shared", for a given |file|,
+run the following steps:
+
+1. Let |result| be [=a new promise=].
+1. Let |lock| be the |file|'s associated [=lock=]
+1. Run the following steps [=in parallel=]:
+  1. If |value| is "exclusive":
+     1. If |lock| is "open":
+       1. Set lock to "taken-exclusive".
+       1. [=/resolve=] |result|.
+     1. Else [=/reject=] |result|.
+  1. If |value| is "shared":
+     1. If |lock| is "open":
+       1. Set lock to "taken-exclusive".
+       1. [=/resolve=] |result|.
+     1. Else if |lock| is "taken-shared":
+       1. [=/resolve=] |result|.
+     1. Else [=/reject=] |result|.
+1. Return |result|.
+
+</div>
+
+<div algorithm>
+To <dfn for="file entry/lock">release</dfn> a [=lock=] for a given |file|,
+run the following steps:
+
+1. Let |lock| be the |file|'s associated [=lock=]
+1. Set lock to "open".
+
+</div>
+
+Note: Locks help prevent concurrent modifications to a file. A {{FileSystemWritableFileStream}}
+requires a shared lock, while a {{FileSystemSyncAccessHandle}} requires an exclusive one.
 
 A <dfn lt="directory|directory entry">directory entry</dfn> additionally consists of a [=/set=] of
 <dfn for="directory entry">children</dfn>, which are themselves [=/entries=]. Each member is either a [=/file=] or a [=directory=].
@@ -278,7 +312,7 @@ the {{FileSystemHandle}} interface can all be associated with the same [=/entry=
 <div algorithm="serialization steps">
 {{FileSystemHandle}} objects are [=serializable objects=].
 
-Advisement: In the Origin Trial as available in Chrome 78, these objects are not yet serializable. 
+Advisement: In the Origin Trial as available in Chrome 78, these objects are not yet serializable.
 In Chrome 82 they are.
 
 Their [=serialization steps=], given |value|, |serialized| and <var ignore>forStorage</var> are:
@@ -477,7 +511,6 @@ The <dfn method for=FileSystemFileHandle>getFile()</dfn> method, when invoked, m
 
 Advisement: In the Origin Trial as available in Chrome 82, createWritable replaces the createWriter method.
 
-// TODO(fivedots): Add info on shared locks.
 <div class="note domintro">
   : |stream| = await |fileHandle| . {{FileSystemFileHandle/createWritable()}}
   : |stream| = await |fileHandle| . {{FileSystemFileHandle/createWritable()|createWritable}}({ {{FileSystemCreateWritableOptions/keepExistingData}}: true/false })
@@ -493,6 +526,10 @@ Advisement: In the Origin Trial as available in Chrome 82, createWritable replac
      If {{FileSystemCreateWritableOptions/keepExistingData}} is `false` or not specified,
      the temporary file starts out empty,
      otherwise the existing file is first copied to this temporary file.
+
+    Creating a {{FileSystemWritableFileStream}} [=file entry/lock/take|takes a shared lock=] on the
+    [=FileSystemHandle/entry=] associated with |fileHandle|. This prevents the creation of
+    {{FileSystemSyncAccessHandle|FileSystemSyncAccessHandles}} for the entry, until the stream is closed.
 </div>
 
 Issue(67): There has been some discussion around and desire for a "inPlace" mode for createWritable
@@ -501,6 +538,8 @@ example to support in-place modification of large files or things like databases
 currently implemented in Chrome. Implementing this is currently blocked on figuring out how to
 combine the desire to run malware checks with the desire to let websites make fast in-place
 modifications to existing large files.
+
+// TODO(fivedots): release lock once the stream is closed.
 
 <div algorithm>
 The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method, when invoked, must run these steps:
@@ -513,6 +552,9 @@ The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method,
   1. If |permissionStatus| is not {{PermissionState/"granted"}},
      reject |result| with a {{NotAllowedError}} and abort.
   1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
+  1. Let |lockValue| be "shared".
+  1. Let |lockResult| be the result of [=file entry/lock/take|taking a lock=] with |lockValue| on |entry|.
+     If that throws an exception, [=reject=] |result| with a {{NoModificationAllowedError}} and abort.
   1. Let |stream| be the result of [=create a new FileSystemWritableFileStream|creating a new FileSystemWritableFileStream=]
      for |entry| in <b>[=this=]</b>'s [=relevant realm=].
   1. If |options|.{{FileSystemCreateWritableOptions/keepExistingData}} is `true`:
@@ -530,6 +572,11 @@ The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method,
      Changes made through |handle| might be immediately reflected in the file represented by |fileHandle|.
      To ensure the changes are reflected in this file, the handle must be flushed or closed.
 
+    Creating a {{FileSystemSyncAccessHandle}} [=file entry/lock/take|takes an exclusive lock=] on the
+    [=FileSystemHandle/entry=] associated with |fileHandle|. This prevents the creation of
+    further {{FileSystemSyncAccessHandle|FileSystemSyncAccessHandles}} or {{FileSystemWritableFileStream|FileSystemWritableFileStreams}}
+    for the entry, until the access handle is closed.
+
     The returned {{FileSystemSyncAccessHandle}} offers synchronous {{FileSystemFileHandle/read()}} and
     {{FileSystemFileHandle/write()}} methods. This allows for higher performance for critical methods on
     contexts where asynchronous operations come with high overhead i.e., WebAssembly.
@@ -538,8 +585,6 @@ The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method,
     [=origin private file system=]. Also temporarily, the {{FileSystemFileHandleCreateAccessHandleOptions/mode}} parameter
     must be set to "in-place". This prevents us from setting a default behavior and allows us to bring access handles to
     other filesytems in the future.
-
-// TODO(fivedots): Mention that an exclusive lock will be taken.
 
 </div>
 
@@ -556,6 +601,9 @@ The <dfn method for=FileSystemFileHandle>createSyncAccessHandle(|options|)</dfn>
   1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
   1. If |entry| does not represent an [=/entry=] in an [=origin private file system=],
      reject |result| with a {{InvalidStateError}} and abort.
+  1. Let |lockValue| be "exclusive".
+  1. Let |lockResult| be the result of [=file entry/lock/take|taking a lock=] with |lockValue| on |entry|.
+     If that throws an exception, [=reject=] |result| with a {{NoModificationAllowedError}} and abort.
   1. Let |handle| be the result of [=create a new FileSystemSyncAccessHandle|creating a new FileSystemSyncAccessHandle=]
      for |entry| in <b>[=this=]</b>'s [=relevant realm=].
   1. [=/Resolve=] |result| with |handle|.
@@ -596,7 +644,7 @@ A {{FileSystemDirectoryHandle}}'s associated [=FileSystemHandle/entry=] must be 
 {{FileSystemDirectoryHandle}} objects are [=serializable objects=]. Their [=serialization steps=] and
 [=deserialization steps=] are the same as those for {{FileSystemHandle}}.
 
-Advisement: In the Origin Trial as available in Chrome 78, these objects are not yet serializable. 
+Advisement: In the Origin Trial as available in Chrome 78, these objects are not yet serializable.
 In Chrome 82 they are.
 
 Advisement: In Chrome versions upto Chrome 85 `getFileHandle` and `getDirectoryHandle` where
@@ -1246,17 +1294,15 @@ in a [=/Realm=] |realm|, perform the following steps:
   :: Reads the contents of the file associated with |handle| into |buffer|, with |position| as the offset.
 </div>
 
-// TODO(fivedots): does this algorithm need to check that the access handle has not been closed?
 <div algorithm>
 The <dfn method for=FileSystemSyncAccessHandle>read(|buffer|, {{FilesystemReadWriteOptions/at}}: |position|)</dfn> method, when invoked, must run
 these steps:
 
-// TODO(fivedots): fill in.
+// TODO(fivedots): fill in. Does this algorithm need to check that the access handle has not been closed?
 
 </div>
 
 ### The {{FileSystemSyncAccessHandle/write()}} method ### {#api-filesystemsyncaccesshandle-write}
-// TODO(fivedots): do we need to explicit interact with storage quota here?
 
 <div class="note domintro">
   : |handle| . {{FileSystemSyncAccessHandle/write()|write}}(|buffer|, {{FilesystemReadWriteOptions/at}}: |position|)
@@ -1267,7 +1313,7 @@ these steps:
 The <dfn method for=FileSystemSyncAccessHandle>write(|buffer|, {{FilesystemReadWriteOptions/at}}: |position|)</dfn> method, when invoked, must run
 these steps:
 
-// TODO(fivedots): fill in.
+// TODO(fivedots): fill in. Does this algorithm need to explicitly interact with storage quota?
 
 </div>
 
@@ -1303,7 +1349,6 @@ these steps:
 
 ### The {{FileSystemSyncAccessHandle/flush()}} method ### {#api-filesystemsyncaccesshandle-flush}
 
-// TODO(fivedots): does the definition of flush require the introduction of a buffer for the access handle, which is optinally flushed on read/write, but mandatorily so with flush?
 <div class="note domintro">
   : |handle| . {{FileSystemSyncAccessHandle/flush()}}
   :: Ensures that the contents of the file associated with |handle| contain all the modifications done through {{FileSystemSyncAccessHandle/read()}} and {{FileSystemSyncAccessHandle/write()}}.
@@ -1318,11 +1363,11 @@ these steps:
 </div>
 
 ### The {{FileSystemSyncAccessHandle/close()}} method ### {#api-filesystemsyncaccesshandle-close}
-// TODO(fivedots): |entry| is used here, it likely needs to be defined above when discussing locks, and as a contructor parameter for access handles.
 
 <div class="note domintro">
   : |handle| . {{FileSystemSyncAccessHandle/close()}}
-  :: Flushes the access handle and then closes it. Closing an access handle disables any further operations on it and releases the lock associated with the |entry|.
+  :: Flushes the access handle and then closes it. Closing an access handle disables any further operations on it and
+     [=file entry/lock/release|releases the lock=] on the [=FileSystemHandle/entry=] associated with |handle|.
 </div>
 
 <div algorithm>
@@ -1955,10 +2000,10 @@ respectively.
 The <dfn method for=DataTransferItem>getAsFileSystemHandle()</dfn> method steps are:
 
 1. If the {{DataTransferItem}} object is not in the <a spec=html>read/write
-    mode</a> or the <a spec=html>read-only mode</a>, return 
+    mode</a> or the <a spec=html>read-only mode</a>, return
     [=a promise resolved with=] `null`.
 
-1. If the <a spec=html>the drag data item kind</a> is not <em>File</em>, 
+1. If the <a spec=html>the drag data item kind</a> is not <em>File</em>,
     then return [=a promise resolved with=] `null`.
 
 1. Let |p| be [=a new promise=].
