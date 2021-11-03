@@ -1364,10 +1364,12 @@ these steps:
 
 ### The {{FileSystemSyncAccessHandle/close()}} method ### {#api-filesystemsyncaccesshandle-close}
 
+// TOOD(fivedots): |fileHandle| is not properly defined here, consider adding an attribute to |handle|.
+
 <div class="note domintro">
   : |handle| . {{FileSystemSyncAccessHandle/close()}}
   :: Flushes the access handle and then closes it. Closing an access handle disables any further operations on it and
-     [=file entry/lock/release|releases the lock=] on the [=FileSystemHandle/entry=] associated with |handle|.
+     [=file entry/lock/release|releases the lock=] on the [=FileSystemHandle/entry=] associated with |fileHandle|.
 </div>
 
 <div algorithm>
