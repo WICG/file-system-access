@@ -1364,7 +1364,7 @@ these steps:
 
 ### The {{FileSystemSyncAccessHandle/close()}} method ### {#api-filesystemsyncaccesshandle-close}
 
-// TOOD(fivedots): |fileHandle| is not properly defined here, consider adding an attribute to |handle|.
+// TODO(fivedots): |fileHandle| is not properly defined here, consider adding an attribute to |handle|.
 
 <div class="note domintro">
   : |handle| . {{FileSystemSyncAccessHandle/close()}}
