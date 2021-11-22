@@ -1273,7 +1273,7 @@ as well as obtaining and changing the size of, a single file.
 
 The {{FileSystemFileHandle/read()}} and {{FileSystemFileHandle/write()}} methods are synchronous.
 This allows for higher performance for critical methods on contexts where asynchronous
-operations come with high overhead i.e., WebAssembly.
+operations come with high overhead, i.e., WebAssembly.
 
 </div>
 
