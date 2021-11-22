@@ -111,7 +111,7 @@ hence the inclusion of + and . as allowed code points.
 A <dfn lt="file|file entry">file entry</dfn> additionally consists of
 <dfn for="file entry">binary data</dfn> (a [=byte sequence=]), a
 <dfn for="file entry">modification timestamp</dfn> (a number representing the number of milliseconds since the <a spec=FileAPI>Unix Epoch</a>)
-and a <dfn for="file entry">lock</dfn>. A lock is a string that may exclusively be "open", "taken-exclusive" and "taken-shared".
+and a <dfn for="file entry">lock</dfn>. A lock is a string that may exclusively be "open", "taken-exclusive", and "taken-shared".
 
 <div algorithm>
 To <dfn for="file entry/lock">take</dfn> a [=lock=] with a |value| of "exclusive" or "shared", for a given |file|,
