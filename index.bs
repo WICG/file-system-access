@@ -579,7 +579,7 @@ The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method,
 
     The returned {{FileSystemSyncAccessHandle}} offers synchronous {{FileSystemFileHandle/read()}} and
     {{FileSystemFileHandle/write()}} methods. This allows for higher performance for critical methods on
-    contexts where asynchronous operations come with high overhead i.e., WebAssembly.
+    contexts where asynchronous operations come with high overhead, i.e., WebAssembly.
 
     For the time being, this method will only succeed when the |fileHandle| belongs to the
     [=origin private file system=]. Also temporarily, the {{FileSystemFileHandleCreateAccessHandleOptions/mode}} parameter
