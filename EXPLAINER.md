@@ -233,9 +233,16 @@ const file_ref = await dir_ref.getFile('foo.js');
 const subdir = await dir_ref.getDirectory('bla', {create: true});
 
 // Rename a file and/or move it to another directory
-await file_ref.rename('new_name');
-await file_ref.move(other_dir_ref);
-await file_ref.move(dir_ref, 'newer_name');
+await file_ref.move('new_name');             // Rename the file.
+await file_ref.move(other_dir_ref);          // Move to another directory.
+await file_ref.move(dir_ref, 'newer_name');  // Move and rename.
+
+// No special API to create copies, but still possible to do so by using
+// available read and write APIs.
+const new_file = await dir_ref.getFile('new_name', {create: true});
+const new_file_writer = await new_file.createWritable();
+await new_file_writer.write(await file_ref.getFile());
+await new_file_writer.close();
 
 // Or using streams:
 const copy2 = await dir_ref.getFile('new_name', {create: true});

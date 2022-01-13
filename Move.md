@@ -1,4 +1,4 @@
-# Adding FileSystemHandle::move() and FileSystemHandle::rename() methods
+# Adding the FileSystemHandle::move() method
 
 ## Authors:
 
@@ -13,19 +13,18 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Adding FileSystemHandle::move() and FileSystemHandle::rename() methods](#adding-filesystemhandlemove-and-filesystemhandlerename-methods)
+- [Adding the FileSystemHandle::move() method](#adding-the-filesystemhandlemove-method)
   - [Authors:](#authors)
   - [Participate](#participate)
   - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [API Surface](#api-surface)
-  - [Open Questions - Naming](#open-questions---naming)
 - [Handling Moves to Other Directories](#handling-moves-to-other-directories)
   - [(1) Moving to a Non-Local File System](#1-moving-to-a-non-local-file-system)
   - [(2) Moving out of the OPFS](#2-moving-out-of-the-opfs)
   - [(3) Moving to a Directory on the Local File System](#3-moving-to-a-directory-on-the-local-file-system)
-  - [Open Questions - Move](#open-questions---move)
-    - [Should behavior be different when moving a file vs moving a directory?](#should-behavior-be-different-when-moving-a-file-vs-moving-a-directory)
+  - [Open Questions](#open-questions)
+    - [What, if any, checks need to be run on same-file-system moves?](#what-if-any-checks-need-to-be-run-on-same-file-system-moves)
     - [What should happen if the operation cannot be completed successfully?](#what-should-happen-if-the-operation-cannot-be-completed-successfully)
 - [Implementation Notes](#implementation-notes)
 - [Alternatives Considered](#alternatives-considered)
@@ -41,34 +40,19 @@ directories. This requires creating a new file/directory, copying over data
 process is slow, error prone (e.g. disk full), and can require re-uploading
 files in some cases (e.g. Google Drive files on Chrome OS).
 
-We propose adding new `FileSystemHandle::rename()` and
-`FileSystemHandle::move()` methods. `rename()` guarantees atomic moves of a file
-or directory without the need to duplicate data. `move()` only offers atomic
-moves of a file or directory if it is moved within the same file system, while
-moves to non-local file systems will not be guaranteed to be atomic and may
-involve duplicating data. See the [Open Questions](#open-questions---move).
+We propose adding a new `FileSystemHandle::move()` method. `move()` will offer
+atomic moves of a file or directory if it is moved within the same file system,
+while moves to non-local file systems will not be guaranteed to be atomic and
+may involve duplicating data. See the [Open Questions](#open-questions).
 
 # API Surface
-
-We propose adding a `rename()` method and a `move()` method with two variations.
-
-`rename()` will rename a file or directory. It is guaranteed to be atomic.
-
-The first `move()` variation allows a user to specify a `destination_directory`
-to move to, which may or may not be on the same file system. The name of the
-original file or directory is retained. This is not guaranteed to be atomic,
-since the destination directory may be on a different file system and/or may be
-subject to other checks (e.g. Safe Browsing in Chrome).
-
-The second `move()` variation allows a user to specify a `new_entry_name` as
-well as a `destination_directory` to move to. The same (lack of) atomicity
-guarantees apply here as with the first `move()` variation.
+We propose adding an overloaded `move()` method with three variations.
 
 ```
 interface FileSystemHandle {
     ...
 
-    Promise<void> rename(USVString new_entry_name);
+    Promise<void> move(USVString new_entry_name);
     Promise<void> move(FileSystemDirectoryHandle destination_directory);
     Promise<void> move(FileSystemDirectoryHandle destination_directory, USVString new_entry_name);
 
@@ -76,12 +60,16 @@ interface FileSystemHandle {
 };
 ```
 
-## Open Questions - Naming
+`move(new_entry_name)` will rename a file or directory to `new_entry_name`. It
+is guaranteed to be atomic and will not involve duplicating data.
 
-- Should we prefer `move()` to move verbose alternatives, such as `moveTo()` or
-  `moveToDirectory()`?
-- Should we bother guaranteeing (in the spec) atomicity to all handles `move()`d
-  on the same file system, or only for `rename()`d handles?
+`move(destination_directory)` allows a user to specify a `destination_directory`
+to move to, which may or may not be on the same file system. The name of the
+original file or directory is retained. This is not guaranteed to be atomic,
+since the destination directory may be on a different file system.
+
+`move(destination_directory, new_entry_name)` allows a user to rename an entry
+and while moving it to a new directory.
 
 # Handling Moves to Other Directories
 
@@ -100,35 +88,27 @@ Note that this approach is no worse than what is available currently.
 [#310](https://github.com/WICG/file-system-access/pull/310) exposes a strong use
 case for fast, atomic moves to other directories on the same file system. Files
 can be written efficiently in the Origin Private File System using an
-`AccessHandle`, then efficiently moved to a directory of the user's choice.
-However, writes using an `AccessHandle` are not subjected to Safe Browsing checks
-in Chrome. Moving files out of the OPFS to a user's directory will require
-running Safe Browsing checks on all moved files.
+`AccessHandle`, then moved to a directory of the user's choice. However, writes
+using an `AccessHandle` are not subjected to Safe Browsing checks in Chrome.
+Moving files out of the OPFS to a user's directory will require running Safe
+Browsing checks and adding the mark-of-the-web on all moved files.
 
 For example, moving a large directory across the OPFS -> file system boundary
-means locking and performing checks (Safe Browsing in Chrome) for an unbounded
-number of files.
+means locking and performing checks for an unbounded number of files.
 
 ## (3) Moving to a Directory on the Local File System
 
-This is the most straightforward case. Every `rename()` falls in this case. The
-operation should be atomic and fast, since no Safe Browsing checks need to be
-performed. However, providing these guarantees for `move()` in only this case
-may be confusing.
+This is the most straightforward case. The operation should be atomic and fast.
+`move(new_entry_name)` is guaranteed to fall in this case.
 
-## Open Questions - Move
+## Open Questions
 
-### Should behavior be different when moving a file vs. moving a directory?
-
-- For a file:
-  - Atomicity is only guaranteed in (2) and (3), though is likely true for (1).
-  - Speed is only guaranteed in (3).
-- For a directory:
-  - Atomicity is only easily guaranteed in (3). Atomicity for (2) would be
-    complex (likely requiring locking each file as an unbounded number of files
-    are scanned) and may not be the best option.
-  - Speed is only guaranteed in (3), but the implications of this for (1) and
-    (2) is much greater than when only moving a file.
+### What, if any, checks need to be run on same-file-system moves?
+- The `new_entry_name` may rename the file with an unsafe extension, so Safe
+  Browsing checks may still need to be performed on same-file-system moves.
+- When moving a directory, should all of the containing files be scanned? What
+  about adding the mark-of-the-web?
+  - This may require scanning and/or modifying an unbounded number of files.
 
 ### What should happen if the operation cannot be completed successfully?
 
@@ -148,8 +128,9 @@ may be confusing.
 
 # Implementation Notes
 
-- Write permission needs to have been granted to both the source and destination
-  directories.
+- Write permission needs to have been granted to both:
+  - the source directory, and
+  - the destination directory or the destination file.
 - Invalid or unsafe `new_entry_name`s will result in a `Promise` rejection.
 - All entries contained within a directory which is moved no longer point to an
   existing file/directory. We currently have no plans to explicitly update or
@@ -161,7 +142,7 @@ may be confusing.
 ## Only support "rename" functionality
 
 Pros:
-- No need to handle (or spec) the case where moves are non-atomic
+- No need to handle (or spec) cross-file-system moves
 - Simpler interface
 
 Cons:
