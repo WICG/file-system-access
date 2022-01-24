@@ -1801,8 +1801,8 @@ elem.addEventListener('drop', async (e) => {
   e.preventDefault();
 
   const fileHandlesPromises = [...e.dataTransfer.items]
-    .filter((item) => item.kind === 'file')
-    .map((item) => item.getAsFileSystemHandle());
+    .filter(item => item.kind === 'file')
+    .map(item => item.getAsFileSystemHandle());
 
   for await (const handle of fileHandlesPromises) {
     if (handle.kind === 'directory') {
