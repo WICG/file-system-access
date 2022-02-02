@@ -22,7 +22,7 @@
   - [New data access surface](#new-data-access-surface)
   - [Locking semantics](#locking-semantics)
 - [Open Questions](#open-questions)
-  - [Exposing AccessHandles on all filesystems](#exposing-accessHandles-on-all-filesystems)
+  - [Exposing AccessHandles on all filesystems](#exposing-accesshandles-on-all-filesystems)
   - [Assurances on non-awaited consistency](#assurances-on-non-awaited-consistency)
 - [Appendix](#appendix)
   - [AccessHandle IDL](#accesshandle-idl)
