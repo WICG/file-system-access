@@ -22,7 +22,7 @@
   - [New data access surface](#new-data-access-surface)
   - [Locking semantics](#locking-semantics)
 - [Open Questions](#open-questions)
-  - [Naming](#naming)
+  - [Exposing AccessHandles on all filesystems](#exposing-accessHandles-on-all-filesystems)
   - [Assurances on non-awaited consistency](#assurances-on-non-awaited-consistency)
 - [Appendix](#appendix)
   - [AccessHandle IDL](#accesshandle-idl)
@@ -183,12 +183,6 @@ after it was created. It is worth noting that these Files could be used to
 observe changes done through the new API, even if a lock is still being held.
 
 ## Open Questions
-
-### Naming
-
-The exact name of the new methods hasn’t been defined. The current placeholder
-for data access is *createAccessHandle()* and *createSyncAccessHandle()*.
-*createUnflushedStreams()* and *createDuplexStream()* have been suggested.
 
 ### Exposing AccessHandles on all filesystems
 
