@@ -539,8 +539,6 @@ currently implemented in Chrome. Implementing this is currently blocked on figur
 combine the desire to run malware checks with the desire to let websites make fast in-place
 modifications to existing large files.
 
-// TODO(fivedots): release lock once the stream is closed.
-
 <div algorithm>
 The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method, when invoked, must run these steps:
 
@@ -1038,13 +1036,17 @@ in a [=/Realm=] |realm|, perform the following steps:
 
          Note: It is expected that this atomically updates the contents of the file on disk
          being written to.
+      1. [=file entry/lock/release|Release the lock=] on |stream|.[=FileSystemWritableFileStream/[[file]]=].
       1. [=/Resolve=] |closeResult| with `undefined`.
    1. Return |closeResult|.
+1. Let |abortAlgorithm| be the following step:
+      1. [=file entry/lock/release|Release the lock=] on |stream|.[=FileSystemWritableFileStream/[[file]]=].
 1. Let |highWaterMark| be 1.
 1. Let |sizeAlgorithm| be an algorithm that returns `1`.
 1. [=WritableStream/Set up=] |stream| with <a for="WritableStream/set up"><var
    ignore>writeAlgorithm</var></a> set to |writeAlgorithm|, <a for="WritableStream/set up"><var
    ignore>closeAlgorithm</var></a> set to |closeAlgorithm|, <a for="WritableStream/set up"><var
+   ignore>abortAlgorithm</var></a> set to |abortAlgorithm|, <a for="WritableStream/set up"><var
    ignore>highWaterMark</var></a> set to |highWaterMark|, and <a for="WritableStream/set up"><var
    ignore>sizeAlgorithm</var></a> set to |sizeAlgorithm|.
 1. Return |stream|.
@@ -1246,7 +1248,7 @@ steps:
 <xmp class=idl>
 
 dictionary FilesystemReadWriteOptions {
-  [EnforceRange] unsigned long long at;
+  [EnforceRange] required unsigned long long at;
 }
 
 [Exposed=DedicatedWorker, SecureContext]
@@ -1264,7 +1266,11 @@ interface FileSystemSyncAccessHandle {
 
 </xmp>
 
-A {{FileSystemSyncAccessHandle}} has an associated <dfn for=FileSystemSyncAccessHandle>\[[file]]</dfn> (a [=file entry=]).
+A {{FileSystemSyncAccessHandle}} has an associated <dfn for=FileSystemSyncAccessHandle>\[[file]]</dfn>
+(a [=file entry=]).
+
+A {{FileSystemSyncAccessHandle}} has an associated <dfn for=FileSystemSyncAccessHandle>\[[state]]</dfn>,
+a string that may exclusively be "open" or "closed".
 
 <div class="note domintro">
 
@@ -1283,6 +1289,7 @@ in a [=/Realm=] |realm|, perform the following steps:
 
 1. Let |handle| be a [=new=] {{FileSystemSyncAccessHandle}} in |realm|.
 1. Set |handle|.[=FileSystemSyncAccessHandle/[[file]]=] to |file|.
+1. Set |handle|.[=FileSystemSyncAccessHandle/[[state]]=] to "open".
 1. Return |handle|.
 
 </div>
@@ -1290,30 +1297,73 @@ in a [=/Realm=] |realm|, perform the following steps:
 ### The {{FileSystemSyncAccessHandle/read()}} method ### {#api-filesystemsyncaccesshandle-read}
 
 <div class="note domintro">
-  : |handle| . {{FileSystemSyncAccessHandle/read()|read}}(|buffer|, {{FilesystemReadWriteOptions/at}}: |position|)
-  :: Reads the contents of the file associated with |handle| into |buffer|, with |position| as the offset.
+  : |handle| . {{FileSystemSyncAccessHandle/read()|read}}(|buffer|, {{FilesystemReadWriteOptions}}: |options|
+  :: Reads the contents of the file associated with |handle| into |buffer|, with |options|.{{FilesystemReadWriteOptions/at}} as the offset.
 </div>
 
+// TODO(fivedots): Is there a more formal way to describe the resutl of partial reads from the OS?
 <div algorithm>
-The <dfn method for=FileSystemSyncAccessHandle>read(|buffer|, {{FilesystemReadWriteOptions/at}}: |position|)</dfn> method, when invoked, must run
+The <dfn method for=FileSystemSyncAccessHandle>read(|buffer|, {{FilesystemReadWriteOptions}}: |options|)</dfn> method, when invoked, must run
 these steps:
 
-// TODO(fivedots): fill in. Does this algorithm need to check that the access handle has not been closed?
+1. If [=this=].[=[[state]]=] is "closed", throw a {{InvalidStateError}}.
+1. Let |readPosition| be |options|.{{FilesystemReadWriteOptions/at}}.
+1. Let |size| be |buffer|'s [=byte length=].
+1. Let |result| be |size|.
+1. Let |bytes| be a [=byte sequence=] containing the bytes from |readPosition|
+   to |readPosition| + (|size| - 1) of [=this=].[=[[file]]=]'s [=file entry/binary data=].
+1. If the operations reading from [=this=].[=[[file]]=]'s [=file entry/binary data=] in the previous steps
+   failed:
+    1. If there were partial reads  and the number of modified bytes in |bytes|  is known,
+       set |result| to the number of modified bytes.
+    1. Else set |result| to 0.
+1. Let |arrayBuffer| be |buffer|'s [=underlying buffer=].
+1. [=write|Write=] |bytes| into |arrayBuffer|.
+1. Return |result|.
 
 </div>
 
 ### The {{FileSystemSyncAccessHandle/write()}} method ### {#api-filesystemsyncaccesshandle-write}
 
 <div class="note domintro">
-  : |handle| . {{FileSystemSyncAccessHandle/write()|write}}(|buffer|, {{FilesystemReadWriteOptions/at}}: |position|)
-  :: Writes the content of |buffer| into the file associated with |handle| with |position| as the offset.
+  : |handle| . {{FileSystemSyncAccessHandle/write()|write}}(|buffer|, {{FilesystemReadWriteOptions}}: |options|)
+  :: Writes the content of |buffer| into the file associated with |handle| with |options|.{{FilesystemReadWriteOptions/at}} as the offset.
 </div>
 
+// TODO(fivedots): Is there a more formal way to describe the resutl of partial writes from the OS?
+
+// TODO(fivedots): Figure out mechanism to prevent concurrent IO operations e.g. doing write() while a truncate() is executing in parallel.
 <div algorithm>
-The <dfn method for=FileSystemSyncAccessHandle>write(|buffer|, {{FilesystemReadWriteOptions/at}}: |position|)</dfn> method, when invoked, must run
+The <dfn method for=FileSystemSyncAccessHandle>write(|buffer|, {{FilesystemReadWriteOptions}}: |options|)</dfn> method, when invoked, must run
 these steps:
 
-// TODO(fivedots): fill in. Does this algorithm need to explicitly interact with storage quota?
+1. If [=this=].[=[[state]]=] is "closed", throw a {{InvalidStateError}}.
+1. Let |writePosition| be |options|.{{FilesystemReadWriteOptions/at}}.
+1. Let |fileContents| be a copy of [=this=].[=[[file]]=]'s [=file entry/binary data=].
+1. Let |oldSize| be |fileContents|'s [=byte sequence/length=].
+1. Let |data| be [=get a copy of the buffer source|a copy of=] |buffer|.
+1. If |writePosition| is larger than |oldSize|,
+   append |writePosition| - |oldSize| `0x00` (NUL) bytes to the end of |fileContents|.
+
+   Note: Implementations are expected to behave as if the skipped over file contents
+   are indeed filled with NUL bytes. That doesn't mean these bytes have to actually be
+   written to disk and take up disk space. Instead most file systems support so called
+   sparse files, where these NUL bytes don't take up actual disk space.
+
+1. Let |head| be a [=byte sequence=] containing the first |writePosition| bytes of |fileContents|.
+1. Let |tail| be an empty [=byte sequence=].
+1. If |writePosition| + |data|.[=byte sequence/length=] is smaller than |oldSize|:
+   1. Let |tail| be a [=byte sequence=] containing the last
+      |oldSize| - (|writePosition| + |data|.[=byte sequence/length=]) bytes of |fileContents|.
+1. Let |newSize| be the [=byte sequence/length=] of the concatenation of |head|, |data| and |tail|.
+1. If |newSize| - |oldSize| exceeds the available [=storage quota=], throw a {{QuotaExceededError}}.
+1. Set [=this=].[=[[file]]=]'s [=file entry/binary data=] to the concatenation of |head|, |data| and |tail|.
+1. If the operations modifying the [=this=].[=[[file]]=]'s [=file entry/binary data=] in the previous steps
+   failed:
+    1. If there were partial modifications and the number of modified bytes is known,
+       return the number of modified bytes.
+    1. Else return 0.
+1. Return |data|.[=byte sequence/length=].
 
 </div>
 
@@ -1324,6 +1374,7 @@ these steps:
   :: Resizes the file associated with stream to be size bytes long. If size is larger than the current file size this pads the file with null bytes, otherwise it truncates the file.
 </div>
 
+//TODO(fivedots):Make sure negative lengths are not allowed.
 <div algorithm>
 The <dfn method for=FileSystemSyncAccessHandle>truncate(|size|)</dfn> method, when invoked, must run
 these steps:
@@ -1351,7 +1402,7 @@ these steps:
 
 <div class="note domintro">
   : |handle| . {{FileSystemSyncAccessHandle/flush()}}
-  :: Ensures that the contents of the file associated with |handle| contain all the modifications done through {{FileSystemSyncAccessHandle/read()}} and {{FileSystemSyncAccessHandle/write()}}.
+  :: Ensures that the contents of the file associated with |handle| contain all the modifications done through {{FileSystemSyncAccessHandle/write()}}.
 </div>
 
 <div algorithm>
@@ -1364,19 +1415,22 @@ these steps:
 
 ### The {{FileSystemSyncAccessHandle/close()}} method ### {#api-filesystemsyncaccesshandle-close}
 
-// TODO(fivedots): |fileHandle| is not properly defined here, consider adding an attribute to |handle|.
-
 <div class="note domintro">
   : |handle| . {{FileSystemSyncAccessHandle/close()}}
   :: Flushes the access handle and then closes it. Closing an access handle disables any further operations on it and
-     [=file entry/lock/release|releases the lock=] on the [=FileSystemHandle/entry=] associated with |fileHandle|.
+     [=file entry/lock/release|releases the lock=] on the [=FileSystemHandle/entry=] associated with |handle|.
 </div>
 
+//TODO(fivedots): Figure out language to describe flushing the file at the OS level before closing the handle.
 <div algorithm>
 The <dfn method for=FileSystemSyncAccessHandle>close()</dfn> method, when invoked, must run
 these steps:
 
-// TODO(fivedots): fill in.
+1. Let |p| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+  1. Set [=this=].[=[[state]]=] to "closed".
+  1. [=/Resolve=] |p|.
+1. Return |p|
 
 </div>
 
