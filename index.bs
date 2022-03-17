@@ -1258,7 +1258,7 @@ interface FileSystemSyncAccessHandle {
   unsigned long long write([AllowShared] BufferSource buffer,
                               FilesystemReadWriteOptions options);
 
-  Promise<undefined> truncate([EnforceRange] unsigned long long size);
+  Promise<undefined> truncate([EnforceRange] unsigned long long newSize);
   Promise<unsigned long long> getSize();
   Promise<undefined> flush();
   Promise<undefined> close();
@@ -1370,16 +1370,31 @@ these steps:
 ### The {{FileSystemSyncAccessHandle/truncate()}} method ### {#api-filesystemsyncaccesshandle-truncate}
 
 <div class="note domintro">
-  : |handle| . {{FileSystemSyncAccessHandle/truncate()|truncate}}(|size|)
-  :: Resizes the file associated with stream to be size bytes long. If size is larger than the current file size this pads the file with null bytes, otherwise it truncates the file.
+  : |handle| . {{FileSystemSyncAccessHandle/truncate()|truncate}}(|newSize|)
+  :: Resizes the file associated with stream to be |newSize| bytes long. If size is larger than the current file size this pads the file with null bytes, otherwise it truncates the file.
 </div>
 
-//TODO(fivedots):Make sure negative lengths are not allowed.
 <div algorithm>
-The <dfn method for=FileSystemSyncAccessHandle>truncate(|size|)</dfn> method, when invoked, must run
+The <dfn method for=FileSystemSyncAccessHandle>truncate(|newSize|)</dfn> method, when invoked, must run
 these steps:
 
-// TODO(fivedots): fill in.
+1. If [=this=].[=[[state]]=] is "closed", throw a {{InvalidStateError}}.
+1. If  |newSize| is less than 0, throw a {{InvalidStateError}}.
+1. Let |fileContents| be a copy of [=this=].[=[[file]]=]'s [=file entry/binary data=].
+1. Let |p| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+  1. Let |oldSize| be the [=byte sequence/length=] of [=this=].[=[[file]]=]'s [=file entry/binary data=].
+  1. If |newSize| is larger than |oldSize|:
+     1. If |newSize| - |oldSize| exceeds the available [=storage quota=], [=/reject=] |p|
+        with a {{QuotaExceededError}} and abort.
+     1. Set [=this=].[=[[file]]=]'s to a [=byte sequence=] formed by concating
+        |fileContents| with a [=byte sequence=]
+        containing |newSize|-|oldSize| `0x00` bytes.
+  1. Else if |newSize| is smaller than |oldSize|:
+     1. Set [=this=].[=[[file]]=]'s to a [=byte sequence=] containing the first |newSize| bytes
+        in |fileContents|.
+  1. [=/Resolve=] |p|.
+1. Return |p|
 
 </div>
 
@@ -1394,7 +1409,13 @@ these steps:
 The <dfn method for=FileSystemSyncAccessHandle>getSize()</dfn> method, when invoked, must run
 these steps:
 
-// TODO(fivedots): fill in.
+1. If [=this=].[=[[state]]=] is "closed", throw a {{InvalidStateError}}.
+1. Let |p| be [=a new promise=].
+1. Run the following steps [=in parallel=]:
+  1. Let |size| be the [=byte sequence/length=] of [=this=].[=[[file]]=]'s [=file entry/binary data=].
+  1. [=/Resolve=] |p| with |size|.
+1. Return |p|
+
 
 </div>
 
@@ -1409,7 +1430,7 @@ these steps:
 The <dfn method for=FileSystemSyncAccessHandle>flush()</dfn> method, when invoked, must run
 these steps:
 
-// TODO(fivedots): fill in.
+// TODO(fivedots): Fill in, after figuring out language to describe flushing at the OS level.
 
 </div>
 
