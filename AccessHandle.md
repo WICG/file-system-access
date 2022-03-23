@@ -190,9 +190,9 @@ This proposal only currently considers additions to OPFS, but it would probably
 be worthwhile to expand the new functionality to arbitrary file handles. While
 the exact behavior of *AccessHandles* outside of OPFS would need to be defined
 in detail, it's almost certain that the one described in this proposal should
-not be the default. To avoid setting it as such, we propose adding a *mode*
-string parameter to *createAccessHandle()* and *createSyncAccessHandle()*.
-Some possible values *mode* could take are:
+not be the default. To avoid setting it as such, we propose adding a required
+*mode* string parameter to *createAccessHandle()* and
+*createSyncAccessHandle()*. Some possible values *mode* could take are:
 
 *  'shared': The current behavior seen in File System Access API in general,
    there is no locking and modifications are atomic (meaning that they would
