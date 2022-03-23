@@ -4,9 +4,9 @@
   <title>File System Access</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
+  <meta content="Bikeshed version fb1e763a4, updated Tue Mar 1 13:13:50 2022 -0800" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="9e74e0139805ad1ff0cc5522e055a7d185837588" name="document-revision">
+  <meta content="34b8ea10efb71efdf784aea6aeac0f9520384355" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -663,7 +663,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">File System Access</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-02-11">11 February 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-03-23">23 March 2022</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2600,31 +2600,30 @@ User agents should allow at least 16 entries to be stored in a <a data-link-type
 directories. The exact paths the various values of this enum map to is <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#implementation-defined" id="ref-for-implementation-defined">implementation-defined</a> (and in some cases these might not even represent actual paths on disk).
 The following list describes the meaning of each of the values, and gives possible example paths on different operating systems:</p>
    <dl>
-    <dl>
-     <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="WellKnownDirectory" data-dfn-type="enum-value" data-export id="dom-wellknowndirectory-desktop"><code>"desktop"</code></dfn>
-     <dd data-md>
-      <p>The user’s Desktop directory, if such a thing exists. For example this could be <code>C:\Documents and Settings\username\Desktop</code>, <code>/Users/username/Desktop</code>, or <code>/home/username/Desktop</code>.</p>
-     <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="WellKnownDirectory" data-dfn-type="enum-value" data-export id="dom-wellknowndirectory-documents"><code>"documents"</code></dfn>
-     <dd data-md>
-      <p>Directory in which documents created by the user would typically be stored.
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="WellKnownDirectory" data-dfn-type="enum-value" data-export id="dom-wellknowndirectory-desktop"><code>"desktop"</code></dfn>
+    <dd data-md>
+     <p>The user’s Desktop directory, if such a thing exists. For example this could be <code>C:\Documents and Settings\username\Desktop</code>, <code>/Users/username/Desktop</code>, or <code>/home/username/Desktop</code>.</p>
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="WellKnownDirectory" data-dfn-type="enum-value" data-export id="dom-wellknowndirectory-documents"><code>"documents"</code></dfn>
+    <dd data-md>
+     <p>Directory in which documents created by the user would typically be stored.
  For example <code>C:\Documents and Settings\username\My Documents</code>, <code>/Users/username/Documents</code>, or <code>/home/username/Documents</code>.</p>
-     <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="WellKnownDirectory" data-dfn-type="enum-value" data-export id="dom-wellknowndirectory-downloads"><code>"downloads"</code></dfn>
-     <dd data-md>
-      <p>Directory where downloaded files would typically be stored.
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="WellKnownDirectory" data-dfn-type="enum-value" data-export id="dom-wellknowndirectory-downloads"><code>"downloads"</code></dfn>
+    <dd data-md>
+     <p>Directory where downloaded files would typically be stored.
  For example <code>C:\Documents and Settings\username\Downloads</code>, <code>/Users/username/Downloads</code>, or <code>/home/username/Downloads</code>.</p>
-     <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="WellKnownDirectory" data-dfn-type="enum-value" data-export id="dom-wellknowndirectory-music"><code>"music"</code></dfn>
-     <dd data-md>
-      <p>Directory where audio files would typically be stored.
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="WellKnownDirectory" data-dfn-type="enum-value" data-export id="dom-wellknowndirectory-music"><code>"music"</code></dfn>
+    <dd data-md>
+     <p>Directory where audio files would typically be stored.
  For example <code>C:\Documents and Settings\username\My Documents\My Music</code>, <code>/Users/username/Music</code>, or <code>/home/username/Music</code>.</p>
-     <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="WellKnownDirectory" data-dfn-type="enum-value" data-export id="dom-wellknowndirectory-pictures"><code>"pictures"</code></dfn>
-     <dd data-md>
-      <p>Directory where photos and other still images would typically be stored.
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="WellKnownDirectory" data-dfn-type="enum-value" data-export id="dom-wellknowndirectory-pictures"><code>"pictures"</code></dfn>
+    <dd data-md>
+     <p>Directory where photos and other still images would typically be stored.
  For example <code>C:\Documents and Settings\username\My Documents\My Pictures</code>, <code>/Users/username/Pictures</code>, or <code>/home/username/Pictures</code>.</p>
-     <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="WellKnownDirectory" data-dfn-type="enum-value" data-export id="dom-wellknowndirectory-videos"><code>"videos"</code></dfn>
-     <dd data-md>
-      <p>Directory where videos/movies would typically be stored.
+    <dt data-md><dfn class="dfn-paneled idl-code" data-dfn-for="WellKnownDirectory" data-dfn-type="enum-value" data-export id="dom-wellknowndirectory-videos"><code>"videos"</code></dfn>
+    <dd data-md>
+     <p>Directory where videos/movies would typically be stored.
  For example <code>C:\Documents and Settings\username\My Documents\My Videos</code>, <code>/Users/username/Movies</code>, or <code>/home/username/Videos</code>.</p>
-    </dl>
+    </dd>
     <div class="algorithm" data-algorithm="determine the directory the picker will start in">
       To <dfn class="dfn-paneled" data-dfn-for="WellKnownDirectory" data-dfn-type="dfn" data-noexport id="wellknowndirectory-determine-the-directory-the-picker-will-start-in">determine the directory the picker will start in</dfn>, given an optional <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string" id="ref-for-string④">string</a> <var>id</var>,
 an optional <code class="idl"><a data-link-type="idl" href="#typedefdef-startindirectory" id="ref-for-typedefdef-startindirectory②">StartInDirectory</a></code> <var>startIn</var> and an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object" id="ref-for-environment-settings-object">environment settings object</a> <var>environment</var>,
@@ -2723,20 +2722,18 @@ run the following steps:
      </div>
     </div>
     <div class="note domintro" role="note">
-     <dl>
-      <dt data-md>[ <var>handle</var> ] = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker④">showOpenFilePicker()</a></code>
-      <dt data-md>[ <var>handle</var> ] = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker⑤">showOpenFilePicker</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-openfilepickeroptions-multiple" id="ref-for-dom-openfilepickeroptions-multiple">multiple</a></code>: false })
-      <dd data-md>
-       <p>Shows a file picker that lets a user select a single existing file, returning a handle for
+     <dt data-md>[ <var>handle</var> ] = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker④">showOpenFilePicker()</a></code>
+     <dt data-md>[ <var>handle</var> ] = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker⑤">showOpenFilePicker</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-openfilepickeroptions-multiple" id="ref-for-dom-openfilepickeroptions-multiple">multiple</a></code>: false })
+     <dd data-md>
+      <p>Shows a file picker that lets a user select a single existing file, returning a handle for
 the selected file.</p>
-      <dt data-md>handles = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker⑥">showOpenFilePicker</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-openfilepickeroptions-multiple" id="ref-for-dom-openfilepickeroptions-multiple①">multiple</a></code>: true })
-      <dd data-md>
-       <p>Shows a file picker that lets a user select multiple existing files, returning handles for
+     <dt data-md>handles = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker⑥">showOpenFilePicker</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-openfilepickeroptions-multiple" id="ref-for-dom-openfilepickeroptions-multiple①">multiple</a></code>: true })
+     <dd data-md>
+      <p>Shows a file picker that lets a user select multiple existing files, returning handles for
 the selected files.</p>
-       <p>Additional options can be passed to <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker⑦">showOpenFilePicker()</a></code> to indicate the types of files
+      <p>Additional options can be passed to <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker⑦">showOpenFilePicker()</a></code> to indicate the types of files
 the website wants the user to select and the directory in which the
 file picker will open. See <a href="#api-filepickeroptions">§ 3.2 File picker options</a> for details.</p>
-     </dl>
     </div>
     <div class="algorithm" data-algorithm="showOpenFilePicker(options)" data-algorithm-for="Window">
       The <dfn class="dfn-paneled idl-code" data-dfn-for="Window" data-dfn-type="method" data-export data-lt="showOpenFilePicker(options)|showOpenFilePicker()" id="dom-window-showopenfilepicker"><code>showOpenFilePicker(<var>options</var>)</code></dfn> method, when invoked, must run
@@ -2821,20 +2818,18 @@ these steps:
      </div>
     </div>
     <div class="note domintro" role="note">
-     <dl>
-      <dt data-md><var>handle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker⑤">showSaveFilePicker</a></code>( <var>options</var> )
-      <dd data-md>
-       <p>Shows a file picker that lets a user select a single file, returning a handle for
+     <dt data-md><var>handle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker⑤">showSaveFilePicker</a></code>( <var>options</var> )
+     <dd data-md>
+      <p>Shows a file picker that lets a user select a single file, returning a handle for
 the selected file. The selected file does not have to exist already. If the selected
 file does not exist a new empty file is created before this method returns, otherwise
 the existing file is cleared before this method returned.</p>
-      <dt data-md><var>handle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker⑥">showSaveFilePicker</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-savefilepickeroptions-suggestedname" id="ref-for-dom-savefilepickeroptions-suggestedname">suggestedName</a></code>: "README.md" })
-      <dd data-md>
-       <p>Shows a file picker with the suggested "README.md" file name pre-filled as the default file name to save as.</p>
-       <p>Additional <var>options</var> can be passed to <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker⑦">showSaveFilePicker()</a></code> to indicate the types of files
+     <dt data-md><var>handle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker⑥">showSaveFilePicker</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-savefilepickeroptions-suggestedname" id="ref-for-dom-savefilepickeroptions-suggestedname">suggestedName</a></code>: "README.md" })
+     <dd data-md>
+      <p>Shows a file picker with the suggested "README.md" file name pre-filled as the default file name to save as.</p>
+      <p>Additional <var>options</var> can be passed to <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker⑦">showSaveFilePicker()</a></code> to indicate the types of files
 the website wants the user to select and the directory in which the
 file picker will open. See <a href="#api-filepickeroptions">§ 3.2 File picker options</a> for details.</p>
-     </dl>
     </div>
     <p><strong class="advisement"> The <code class="idl"><a data-link-type="idl" href="#dom-savefilepickeroptions-suggestedname" id="ref-for-dom-savefilepickeroptions-suggestedname①">suggestedName</a></code> option was first introduced in Chrome 91.</strong></p>
     <div class="algorithm" data-algorithm="showSaveFilePicker(options)" data-algorithm-for="Window">
@@ -2922,12 +2917,11 @@ these steps:
      </div>
     </div>
     <div class="note domintro" role="note">
-     <dl>
-      <dt data-md><var>handle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showdirectorypicker" id="ref-for-dom-window-showdirectorypicker③">showDirectoryPicker()</a></code>
-      <dd data-md>
-       <p>Shows a directory picker that lets the user select a single directory, returning a handle for
+     <dt data-md><var>handle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showdirectorypicker" id="ref-for-dom-window-showdirectorypicker③">showDirectoryPicker()</a></code>
+     <dd data-md>
+      <p>Shows a directory picker that lets the user select a single directory, returning a handle for
 the selected directory.</p>
-     </dl>
+     </dd>
      <p>The <code class="idl"><a data-link-type="idl" href="#dom-directorypickeroptions-id" id="ref-for-dom-directorypickeroptions-id">id</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-directorypickeroptions-startin" id="ref-for-dom-directorypickeroptions-startin">startIn</a></code> fields behave
   identically to the <code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-id" id="ref-for-dom-filepickeroptions-id①⑥">id</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-startin" id="ref-for-dom-filepickeroptions-startin①①">startIn</a></code> fields, respectively.
   See <a href="#api-filepickeroptions-starting-directory">§ 3.2.2 Starting Directory</a> for details on how to use these fields.</p>
@@ -2995,11 +2989,9 @@ these steps:
     <p>During a <em>drag-and-drop operation</em>, dragged file and
 directory items are associated with <a data-link-type="dfn" href="#file" id="ref-for-file①②">file entries</a> and <a data-link-type="dfn" href="#directory" id="ref-for-directory①⓪">directory entries</a> respectively.</p>
     <div class="note domintro" role="note">
-     <dl>
-      <dt data-md><var>handle</var> = await item . <code class="idl"><a data-link-type="idl" href="#dom-datatransferitem-getasfilesystemhandle" id="ref-for-dom-datatransferitem-getasfilesystemhandle①">getAsFileSystemHandle()</a></code>
-      <dd data-md>
-       <p>Returns a <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle①③">FileSystemFileHandle</a></code> object if the dragged item is a file and a <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①④">FileSystemDirectoryHandle</a></code> object if the dragged item is a directory.</p>
-     </dl>
+     <dt data-md><var>handle</var> = await item . <code class="idl"><a data-link-type="idl" href="#dom-datatransferitem-getasfilesystemhandle" id="ref-for-dom-datatransferitem-getasfilesystemhandle①">getAsFileSystemHandle()</a></code>
+     <dd data-md>
+      <p>Returns a <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle①③">FileSystemFileHandle</a></code> object if the dragged item is a file and a <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①④">FileSystemDirectoryHandle</a></code> object if the dragged item is a directory.</p>
     </div>
     <div class="algorithm" data-algorithm="getAsFileSystemHandle()" data-algorithm-for="DataTransferItem">
      <div class="mdn-anno wrapped">
@@ -3095,11 +3087,9 @@ matching the names of children of the <a data-link-type="dfn" href="#wellknowndi
     <p><strong class="advisement"> In Chrome this functionality was previously exposed as <code>FileSystemDirectoryHandle.getSystemDirectory({type: "sandbox"})</code>.
 This new method is available as of Chrome 85.</strong></p>
     <div class="note domintro" role="note">
-     <dl>
-      <dt data-md><var>directoryHandle</var> = await navigator . storage . <code class="idl"><a data-link-type="idl" href="#dom-storagemanager-getdirectory" id="ref-for-dom-storagemanager-getdirectory③">getDirectory()</a></code>
-      <dd data-md>
-       <p>Returns the root directory of the origin private file system.</p>
-     </dl>
+     <dt data-md><var>directoryHandle</var> = await navigator . storage . <code class="idl"><a data-link-type="idl" href="#dom-storagemanager-getdirectory" id="ref-for-dom-storagemanager-getdirectory③">getDirectory()</a></code>
+     <dd data-md>
+      <p>Returns the root directory of the origin private file system.</p>
     </div>
     <div class="algorithm" data-algorithm="getDirectory()" data-algorithm-for="StorageManager">
       The <dfn class="dfn-paneled idl-code" data-dfn-for="StorageManager" data-dfn-type="method" data-export id="dom-storagemanager-getdirectory"><code>getDirectory()</code></dfn> method, when
@@ -4568,7 +4558,7 @@ use this API to write to disk.</p>
    <dt id="biblio-mimesniff">[MIMESNIFF]
    <dd>Gordon P. Hemsley. <a href="https://mimesniff.spec.whatwg.org/"><cite>MIME Sniffing Standard</cite></a>. Living Standard. URL: <a href="https://mimesniff.spec.whatwg.org/">https://mimesniff.spec.whatwg.org/</a>
    <dt id="biblio-permissions">[PERMISSIONS]
-   <dd>Marcos Caceres; Mike Taylor. <a href="https://www.w3.org/TR/permissions/"><cite>Permissions</cite></a>. 10 February 2022. WD. URL: <a href="https://www.w3.org/TR/permissions/">https://www.w3.org/TR/permissions/</a>
+   <dd>Marcos Caceres; Mike Taylor. <a href="https://www.w3.org/TR/permissions/"><cite>Permissions</cite></a>. 11 March 2022. WD. URL: <a href="https://www.w3.org/TR/permissions/">https://www.w3.org/TR/permissions/</a>
    <dt id="biblio-permissions-request">[PERMISSIONS-REQUEST]
    <dd><a href="https://wicg.github.io/permissions-request/"><cite>Requesting Permissions</cite></a>. cg-draft. URL: <a href="https://wicg.github.io/permissions-request/">https://wicg.github.io/permissions-request/</a>
    <dt id="biblio-rfc2119">[RFC2119]
