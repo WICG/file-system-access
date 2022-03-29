@@ -250,7 +250,7 @@ interface FileSystemFileHandle : FileSystemHandle {
 };
 
 dictionary FileSystemFileHandleCreateAccessHandleOptions {
-  AccessHandleMode mode;
+  required AccessHandleMode mode;
 };
 
 // For more details and possible modes, see "Exposing AccessHandles on all
