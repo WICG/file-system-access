@@ -190,7 +190,7 @@ This proposal only currently considers additions to OPFS, but it would probably
 be worthwhile to expand the new functionality to arbitrary file handles. While
 the exact behavior of *AccessHandles* outside of OPFS would need to be defined
 in detail, it's almost certain that the one described in this proposal should
-not be the default. To avoid setting it as such, we propose adding a required
+not be the default. To avoid setting it as such, we propose adding an optional
 *mode* string parameter to *createAccessHandle()* and
 *createSyncAccessHandle()*. Some possible values *mode* could take are:
 
@@ -206,8 +206,7 @@ not be the default. To avoid setting it as such, we propose adding a required
    It's possible that this mode would only be allowed in OPFS.
 
 Both the naming and semantics of the *mode* parameter have to be more concretely
-defined. When a default behavior is agreed upon, the parameter should be made
-optional.
+defined.
 
 ### Assurances on non-awaited consistency
 
@@ -244,13 +243,13 @@ interface FileSystemFileHandle : FileSystemHandle {
   Promise<File> getFile();
   Promise<FileSystemWritableFileStream> createWritable(optional FileSystemCreateWritableOptions options = {});
 
-  Promise<FileSystemAccessHandle> createAccessHandle(FileSystemFileHandleCreateAccessHandleOptions options = {});
+  Promise<FileSystemAccessHandle> createAccessHandle(optional FileSystemFileHandleCreateAccessHandleOptions options = {});
   [Exposed=DedicatedWorker]
-  Promise<FileSystemSyncAccessHandle> createSyncAccessHandle(FileSystemFileHandleCreateAccessHandleOptions options = {});
+  Promise<FileSystemSyncAccessHandle> createSyncAccessHandle(optional FileSystemFileHandleCreateAccessHandleOptions options = {});
 };
 
 dictionary FileSystemFileHandleCreateAccessHandleOptions {
-  required AccessHandleMode mode;
+  AccessHandleMode mode;
 };
 
 // For more details and possible modes, see "Exposing AccessHandles on all
