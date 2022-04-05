@@ -451,18 +451,12 @@ dictionary FileSystemCreateWritableOptions {
   boolean keepExistingData = false;
 };
 
-enum AccessHandleMode { "in-place" };
-
-dictionary FileSystemFileHandleCreateAccessHandleOptions {
-  required AccessHandleMode mode;
-};
-
 [Exposed=(Window,Worker), SecureContext, Serializable]
 interface FileSystemFileHandle : FileSystemHandle {
   Promise<File> getFile();
   Promise<FileSystemWritableFileStream> createWritable(optional FileSystemCreateWritableOptions options = {});
   [Exposed=DedicatedWorker]
-  Promise<FileSystemSyncAccessHandle> createSyncAccessHandle(FileSystemFileHandleCreateAccessHandleOptions options);
+  Promise<FileSystemSyncAccessHandle> createSyncAccessHandle();
 };
 </xmp>
 
@@ -565,7 +559,7 @@ The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method,
 ### The {{FileSystemFileHandle/createSyncAccessHandle()}} method ### {#api-filesystemfilehandle-createsyncaccesshandle}
 
 <div class="note domintro">
-  : |handle| = await |fileHandle| . {{FileSystemFileHandle/createSyncAccessHandle()|createSyncAccessHandle}}({ {{FileSystemFileHandleCreateAccessHandleOptions/mode}}: "in-place" })
+  : |handle| = await |fileHandle| . {{FileSystemFileHandle/createSyncAccessHandle()|createSyncAccessHandle}}()
   :: Returns a {{FileSystemSyncAccessHandle}} that can be used to read/write from/to the file.
      Changes made through |handle| might be immediately reflected in the file represented by |fileHandle|.
      To ensure the changes are reflected in this file, the handle must be flushed or closed.
@@ -580,14 +574,11 @@ The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method,
     contexts where asynchronous operations come with high overhead, i.e., WebAssembly.
 
     For the time being, this method will only succeed when the |fileHandle| belongs to the
-    [=origin private file system=]. Also temporarily, the {{FileSystemFileHandleCreateAccessHandleOptions/mode}} parameter
-    must be set to "in-place". This prevents us from setting a default behavior and allows us to bring access handles to
-    other filesytems in the future.
-
+    [=origin private file system=].
 </div>
 
 <div algorithm>
-The <dfn method for=FileSystemFileHandle>createSyncAccessHandle(|options|)</dfn> method, when invoked, must run these steps:
+The <dfn method for=FileSystemFileHandle>createSyncAccessHandle()</dfn> method, when invoked, must run these steps:
 
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
