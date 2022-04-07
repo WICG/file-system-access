@@ -111,37 +111,33 @@ hence the inclusion of + and . as allowed code points.
 A <dfn lt="file|file entry">file entry</dfn> additionally consists of
 <dfn for="file entry">binary data</dfn> (a [=byte sequence=]), a
 <dfn for="file entry">modification timestamp</dfn> (a number representing the number of milliseconds since the <a spec=FileAPI>Unix Epoch</a>)
-and a <dfn for="file entry">lock</dfn>. A lock is a string that may exclusively be "open", "taken-exclusive", and "taken-shared".
+and a <dfn for="file entry">lock</dfn>. A lock is a string that may exclusively be "`open`", "`taken-exclusive`", and "`taken-shared`".
 
 <div algorithm>
-To <dfn for="file entry/lock">take</dfn> a [=lock=] with a |value| of "exclusive" or "shared", for a given |file|,
+To <dfn for="file entry/lock">take</dfn> a [=file entry/lock=] with a |value| of "`exclusive`" or "`shared`" on a given [=file entry=] |file|,
 run the following steps:
 
-1. Let |result| be [=a new promise=].
-1. Let |lock| be the |file|'s associated [=lock=]
-1. Run the following steps [=in parallel=]:
-  1. If |value| is "exclusive":
-     1. If |lock| is "open":
-       1. Set lock to "taken-exclusive".
-       1. [=/resolve=] |result|.
-     1. Else [=/reject=] |result|.
-  1. If |value| is "shared":
-     1. If |lock| is "open":
-       1. Set lock to "taken-exclusive".
-       1. [=/resolve=] |result|.
-     1. Else if |lock| is "taken-shared":
-       1. [=/resolve=] |result|.
-     1. Else [=/reject=] |result|.
-1. Return |result|.
+1. Let |lock| be the |file|'s [=file entry/lock=].
+1. If |value| is "`exclusive`":
+   1. If |lock| is "`open`":
+     1. Set lock to "`taken-exclusive`".
+     1. Return `true`.
+1. If |value| is "`shared`":
+   1. If |lock| is "`open`":
+     1. Set lock to "`taken-shared`".
+     1. Return `true`.
+   1. Else if |lock| is "`taken-shared`":
+     1. Return `true`.
+1. Return `false`.
 
 </div>
 
 <div algorithm>
-To <dfn for="file entry/lock">release</dfn> a [=lock=] for a given |file|,
+To <dfn for="file entry/lock">release</dfn> a [=file entry/lock=] on a given [=file entry=] |file|,
 run the following steps:
 
-1. Let |lock| be the |file|'s associated [=lock=]
-1. Set lock to "open".
+1. Let |lock| be the |file|'s associated [=file entry/lock=].
+1. Set lock to "`open`".
 
 </div>
 
@@ -544,9 +540,8 @@ The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method,
   1. If |permissionStatus| is not {{PermissionState/"granted"}},
      reject |result| with a {{NotAllowedError}} and abort.
   1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
-  1. Let |lockValue| be "shared".
-  1. Let |lockResult| be the result of [=file entry/lock/take|taking a lock=] with |lockValue| on |entry|.
-     If that throws an exception, [=reject=] |result| with a {{NoModificationAllowedError}} and abort.
+  1. Let |lockResult| be the result of [=file entry/lock/take|taking a lock=] with "`shared`" on |entry|.
+  1. If |lockResult| is `false`, [=reject=] |result| with a {{NoModificationAllowedError}} and abort.
   1. Let |stream| be the result of [=create a new FileSystemWritableFileStream|creating a new FileSystemWritableFileStream=]
      for |entry| in <b>[=this=]</b>'s [=relevant realm=].
   1. If |options|.{{FileSystemCreateWritableOptions/keepExistingData}} is `true`:
@@ -566,12 +561,12 @@ The <dfn method for=FileSystemFileHandle>createWritable(|options|)</dfn> method,
 
     Creating a {{FileSystemSyncAccessHandle}} [=file entry/lock/take|takes an exclusive lock=] on the
     [=FileSystemHandle/entry=] associated with |fileHandle|. This prevents the creation of
-    further {{FileSystemSyncAccessHandle|FileSystemSyncAccessHandles}} or {{FileSystemWritableFileStream|FileSystemWritableFileStreams}}
+    further {{FileSystemSyncAccessHandle}}s or {{FileSystemWritableFileStream}}s
     for the entry, until the access handle is closed.
 
-    The returned {{FileSystemSyncAccessHandle}} offers synchronous {{FileSystemFileHandle/read()}} and
-    {{FileSystemFileHandle/write()}} methods. This allows for higher performance for critical methods on
-    contexts where asynchronous operations come with high overhead, i.e., WebAssembly.
+    The returned {{FileSystemSyncAccessHandle}} offers synchronous {{FileSystemSyncAccessHandle/read()}} and
+    {{FileSystemSyncAccessHandle/write()}} methods. This allows for higher performance for critical methods on
+    contexts where asynchronous operations come with high overhead, e.g., WebAssembly.
 
     For the time being, this method will only succeed when the |fileHandle| belongs to the
     [=origin private file system=].
@@ -589,10 +584,9 @@ The <dfn method for=FileSystemFileHandle>createSyncAccessHandle()</dfn> method, 
      reject |result| with a {{NotAllowedError}} and abort.
   1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
   1. If |entry| does not represent an [=/entry=] in an [=origin private file system=],
-     reject |result| with a {{InvalidStateError}} and abort.
-  1. Let |lockValue| be "exclusive".
-  1. Let |lockResult| be the result of [=file entry/lock/take|taking a lock=] with |lockValue| on |entry|.
-     If that throws an exception, [=reject=] |result| with a {{NoModificationAllowedError}} and abort.
+     reject |result| with an {{InvalidStateError}} and abort.
+  1. Let |lockResult| be the result of [=file entry/lock/take|taking a lock=] with  "`exclusive`" on |entry|.
+  1. If |lockResult| is `false`, [=reject=] |result| with a {{NoModificationAllowedError}} and abort.
   1. Let |handle| be the result of [=create a new FileSystemSyncAccessHandle|creating a new FileSystemSyncAccessHandle=]
      for |entry| in <b>[=this=]</b>'s [=relevant realm=].
   1. [=/Resolve=] |result| with |handle|.
@@ -1261,16 +1255,16 @@ A {{FileSystemSyncAccessHandle}} has an associated <dfn for=FileSystemSyncAccess
 (a [=file entry=]).
 
 A {{FileSystemSyncAccessHandle}} has an associated <dfn for=FileSystemSyncAccessHandle>\[[state]]</dfn>,
-a string that may exclusively be "open" or "closed".
+a string that may exclusively be "`open`" or "`closed`".
 
 <div class="note domintro">
 
 A {{FileSystemSyncAccessHandle}} is an object that is capable of reading/writing from/to,
 as well as obtaining and changing the size of, a single file.
 
-The {{FileSystemFileHandle/read()}} and {{FileSystemFileHandle/write()}} methods are synchronous.
+The {{FileSystemSyncAccessHandle/read()}} and {{FileSystemSyncAccessHandle/write()}} methods are synchronous.
 This allows for higher performance for critical methods on contexts where asynchronous
-operations come with high overhead, i.e., WebAssembly.
+operations come with high overhead, e.g., WebAssembly.
 
 </div>
 
@@ -1280,7 +1274,7 @@ in a [=/Realm=] |realm|, perform the following steps:
 
 1. Let |handle| be a [=new=] {{FileSystemSyncAccessHandle}} in |realm|.
 1. Set |handle|.[=FileSystemSyncAccessHandle/[[file]]=] to |file|.
-1. Set |handle|.[=FileSystemSyncAccessHandle/[[state]]=] to "open".
+1. Set |handle|.[=FileSystemSyncAccessHandle/[[state]]=] to "`open`".
 1. Return |handle|.
 
 </div>
@@ -1297,7 +1291,7 @@ in a [=/Realm=] |realm|, perform the following steps:
 The <dfn method for=FileSystemSyncAccessHandle>read(|buffer|, {{FilesystemReadWriteOptions}}: |options|)</dfn> method, when invoked, must run
 these steps:
 
-1. If [=this=].[=[[state]]=] is "closed", throw a {{InvalidStateError}}.
+1. If [=this=].[=[[state]]=] is "`closed`", throw a {{InvalidStateError}}.
 1. Let |readPosition| be |options|.{{FilesystemReadWriteOptions/at}}.
 1. Let |size| be |buffer|'s [=byte length=].
 1. Let |result| be |size|.
@@ -1328,7 +1322,7 @@ these steps:
 The <dfn method for=FileSystemSyncAccessHandle>write(|buffer|, {{FilesystemReadWriteOptions}}: |options|)</dfn> method, when invoked, must run
 these steps:
 
-1. If [=this=].[=[[state]]=] is "closed", throw a {{InvalidStateError}}.
+1. If [=this=].[=[[state]]=] is "`closed`", throw a {{InvalidStateError}}.
 1. Let |writePosition| be |options|.{{FilesystemReadWriteOptions/at}}.
 1. Let |fileContents| be a copy of [=this=].[=[[file]]=]'s [=file entry/binary data=].
 1. Let |oldSize| be |fileContents|'s [=byte sequence/length=].
@@ -1369,7 +1363,7 @@ these steps:
 The <dfn method for=FileSystemSyncAccessHandle>truncate(|newSize|)</dfn> method, when invoked, must run
 these steps:
 
-1. If [=this=].[=[[state]]=] is "closed", throw a {{InvalidStateError}}.
+1. If [=this=].[=[[state]]=] is "`closed`", throw a {{InvalidStateError}}.
 1. If  |newSize| is less than 0, throw a {{InvalidStateError}}.
 1. Let |fileContents| be a copy of [=this=].[=[[file]]=]'s [=file entry/binary data=].
 1. Let |p| be [=a new promise=].
@@ -1400,7 +1394,7 @@ these steps:
 The <dfn method for=FileSystemSyncAccessHandle>getSize()</dfn> method, when invoked, must run
 these steps:
 
-1. If [=this=].[=[[state]]=] is "closed", throw a {{InvalidStateError}}.
+1. If [=this=].[=[[state]]=] is "`closed`", throw a {{InvalidStateError}}.
 1. Let |p| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
   1. Let |size| be the [=byte sequence/length=] of [=this=].[=[[file]]=]'s [=file entry/binary data=].
@@ -1440,7 +1434,7 @@ these steps:
 
 1. Let |p| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
-  1. Set [=this=].[=[[state]]=] to "closed".
+  1. Set [=this=].[=[[state]]=] to "`closed`".
   1. [=/Resolve=] |p|.
 1. Return |p|
 
