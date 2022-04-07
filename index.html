@@ -662,7 +662,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">File System Access</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-04-06">6 April 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-04-07">7 April 2022</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -853,8 +853,6 @@ run the following steps:
      <li data-md>
       <p>Let <var>lock</var> be the <var>file</var>’s <a data-link-type="dfn" href="#file-entry-lock" id="ref-for-file-entry-lock①">lock</a>.</p>
      <li data-md>
-      <p>Let <var>result</var> be <code>false</code>.</p>
-     <li data-md>
       <p>If <var>value</var> is "<code>exclusive</code>":</p>
       <ol>
        <li data-md>
@@ -863,7 +861,7 @@ run the following steps:
          <li data-md>
           <p>Set lock to "<code>taken-exclusive</code>".</p>
          <li data-md>
-          <p>Set <var>result</var> to <code>true</code></p>
+          <p>Return <code>true</code>.</p>
         </ol>
       </ol>
      <li data-md>
@@ -875,17 +873,17 @@ run the following steps:
          <li data-md>
           <p>Set lock to "<code>taken-shared</code>".</p>
          <li data-md>
-          <p>Set <var>result</var> to <code>true</code></p>
+          <p>Return <code>true</code>.</p>
         </ol>
        <li data-md>
         <p>Else if <var>lock</var> is "<code>taken-shared</code>":</p>
         <ol>
          <li data-md>
-          <p>Set <var>result</var> to <code>true</code></p>
+          <p>Return <code>true</code>.</p>
         </ol>
       </ol>
      <li data-md>
-      <p>Return <var>result</var>.</p>
+      <p>Return <code>false</code>.</p>
     </ol>
    </div>
    <div class="algorithm" data-algorithm="release" data-algorithm-for="file entry/lock">
@@ -1404,7 +1402,7 @@ modifications to existing large files. <a href="https://github.com/wicg/file-sys
 further <code class="idl"><a data-link-type="idl" href="#filesystemsyncaccesshandle" id="ref-for-filesystemsyncaccesshandle⑤">FileSystemSyncAccessHandle</a></code>s or <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream④">FileSystemWritableFileStream</a></code>s
 for the entry, until the access handle is closed.</p>
       <p>The returned <code class="idl"><a data-link-type="idl" href="#filesystemsyncaccesshandle" id="ref-for-filesystemsyncaccesshandle⑥">FileSystemSyncAccessHandle</a></code> offers synchronous <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-read" id="ref-for-dom-filesystemsyncaccesshandle-read">read()</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-write" id="ref-for-dom-filesystemsyncaccesshandle-write">write()</a></code> methods. This allows for higher performance for critical methods on
-contexts where asynchronous operations come with high overhead, i.e., WebAssembly.</p>
+contexts where asynchronous operations come with high overhead, e.g., WebAssembly.</p>
       <p>For the time being, this method will only succeed when the <var>fileHandle</var> belongs to the <a data-link-type="dfn" href="#wellknowndirectory-origin-private-file-system" id="ref-for-wellknowndirectory-origin-private-file-system①">origin private file system</a>.</p>
     </dl>
    </div>
@@ -1426,7 +1424,7 @@ contexts where asynchronous operations come with high overhead, i.e., WebAssembl
         <p>Let <var>entry</var> be <b><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①⓪">this</a></b>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①③">entry</a>.</p>
        <li data-md>
         <p>If <var>entry</var> does not represent an <a data-link-type="dfn" href="#entry" id="ref-for-entry①③">entry</a> in an <a data-link-type="dfn" href="#wellknowndirectory-origin-private-file-system" id="ref-for-wellknowndirectory-origin-private-file-system②">origin private file system</a>,
- reject <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#invalidstateerror" id="ref-for-invalidstateerror">InvalidStateError</a></code> and abort.</p>
+ reject <var>result</var> with an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#invalidstateerror" id="ref-for-invalidstateerror">InvalidStateError</a></code> and abort.</p>
        <li data-md>
         <p>Let <var>lockResult</var> be the result of <a data-link-type="dfn" href="#file-entry-lock-take" id="ref-for-file-entry-lock-take③">taking a lock</a> with  "<code>exclusive</code>" on <var>entry</var>.</p>
        <li data-md>
@@ -2188,16 +2186,16 @@ steps:
     </ol>
    </div>
    <h3 class="heading settled" data-level="2.7" id="api-filesystemsyncaccesshandle"><span class="secno">2.7. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemsyncaccesshandle" id="ref-for-filesystemsyncaccesshandle⑦">FileSystemSyncAccessHandle</a></code> interface</span><a class="self-link" href="#api-filesystemsyncaccesshandle"></a></h3>
-<pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystemreadwriteoptions"><code><c- g>FilesystemReadWriteOptions</c-></code></dfn> {
-  [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#EnforceRange" id="ref-for-EnforceRange"><c- g>EnforceRange</c-></a>] <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long④"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FilesystemReadWriteOptions" data-dfn-type="dict-member" data-export data-type="unsigned long long " id="dom-filesystemreadwriteoptions-at"><code><c- g>at</c-></code></dfn>;
+<pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystemreadwriteoptions"><code><c- g>FileSystemReadWriteOptions</c-></code></dfn> {
+  [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#EnforceRange" id="ref-for-EnforceRange"><c- g>EnforceRange</c-></a>] <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long④"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemReadWriteOptions" data-dfn-type="dict-member" data-export data-type="unsigned long long " id="dom-filesystemreadwriteoptions-at"><code><c- g>at</c-></code></dfn>;
 }
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed" id="ref-for-Exposed⑤"><c- g>Exposed</c-></a>=<c- n>DedicatedWorker</c->, <a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext④"><c- g>SecureContext</c-></a>]
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="filesystemsyncaccesshandle"><code><c- g>FileSystemSyncAccessHandle</c-></code></dfn> {
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long⑤"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemSyncAccessHandle" data-dfn-type="method" data-export data-lt="read(buffer, options)" id="dom-filesystemsyncaccesshandle-read"><code><c- g>read</c-></code></dfn>([<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#AllowShared" id="ref-for-AllowShared"><c- g>AllowShared</c-></a>] <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#BufferSource" id="ref-for-BufferSource③"><c- n>BufferSource</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemSyncAccessHandle/read(buffer, options)" data-dfn-type="argument" data-export id="dom-filesystemsyncaccesshandle-read-buffer-options-buffer"><code><c- g>buffer</c-></code><a class="self-link" href="#dom-filesystemsyncaccesshandle-read-buffer-options-buffer"></a></dfn>,
-                             <a data-link-type="idl-name" href="#dictdef-filesystemreadwriteoptions" id="ref-for-dictdef-filesystemreadwriteoptions"><c- n>FilesystemReadWriteOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemSyncAccessHandle/read(buffer, options)" data-dfn-type="argument" data-export id="dom-filesystemsyncaccesshandle-read-buffer-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemsyncaccesshandle-read-buffer-options-options"></a></dfn>);
+                          <a data-link-type="idl-name" href="#dictdef-filesystemreadwriteoptions" id="ref-for-dictdef-filesystemreadwriteoptions"><c- n>FileSystemReadWriteOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemSyncAccessHandle/read(buffer, options)" data-dfn-type="argument" data-export id="dom-filesystemsyncaccesshandle-read-buffer-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemsyncaccesshandle-read-buffer-options-options"></a></dfn>);
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long⑥"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemSyncAccessHandle" data-dfn-type="method" data-export data-lt="write(buffer, options)" id="dom-filesystemsyncaccesshandle-write"><code><c- g>write</c-></code></dfn>([<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#AllowShared" id="ref-for-AllowShared①"><c- g>AllowShared</c-></a>] <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#BufferSource" id="ref-for-BufferSource④"><c- n>BufferSource</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemSyncAccessHandle/write(buffer, options)" data-dfn-type="argument" data-export id="dom-filesystemsyncaccesshandle-write-buffer-options-buffer"><code><c- g>buffer</c-></code><a class="self-link" href="#dom-filesystemsyncaccesshandle-write-buffer-options-buffer"></a></dfn>,
-                              <a data-link-type="idl-name" href="#dictdef-filesystemreadwriteoptions" id="ref-for-dictdef-filesystemreadwriteoptions①"><c- n>FilesystemReadWriteOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemSyncAccessHandle/write(buffer, options)" data-dfn-type="argument" data-export id="dom-filesystemsyncaccesshandle-write-buffer-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemsyncaccesshandle-write-buffer-options-options"></a></dfn>);
+                           <a data-link-type="idl-name" href="#dictdef-filesystemreadwriteoptions" id="ref-for-dictdef-filesystemreadwriteoptions①"><c- n>FileSystemReadWriteOptions</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemSyncAccessHandle/write(buffer, options)" data-dfn-type="argument" data-export id="dom-filesystemsyncaccesshandle-write-buffer-options-options"><code><c- g>options</c-></code><a class="self-link" href="#dom-filesystemsyncaccesshandle-write-buffer-options-options"></a></dfn>);
 
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise" id="ref-for-idl-promise①③"><c- b>Promise</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-undefined" id="ref-for-idl-undefined④"><c- b>undefined</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemsyncaccesshandle-truncate" id="ref-for-dom-filesystemsyncaccesshandle-truncate"><c- g>truncate</c-></a>([<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#EnforceRange" id="ref-for-EnforceRange①"><c- g>EnforceRange</c-></a>] <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long⑦"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <dfn class="idl-code" data-dfn-for="FileSystemSyncAccessHandle/truncate(newSize)" data-dfn-type="argument" data-export id="dom-filesystemsyncaccesshandle-truncate-newsize-newsize"><code><c- g>newSize</c-></code><a class="self-link" href="#dom-filesystemsyncaccesshandle-truncate-newsize-newsize"></a></dfn>);
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise" id="ref-for-idl-promise①④"><c- b>Promise</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long" id="ref-for-idl-unsigned-long-long⑧"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemsyncaccesshandle-getsize" id="ref-for-dom-filesystemsyncaccesshandle-getsize"><c- g>getSize</c-></a>();
@@ -2212,9 +2210,9 @@ a string that may exclusively be "<code>open</code>" or "<code>closed</code>".</
    <div class="note domintro" role="note">
     <p>A <code class="idl"><a data-link-type="idl" href="#filesystemsyncaccesshandle" id="ref-for-filesystemsyncaccesshandle①⓪">FileSystemSyncAccessHandle</a></code> is an object that is capable of reading/writing from/to,
 as well as obtaining and changing the size of, a single file.</p>
-    <p>The <code class="idl"><a data-link-type="idl">read()</a></code> and <code class="idl"><a data-link-type="idl">write()</a></code> methods are synchronous.
+    <p>The <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-read" id="ref-for-dom-filesystemsyncaccesshandle-read①">read()</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-write" id="ref-for-dom-filesystemsyncaccesshandle-write①">write()</a></code> methods are synchronous.
 This allows for higher performance for critical methods on contexts where asynchronous
-operations come with high overhead, i.e., WebAssembly.</p>
+operations come with high overhead, e.g., WebAssembly.</p>
    </div>
    <div class="algorithm" data-algorithm="create a new FileSystemSyncAccessHandle">
      To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="create-a-new-filesystemsyncaccesshandle">create a new FileSystemSyncAccessHandle</dfn> given a <a data-link-type="dfn" href="#file" id="ref-for-file①②">file entry</a> <var>file</var> in a <a data-link-type="dfn" href="https://tc39.github.io/ecma262/#realm" id="ref-for-realm①">Realm</a> <var>realm</var>, perform the following steps: 
@@ -2229,21 +2227,21 @@ operations come with high overhead, i.e., WebAssembly.</p>
       <p>Return <var>handle</var>.</p>
     </ol>
    </div>
-   <h4 class="heading settled" data-level="2.7.1" id="api-filesystemsyncaccesshandle-read"><span class="secno">2.7.1. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-read" id="ref-for-dom-filesystemsyncaccesshandle-read①">read()</a></code> method</span><a class="self-link" href="#api-filesystemsyncaccesshandle-read"></a></h4>
+   <h4 class="heading settled" data-level="2.7.1" id="api-filesystemsyncaccesshandle-read"><span class="secno">2.7.1. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-read" id="ref-for-dom-filesystemsyncaccesshandle-read②">read()</a></code> method</span><a class="self-link" href="#api-filesystemsyncaccesshandle-read"></a></h4>
    <div class="note domintro" role="note">
     <dl>
-     <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-read" id="ref-for-dom-filesystemsyncaccesshandle-read②">read</a></code>(<var>buffer</var>, <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemreadwriteoptions" id="ref-for-dictdef-filesystemreadwriteoptions②">FilesystemReadWriteOptions</a></code>: <var>options</var>
+     <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-read" id="ref-for-dom-filesystemsyncaccesshandle-read③">read</a></code>(<var>buffer</var>)
+     <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-read" id="ref-for-dom-filesystemsyncaccesshandle-read④">read</a></code>(<var>buffer</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemreadwriteoptions-at" id="ref-for-dom-filesystemreadwriteoptions-at">at</a></code> })
      <dd data-md>
-      <p>Reads the contents of the file associated with <var>handle</var> into <var>buffer</var>, with <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystemreadwriteoptions-at" id="ref-for-dom-filesystemreadwriteoptions-at">at</a></code> as the offset.</p>
+      <p>Reads the contents of the file associated with <var>handle</var> into <var>buffer</var>, optionally at a given offset.</p>
     </dl>
    </div>
-   <p>// TODO(fivedots): Is there a more formal way to describe the resutl of partial reads from the OS?</p>
-   <div class="algorithm" data-algorithm="read(buffer, FilesystemReadWriteOptions: options)" data-algorithm-for="FileSystemSyncAccessHandle">
-     The <dfn class="idl-code" data-dfn-for="FileSystemSyncAccessHandle" data-dfn-type="method" data-export id="dom-filesystemsyncaccesshandle-read-buffer-filesystemreadwriteoptions-options"><code>read(<var>buffer</var>, <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemreadwriteoptions" id="ref-for-dictdef-filesystemreadwriteoptions③">FilesystemReadWriteOptions</a></code>: <var>options</var>)</code><a class="self-link" href="#dom-filesystemsyncaccesshandle-read-buffer-filesystemreadwriteoptions-options"></a></dfn> method, when invoked, must run
+   <div class="algorithm" data-algorithm="read(buffer, FileSystemReadWriteOptions: options)" data-algorithm-for="FileSystemSyncAccessHandle">
+     The <dfn class="idl-code" data-dfn-for="FileSystemSyncAccessHandle" data-dfn-type="method" data-export id="dom-filesystemsyncaccesshandle-read-buffer-filesystemreadwriteoptions-options"><code>read(<var>buffer</var>, <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemreadwriteoptions" id="ref-for-dictdef-filesystemreadwriteoptions②">FileSystemReadWriteOptions</a></code>: <var>options</var>)</code><a class="self-link" href="#dom-filesystemsyncaccesshandle-read-buffer-filesystemreadwriteoptions-options"></a></dfn> method, when invoked, must run
 these steps: 
     <ol>
      <li data-md>
-      <p>If <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this②④">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-state" id="ref-for-filesystemsyncaccesshandle-state①">[[state]]</a> is "<code>closed</code>", throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#invalidstateerror" id="ref-for-invalidstateerror①">InvalidStateError</a></code>.</p>
+      <p>If <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this②④">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-state" id="ref-for-filesystemsyncaccesshandle-state①">[[state]]</a> is "<code>closed</code>", throw an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#invalidstateerror" id="ref-for-invalidstateerror①">InvalidStateError</a></code>.</p>
      <li data-md>
       <p>Let <var>readPosition</var> be <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystemreadwriteoptions-at" id="ref-for-dom-filesystemreadwriteoptions-at①">at</a></code>.</p>
      <li data-md>
@@ -2251,9 +2249,9 @@ these steps:
      <li data-md>
       <p>Let <var>result</var> be <var>size</var>.</p>
      <li data-md>
-      <p>Let <var>bytes</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑨">byte sequence</a> containing the bytes from <var>readPosition</var> to <var>readPosition</var> + (<var>size</var> - 1) of <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this②⑤">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-file" id="ref-for-filesystemsyncaccesshandle-file④">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑤">binary data</a>.</p>
+      <p>Let <var>bytes</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence⑨">byte sequence</a> containing the bytes from <var>readPosition</var> to <var>readPosition</var> + (<var>size</var> − 1) of <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this②⑤">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-file" id="ref-for-filesystemsyncaccesshandle-file④">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑤">binary data</a>.</p>
      <li data-md>
-      <p>If the operations reading from <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this②⑥">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-file" id="ref-for-filesystemsyncaccesshandle-file⑤">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑥">binary data</a> in the previous steps
+      <p>If the operations reading from <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this②⑥">this</a>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file③">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑥">binary data</a> in the previous steps
  failed:</p>
       <ol>
        <li data-md>
@@ -2270,18 +2268,18 @@ these steps:
       <p>Return <var>result</var>.</p>
     </ol>
    </div>
-   <h4 class="heading settled" data-level="2.7.2" id="api-filesystemsyncaccesshandle-write"><span class="secno">2.7.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-write" id="ref-for-dom-filesystemsyncaccesshandle-write①">write()</a></code> method</span><a class="self-link" href="#api-filesystemsyncaccesshandle-write"></a></h4>
+   <h4 class="heading settled" data-level="2.7.2" id="api-filesystemsyncaccesshandle-write"><span class="secno">2.7.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-write" id="ref-for-dom-filesystemsyncaccesshandle-write②">write()</a></code> method</span><a class="self-link" href="#api-filesystemsyncaccesshandle-write"></a></h4>
    <div class="note domintro" role="note">
     <dl>
-     <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-write" id="ref-for-dom-filesystemsyncaccesshandle-write②">write</a></code>(<var>buffer</var>, <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemreadwriteoptions" id="ref-for-dictdef-filesystemreadwriteoptions④">FilesystemReadWriteOptions</a></code>: <var>options</var>)
+     <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-write" id="ref-for-dom-filesystemsyncaccesshandle-write③">write</a></code>(<var>buffer</var>)
+     <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-write" id="ref-for-dom-filesystemsyncaccesshandle-write④">write</a></code>(<var>buffer</var>, { <code class="idl"><a data-link-type="idl" href="#dom-filesystemreadwriteoptions-at" id="ref-for-dom-filesystemreadwriteoptions-at②">at</a></code> })
      <dd data-md>
-      <p>Writes the content of <var>buffer</var> into the file associated with <var>handle</var> with <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystemreadwriteoptions-at" id="ref-for-dom-filesystemreadwriteoptions-at②">at</a></code> as the offset.</p>
+      <p>Writes the content of <var>buffer</var> into the file associated with <var>handle</var>, optionally at a given offset.</p>
     </dl>
    </div>
-   <p>// TODO(fivedots): Is there a more formal way to describe the resutl of partial writes from the OS?</p>
    <p>// TODO(fivedots): Figure out mechanism to prevent concurrent IO operations e.g. doing write() while a truncate() is executing in parallel.</p>
-   <div class="algorithm" data-algorithm="write(buffer, FilesystemReadWriteOptions: options)" data-algorithm-for="FileSystemSyncAccessHandle">
-     The <dfn class="idl-code" data-dfn-for="FileSystemSyncAccessHandle" data-dfn-type="method" data-export id="dom-filesystemsyncaccesshandle-write-buffer-filesystemreadwriteoptions-options"><code>write(<var>buffer</var>, <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemreadwriteoptions" id="ref-for-dictdef-filesystemreadwriteoptions⑤">FilesystemReadWriteOptions</a></code>: <var>options</var>)</code><a class="self-link" href="#dom-filesystemsyncaccesshandle-write-buffer-filesystemreadwriteoptions-options"></a></dfn> method, when invoked, must run
+   <div class="algorithm" data-algorithm="write(buffer, FileSystemReadWriteOptions: options)" data-algorithm-for="FileSystemSyncAccessHandle">
+     The <dfn class="idl-code" data-dfn-for="FileSystemSyncAccessHandle" data-dfn-type="method" data-export id="dom-filesystemsyncaccesshandle-write-buffer-filesystemreadwriteoptions-options"><code>write(<var>buffer</var>, <code class="idl"><a data-link-type="idl" href="#dictdef-filesystemreadwriteoptions" id="ref-for-dictdef-filesystemreadwriteoptions③">FileSystemReadWriteOptions</a></code>: <var>options</var>)</code><a class="self-link" href="#dom-filesystemsyncaccesshandle-write-buffer-filesystemreadwriteoptions-options"></a></dfn> method, when invoked, must run
 these steps: 
     <ol>
      <li data-md>
@@ -2289,14 +2287,14 @@ these steps:
      <li data-md>
       <p>Let <var>writePosition</var> be <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystemreadwriteoptions-at" id="ref-for-dom-filesystemreadwriteoptions-at③">at</a></code>.</p>
      <li data-md>
-      <p>Let <var>fileContents</var> be a copy of <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this②⑧">this</a>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file③">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑦">binary data</a>.</p>
+      <p>Let <var>fileContents</var> be a copy of <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this②⑧">this</a>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file④">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑦">binary data</a>.</p>
      <li data-md>
       <p>Let <var>oldSize</var> be <var>fileContents</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length⑤">length</a>.</p>
      <li data-md>
       <p>Let <var>data</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-get-buffer-source-copy" id="ref-for-dfn-get-buffer-source-copy①">a copy of</a> <var>buffer</var>.</p>
      <li data-md>
       <p>If <var>writePosition</var> is larger than <var>oldSize</var>,
- append <var>writePosition</var> - <var>oldSize</var> <code>0x00</code> (NUL) bytes to the end of <var>fileContents</var>.</p>
+ append <var>writePosition</var> − <var>oldSize</var> <code>0x00</code> (NUL) bytes to the end of <var>fileContents</var>.</p>
       <p class="note" role="note"><span>Note:</span> Implementations are expected to behave as if the skipped over file contents
  are indeed filled with NUL bytes. That doesn’t mean these bytes have to actually be
  written to disk and take up disk space. Instead most file systems support so called
@@ -2306,29 +2304,29 @@ these steps:
      <li data-md>
       <p>Let <var>tail</var> be an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence①①">byte sequence</a>.</p>
      <li data-md>
-      <p>If <var>writePosition</var> + <var>data</var>.<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length⑥">length</a> is smaller than <var>oldSize</var>:</p>
+      <p>If <var>writePosition</var> + <var>data</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length⑥">length</a> is smaller than <var>oldSize</var>:</p>
       <ol>
        <li data-md>
-        <p>Let <var>tail</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence①②">byte sequence</a> containing the last <var>oldSize</var> - (<var>writePosition</var> + <var>data</var>.<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length⑦">length</a>) bytes of <var>fileContents</var>.</p>
+        <p>Set <var>tail</var> to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence①②">byte sequence</a> containing the last <var>oldSize</var> − (<var>writePosition</var> + <var>data</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length⑦">length</a>) bytes of <var>fileContents</var>.</p>
       </ol>
      <li data-md>
-      <p>Let <var>newSize</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length⑧">length</a> of the concatenation of <var>head</var>, <var>data</var> and <var>tail</var>.</p>
+      <p>Let <var>newSize</var> be <var>head</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length⑧">length</a> + <var>data</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length⑨">length</a> + <var>tail</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length①⓪">length</a>.</p>
      <li data-md>
-      <p>If <var>newSize</var> - <var>oldSize</var> exceeds the available <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota④">storage quota</a>, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#quotaexceedederror" id="ref-for-quotaexceedederror②">QuotaExceededError</a></code>.</p>
+      <p>If <var>newSize</var> − <var>oldSize</var> exceeds the available <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota④">storage quota</a>, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#quotaexceedederror" id="ref-for-quotaexceedederror②">QuotaExceededError</a></code>.</p>
      <li data-md>
-      <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this②⑨">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-file" id="ref-for-filesystemsyncaccesshandle-file⑥">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑧">binary data</a> to the concatenation of <var>head</var>, <var>data</var> and <var>tail</var>.</p>
+      <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this②⑨">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-file" id="ref-for-filesystemsyncaccesshandle-file⑤">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑧">binary data</a> to the concatenation of <var>head</var>, <var>data</var> and <var>tail</var>.</p>
      <li data-md>
-      <p>If the operations modifying the <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③⓪">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-file" id="ref-for-filesystemsyncaccesshandle-file⑦">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑨">binary data</a> in the previous steps
+      <p>If the operations modifying the <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③⓪">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-file" id="ref-for-filesystemsyncaccesshandle-file⑥">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data⑨">binary data</a> in the previous steps
  failed:</p>
       <ol>
        <li data-md>
-        <p>If there were partial modifications and the number of modified bytes is known,
- return the number of modified bytes.</p>
+        <p>If there were partial writes and the number of bytes that were written from <var>data</var> is known,
+ return the number of bytes that were written from <var>data</var>.</p>
        <li data-md>
         <p>Else return 0.</p>
       </ol>
      <li data-md>
-      <p>Return <var>data</var>.<a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length⑨">length</a>.</p>
+      <p>Return <var>data</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length①①">length</a>.</p>
     </ol>
    </div>
    <h4 class="heading settled" data-level="2.7.3" id="api-filesystemsyncaccesshandle-truncate"><span class="secno">2.7.3. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-truncate" id="ref-for-dom-filesystemsyncaccesshandle-truncate①">truncate()</a></code> method</span><a class="self-link" href="#api-filesystemsyncaccesshandle-truncate"></a></h4>
@@ -2336,7 +2334,7 @@ these steps:
     <dl>
      <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-truncate" id="ref-for-dom-filesystemsyncaccesshandle-truncate②">truncate</a></code>(<var>newSize</var>)
      <dd data-md>
-      <p>Resizes the file associated with stream to be <var>newSize</var> bytes long. If size is larger than the current file size this pads the file with null bytes, otherwise it truncates the file.</p>
+      <p>Resizes the file associated with stream to be <var>newSize</var> bytes long. If size is larger than the current file size this pads the file with null bytes; otherwise it truncates the file.</p>
     </dl>
    </div>
    <div class="algorithm" data-algorithm="truncate(newSize)" data-algorithm-for="FileSystemSyncAccessHandle">
@@ -2344,38 +2342,36 @@ these steps:
 these steps: 
     <ol>
      <li data-md>
-      <p>If <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③①">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-state" id="ref-for-filesystemsyncaccesshandle-state③">[[state]]</a> is "<code>closed</code>", throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#invalidstateerror" id="ref-for-invalidstateerror③">InvalidStateError</a></code>.</p>
+      <p>If <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③①">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-state" id="ref-for-filesystemsyncaccesshandle-state③">[[state]]</a> is "<code>closed</code>", return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with①">a promise rejected with</a> an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#invalidstateerror" id="ref-for-invalidstateerror③">InvalidStateError</a></code>.</p>
      <li data-md>
-      <p>If <var>newSize</var> is less than 0, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#invalidstateerror" id="ref-for-invalidstateerror④">InvalidStateError</a></code>.</p>
+      <p>Let <var>fileContents</var> be a copy of <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③②">this</a>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file⑤">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data①⓪">binary data</a>.</p>
      <li data-md>
-      <p>Let <var>fileContents</var> be a copy of <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③②">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-file" id="ref-for-filesystemsyncaccesshandle-file⑧">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data①⓪">binary data</a>.</p>
-     <li data-md>
-      <p>Let <var>p</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-new-promise" id="ref-for-a-new-promise①③">a new promise</a>.</p>
+      <p>Let <var>p</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-new-promise" id="ref-for-a-new-promise①③">a new promise</a> created in the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-realm" id="ref-for-concept-relevant-realm③">relevant Realm</a> of <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③③">this</a>.</p>
      <li data-md>
       <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel①②">in parallel</a>:</p>
       <ol>
        <li data-md>
-        <p>Let <var>oldSize</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length①⓪">length</a> of <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③③">this</a>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file④">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data①①">binary data</a>.</p>
+        <p>Let <var>oldSize</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length①②">length</a> of <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③④">this</a>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file⑥">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data①①">binary data</a>.</p>
        <li data-md>
         <p>If <var>newSize</var> is larger than <var>oldSize</var>:</p>
         <ol>
          <li data-md>
-          <p>If <var>newSize</var> - <var>oldSize</var> exceeds the available <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota⑤">storage quota</a>, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject②⑦">reject</a> <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#quotaexceedederror" id="ref-for-quotaexceedederror③">QuotaExceededError</a></code> and abort.</p>
+          <p>If <var>newSize</var> − <var>oldSize</var> exceeds the available <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota⑤">storage quota</a>, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject②⑦">reject</a> <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#quotaexceedederror" id="ref-for-quotaexceedederror③">QuotaExceededError</a></code> and abort.</p>
          <li data-md>
-          <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③④">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-file" id="ref-for-filesystemsyncaccesshandle-file⑨">[[file]]</a>'s to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence①③">byte sequence</a> formed by concating <var>fileContents</var> with a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence①④">byte sequence</a> containing <var>newSize</var>-<var>oldSize</var> <code>0x00</code> bytes.</p>
+          <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③⑤">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-file" id="ref-for-filesystemsyncaccesshandle-file⑦">[[file]]</a>'s to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence①③">byte sequence</a> formed by concatenating <var>fileContents</var> with a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence①④">byte sequence</a> containing <var>newSize</var> − <var>oldSize</var> <code>0x00</code> bytes.</p>
         </ol>
        <li data-md>
         <p>Else if <var>newSize</var> is smaller than <var>oldSize</var>:</p>
         <ol>
          <li data-md>
-          <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③⑤">this</a>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file⑤">[[file]]</a>'s to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence①⑤">byte sequence</a> containing the first <var>newSize</var> bytes
+          <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③⑥">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-file" id="ref-for-filesystemsyncaccesshandle-file⑧">[[file]]</a>'s to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence①⑤">byte sequence</a> containing the first <var>newSize</var> bytes
   in <var>fileContents</var>.</p>
         </ol>
        <li data-md>
         <p><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#resolve" id="ref-for-resolve②①">Resolve</a> <var>p</var>.</p>
       </ol>
      <li data-md>
-      <p>Return <var>p</var></p>
+      <p>Return <var>p</var>.</p>
     </ol>
    </div>
    <h4 class="heading settled" data-level="2.7.4" id="api-filesystemsyncaccesshandle-getsize"><span class="secno">2.7.4. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-getsize" id="ref-for-dom-filesystemsyncaccesshandle-getsize①">getSize()</a></code> method</span><a class="self-link" href="#api-filesystemsyncaccesshandle-getsize"></a></h4>
@@ -2391,19 +2387,19 @@ these steps:
 these steps: 
     <ol>
      <li data-md>
-      <p>If <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③⑥">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-state" id="ref-for-filesystemsyncaccesshandle-state④">[[state]]</a> is "<code>closed</code>", throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#invalidstateerror" id="ref-for-invalidstateerror⑤">InvalidStateError</a></code>.</p>
+      <p>If <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③⑦">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-state" id="ref-for-filesystemsyncaccesshandle-state④">[[state]]</a> is "<code>closed</code>", return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with②">a promise rejected with</a> an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#invalidstateerror" id="ref-for-invalidstateerror④">InvalidStateError</a></code>.</p>
      <li data-md>
-      <p>Let <var>p</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-new-promise" id="ref-for-a-new-promise①④">a new promise</a>.</p>
+      <p>Let <var>p</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-new-promise" id="ref-for-a-new-promise①④">a new promise</a> created in the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-realm" id="ref-for-concept-relevant-realm④">relevant Realm</a> of <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③⑧">this</a>.</p>
      <li data-md>
       <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel①③">in parallel</a>:</p>
       <ol>
        <li data-md>
-        <p>Let <var>size</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length①①">length</a> of <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③⑦">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-file" id="ref-for-filesystemsyncaccesshandle-file①⓪">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data①②">binary data</a>.</p>
+        <p>Let <var>size</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence-length" id="ref-for-byte-sequence-length①③">length</a> of <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③⑨">this</a>.<a data-link-type="dfn" href="#filesystemwritablefilestream-file" id="ref-for-filesystemwritablefilestream-file⑦">[[file]]</a>'s <a data-link-type="dfn" href="#file-entry-binary-data" id="ref-for-file-entry-binary-data①②">binary data</a>.</p>
        <li data-md>
         <p><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#resolve" id="ref-for-resolve②②">Resolve</a> <var>p</var> with <var>size</var>.</p>
       </ol>
      <li data-md>
-      <p>Return <var>p</var></p>
+      <p>Return <var>p</var>.</p>
     </ol>
    </div>
    <h4 class="heading settled" data-level="2.7.5" id="api-filesystemsyncaccesshandle-flush"><span class="secno">2.7.5. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-flush" id="ref-for-dom-filesystemsyncaccesshandle-flush①">flush()</a></code> method</span><a class="self-link" href="#api-filesystemsyncaccesshandle-flush"></a></h4>
@@ -2411,7 +2407,7 @@ these steps:
     <dl>
      <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-flush" id="ref-for-dom-filesystemsyncaccesshandle-flush②">flush()</a></code>
      <dd data-md>
-      <p>Ensures that the contents of the file associated with <var>handle</var> contain all the modifications done through <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-write" id="ref-for-dom-filesystemsyncaccesshandle-write③">write()</a></code>.</p>
+      <p>Ensures that the contents of the file associated with <var>handle</var> contain all the modifications done through <code class="idl"><a data-link-type="idl" href="#dom-filesystemsyncaccesshandle-write" id="ref-for-dom-filesystemsyncaccesshandle-write⑤">write()</a></code>.</p>
     </dl>
    </div>
    <div class="algorithm" data-algorithm="flush()" data-algorithm-for="FileSystemSyncAccessHandle">
@@ -2433,17 +2429,17 @@ these steps:
 these steps: 
     <ol>
      <li data-md>
-      <p>Let <var>p</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-new-promise" id="ref-for-a-new-promise①⑤">a new promise</a>.</p>
+      <p>Let <var>p</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-new-promise" id="ref-for-a-new-promise①⑤">a new promise</a> created in the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-realm" id="ref-for-concept-relevant-realm⑤">relevant Realm</a> of <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this④⓪">this</a>.</p>
      <li data-md>
       <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel①④">in parallel</a>:</p>
       <ol>
        <li data-md>
-        <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③⑧">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-state" id="ref-for-filesystemsyncaccesshandle-state⑤">[[state]]</a> to "<code>closed</code>".</p>
+        <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this④①">this</a>.<a data-link-type="dfn" href="#filesystemsyncaccesshandle-state" id="ref-for-filesystemsyncaccesshandle-state⑤">[[state]]</a> to "<code>closed</code>".</p>
        <li data-md>
         <p><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#resolve" id="ref-for-resolve②③">Resolve</a> <var>p</var>.</p>
       </ol>
      <li data-md>
-      <p>Return <var>p</var></p>
+      <p>Return <var>p</var>.</p>
     </ol>
    </div>
    <h2 class="heading settled" data-level="3" id="local-filesystem"><span class="secno">3. </span><span class="content">Accessing Local File System</span><a class="self-link" href="#local-filesystem"></a></h2>
@@ -2509,10 +2505,10 @@ and <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondes
     <ol>
      <li data-md>
       <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin③">origin</a> is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin-opaque" id="ref-for-concept-origin-opaque">opaque origin</a>,
- return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with①">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror③">SecurityError</a></code>.</p>
+ return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with③">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror③">SecurityError</a></code>.</p>
      <li data-md>
       <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin④">origin</a> is not <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#same-origin" id="ref-for-same-origin②">same origin</a> with <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin" id="ref-for-concept-environment-top-level-origin①">top-level origin</a>,
- return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with②">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror④">SecurityError</a></code>.</p>
+ return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with④">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror④">SecurityError</a></code>.</p>
      <li data-md>
       <p>Let <var>global</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global" id="ref-for-concept-settings-object-global①">global object</a>.</p>
      <li data-md>
@@ -2880,7 +2876,7 @@ file picker will open. See <a href="#api-filepickeroptions">§ 3.2 File picker
 these steps: 
      <ol>
       <li data-md>
-       <p>Let <var>environment</var> be <b><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③⑨">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object③">relevant settings object</a>.</p>
+       <p>Let <var>environment</var> be <b><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this④②">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object③">relevant settings object</a>.</p>
       <li data-md>
        <p>Let <var>accepts options</var> be the result of <a data-link-type="dfn" href="#process-accept-types" id="ref-for-process-accept-types">processing accept types</a> given <var>options</var>.</p>
       <li data-md>
@@ -2977,7 +2973,7 @@ file picker will open. See <a href="#api-filepickeroptions">§ 3.2 File picker
 these steps: 
      <ol>
       <li data-md>
-       <p>Let <var>environment</var> be <b><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this④⓪">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object④">relevant settings object</a>.</p>
+       <p>Let <var>environment</var> be <b><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this④③">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object④">relevant settings object</a>.</p>
       <li data-md>
        <p>Let <var>accepts options</var> be the result of <a data-link-type="dfn" href="#process-accept-types" id="ref-for-process-accept-types①">processing accept types</a> given <var>options</var>.</p>
       <li data-md>
@@ -3071,7 +3067,7 @@ the selected directory.</p>
 these steps: 
      <ol>
       <li data-md>
-       <p>Let <var>environment</var> be <b><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this④①">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object⑤">relevant settings object</a>.</p>
+       <p>Let <var>environment</var> be <b><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this④④">this</a></b>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object" id="ref-for-relevant-settings-object⑤">relevant settings object</a>.</p>
       <li data-md>
        <p>Let <var>starting directory</var> be the result of <a data-link-type="dfn" href="#wellknowndirectory-determine-the-directory-the-picker-will-start-in" id="ref-for-wellknowndirectory-determine-the-directory-the-picker-will-start-in②">determining the directory the picker will start in</a> given <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-directorypickeroptions-id" id="ref-for-dom-directorypickeroptions-id①">id</a></code>, <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-directorypickeroptions-startin" id="ref-for-dom-directorypickeroptions-startin①">startIn</a></code> and <var>environment</var>.</p>
       <li data-md>
@@ -3239,7 +3235,7 @@ invoked, must run these steps:
        <p>Let <var>environment</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-settings-object" id="ref-for-current-settings-object">current settings object</a>.</p>
       <li data-md>
        <p>Let <var>map</var> be the result of running <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#obtain-a-local-storage-bottle-map" id="ref-for-obtain-a-local-storage-bottle-map">obtain a local storage bottle map</a> with <var>environment</var> and <code>"fileSystem"</code>. If this returns failure,
- return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with③">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror⑥">SecurityError</a></code>.</p>
+ return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with⑤">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror⑥">SecurityError</a></code>.</p>
       <li data-md>
        <p>If <var>map</var>["root"] does not <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists⑤">exist</a>:</p>
        <ol>
@@ -3468,7 +3464,7 @@ use this API to write to disk.</p>
    <li><a href="#dictdef-filesystemhandlepermissiondescriptor">FileSystemHandlePermissionDescriptor</a><span>, in § 2.3</span>
    <li><a href="#dictdef-filesystempermissiondescriptor">FileSystemPermissionDescriptor</a><span>, in § 2.2</span>
    <li><a href="#enumdef-filesystempermissionmode">FileSystemPermissionMode</a><span>, in § 2.2</span>
-   <li><a href="#dictdef-filesystemreadwriteoptions">FilesystemReadWriteOptions</a><span>, in § 2.7</span>
+   <li><a href="#dictdef-filesystemreadwriteoptions">FileSystemReadWriteOptions</a><span>, in § 2.7</span>
    <li><a href="#dictdef-filesystemremoveoptions">FileSystemRemoveOptions</a><span>, in § 2.5</span>
    <li><a href="#filesystemsyncaccesshandle">FileSystemSyncAccessHandle</a><span>, in § 2.7</span>
    <li><a href="#filesystemwritablefilestream">FileSystemWritableFileStream</a><span>, in § 2.6</span>
@@ -3524,7 +3520,7 @@ use this API to write to disk.</p>
    <li><a href="#dom-filesystemhandle-querypermission">queryPermission()</a><span>, in § 2.3.2</span>
    <li><a href="#dom-filesystemhandle-querypermission">queryPermission(descriptor)</a><span>, in § 2.3.2</span>
    <li><a href="#dom-filesystempermissionmode-read">"read"</a><span>, in § 2.2</span>
-   <li><a href="#dom-filesystemsyncaccesshandle-read-buffer-filesystemreadwriteoptions-options">read(buffer, FilesystemReadWriteOptions: options)</a><span>, in § 2.7.1</span>
+   <li><a href="#dom-filesystemsyncaccesshandle-read-buffer-filesystemreadwriteoptions-options">read(buffer, FileSystemReadWriteOptions: options)</a><span>, in § 2.7.1</span>
    <li><a href="#dom-filesystemsyncaccesshandle-read">read(buffer, options)</a><span>, in § 2.7</span>
    <li><a href="#dom-filesystempermissionmode-readwrite">"readwrite"</a><span>, in § 2.2</span>
    <li><a href="#recently-picked-directory-map">recently picked directory map</a><span>, in § 3.2.2</span>
@@ -3575,7 +3571,7 @@ use this API to write to disk.</p>
    <li><a href="#enumdef-wellknowndirectory">WellKnownDirectory</a><span>, in § 3.2.2</span>
    <li><a href="#dom-writecommandtype-write">"write"</a><span>, in § 2.6</span>
    <li><a href="#write-a-chunk">write a chunk</a><span>, in § 2.6</span>
-   <li><a href="#dom-filesystemsyncaccesshandle-write-buffer-filesystemreadwriteoptions-options">write(buffer, FilesystemReadWriteOptions: options)</a><span>, in § 2.7.2</span>
+   <li><a href="#dom-filesystemsyncaccesshandle-write-buffer-filesystemreadwriteoptions-options">write(buffer, FileSystemReadWriteOptions: options)</a><span>, in § 2.7.2</span>
    <li><a href="#dom-filesystemsyncaccesshandle-write">write(buffer, options)</a><span>, in § 2.7</span>
    <li><a href="#enumdef-writecommandtype">WriteCommandType</a><span>, in § 2.6</span>
    <li><a href="#dom-filesystemwritablefilestream-write">write(data)</a><span>, in § 2.6.1</span>
@@ -3778,6 +3774,9 @@ use this API to write to disk.</p>
     <li><a href="#ref-for-concept-relevant-realm">2.3.1. The isSameEntry() method</a>
     <li><a href="#ref-for-concept-relevant-realm①">2.4.2. The createWritable() method</a>
     <li><a href="#ref-for-concept-relevant-realm②">2.4.3. The createSyncAccessHandle() method</a>
+    <li><a href="#ref-for-concept-relevant-realm③">2.7.3. The truncate() method</a>
+    <li><a href="#ref-for-concept-relevant-realm④">2.7.4. The getSize() method</a>
+    <li><a href="#ref-for-concept-relevant-realm⑤">2.7.6. The close() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-relevant-settings-object">
@@ -4322,8 +4321,8 @@ use this API to write to disk.</p>
     <li><a href="#ref-for-invalidstateerror">2.4.3. The createSyncAccessHandle() method</a>
     <li><a href="#ref-for-invalidstateerror①">2.7.1. The read() method</a>
     <li><a href="#ref-for-invalidstateerror②">2.7.2. The write() method</a>
-    <li><a href="#ref-for-invalidstateerror③">2.7.3. The truncate() method</a> <a href="#ref-for-invalidstateerror④">(2)</a>
-    <li><a href="#ref-for-invalidstateerror⑤">2.7.4. The getSize() method</a>
+    <li><a href="#ref-for-invalidstateerror③">2.7.3. The truncate() method</a>
+    <li><a href="#ref-for-invalidstateerror④">2.7.4. The getSize() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-nomodificationallowederror">
@@ -4450,8 +4449,10 @@ use this API to write to disk.</p>
    <a href="https://webidl.spec.whatwg.org/#a-promise-rejected-with">https://webidl.spec.whatwg.org/#a-promise-rejected-with</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-a-promise-rejected-with">2.6. The FileSystemWritableFileStream interface</a>
-    <li><a href="#ref-for-a-promise-rejected-with①">3.1. Local File System Permissions</a> <a href="#ref-for-a-promise-rejected-with②">(2)</a>
-    <li><a href="#ref-for-a-promise-rejected-with③">4. Accessing the Origin Private File System</a>
+    <li><a href="#ref-for-a-promise-rejected-with①">2.7.3. The truncate() method</a>
+    <li><a href="#ref-for-a-promise-rejected-with②">2.7.4. The getSize() method</a>
+    <li><a href="#ref-for-a-promise-rejected-with③">3.1. Local File System Permissions</a> <a href="#ref-for-a-promise-rejected-with④">(2)</a>
+    <li><a href="#ref-for-a-promise-rejected-with⑤">4. Accessing the Origin Private File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-a-promise-resolved-with">
@@ -4573,12 +4574,12 @@ use this API to write to disk.</p>
     <li><a href="#ref-for-this②③">2.6.3. The truncate() method</a>
     <li><a href="#ref-for-this②④">2.7.1. The read() method</a> <a href="#ref-for-this②⑤">(2)</a> <a href="#ref-for-this②⑥">(3)</a>
     <li><a href="#ref-for-this②⑦">2.7.2. The write() method</a> <a href="#ref-for-this②⑧">(2)</a> <a href="#ref-for-this②⑨">(3)</a> <a href="#ref-for-this③⓪">(4)</a>
-    <li><a href="#ref-for-this③①">2.7.3. The truncate() method</a> <a href="#ref-for-this③②">(2)</a> <a href="#ref-for-this③③">(3)</a> <a href="#ref-for-this③④">(4)</a> <a href="#ref-for-this③⑤">(5)</a>
-    <li><a href="#ref-for-this③⑥">2.7.4. The getSize() method</a> <a href="#ref-for-this③⑦">(2)</a>
-    <li><a href="#ref-for-this③⑧">2.7.6. The close() method</a>
-    <li><a href="#ref-for-this③⑨">3.3. The showOpenFilePicker() method</a>
-    <li><a href="#ref-for-this④⓪">3.4. The showSaveFilePicker() method</a>
-    <li><a href="#ref-for-this④①">3.5. The showDirectoryPicker() method</a>
+    <li><a href="#ref-for-this③①">2.7.3. The truncate() method</a> <a href="#ref-for-this③②">(2)</a> <a href="#ref-for-this③③">(3)</a> <a href="#ref-for-this③④">(4)</a> <a href="#ref-for-this③⑤">(5)</a> <a href="#ref-for-this③⑥">(6)</a>
+    <li><a href="#ref-for-this③⑦">2.7.4. The getSize() method</a> <a href="#ref-for-this③⑧">(2)</a> <a href="#ref-for-this③⑨">(3)</a>
+    <li><a href="#ref-for-this④⓪">2.7.6. The close() method</a> <a href="#ref-for-this④①">(2)</a>
+    <li><a href="#ref-for-this④②">3.3. The showOpenFilePicker() method</a>
+    <li><a href="#ref-for-this④③">3.4. The showSaveFilePicker() method</a>
+    <li><a href="#ref-for-this④④">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-undefined">
@@ -4928,16 +4929,16 @@ use this API to write to disk.</p>
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise"><c- b>Promise</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-undefined"><c- b>undefined</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemwritablefilestream-truncate"><c- g>truncate</c-></a>(<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a href="#dom-filesystemwritablefilestream-truncate-size-size"><code><c- g>size</c-></code></a>);
 };
 
-<c- b>dictionary</c-> <a href="#dictdef-filesystemreadwriteoptions"><code><c- g>FilesystemReadWriteOptions</c-></code></a> {
+<c- b>dictionary</c-> <a href="#dictdef-filesystemreadwriteoptions"><code><c- g>FileSystemReadWriteOptions</c-></code></a> {
   [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#EnforceRange"><c- g>EnforceRange</c-></a>] <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a data-type="unsigned long long " href="#dom-filesystemreadwriteoptions-at"><code><c- g>at</c-></code></a>;
 }
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed"><c- g>Exposed</c-></a>=<c- n>DedicatedWorker</c->, <a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext"><c- g>SecureContext</c-></a>]
 <c- b>interface</c-> <a href="#filesystemsyncaccesshandle"><code><c- g>FileSystemSyncAccessHandle</c-></code></a> {
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a href="#dom-filesystemsyncaccesshandle-read"><code><c- g>read</c-></code></a>([<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#AllowShared"><c- g>AllowShared</c-></a>] <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#BufferSource"><c- n>BufferSource</c-></a> <a href="#dom-filesystemsyncaccesshandle-read-buffer-options-buffer"><code><c- g>buffer</c-></code></a>,
-                             <a data-link-type="idl-name" href="#dictdef-filesystemreadwriteoptions"><c- n>FilesystemReadWriteOptions</c-></a> <a href="#dom-filesystemsyncaccesshandle-read-buffer-options-options"><code><c- g>options</c-></code></a>);
+                          <a data-link-type="idl-name" href="#dictdef-filesystemreadwriteoptions"><c- n>FileSystemReadWriteOptions</c-></a> <a href="#dom-filesystemsyncaccesshandle-read-buffer-options-options"><code><c- g>options</c-></code></a>);
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a href="#dom-filesystemsyncaccesshandle-write"><code><c- g>write</c-></code></a>([<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#AllowShared"><c- g>AllowShared</c-></a>] <a data-link-type="idl-name" href="https://webidl.spec.whatwg.org/#BufferSource"><c- n>BufferSource</c-></a> <a href="#dom-filesystemsyncaccesshandle-write-buffer-options-buffer"><code><c- g>buffer</c-></code></a>,
-                              <a data-link-type="idl-name" href="#dictdef-filesystemreadwriteoptions"><c- n>FilesystemReadWriteOptions</c-></a> <a href="#dom-filesystemsyncaccesshandle-write-buffer-options-options"><code><c- g>options</c-></code></a>);
+                           <a data-link-type="idl-name" href="#dictdef-filesystemreadwriteoptions"><c- n>FileSystemReadWriteOptions</c-></a> <a href="#dom-filesystemsyncaccesshandle-write-buffer-options-options"><code><c- g>options</c-></code></a>);
 
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise"><c- b>Promise</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-undefined"><c- b>undefined</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemsyncaccesshandle-truncate"><c- g>truncate</c-></a>([<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#EnforceRange"><c- g>EnforceRange</c-></a>] <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a> <a href="#dom-filesystemsyncaccesshandle-truncate-newsize-newsize"><code><c- g>newSize</c-></code></a>);
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise"><c- b>Promise</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-unsigned-long-long"><c- b>unsigned</c-> <c- b>long</c-> <c- b>long</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-filesystemsyncaccesshandle-getsize"><c- g>getSize</c-></a>();
@@ -5583,8 +5584,10 @@ than being defined here. So merge this into the table there. <a class="issue-ret
    <b><a href="#filesystemwritablefilestream-file">#filesystemwritablefilestream-file</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-filesystemwritablefilestream-file">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-filesystemwritablefilestream-file①">(2)</a> <a href="#ref-for-filesystemwritablefilestream-file②">(3)</a>
-    <li><a href="#ref-for-filesystemwritablefilestream-file③">2.7.2. The write() method</a>
-    <li><a href="#ref-for-filesystemwritablefilestream-file④">2.7.3. The truncate() method</a> <a href="#ref-for-filesystemwritablefilestream-file⑤">(2)</a>
+    <li><a href="#ref-for-filesystemwritablefilestream-file③">2.7.1. The read() method</a>
+    <li><a href="#ref-for-filesystemwritablefilestream-file④">2.7.2. The write() method</a>
+    <li><a href="#ref-for-filesystemwritablefilestream-file⑤">2.7.3. The truncate() method</a> <a href="#ref-for-filesystemwritablefilestream-file⑥">(2)</a>
+    <li><a href="#ref-for-filesystemwritablefilestream-file⑦">2.7.4. The getSize() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="filesystemwritablefilestream-buffer">
@@ -5638,8 +5641,8 @@ than being defined here. So merge this into the table there. <a class="issue-ret
    <b><a href="#dictdef-filesystemreadwriteoptions">#dictdef-filesystemreadwriteoptions</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dictdef-filesystemreadwriteoptions">2.7. The FileSystemSyncAccessHandle interface</a> <a href="#ref-for-dictdef-filesystemreadwriteoptions①">(2)</a>
-    <li><a href="#ref-for-dictdef-filesystemreadwriteoptions②">2.7.1. The read() method</a> <a href="#ref-for-dictdef-filesystemreadwriteoptions③">(2)</a>
-    <li><a href="#ref-for-dictdef-filesystemreadwriteoptions④">2.7.2. The write() method</a> <a href="#ref-for-dictdef-filesystemreadwriteoptions⑤">(2)</a>
+    <li><a href="#ref-for-dictdef-filesystemreadwriteoptions②">2.7.1. The read() method</a>
+    <li><a href="#ref-for-dictdef-filesystemreadwriteoptions③">2.7.2. The write() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemreadwriteoptions-at">
@@ -5663,15 +5666,17 @@ than being defined here. So merge this into the table there. <a class="issue-ret
    <b><a href="#dom-filesystemsyncaccesshandle-read">#dom-filesystemsyncaccesshandle-read</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-filesystemsyncaccesshandle-read">2.4.3. The createSyncAccessHandle() method</a>
-    <li><a href="#ref-for-dom-filesystemsyncaccesshandle-read①">2.7.1. The read() method</a> <a href="#ref-for-dom-filesystemsyncaccesshandle-read②">(2)</a>
+    <li><a href="#ref-for-dom-filesystemsyncaccesshandle-read①">2.7. The FileSystemSyncAccessHandle interface</a>
+    <li><a href="#ref-for-dom-filesystemsyncaccesshandle-read②">2.7.1. The read() method</a> <a href="#ref-for-dom-filesystemsyncaccesshandle-read③">(2)</a> <a href="#ref-for-dom-filesystemsyncaccesshandle-read④">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystemsyncaccesshandle-write">
    <b><a href="#dom-filesystemsyncaccesshandle-write">#dom-filesystemsyncaccesshandle-write</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-filesystemsyncaccesshandle-write">2.4.3. The createSyncAccessHandle() method</a>
-    <li><a href="#ref-for-dom-filesystemsyncaccesshandle-write①">2.7.2. The write() method</a> <a href="#ref-for-dom-filesystemsyncaccesshandle-write②">(2)</a>
-    <li><a href="#ref-for-dom-filesystemsyncaccesshandle-write③">2.7.5. The flush() method</a>
+    <li><a href="#ref-for-dom-filesystemsyncaccesshandle-write①">2.7. The FileSystemSyncAccessHandle interface</a>
+    <li><a href="#ref-for-dom-filesystemsyncaccesshandle-write②">2.7.2. The write() method</a> <a href="#ref-for-dom-filesystemsyncaccesshandle-write③">(2)</a> <a href="#ref-for-dom-filesystemsyncaccesshandle-write④">(3)</a>
+    <li><a href="#ref-for-dom-filesystemsyncaccesshandle-write⑤">2.7.5. The flush() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="filesystemsyncaccesshandle-file">
@@ -5679,10 +5684,9 @@ than being defined here. So merge this into the table there. <a class="issue-ret
    <ul>
     <li><a href="#ref-for-filesystemsyncaccesshandle-file">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-filesystemsyncaccesshandle-file①">(2)</a> <a href="#ref-for-filesystemsyncaccesshandle-file②">(3)</a>
     <li><a href="#ref-for-filesystemsyncaccesshandle-file③">2.7. The FileSystemSyncAccessHandle interface</a>
-    <li><a href="#ref-for-filesystemsyncaccesshandle-file④">2.7.1. The read() method</a> <a href="#ref-for-filesystemsyncaccesshandle-file⑤">(2)</a>
-    <li><a href="#ref-for-filesystemsyncaccesshandle-file⑥">2.7.2. The write() method</a> <a href="#ref-for-filesystemsyncaccesshandle-file⑦">(2)</a>
-    <li><a href="#ref-for-filesystemsyncaccesshandle-file⑧">2.7.3. The truncate() method</a> <a href="#ref-for-filesystemsyncaccesshandle-file⑨">(2)</a>
-    <li><a href="#ref-for-filesystemsyncaccesshandle-file①⓪">2.7.4. The getSize() method</a>
+    <li><a href="#ref-for-filesystemsyncaccesshandle-file④">2.7.1. The read() method</a>
+    <li><a href="#ref-for-filesystemsyncaccesshandle-file⑤">2.7.2. The write() method</a> <a href="#ref-for-filesystemsyncaccesshandle-file⑥">(2)</a>
+    <li><a href="#ref-for-filesystemsyncaccesshandle-file⑦">2.7.3. The truncate() method</a> <a href="#ref-for-filesystemsyncaccesshandle-file⑧">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="filesystemsyncaccesshandle-state">

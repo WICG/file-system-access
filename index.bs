@@ -1232,16 +1232,16 @@ steps:
 
 <xmp class=idl>
 
-dictionary FilesystemReadWriteOptions {
+dictionary FileSystemReadWriteOptions {
   [EnforceRange] required unsigned long long at;
 }
 
 [Exposed=DedicatedWorker, SecureContext]
 interface FileSystemSyncAccessHandle {
   unsigned long long read([AllowShared] BufferSource buffer,
-                             FilesystemReadWriteOptions options);
+                          FileSystemReadWriteOptions options);
   unsigned long long write([AllowShared] BufferSource buffer,
-                              FilesystemReadWriteOptions options);
+                           FileSystemReadWriteOptions options);
 
   Promise<undefined> truncate([EnforceRange] unsigned long long newSize);
   Promise<unsigned long long> getSize();
@@ -1282,21 +1282,21 @@ in a [=/Realm=] |realm|, perform the following steps:
 ### The {{FileSystemSyncAccessHandle/read()}} method ### {#api-filesystemsyncaccesshandle-read}
 
 <div class="note domintro">
-  : |handle| . {{FileSystemSyncAccessHandle/read()|read}}(|buffer|, {{FilesystemReadWriteOptions}}: |options|
-  :: Reads the contents of the file associated with |handle| into |buffer|, with |options|.{{FilesystemReadWriteOptions/at}} as the offset.
+  : |handle| . {{FileSystemSyncAccessHandle/read()|read}}(|buffer|)
+  : |handle| . {{FileSystemSyncAccessHandle/read()|read}}(|buffer|, { {{FileSystemReadWriteOptions/at}} })
+  :: Reads the contents of the file associated with |handle| into |buffer|, optionally at a given offset.
 </div>
 
-// TODO(fivedots): Is there a more formal way to describe the resutl of partial reads from the OS?
 <div algorithm>
-The <dfn method for=FileSystemSyncAccessHandle>read(|buffer|, {{FilesystemReadWriteOptions}}: |options|)</dfn> method, when invoked, must run
+The <dfn method for=FileSystemSyncAccessHandle>read(|buffer|, {{FileSystemReadWriteOptions}}: |options|)</dfn> method, when invoked, must run
 these steps:
 
-1. If [=this=].[=[[state]]=] is "`closed`", throw a {{InvalidStateError}}.
-1. Let |readPosition| be |options|.{{FilesystemReadWriteOptions/at}}.
+1. If [=this=].[=[[state]]=] is "`closed`", throw an {{InvalidStateError}}.
+1. Let |readPosition| be |options|.{{FileSystemReadWriteOptions/at}}.
 1. Let |size| be |buffer|'s [=byte length=].
 1. Let |result| be |size|.
 1. Let |bytes| be a [=byte sequence=] containing the bytes from |readPosition|
-   to |readPosition| + (|size| - 1) of [=this=].[=[[file]]=]'s [=file entry/binary data=].
+   to |readPosition| + (|size| &minus; 1) of [=this=].[=[[file]]=]'s [=file entry/binary data=].
 1. If the operations reading from [=this=].[=[[file]]=]'s [=file entry/binary data=] in the previous steps
    failed:
     1. If there were partial reads  and the number of modified bytes in |bytes|  is known,
@@ -1311,24 +1311,23 @@ these steps:
 ### The {{FileSystemSyncAccessHandle/write()}} method ### {#api-filesystemsyncaccesshandle-write}
 
 <div class="note domintro">
-  : |handle| . {{FileSystemSyncAccessHandle/write()|write}}(|buffer|, {{FilesystemReadWriteOptions}}: |options|)
-  :: Writes the content of |buffer| into the file associated with |handle| with |options|.{{FilesystemReadWriteOptions/at}} as the offset.
+  : |handle| . {{FileSystemSyncAccessHandle/write()|write}}(|buffer|)
+  : |handle| . {{FileSystemSyncAccessHandle/write()|write}}(|buffer|, { {{FileSystemReadWriteOptions/at}} })
+  :: Writes the content of |buffer| into the file associated with |handle|, optionally at a given offset.
 </div>
-
-// TODO(fivedots): Is there a more formal way to describe the resutl of partial writes from the OS?
 
 // TODO(fivedots): Figure out mechanism to prevent concurrent IO operations e.g. doing write() while a truncate() is executing in parallel.
 <div algorithm>
-The <dfn method for=FileSystemSyncAccessHandle>write(|buffer|, {{FilesystemReadWriteOptions}}: |options|)</dfn> method, when invoked, must run
+The <dfn method for=FileSystemSyncAccessHandle>write(|buffer|, {{FileSystemReadWriteOptions}}: |options|)</dfn> method, when invoked, must run
 these steps:
 
 1. If [=this=].[=[[state]]=] is "`closed`", throw a {{InvalidStateError}}.
-1. Let |writePosition| be |options|.{{FilesystemReadWriteOptions/at}}.
+1. Let |writePosition| be |options|.{{FileSystemReadWriteOptions/at}}.
 1. Let |fileContents| be a copy of [=this=].[=[[file]]=]'s [=file entry/binary data=].
 1. Let |oldSize| be |fileContents|'s [=byte sequence/length=].
 1. Let |data| be [=get a copy of the buffer source|a copy of=] |buffer|.
 1. If |writePosition| is larger than |oldSize|,
-   append |writePosition| - |oldSize| `0x00` (NUL) bytes to the end of |fileContents|.
+   append |writePosition| &minus; |oldSize| `0x00` (NUL) bytes to the end of |fileContents|.
 
    Note: Implementations are expected to behave as if the skipped over file contents
    are indeed filled with NUL bytes. That doesn't mean these bytes have to actually be
@@ -1337,18 +1336,18 @@ these steps:
 
 1. Let |head| be a [=byte sequence=] containing the first |writePosition| bytes of |fileContents|.
 1. Let |tail| be an empty [=byte sequence=].
-1. If |writePosition| + |data|.[=byte sequence/length=] is smaller than |oldSize|:
-   1. Let |tail| be a [=byte sequence=] containing the last
-      |oldSize| - (|writePosition| + |data|.[=byte sequence/length=]) bytes of |fileContents|.
-1. Let |newSize| be the [=byte sequence/length=] of the concatenation of |head|, |data| and |tail|.
-1. If |newSize| - |oldSize| exceeds the available [=storage quota=], throw a {{QuotaExceededError}}.
+1. If |writePosition| + |data|'s [=byte sequence/length=] is smaller than |oldSize|:
+   1. Set |tail| to a [=byte sequence=] containing the last
+      |oldSize| &minus; (|writePosition| + |data|'s [=byte sequence/length=]) bytes of |fileContents|.
+1. Let |newSize| be |head|'s [=byte sequence/length=] + |data|'s [=byte sequence/length=] + |tail|'s [=byte sequence/length=].
+1. If |newSize| &minus; |oldSize| exceeds the available [=storage quota=], throw a {{QuotaExceededError}}.
 1. Set [=this=].[=[[file]]=]'s [=file entry/binary data=] to the concatenation of |head|, |data| and |tail|.
 1. If the operations modifying the [=this=].[=[[file]]=]'s [=file entry/binary data=] in the previous steps
    failed:
-    1. If there were partial modifications and the number of modified bytes is known,
-       return the number of modified bytes.
+    1. If there were partial writes and the number of bytes that were written from |data| is known,
+       return the number of bytes that were written from |data|.
     1. Else return 0.
-1. Return |data|.[=byte sequence/length=].
+1. Return |data|'s [=byte sequence/length=].
 
 </div>
 
@@ -1356,30 +1355,29 @@ these steps:
 
 <div class="note domintro">
   : |handle| . {{FileSystemSyncAccessHandle/truncate()|truncate}}(|newSize|)
-  :: Resizes the file associated with stream to be |newSize| bytes long. If size is larger than the current file size this pads the file with null bytes, otherwise it truncates the file.
+  :: Resizes the file associated with stream to be |newSize| bytes long. If size is larger than the current file size this pads the file with null bytes; otherwise it truncates the file.
 </div>
 
 <div algorithm>
 The <dfn method for=FileSystemSyncAccessHandle>truncate(|newSize|)</dfn> method, when invoked, must run
 these steps:
 
-1. If [=this=].[=[[state]]=] is "`closed`", throw a {{InvalidStateError}}.
-1. If  |newSize| is less than 0, throw a {{InvalidStateError}}.
+1. If [=this=].[=[[state]]=] is "`closed`", return [=a promise rejected with=] an {{InvalidStateError}}.
 1. Let |fileContents| be a copy of [=this=].[=[[file]]=]'s [=file entry/binary data=].
-1. Let |p| be [=a new promise=].
+1. Let |p| be [=a new promise=] created in the [=relevant Realm=] of [=this=].
 1. Run the following steps [=in parallel=]:
   1. Let |oldSize| be the [=byte sequence/length=] of [=this=].[=[[file]]=]'s [=file entry/binary data=].
   1. If |newSize| is larger than |oldSize|:
-     1. If |newSize| - |oldSize| exceeds the available [=storage quota=], [=/reject=] |p|
+     1. If |newSize| &minus; |oldSize| exceeds the available [=storage quota=], [=/reject=] |p|
         with a {{QuotaExceededError}} and abort.
-     1. Set [=this=].[=[[file]]=]'s to a [=byte sequence=] formed by concating
+     1. Set [=this=].[=[[file]]=]'s to a [=byte sequence=] formed by concatenating
         |fileContents| with a [=byte sequence=]
-        containing |newSize|-|oldSize| `0x00` bytes.
+        containing |newSize| &minus; |oldSize| `0x00` bytes.
   1. Else if |newSize| is smaller than |oldSize|:
      1. Set [=this=].[=[[file]]=]'s to a [=byte sequence=] containing the first |newSize| bytes
         in |fileContents|.
   1. [=/Resolve=] |p|.
-1. Return |p|
+1. Return |p|.
 
 </div>
 
@@ -1394,12 +1392,12 @@ these steps:
 The <dfn method for=FileSystemSyncAccessHandle>getSize()</dfn> method, when invoked, must run
 these steps:
 
-1. If [=this=].[=[[state]]=] is "`closed`", throw a {{InvalidStateError}}.
-1. Let |p| be [=a new promise=].
+1. If [=this=].[=[[state]]=] is "`closed`", return [=a promise rejected with=] an {{InvalidStateError}}.
+1. Let |p| be [=a new promise=] created in the [=relevant Realm=] of [=this=].
 1. Run the following steps [=in parallel=]:
   1. Let |size| be the [=byte sequence/length=] of [=this=].[=[[file]]=]'s [=file entry/binary data=].
   1. [=/Resolve=] |p| with |size|.
-1. Return |p|
+1. Return |p|.
 
 
 </div>
@@ -1432,11 +1430,11 @@ these steps:
 The <dfn method for=FileSystemSyncAccessHandle>close()</dfn> method, when invoked, must run
 these steps:
 
-1. Let |p| be [=a new promise=].
+1. Let |p| be [=a new promise=] created in the [=relevant Realm=] of [=this=].
 1. Run the following steps [=in parallel=]:
   1. Set [=this=].[=[[state]]=] to "`closed`".
   1. [=/Resolve=] |p|.
-1. Return |p|
+1. Return |p|.
 
 </div>
 
