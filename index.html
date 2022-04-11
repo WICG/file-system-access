@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version fb1e763a4, updated Tue Mar 1 13:13:50 2022 -0800" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="27b0c28c1f357ed30aaf0398fab7b2e13851560a" name="document-revision">
+  <meta content="0f1b51927bdeb1616680dedcb2b07eb299371dcd" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -663,7 +663,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">File System Access</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-03-29">29 March 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-04-11">11 April 2022</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1007,21 +1007,6 @@ run these steps:
    <p class="issue" id="issue-7fc2f5c7"><a class="self-link" href="#issue-7fc2f5c7"></a> Currently <code class="idl"><a data-link-type="idl" href="#enumdef-filesystempermissionmode" id="ref-for-enumdef-filesystempermissionmode③">FileSystemPermissionMode</a></code> can only be <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-read" id="ref-for-dom-filesystempermissionmode-read①">"read"</a></code> or <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissionmode-readwrite" id="ref-for-dom-filesystempermissionmode-readwrite①">"readwrite"</a></code>. In
 the future we might want to add a "write" mode as well to support write-only handles. <a href="https://github.com/wicg/file-system-access/issues/119">[Issue #119]</a></p>
    <h3 class="heading settled" data-level="2.3" id="api-filesystemhandle"><span class="secno">2.3. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemhandle" id="ref-for-filesystemhandle③">FileSystemHandle</a></code> interface</span><a class="self-link" href="#api-filesystemhandle"></a></h3>
-   <div class="mdn-anno wrapped after">
-    <button class="mdn-anno-btn"><span>MDN</span></button>
-    <div class="feature">
-     <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemHandle" title="The FileSystemHandle interface of the File System Access API is an object which represents a file or directory entry. Multiple handles can represent the same entry. For the most part you do not work with FileSystemHandle directly but rather its child interfaces FileSystemFileHandle and FileSystemDirectoryHandle.">FileSystemHandle</a></p>
-     <div class="support">
-      <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari yes"><span>Safari</span><span>15.2+</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-      <hr>
-      <span class="opera yes"><span>Opera</span><span>72+</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-      <hr>
-      <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-      <hr>
-      <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios yes"><span>iOS Safari</span><span>15.2+</span></span><span class="chrome_android yes"><span>Chrome for Android</span><span>86+</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android yes"><span>Samsung Internet</span><span>14.0+</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-     </div>
-    </div>
-   </div>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystemhandlepermissiondescriptor"><code><c- g>FileSystemHandlePermissionDescriptor</c-></code></dfn> {
   <a data-link-type="idl-name" href="#enumdef-filesystempermissionmode" id="ref-for-enumdef-filesystempermissionmode④"><c- n>FileSystemPermissionMode</c-></a> <dfn class="dfn-paneled idl-code" data-default="&quot;read&quot;" data-dfn-for="FileSystemHandlePermissionDescriptor" data-dfn-type="dict-member" data-export data-type="FileSystemPermissionMode " id="dom-filesystemhandlepermissiondescriptor-mode"><code><c- g>mode</c-></code></dfn> = "read";
 };
@@ -1069,45 +1054,13 @@ In Chrome 82 they are.</strong></p>
    </div>
    <div class="note domintro" role="note">
     <dl>
-     <dt data-md>
-      <div class="mdn-anno wrapped">
-       <button class="mdn-anno-btn"><span>MDN</span></button>
-       <div class="feature">
-        <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemHandle/kind" title="The kind read-only property of the FileSystemHandle interface returns the type of entry. This is &apos;file&apos; if the associated entry is a file or &apos;directory&apos;. It is used to distinguish files from directories when iterating over the contents of a directory.">FileSystemHandle/kind</a></p>
-        <div class="support">
-         <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari yes"><span>Safari</span><span>15.2+</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-         <hr>
-         <span class="opera yes"><span>Opera</span><span>72+</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-         <hr>
-         <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-         <hr>
-         <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios yes"><span>iOS Safari</span><span>15.2+</span></span><span class="chrome_android yes"><span>Chrome for Android</span><span>86+</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android yes"><span>Samsung Internet</span><span>14.0+</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-        </div>
-       </div>
-      </div>
-      <p><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-kind" id="ref-for-dom-filesystemhandle-kind①">kind</a></code></p>
+     <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-kind" id="ref-for-dom-filesystemhandle-kind①">kind</a></code>
      <dd data-md>
       <p>Returns <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlekind-file" id="ref-for-dom-filesystemhandlekind-file">"file"</a></code> if <var>handle</var> is a <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle">FileSystemFileHandle</a></code>,
  or <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandlekind-directory" id="ref-for-dom-filesystemhandlekind-directory">"directory"</a></code> if <var>handle</var> is a <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle">FileSystemDirectoryHandle</a></code>.</p>
       <p>This can be used to distinguish files from directories when iterating over the contents
  of a directory.</p>
-     <dt data-md>
-      <div class="mdn-anno wrapped">
-       <button class="mdn-anno-btn"><span>MDN</span></button>
-       <div class="feature">
-        <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemHandle/name" title="The name read-only property of the FileSystemHandle interface returns the name of the entry represented by handle.">FileSystemHandle/name</a></p>
-        <div class="support">
-         <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari yes"><span>Safari</span><span>15.2+</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-         <hr>
-         <span class="opera yes"><span>Opera</span><span>72+</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-         <hr>
-         <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-         <hr>
-         <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios yes"><span>iOS Safari</span><span>15.2+</span></span><span class="chrome_android yes"><span>Chrome for Android</span><span>86+</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android yes"><span>Samsung Internet</span><span>14.0+</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-        </div>
-       </div>
-      </div>
-      <p><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-name" id="ref-for-dom-filesystemhandle-name①">name</a></code></p>
+     <dt data-md><var>handle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-name" id="ref-for-dom-filesystemhandle-name①">name</a></code>
      <dd data-md>
       <p>Returns the <a data-link-type="dfn" href="#entry-name" id="ref-for-entry-name①">name</a> of the entry represented by <var>handle</var>.</p>
     </dl>
@@ -1118,21 +1071,6 @@ and return <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle
    <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemHandle" data-dfn-type="attribute" data-export id="dom-filesystemhandle-name"><code>name</code></dfn> attribute must return the <a data-link-type="dfn" href="#entry-name" id="ref-for-entry-name②">name</a> of the
 associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry⑤">entry</a>.</p>
    <h4 class="heading settled" data-level="2.3.1" id="api-filesystemhandle-issameentry"><span class="secno">2.3.1. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-issameentry" id="ref-for-dom-filesystemhandle-issameentry①">isSameEntry()</a></code> method</span><a class="self-link" href="#api-filesystemhandle-issameentry"></a></h4>
-   <div class="mdn-anno wrapped after">
-    <button class="mdn-anno-btn"><span>MDN</span></button>
-    <div class="feature">
-     <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemHandle/isSameEntry" title="The isSameEntry() method of the FileSystemHandle interface compares two handles to see if the associated entries (either a file or directory) match.">FileSystemHandle/isSameEntry</a></p>
-     <div class="support">
-      <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari yes"><span>Safari</span><span>15.2+</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-      <hr>
-      <span class="opera yes"><span>Opera</span><span>72+</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-      <hr>
-      <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-      <hr>
-      <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios yes"><span>iOS Safari</span><span>15.2+</span></span><span class="chrome_android yes"><span>Chrome for Android</span><span>86+</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android yes"><span>Samsung Internet</span><span>14.0+</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-     </div>
-    </div>
-   </div>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md><var>same</var> = await <var>handle1</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemhandle-issameentry" id="ref-for-dom-filesystemhandle-issameentry②">isSameEntry</a></code>( <var>handle2</var> )
@@ -1270,21 +1208,6 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
     </ol>
    </div>
    <h3 class="heading settled" data-level="2.4" id="api-filesystemfilehandle"><span class="secno">2.4. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemfilehandle" id="ref-for-filesystemfilehandle①">FileSystemFileHandle</a></code> interface</span><a class="self-link" href="#api-filesystemfilehandle"></a></h3>
-   <div class="mdn-anno wrapped after">
-    <button class="mdn-anno-btn"><span>MDN</span></button>
-    <div class="feature">
-     <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileHandle" title="The FileSystemFileHandle interface of the File System Access API represents a handle to a file system entry. The interface is accessed through the window.showOpenFilePicker() method.">FileSystemFileHandle</a></p>
-     <div class="support">
-      <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari yes"><span>Safari</span><span>15.2+</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-      <hr>
-      <span class="opera yes"><span>Opera</span><span>72+</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-      <hr>
-      <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-      <hr>
-      <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios yes"><span>iOS Safari</span><span>15.2+</span></span><span class="chrome_android yes"><span>Chrome for Android</span><span>86+</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android yes"><span>Samsung Internet</span><span>14.0+</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-     </div>
-    </div>
-   </div>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystemcreatewritableoptions"><code><c- g>FileSystemCreateWritableOptions</c-></code></dfn> {
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-boolean" id="ref-for-idl-boolean①"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemCreateWritableOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemcreatewritableoptions-keepexistingdata"><code><c- g>keepExistingData</c-></code></dfn> = <c- b>false</c->;
 };
@@ -1300,21 +1223,6 @@ associated <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-fi
    <p><strong class="advisement"> In the Origin Trial as available in Chrome 78, these objects are not yet serializable.
 In Chrome 82 they are.</strong></p>
    <h4 class="heading settled" data-level="2.4.1" id="api-filesystemfilehandle-getfile"><span class="secno">2.4.1. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemfilehandle-getfile" id="ref-for-dom-filesystemfilehandle-getfile①">getFile()</a></code> method</span><a class="self-link" href="#api-filesystemfilehandle-getfile"></a></h4>
-   <div class="mdn-anno wrapped after">
-    <button class="mdn-anno-btn"><span>MDN</span></button>
-    <div class="feature">
-     <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileHandle/getFile" title="The getFile() method of the FileSystemFileHandle interface returns a Promise which resolves to a File object representing the state on disk of the entry represented by the handle.">FileSystemFileHandle/getFile</a></p>
-     <div class="support">
-      <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari yes"><span>Safari</span><span>15.2+</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-      <hr>
-      <span class="opera yes"><span>Opera</span><span>72+</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-      <hr>
-      <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-      <hr>
-      <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios yes"><span>iOS Safari</span><span>15.2+</span></span><span class="chrome_android yes"><span>Chrome for Android</span><span>86+</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android yes"><span>Samsung Internet</span><span>14.0+</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-     </div>
-    </div>
-   </div>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md><var>file</var> = await <var>fileHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemfilehandle-getfile" id="ref-for-dom-filesystemfilehandle-getfile②">getFile()</a></code>
@@ -1360,21 +1268,6 @@ In Chrome 82 they are.</strong></p>
     </ol>
    </div>
    <h4 class="heading settled" data-level="2.4.2" id="api-filesystemfilehandle-createwritable"><span class="secno">2.4.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemfilehandle-createwritable" id="ref-for-dom-filesystemfilehandle-createwritable①">createWritable()</a></code> method</span><a class="self-link" href="#api-filesystemfilehandle-createwritable"></a></h4>
-   <div class="mdn-anno wrapped after">
-    <button class="mdn-anno-btn"><span>MDN</span></button>
-    <div class="feature">
-     <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileHandle/createWritable" title="The createWritable() method of the FileSystemFileHandle interface creates a FileSystemWritableFileStream that can be used to write to a file. The method returns a Promise which resolves to this created stream.">FileSystemFileHandle/createWritable</a></p>
-     <div class="support">
-      <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari yes"><span>Safari</span><span>preview+</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-      <hr>
-      <span class="opera yes"><span>Opera</span><span>72+</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-      <hr>
-      <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-      <hr>
-      <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios no"><span>iOS Safari</span><span>None</span></span><span class="chrome_android yes"><span>Chrome for Android</span><span>86+</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android yes"><span>Samsung Internet</span><span>14.0+</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-     </div>
-    </div>
-   </div>
    <p><strong class="advisement"> In the Origin Trial as available in Chrome 82, createWritable replaces the createWriter method.</strong></p>
    <div class="note domintro" role="note">
     <dl>
@@ -1429,21 +1322,6 @@ modifications to existing large files. <a href="https://github.com/wicg/file-sys
     </ol>
    </div>
    <h3 class="heading settled" data-level="2.5" id="api-filesystemdirectoryhandle"><span class="secno">2.5. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①">FileSystemDirectoryHandle</a></code> interface</span><a class="self-link" href="#api-filesystemdirectoryhandle"></a></h3>
-   <div class="mdn-anno wrapped after">
-    <button class="mdn-anno-btn"><span>MDN</span></button>
-    <div class="feature">
-     <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryHandle" title="The FileSystemDirectoryHandle interface of the File System Access API provides a handle to a file system directory. The interface is accessed via the window.showDirectoryPicker() method.">FileSystemDirectoryHandle</a></p>
-     <div class="support">
-      <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari yes"><span>Safari</span><span>15.2+</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-      <hr>
-      <span class="opera yes"><span>Opera</span><span>72+</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-      <hr>
-      <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-      <hr>
-      <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios yes"><span>iOS Safari</span><span>15.2+</span></span><span class="chrome_android yes"><span>Chrome for Android</span><span>86+</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android yes"><span>Samsung Internet</span><span>14.0+</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-     </div>
-    </div>
-   </div>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filesystemgetfileoptions"><code><c- g>FileSystemGetFileOptions</c-></code></dfn> {
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-boolean" id="ref-for-idl-boolean②"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FileSystemGetFileOptions" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-filesystemgetfileoptions-create"><code><c- g>create</c-></code></dfn> = <c- b>false</c->;
 };
@@ -1555,21 +1433,6 @@ support for example recursive iteration. <a href="https://github.com/wicg/file-s
     </ol>
    </div>
    <h4 class="heading settled" data-level="2.5.2" id="api-filesystemdirectoryhandle-getfilehandle"><span class="secno">2.5.2. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfilehandle" id="ref-for-dom-filesystemdirectoryhandle-getfilehandle①">getFileHandle()</a></code> method</span><a class="self-link" href="#api-filesystemdirectoryhandle-getfilehandle"></a></h4>
-   <div class="mdn-anno wrapped after">
-    <button class="mdn-anno-btn"><span>MDN</span></button>
-    <div class="feature">
-     <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryHandle/getFileHandle" title="The getFileHandle() method of the FileSystemDirectoryHandle interface returns a FileSystemFileHandle for a file with the specified name, within the directory the method is called.">FileSystemDirectoryHandle/getFileHandle</a></p>
-     <div class="support">
-      <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari yes"><span>Safari</span><span>15.2+</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-      <hr>
-      <span class="opera yes"><span>Opera</span><span>72+</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-      <hr>
-      <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-      <hr>
-      <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios yes"><span>iOS Safari</span><span>15.2+</span></span><span class="chrome_android yes"><span>Chrome for Android</span><span>86+</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android yes"><span>Samsung Internet</span><span>14.0+</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-     </div>
-    </div>
-   </div>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md><var>fileHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getfilehandle" id="ref-for-dom-filesystemdirectoryhandle-getfilehandle②">getFileHandle</a></code>(<var>name</var>)
@@ -1662,21 +1525,6 @@ must run these steps:
     </ol>
    </div>
    <h4 class="heading settled" data-level="2.5.3" id="api-filesystemdirectoryhandle-getdirectoryhandle"><span class="secno">2.5.3. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getdirectoryhandle" id="ref-for-dom-filesystemdirectoryhandle-getdirectoryhandle①">getDirectoryHandle()</a></code> method</span><a class="self-link" href="#api-filesystemdirectoryhandle-getdirectoryhandle"></a></h4>
-   <div class="mdn-anno wrapped after">
-    <button class="mdn-anno-btn"><span>MDN</span></button>
-    <div class="feature">
-     <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryHandle/getDirectoryHandle" title="The getDirectoryHandle() method of the FileSystemDirectoryHandle interface returns a FileSystemDirectoryHandle for a subdirectory with the specified name within the directory handle on which the method is called.">FileSystemDirectoryHandle/getDirectoryHandle</a></p>
-     <div class="support">
-      <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari yes"><span>Safari</span><span>15.2+</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-      <hr>
-      <span class="opera yes"><span>Opera</span><span>72+</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-      <hr>
-      <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-      <hr>
-      <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios yes"><span>iOS Safari</span><span>15.2+</span></span><span class="chrome_android yes"><span>Chrome for Android</span><span>86+</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android yes"><span>Samsung Internet</span><span>14.0+</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-     </div>
-    </div>
-   </div>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md><var>subdirHandle</var> = await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-getdirectoryhandle" id="ref-for-dom-filesystemdirectoryhandle-getdirectoryhandle②">getDirectoryHandle</a></code>(<var>name</var>)
@@ -1765,21 +1613,6 @@ invoked, must run these steps:
     </ol>
    </div>
    <h4 class="heading settled" data-level="2.5.4" id="api-filesystemdirectoryhandle-removeentry"><span class="secno">2.5.4. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-removeentry" id="ref-for-dom-filesystemdirectoryhandle-removeentry①">removeEntry()</a></code> method</span><a class="self-link" href="#api-filesystemdirectoryhandle-removeentry"></a></h4>
-   <div class="mdn-anno wrapped after">
-    <button class="mdn-anno-btn"><span>MDN</span></button>
-    <div class="feature">
-     <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryHandle/removeEntry" title="The removeEntry() method of the FileSystemDirectoryHandle interface attempts to remove an entry if the directory handle contains a file or directory called the name specified.">FileSystemDirectoryHandle/removeEntry</a></p>
-     <div class="support">
-      <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari yes"><span>Safari</span><span>15.2+</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-      <hr>
-      <span class="opera yes"><span>Opera</span><span>72+</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-      <hr>
-      <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-      <hr>
-      <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios yes"><span>iOS Safari</span><span>15.2+</span></span><span class="chrome_android yes"><span>Chrome for Android</span><span>86+</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android yes"><span>Samsung Internet</span><span>14.0+</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-     </div>
-    </div>
-   </div>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md>await <var>directoryHandle</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-removeentry" id="ref-for-dom-filesystemdirectoryhandle-removeentry②">removeEntry</a></code>(<var>name</var>)
@@ -1852,21 +1685,6 @@ these steps:
     </ol>
    </div>
    <h4 class="heading settled" data-level="2.5.5" id="api-filesystemdirectoryhandle-resolve"><span class="secno">2.5.5. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-resolve" id="ref-for-dom-filesystemdirectoryhandle-resolve①">resolve()</a></code> method</span><a class="self-link" href="#api-filesystemdirectoryhandle-resolve"></a></h4>
-   <div class="mdn-anno wrapped after">
-    <button class="mdn-anno-btn"><span>MDN</span></button>
-    <div class="feature">
-     <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryHandle/resolve" title="The resolve() method of the FileSystemDirectoryHandle interface returns an Array of directory names from the parent handle to the specified child entry, with the name of the child entry as the last array item.">FileSystemDirectoryHandle/resolve</a></p>
-     <div class="support">
-      <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari yes"><span>Safari</span><span>15.2+</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-      <hr>
-      <span class="opera yes"><span>Opera</span><span>72+</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-      <hr>
-      <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-      <hr>
-      <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios yes"><span>iOS Safari</span><span>15.2+</span></span><span class="chrome_android yes"><span>Chrome for Android</span><span>86+</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android yes"><span>Samsung Internet</span><span>14.0+</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-     </div>
-    </div>
-   </div>
    <div class="note domintro" role="note">
     <dl>
      <dt data-md><var>path</var> = await <var>directory</var> . <code class="idl"><a data-link-type="idl" href="#dom-filesystemdirectoryhandle-resolve" id="ref-for-dom-filesystemdirectoryhandle-resolve②">resolve</a></code>( <var>child</var> )
@@ -1921,22 +1739,6 @@ these steps:
    <div class="algorithm" data-algorithm="resolve(possibleDescendant)" data-algorithm-for="FileSystemDirectoryHandle"> The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemDirectoryHandle" data-dfn-type="method" data-export id="dom-filesystemdirectoryhandle-resolve"><code>resolve(<var>possibleDescendant</var>)</code></dfn> method,
 when invoked, must return the result of <a data-link-type="dfn" href="#entry-resolve" id="ref-for-entry-resolve①">resolving</a> <var>possibleDescendant</var>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②⓪">entry</a> relative to <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①⑦">this</a>'s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②①">entry</a>. </div>
    <h3 class="heading settled" data-level="2.6" id="api-filesystemwritablefilestream"><span class="secno">2.6. </span><span class="content">The <code class="idl"><a data-link-type="idl" href="#filesystemwritablefilestream" id="ref-for-filesystemwritablefilestream②">FileSystemWritableFileStream</a></code> interface</span><a class="self-link" href="#api-filesystemwritablefilestream"></a></h3>
-   <div class="mdn-anno wrapped after">
-    <button class="mdn-anno-btn"><b class="less-than-two-engines-flag" title="This feature is in less than two current engines.">⚠</b><span>MDN</span></button>
-    <div class="feature">
-     <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemWritableFileStream" title="The FileSystemWritableFileStream interface of the File System Access API is a WritableStream object with additional convenience methods, which operates on a single file on disk. The interface is accessed through the FileSystemFileHandle.createWritable() method.">FileSystemWritableFileStream</a></p>
-     <p class="less-than-two-engines-text">In only one current engine.</p>
-     <div class="support">
-      <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari no"><span>Safari</span><span>None</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-      <hr>
-      <span class="opera no"><span>Opera</span><span>None</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-      <hr>
-      <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-      <hr>
-      <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios no"><span>iOS Safari</span><span>None</span></span><span class="chrome_android no"><span>Chrome for Android</span><span>None</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android no"><span>Samsung Internet</span><span>None</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-     </div>
-    </div>
-   </div>
 <pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-writecommandtype"><code><c- g>WriteCommandType</c-></code></dfn> {
   <dfn class="dfn-paneled idl-code" data-dfn-for="WriteCommandType" data-dfn-type="enum-value" data-export id="dom-writecommandtype-write"><code><c- s>"write"</c-></code></dfn>,
   <dfn class="dfn-paneled idl-code" data-dfn-for="WriteCommandType" data-dfn-type="enum-value" data-export id="dom-writecommandtype-seek"><code><c- s>"seek"</c-></code></dfn>,
@@ -2192,22 +1994,6 @@ runs these steps:
  Changes are typically written to a temporary file instead.</p>
     </dl>
    </div>
-   <div class="mdn-anno wrapped">
-    <button class="mdn-anno-btn"><b class="less-than-two-engines-flag" title="This feature is in less than two current engines.">⚠</b><span>MDN</span></button>
-    <div class="feature">
-     <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemWritableFileStream/write" title="The write() method of the FileSystemWritableFileStream interface writes content into the file the method is called on, at the current file cursor offset.">FileSystemWritableFileStream/write</a></p>
-     <p class="less-than-two-engines-text">In only one current engine.</p>
-     <div class="support">
-      <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari no"><span>Safari</span><span>None</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-      <hr>
-      <span class="opera no"><span>Opera</span><span>None</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-      <hr>
-      <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-      <hr>
-      <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios no"><span>iOS Safari</span><span>None</span></span><span class="chrome_android no"><span>Chrome for Android</span><span>None</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android no"><span>Samsung Internet</span><span>None</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-     </div>
-    </div>
-   </div>
    <div class="algorithm" data-algorithm="write(data)" data-algorithm-for="FileSystemWritableFileStream">
      The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemWritableFileStream" data-dfn-type="method" data-export id="dom-filesystemwritablefilestream-write"><code>write(<var>data</var>)</code></dfn> method, when invoked, must run
 these steps: 
@@ -2229,22 +2015,6 @@ these steps:
      <dd data-md>
       <p>Updates the current file cursor offset the <var>position</var> bytes from the top of the file.</p>
     </dl>
-   </div>
-   <div class="mdn-anno wrapped">
-    <button class="mdn-anno-btn"><b class="less-than-two-engines-flag" title="This feature is in less than two current engines.">⚠</b><span>MDN</span></button>
-    <div class="feature">
-     <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemWritableFileStream/seek" title="The seek() method of the FileSystemWritableFileStream interface updates the current file cursor offset to the position (in bytes) specified when calling the method.">FileSystemWritableFileStream/seek</a></p>
-     <p class="less-than-two-engines-text">In only one current engine.</p>
-     <div class="support">
-      <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari no"><span>Safari</span><span>None</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-      <hr>
-      <span class="opera no"><span>Opera</span><span>None</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-      <hr>
-      <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-      <hr>
-      <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios no"><span>iOS Safari</span><span>None</span></span><span class="chrome_android no"><span>Chrome for Android</span><span>None</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android no"><span>Samsung Internet</span><span>None</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-     </div>
-    </div>
    </div>
    <div class="algorithm" data-algorithm="seek(position)" data-algorithm-for="FileSystemWritableFileStream">
      The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemWritableFileStream" data-dfn-type="method" data-export id="dom-filesystemwritablefilestream-seek"><code>seek(<var>position</var>)</code></dfn> method, when invoked, must run these
@@ -2274,22 +2044,6 @@ steps:
       <p>No changes are written to the actual file until on disk until the stream has been closed.
  Changes are typically written to a temporary file instead.</p>
     </dl>
-   </div>
-   <div class="mdn-anno wrapped">
-    <button class="mdn-anno-btn"><b class="less-than-two-engines-flag" title="This feature is in less than two current engines.">⚠</b><span>MDN</span></button>
-    <div class="feature">
-     <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileSystemWritableFileStream/truncate" title="The truncate() method of the FileSystemWritableFileStream interface resizes the file associated with the stream to be the specified size in bytes.">FileSystemWritableFileStream/truncate</a></p>
-     <p class="less-than-two-engines-text">In only one current engine.</p>
-     <div class="support">
-      <span class="firefox no"><span>Firefox</span><span>None</span></span><span class="safari no"><span>Safari</span><span>None</span></span><span class="chrome yes"><span>Chrome</span><span>86+</span></span>
-      <hr>
-      <span class="opera no"><span>Opera</span><span>None</span></span><span class="edge_blink yes"><span>Edge</span><span>86+</span></span>
-      <hr>
-      <span class="edge no"><span>Edge (Legacy)</span><span>None</span></span><span class="ie no"><span>IE</span><span>None</span></span>
-      <hr>
-      <span class="firefox_android no"><span>Firefox for Android</span><span>None</span></span><span class="safari_ios no"><span>iOS Safari</span><span>None</span></span><span class="chrome_android no"><span>Chrome for Android</span><span>None</span></span><span class="webview_android no"><span>Android WebView</span><span>None</span></span><span class="samsunginternet_android no"><span>Samsung Internet</span><span>None</span></span><span class="opera_android no"><span>Opera Mobile</span><span>None</span></span>
-     </div>
-    </div>
    </div>
    <div class="algorithm" data-algorithm="truncate(size)" data-algorithm-for="FileSystemWritableFileStream">
      The <dfn class="dfn-paneled idl-code" data-dfn-for="FileSystemWritableFileStream" data-dfn-type="method" data-export id="dom-filesystemwritablefilestream-truncate"><code>truncate(<var>size</var>)</code></dfn> method, when invoked, must run these
