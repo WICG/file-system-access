@@ -584,7 +584,7 @@ The <dfn method for=FileSystemFileHandle>createSyncAccessHandle()</dfn> method, 
      reject |result| with a {{NotAllowedError}} and abort.
   1. Let |entry| be <b>[=this=]</b>'s [=FileSystemHandle/entry=].
   1. If |entry| does not represent an [=/entry=] in an [=origin private file system=],
-     reject |result| with an {{InvalidStateError}} and abort.
+     reject |result| with an {{NotAllowedError}} and abort.
   1. Let |lockResult| be the result of [=file entry/lock/take|taking a lock=] with  "`exclusive`" on |entry|.
   1. If |lockResult| is `false`, [=reject=] |result| with a {{NoModificationAllowedError}} and abort.
   1. Let |handle| be the result of [=create a new FileSystemSyncAccessHandle|creating a new FileSystemSyncAccessHandle=]
@@ -1292,13 +1292,16 @@ The <dfn method for=FileSystemSyncAccessHandle>read(|buffer|, {{FileSystemReadWr
 these steps:
 
 1. If [=this=].[=[[state]]=] is "`closed`", throw an {{InvalidStateError}}.
-1. Let |readPosition| be |options|.{{FileSystemReadWriteOptions/at}}.
-1. Let |size| be |buffer|'s [=byte length=].
-1. Let |result| be |size|.
-1. Let |bytes| be a [=byte sequence=] containing the bytes from |readPosition|
-   to |readPosition| + (|size| &minus; 1) of [=this=].[=[[file]]=]'s [=file entry/binary data=].
-1. If the operations reading from [=this=].[=[[file]]=]'s [=file entry/binary data=] in the previous steps
-   failed:
+1. Let |bufferSize| be |buffer|'s [=byte length=].
+1. Let |fileContents| be [=this=].[=[[file]]=]'s [=file entry/binary data=].
+1. Let |fileSize| be |fileContents|'s [=byte sequence/length=].
+1. Let |readStart| be |options|.{{FileSystemReadWriteOptions/at}}.
+1. If |readStart| is larger than |fileSize|, return 0.
+1. Let |readEnd| be |readStart| + (|bufferSize| &minus; 1).
+1. If |readEnd| is larger than |fileSize|, set |readEnd| to |fileSize|.
+1. Let |result| be |bufferSize|.
+1. Let |bytes| be a [=byte sequence=] containing the bytes from |readStart| to |readEnd| of |fileContents|.
+1. If the operations reading from |fileContents| in the previous steps failed:
     1. If there were partial reads  and the number of modified bytes in |bytes|  is known,
        set |result| to the number of modified bytes.
     1. Else set |result| to 0.
@@ -1316,6 +1319,7 @@ these steps:
   :: Writes the content of |buffer| into the file associated with |handle|, optionally at a given offset.
 </div>
 
+// TODO(fivedots): Figure out how to properly check the available storage quota (in this method and others) by passing the right storage shelf.
 // TODO(fivedots): Figure out mechanism to prevent concurrent IO operations e.g. doing write() while a truncate() is executing in parallel.
 <div algorithm>
 The <dfn method for=FileSystemSyncAccessHandle>write(|buffer|, {{FileSystemReadWriteOptions}}: |options|)</dfn> method, when invoked, must run
@@ -1326,6 +1330,13 @@ these steps:
 1. Let |fileContents| be a copy of [=this=].[=[[file]]=]'s [=file entry/binary data=].
 1. Let |oldSize| be |fileContents|'s [=byte sequence/length=].
 1. Let |data| be [=get a copy of the buffer source|a copy of=] |buffer|.
+
+   Note: The objective of this copy is to prevent concurrent modifications of the buffer
+   from being reflected in the file. Depending on the implementation, a copy
+   of non-shared ArrayBuffers may not be needed in a synchronous call like this one.
+   It might also be possible to do a buffer copy at an earlier time or through a
+   different mechanism.
+
 1. If |writePosition| is larger than |oldSize|,
    append |writePosition| &minus; |oldSize| `0x00` (NUL) bytes to the end of |fileContents|.
 
@@ -1373,9 +1384,13 @@ these steps:
      1. Set [=this=].[=[[file]]=]'s to a [=byte sequence=] formed by concatenating
         |fileContents| with a [=byte sequence=]
         containing |newSize| &minus; |oldSize| `0x00` bytes.
+     1. If the operations modifying the [=this=].[=[[file]]=]'s [=file entry/binary data=] in the previous steps
+        failed, [=/reject=] |p| with a {{InvalidStateError}} and abort.
   1. Else if |newSize| is smaller than |oldSize|:
      1. Set [=this=].[=[[file]]=]'s to a [=byte sequence=] containing the first |newSize| bytes
         in |fileContents|.
+     1. If the operations modifying the [=this=].[=[[file]]=]'s [=file entry/binary data=] in the previous steps
+        failed, [=/reject=] |p| with a {{InvalidStateError}} and abort.
   1. [=/Resolve=] |p|.
 1. Return |p|.
 
