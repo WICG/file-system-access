@@ -22,8 +22,8 @@
   - [New data access surface](#new-data-access-surface)
   - [Locking semantics](#locking-semantics)
 - [Open Questions](#open-questions)
-  - [Exposing AccessHandles on all filesystems](#exposing-accesshandles-on-all-filesystems)
   - [Assurances on non-awaited consistency](#assurances-on-non-awaited-consistency)
+- [Trying It Out](#trying-it-out)
 - [Appendix](#appendix)
   - [AccessHandle IDL](#accesshandle-idl)
 - [References & acknowledgements](#references--acknowledgements)
@@ -122,9 +122,7 @@ API](https://docs.google.com/document/d/1cOdnvuNIWWyJHz1uu8K_9DEgntMtedxfCzShI7d
 
 ```javascript
 // In all contexts
-// For details on the `mode` parameter see "Exposing AccessHandles on all
-// filesystems" below
-const accessHandle = await fileHandle.createAccessHandle({ mode: "in-place" });
+const accessHandle = await fileHandle.createAccessHandle();
 await accessHandle.writable.getWriter().write(buffer);
 const reader = accessHandle.readable.getReader({ mode: "byob" });
 // Assumes seekable streams, and SharedArrayBuffer support are available
@@ -158,9 +156,9 @@ default reader and writer with a *seek()* method.
 ### Locking semantics
 
 ```javascript
-const accessHandle1 = await fileHandle.createAccessHandle({ mode: "in-place" });
+const accessHandle1 = await fileHandle.createAccessHandle();
 try {
-  const accessHandle2 = await fileHandle.createAccessHandle({ mode: "in-place" });
+  const accessHandle2 = await fileHandle.createAccessHandle();
 } catch (e) {
   // This catch will always be executed, since there is an open access handle
 }
@@ -183,31 +181,6 @@ after it was created. It is worth noting that these Files could be used to
 observe changes done through the new API, even if a lock is still being held.
 
 ## Open Questions
-
-### Exposing AccessHandles on all filesystems
-
-This proposal only currently considers additions to OPFS, but it would probably
-be worthwhile to expand the new functionality to arbitrary file handles. While
-the exact behavior of *AccessHandles* outside of OPFS would need to be defined
-in detail, it's almost certain that the one described in this proposal should
-not be the default. To avoid setting it as such, we propose adding a required
-*mode* string parameter to *createAccessHandle()* and
-*createSyncAccessHandle()*. Some possible values *mode* could take are:
-
-*  'shared': The current behavior seen in File System Access API in general,
-   there is no locking and modifications are atomic (meaning that they would
-   only actually change the file when the *AccessHandle* is closed). This mode
-   would be a safe choice as a default value.
-*  'exclusive': An exclusive write lock is taken on the file, but modifications
-   are still atomic. This is a useful mode for developers that want to
-   coordinate various writing threads but still want "all or nothing" writes.
-*  'in-place': The behavior described in this proposal, allowing developers to
-   use high performance access to files at the cost of not having atomic writes.
-   It's possible that this mode would only be allowed in OPFS.
-
-Both the naming and semantics of the *mode* parameter have to be more concretely
-defined. When a default behavior is agreed upon, the parameter should be made
-optional.
 
 ### Assurances on non-awaited consistency
 
@@ -244,18 +217,10 @@ interface FileSystemFileHandle : FileSystemHandle {
   Promise<File> getFile();
   Promise<FileSystemWritableFileStream> createWritable(optional FileSystemCreateWritableOptions options = {});
 
-  Promise<FileSystemAccessHandle> createAccessHandle(FileSystemFileHandleCreateAccessHandleOptions options = {});
+  Promise<FileSystemAccessHandle> createAccessHandle();
   [Exposed=DedicatedWorker]
-  Promise<FileSystemSyncAccessHandle> createSyncAccessHandle(FileSystemFileHandleCreateAccessHandleOptions options = {});
+  Promise<FileSystemSyncAccessHandle> createSyncAccessHandle();
 };
-
-dictionary FileSystemFileHandleCreateAccessHandleOptions {
-  required AccessHandleMode mode;
-};
-
-// For more details and possible modes, see "Exposing AccessHandles on all
-// filesystems" above
-enum AccessHandleMode { "in-place" };
 
 interface FileSystemAccessHandle {
   // Assumes seekable streams are available. The
