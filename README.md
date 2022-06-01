@@ -24,7 +24,7 @@ Today, if a web site wants to create experiences involving local files (document
 	- Clean up if necessary (`URL.revokeObjectURL(a.href)`)
 
   This is also the approach taken in the
-  [browser-nativefs](https://github.com/GoogleChromeLabs/browser-nativefs)
+  [browser-fs-access](https://github.com/GoogleChromeLabs/browser-fs-access)
   support library.
 - Setting `window.location` to `'data:application/octet-stream' + data_stream`.
 - Hidden Flash controls to display a “save as” dialog.
