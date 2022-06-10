@@ -1684,7 +1684,7 @@ these steps:
   : |handle| = await window . {{Window/showDirectoryPicker()}}
   : |handle| = await window . {{Window/showDirectoryPicker()}}({ {{DirectoryPickerOptions/mode}}: 'read' })
   :: Shows a directory picker that lets the user select a single directory, returning a handle for
-    the selected directory.
+    the selected directory if the user grants read permission.
 
   : handles = await window . {{Window/showDirectoryPicker()}}({ {{DirectoryPickerOptions/mode}}: 'readwrite' })
   :: Shows a directory picker that lets the user select a single directory, returning a handle for
