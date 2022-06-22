@@ -222,6 +222,7 @@ interface FileSystemFileHandle : FileSystemHandle {
   Promise<FileSystemSyncAccessHandle> createSyncAccessHandle();
 };
 
+[SecureContext]
 interface FileSystemAccessHandle {
   // Assumes seekable streams are available. The
   // Seekable extended attribute is ad-hoc notation for this proposal.
@@ -239,7 +240,7 @@ interface FileSystemAccessHandle {
   Promise<undefined> close();
 };
 
-[Exposed=DedicatedWorker]
+[Exposed=DedicatedWorker, SecureContext]
 interface FileSystemSyncAccessHandle {
   unsigned long long read([AllowShared] BufferSource buffer,
                              FilesystemReadWriteOptions options);
