@@ -1688,7 +1688,8 @@ these steps:
 
   : handles = await window . {{Window/showDirectoryPicker()}}({ {{DirectoryPickerOptions/mode}}: 'readwrite' })
   :: Shows a directory picker that lets the user select a single directory, returning a handle for
-    the selected directory. The user agent can combine read and write permission requests on this handle into one prompt.
+    the selected directory. The user agent can combine read and write permission requests on this handle into
+    one subsequent prompt.
 
   The {{DirectoryPickerOptions/id}} and {{DirectoryPickerOptions/startIn}} fields behave
   identically to the {{FilePickerOptions/id}} and {{FilePickerOptions/startIn}} fields, respectively.
