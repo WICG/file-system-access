@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 37b7e7e68, updated Fri May 27 15:08:11 2022 -0700" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="971cf144fad49435ff85df41c578ab8103157d82" name="document-revision">
+  <meta content="24588ba8aa3c04bc88c556c3df35b25b2c662e05" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -663,7 +663,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">File System Access</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-06-23">23 June 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-06-27">27 June 2022</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2095,6 +2095,7 @@ steps:
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-directorypickeroptions"><code><c- g>DirectoryPickerOptions</c-></code></dfn> {
     <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString①"><c- b>DOMString</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="DirectoryPickerOptions" data-dfn-type="dict-member" data-export data-type="DOMString " id="dom-directorypickeroptions-id"><code><c- g>id</c-></code></dfn>;
     <a data-link-type="idl-name" href="#typedefdef-startindirectory" id="ref-for-typedefdef-startindirectory①"><c- n>StartInDirectory</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="DirectoryPickerOptions" data-dfn-type="dict-member" data-export data-type="StartInDirectory " id="dom-directorypickeroptions-startin"><code><c- g>startIn</c-></code></dfn>;
+    <a data-link-type="idl-name" href="#enumdef-filesystempermissionmode" id="ref-for-enumdef-filesystempermissionmode⑤"><c- n>FileSystemPermissionMode</c-></a> <dfn class="dfn-paneled idl-code" data-default="&quot;read&quot;" data-dfn-for="DirectoryPickerOptions" data-dfn-type="dict-member" data-export data-type="FileSystemPermissionMode " id="dom-directorypickeroptions-mode"><code><c- g>mode</c-></code></dfn> = "read";
 };
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext④"><c- g>SecureContext</c-></a>]
@@ -2672,9 +2673,15 @@ these steps:
     </div>
     <div class="note domintro" role="note">
      <dt data-md><var>handle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showdirectorypicker" id="ref-for-dom-window-showdirectorypicker③">showDirectoryPicker()</a></code>
+     <dt data-md><var>handle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showdirectorypicker" id="ref-for-dom-window-showdirectorypicker④">showDirectoryPicker()</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-directorypickeroptions-mode" id="ref-for-dom-directorypickeroptions-mode">mode</a></code>: 'read' })
      <dd data-md>
       <p>Shows a directory picker that lets the user select a single directory, returning a handle for
-the selected directory.</p>
+the selected directory if the user grants read permission.</p>
+     <dt data-md>handles = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showdirectorypicker" id="ref-for-dom-window-showdirectorypicker⑤">showDirectoryPicker()</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-directorypickeroptions-mode" id="ref-for-dom-directorypickeroptions-mode①">mode</a></code>: 'readwrite' })
+     <dd data-md>
+      <p>Shows a directory picker that lets the user select a single directory, returning a handle for
+the selected directory. The user agent can combine read and write permission requests on this handle into
+one subsequent prompt.</p>
      </dd>
      <p>The <code class="idl"><a data-link-type="idl" href="#dom-directorypickeroptions-id" id="ref-for-dom-directorypickeroptions-id">id</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-directorypickeroptions-startin" id="ref-for-dom-directorypickeroptions-startin">startIn</a></code> fields behave
   identically to the <code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-id" id="ref-for-dom-filepickeroptions-id①⑥">id</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-startin" id="ref-for-dom-filepickeroptions-startin①①">startIn</a></code> fields, respectively.
@@ -2723,11 +2730,20 @@ these steps:
         <li data-md>
          <p><a data-link-type="dfn" href="#wellknowndirectory-remember-a-picked-directory" id="ref-for-wellknowndirectory-remember-a-picked-directory②">Remember a picked directory</a> given <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-directorypickeroptions-id" id="ref-for-dom-directorypickeroptions-id②">id</a></code>, <var>entry</var> and <var>environment</var>.</p>
         <li data-md>
+         <p>Let <var>desc</var> be a <code class="idl"><a data-link-type="idl" href="#dictdef-filesystempermissiondescriptor" id="ref-for-dictdef-filesystempermissiondescriptor⑦">FileSystemPermissionDescriptor</a></code> with <var>entry</var> as <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle①②">handle</a></code> and <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-directorypickeroptions-mode" id="ref-for-dom-directorypickeroptions-mode②">mode</a></code> as <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-mode" id="ref-for-dom-filesystempermissiondescriptor-mode①⓪">mode</a></code>.</p>
+        <li data-md>
+         <p>Let <var>status</var> be the result of running <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-create-a-permissionstatus" id="ref-for-dfn-create-a-permissionstatus①">create a PermissionStatus</a> for <var>desc</var>.</p>
+        <li data-md>
          <p>Perform the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#activation-notification" id="ref-for-activation-notification②">activation notification</a> steps in <var>global</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/window-object.html#window-bc" id="ref-for-window-bc②">browsing context</a>.</p>
-         <p class="note" role="note"><span>Note:</span> This lets a website immediately perform operations on the returned handles that
- might require user activation, such as requesting more permissions.</p>
-         <p class="issue" id="issue-923f3009"><a class="self-link" href="#issue-923f3009"></a> Rather than requiring the website to prompt separately for a writable directory,
- we should provide some kind of API to request a writable directory in one step. <a href="https://github.com/wicg/file-system-access/issues/89">[Issue #89]</a></p>
+        <li data-md>
+         <p><a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-request-permission-to-use" id="ref-for-dfn-request-permission-to-use①">Request permission to use</a> <var>desc</var>.</p>
+        <li data-md>
+         <p>Run the <a data-link-type="dfn">boolean permission query algorithm</a> on <var>desc</var> and <var>status</var>.</p>
+        <li data-md>
+         <p>If <var>status</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①③">"granted"</a></code>,
+ reject <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror⑦">AbortError</a></code> and abort.</p>
+        <li data-md>
+         <p>Perform the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#activation-notification" id="ref-for-activation-notification③">activation notification</a> steps in <var>global</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/window-object.html#window-bc" id="ref-for-window-bc③">browsing context</a>.</p>
         <li data-md>
          <p><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#resolve" id="ref-for-resolve②②">Resolve</a> <var>p</var> with <var>result</var>.</p>
        </ol>
@@ -3099,6 +3115,7 @@ use this API to write to disk.</p>
    <li>
     mode
     <ul>
+     <li><a href="#dom-directorypickeroptions-mode">dict-member for DirectoryPickerOptions</a><span>, in § 3</span>
      <li><a href="#dom-filesystemhandlepermissiondescriptor-mode">dict-member for FileSystemHandlePermissionDescriptor</a><span>, in § 2.3</span>
      <li><a href="#dom-filesystempermissiondescriptor-mode">dict-member for FileSystemPermissionDescriptor</a><span>, in § 2.2</span>
     </ul>
@@ -3260,7 +3277,7 @@ use this API to write to disk.</p>
    <ul>
     <li><a href="#ref-for-activation-notification">3.3. The showOpenFilePicker() method</a>
     <li><a href="#ref-for-activation-notification①">3.4. The showSaveFilePicker() method</a>
-    <li><a href="#ref-for-activation-notification②">3.5. The showDirectoryPicker() method</a>
+    <li><a href="#ref-for-activation-notification②">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-activation-notification③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-as-a-download">
@@ -3274,7 +3291,7 @@ use this API to write to disk.</p>
    <ul>
     <li><a href="#ref-for-window-bc">3.3. The showOpenFilePicker() method</a>
     <li><a href="#ref-for-window-bc①">3.4. The showSaveFilePicker() method</a>
-    <li><a href="#ref-for-window-bc②">3.5. The showDirectoryPicker() method</a>
+    <li><a href="#ref-for-window-bc②">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-window-bc③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-current-settings-object">
@@ -3615,6 +3632,7 @@ use this API to write to disk.</p>
    <a href="https://w3c.github.io/permissions/#dfn-create-a-permissionstatus">https://w3c.github.io/permissions/#dfn-create-a-permissionstatus</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dfn-create-a-permissionstatus">2.2. Permissions</a>
+    <li><a href="#ref-for-dfn-create-a-permissionstatus①">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-permissionstate-granted">
@@ -3629,6 +3647,7 @@ use this API to write to disk.</p>
     <li><a href="#ref-for-dom-permissionstate-granted⑧">2.5.4. The removeEntry() method</a>
     <li><a href="#ref-for-dom-permissionstate-granted⑨">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-permissionstate-granted①⓪">(2)</a>
     <li><a href="#ref-for-dom-permissionstate-granted①①">3.1. Local File System Permissions</a> <a href="#ref-for-dom-permissionstate-granted①②">(2)</a>
+    <li><a href="#ref-for-dom-permissionstate-granted①③">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-permissiondescriptor-name">
@@ -3686,6 +3705,7 @@ use this API to write to disk.</p>
    <a href="https://w3c.github.io/permissions/#dfn-request-permission-to-use">https://w3c.github.io/permissions/#dfn-request-permission-to-use</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dfn-request-permission-to-use">2.2. Permissions</a>
+    <li><a href="#ref-for-dfn-request-permission-to-use①">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-permissionstatus-state">
@@ -3840,7 +3860,7 @@ use this API to write to disk.</p>
     <li><a href="#ref-for-aborterror">2.6. The FileSystemWritableFileStream interface</a>
     <li><a href="#ref-for-aborterror①">3.3. The showOpenFilePicker() method</a> <a href="#ref-for-aborterror②">(2)</a>
     <li><a href="#ref-for-aborterror③">3.4. The showSaveFilePicker() method</a> <a href="#ref-for-aborterror④">(2)</a>
-    <li><a href="#ref-for-aborterror⑤">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-aborterror⑥">(2)</a>
+    <li><a href="#ref-for-aborterror⑤">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-aborterror⑥">(2)</a> <a href="#ref-for-aborterror⑦">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-BufferSource">
@@ -4452,6 +4472,7 @@ use this API to write to disk.</p>
 <c- b>dictionary</c-> <a href="#dictdef-directorypickeroptions"><code><c- g>DirectoryPickerOptions</c-></code></a> {
     <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a data-type="DOMString " href="#dom-directorypickeroptions-id"><code><c- g>id</c-></code></a>;
     <a data-link-type="idl-name" href="#typedefdef-startindirectory"><c- n>StartInDirectory</c-></a> <a data-type="StartInDirectory " href="#dom-directorypickeroptions-startin"><code><c- g>startIn</c-></code></a>;
+    <a data-link-type="idl-name" href="#enumdef-filesystempermissionmode"><c- n>FileSystemPermissionMode</c-></a> <a data-default="&quot;read&quot;" data-type="FileSystemPermissionMode " href="#dom-directorypickeroptions-mode"><code><c- g>mode</c-></code></a> = "read";
 };
 
 [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext"><c- g>SecureContext</c-></a>]
@@ -4494,8 +4515,6 @@ support for example recursive iteration. <a href="https://github.com/wicg/file-s
    <div class="issue"> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/file-system-access/issues/68">[Issue #68]</a> <a class="issue-return" href="#issue-721a33e4" title="Jump to section">↵</a></div>
    <div class="issue"> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/file-system-access/issues/68">[Issue #68]</a> <a class="issue-return" href="#issue-721a33e4①" title="Jump to section">↵</a></div>
    <div class="issue"> Better specify what possible exceptions this could throw. <a href="https://github.com/wicg/file-system-access/issues/68">[Issue #68]</a> <a class="issue-return" href="#issue-721a33e4②" title="Jump to section">↵</a></div>
-   <div class="issue"> Rather than requiring the website to prompt separately for a writable directory,
- we should provide some kind of API to request a writable directory in one step. <a href="https://github.com/wicg/file-system-access/issues/89">[Issue #89]</a> <a class="issue-return" href="#issue-923f3009" title="Jump to section">↵</a></div>
    <div class="issue"> This currently does not block access to <a data-link-type="dfn" href="#wellknowndirectory-too-sensitive-or-dangerous">too sensitive or dangerous</a> directories, to
 be consistent with other APIs that give access to dropped files and directories. This is inconsistent
 with the <a data-link-type="dfn" href="#local-file-system-handle-factories">local file system handle factories</a> though, so we might want to reconsider this. <a class="issue-return" href="#issue-8306b646" title="Jump to section">↵</a></div>
@@ -4633,6 +4652,7 @@ than being defined here. So merge this into the table there. <a class="issue-ret
    <ul>
     <li><a href="#ref-for-enumdef-filesystempermissionmode">2.2. Permissions</a> <a href="#ref-for-enumdef-filesystempermissionmode①">(2)</a> <a href="#ref-for-enumdef-filesystempermissionmode②">(3)</a> <a href="#ref-for-enumdef-filesystempermissionmode③">(4)</a>
     <li><a href="#ref-for-enumdef-filesystempermissionmode④">2.3. The FileSystemHandle interface</a>
+    <li><a href="#ref-for-enumdef-filesystempermissionmode⑤">3. Accessing Local File System</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystempermissionmode-read">
@@ -4667,6 +4687,7 @@ than being defined here. So merge this into the table there. <a class="issue-ret
    <ul>
     <li><a href="#ref-for-dictdef-filesystempermissiondescriptor">2.2. Permissions</a> <a href="#ref-for-dictdef-filesystempermissiondescriptor①">(2)</a> <a href="#ref-for-dictdef-filesystempermissiondescriptor②">(3)</a> <a href="#ref-for-dictdef-filesystempermissiondescriptor③">(4)</a> <a href="#ref-for-dictdef-filesystempermissiondescriptor④">(5)</a>
     <li><a href="#ref-for-dictdef-filesystempermissiondescriptor⑤">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dictdef-filesystempermissiondescriptor⑥">(2)</a>
+    <li><a href="#ref-for-dictdef-filesystempermissiondescriptor⑦">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystempermissiondescriptor-handle">
@@ -4676,6 +4697,7 @@ than being defined here. So merge this into the table there. <a class="issue-ret
     <li><a href="#ref-for-dom-filesystempermissiondescriptor-handle⑥">2.3.2. The queryPermission() method</a> <a href="#ref-for-dom-filesystempermissiondescriptor-handle⑦">(2)</a>
     <li><a href="#ref-for-dom-filesystempermissiondescriptor-handle⑧">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-filesystempermissiondescriptor-handle⑨">(2)</a>
     <li><a href="#ref-for-dom-filesystempermissiondescriptor-handle①⓪">3.1. Local File System Permissions</a> <a href="#ref-for-dom-filesystempermissiondescriptor-handle①①">(2)</a>
+    <li><a href="#ref-for-dom-filesystempermissiondescriptor-handle①②">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-filesystempermissiondescriptor-mode">
@@ -4685,6 +4707,7 @@ than being defined here. So merge this into the table there. <a class="issue-ret
     <li><a href="#ref-for-dom-filesystempermissiondescriptor-mode⑤">2.3.2. The queryPermission() method</a>
     <li><a href="#ref-for-dom-filesystempermissiondescriptor-mode⑥">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-dom-filesystempermissiondescriptor-mode⑦">(2)</a>
     <li><a href="#ref-for-dom-filesystempermissiondescriptor-mode⑧">3.1. Local File System Permissions</a> <a href="#ref-for-dom-filesystempermissiondescriptor-mode⑨">(2)</a>
+    <li><a href="#ref-for-dom-filesystempermissiondescriptor-mode①⓪">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="querying-file-system-permission">
@@ -5169,6 +5192,12 @@ than being defined here. So merge this into the table there. <a class="issue-ret
     <li><a href="#ref-for-dom-directorypickeroptions-startin">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-dom-directorypickeroptions-startin①">(2)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="dom-directorypickeroptions-mode">
+   <b><a href="#dom-directorypickeroptions-mode">#dom-directorypickeroptions-mode</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-directorypickeroptions-mode">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-dom-directorypickeroptions-mode①">(2)</a> <a href="#ref-for-dom-directorypickeroptions-mode②">(3)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="local-file-system-handle-factories">
    <b><a href="#local-file-system-handle-factories">#local-file-system-handle-factories</a></b><b>Referenced in:</b>
    <ul>
@@ -5299,7 +5328,7 @@ than being defined here. So merge this into the table there. <a class="issue-ret
    <b><a href="#dom-window-showdirectorypicker">#dom-window-showdirectorypicker</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-window-showdirectorypicker">3. Accessing Local File System</a> <a href="#ref-for-dom-window-showdirectorypicker①">(2)</a>
-    <li><a href="#ref-for-dom-window-showdirectorypicker②">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-dom-window-showdirectorypicker③">(2)</a>
+    <li><a href="#ref-for-dom-window-showdirectorypicker②">3.5. The showDirectoryPicker() method</a> <a href="#ref-for-dom-window-showdirectorypicker③">(2)</a> <a href="#ref-for-dom-window-showdirectorypicker④">(3)</a> <a href="#ref-for-dom-window-showdirectorypicker⑤">(4)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-datatransferitem-getasfilesystemhandle">
