@@ -28,6 +28,8 @@ Websites can also store any state they like in files they get write access to vi
 
 Additionally, user agents could also choose to persist the last directory a file was picked from using this API on a per origin (and per purpose via the `FilePickerOption.id` option) basis. This state will not be exposed to the website, it only changes the UI that is presented to the user. A website will have no way of telling if a user picked a file in a certain directory because of this state or because the user manually navigated to the directory.
 
+The `getUniqueId()` method will require a user agent to persist information (e.g. a salt) to provide unique identifiers for handles which are stable across browsing sessions, but which are invalidated once the user clears storage for the site. This state will not be exposed to the website.
+
 ### 2.6. What information from the underlying platform, e.g. configuration data, is exposed by this specification to an origin?
 
 Anything that exists on disk in files could be exposed by the user to the web. However, user agents are encouraged to maintain a block list of certain directories with particularly sensitive files, and thus somewhat restrict which files and directories the user is allowed to select. For example, things like Chrome's "Profile" directory, and other platform configuration data directories are likely going to be on this block list.
@@ -54,7 +56,7 @@ The origin can pop up native file or directory pickers, and have some control ov
 
 ### 2.12. What temporary identifiers might this this specification create or expose to the web?
 
-None.
+The `getUniqueId()` method will create a temporary unique identifier for a given handle. This ID will become invalid if the user clears storage for the site.
 
 ### 2.13. How does this specification distinguish between behavior in first-party and third-party contexts?
 
