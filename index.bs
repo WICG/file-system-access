@@ -1305,7 +1305,8 @@ const options = {
 To <dfn>process accept types</dfn>, given {{FilePickerOptions}} |options|,
 run these steps:
 
-1. Let |accepts options| be a empty [=/list=] of [=pairs=].
+1. Let |accepts options| be a empty [=/list=] of [=tuples=]
+   consisting of a description and a filter.
 1. [=list/For each=] |type| of |options|.{{FilePickerOptions/types}}:
   1. Let |description| be |type|.{{FilePickerAcceptType/description}}.
   1. [=map/For each=] |typeString| → |suffixes| of |type|.{{FilePickerAcceptType/accept}}:
@@ -1332,13 +1333,13 @@ run these steps:
   1. If |description| is an empty string,
     set |description| to some user understandable string describing |filter|.
 
-  1. [=list/Append=] |description|/|filter| to |accepts options|.
+  1. [=list/Append=] (|description|, |filter|) to |accepts options|.
 
 1. If either |accepts options| is [=list/empty=],
   or |options|.{{FilePickerOptions/excludeAcceptAllOption}} is `false`:
   1. Let |description| be a user understandable string describing "all files".
     1. Let |filter| be an algorithm that returns `true`.
-    1. [=list/Append=] |description|/|filter| to |accepts options|.
+    1. [=list/Append=] (|description|, |filter|) to |accepts options|.
 
 1. If |accepts options| is empty, throw a {{TypeError}}.
 
