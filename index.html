@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 63e66730b, updated Tue Oct 25 12:35:05 2022 -0700" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="edcc70ecc789faa4158ab39cab970141b6960b5e" name="document-revision">
+  <meta content="8427e246da4ca4683c32884fb5c982d8c30011ce" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1127,7 +1127,7 @@ but <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondes
 run these steps: 
       <ol>
        <li data-md>
-        <p>Run the <a data-link-type="dfn">boolean permission query algorithm</a> on <var>desc</var> and <var>status</var>.</p>
+        <p>Run the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-default-permission-query-algorithm" id="ref-for-dfn-default-permission-query-algorithm">default permission query algorithm</a> on <var>desc</var> and <var>status</var>.</p>
        <li data-md>
         <p>If <var>status</var>.<code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstatus-state" id="ref-for-dom-permissionstatus-state">state</a></code> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-prompt" id="ref-for-dom-permissionstate-prompt">"prompt"</a></code>, abort.</p>
        <li data-md>
@@ -1144,7 +1144,7 @@ run these steps:
        <li data-md>
         <p><a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-request-permission-to-use" id="ref-for-dfn-request-permission-to-use">Request permission to use</a> <var>desc</var>.</p>
        <li data-md>
-        <p>Run the <a data-link-type="dfn">boolean permission query algorithm</a> on <var>desc</var> and <var>status</var>.</p>
+        <p>Run the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-default-permission-query-algorithm" id="ref-for-dfn-default-permission-query-algorithm①">default permission query algorithm</a> on <var>desc</var> and <var>status</var>.</p>
       </ol>
       <p class="issue" id="issue-88417955"><a class="self-link" href="#issue-88417955"></a> Ideally this user activation requirement would be defined upstream. <a href="https://github.com/WICG/permissions-request/issues/2">[Issue #WICG/permissions-request#2]</a></p>
      </div>
@@ -2917,7 +2917,7 @@ these steps:
         <li data-md>
          <p><a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-request-permission-to-use" id="ref-for-dfn-request-permission-to-use①">Request permission to use</a> <var>desc</var>.</p>
         <li data-md>
-         <p>Run the <a data-link-type="dfn">boolean permission query algorithm</a> on <var>desc</var> and <var>status</var>.</p>
+         <p>Run the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-default-permission-query-algorithm" id="ref-for-dfn-default-permission-query-algorithm②">default permission query algorithm</a> on <var>desc</var> and <var>status</var>.</p>
         <li data-md>
          <p>If <var>status</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted①③">"granted"</a></code>,
  reject <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror⑦">AbortError</a></code> and abort.</p>
@@ -3850,6 +3850,13 @@ use this API to write to disk.</p>
     <li><a href="#ref-for-dfn-create-a-permissionstatus①">3.5. The showDirectoryPicker() method</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-dfn-default-permission-query-algorithm">
+   <a href="https://w3c.github.io/permissions/#dfn-default-permission-query-algorithm">https://w3c.github.io/permissions/#dfn-default-permission-query-algorithm</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dfn-default-permission-query-algorithm">2.2. Permissions</a> <a href="#ref-for-dfn-default-permission-query-algorithm①">(2)</a>
+    <li><a href="#ref-for-dfn-default-permission-query-algorithm②">3.5. The showDirectoryPicker() method</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-dom-permissionstate-granted">
    <a href="https://w3c.github.io/permissions/#dom-permissionstate-granted">https://w3c.github.io/permissions/#dom-permissionstate-granted</a><b>Referenced in:</b>
    <ul>
@@ -4453,6 +4460,7 @@ use this API to write to disk.</p>
      <li><span class="dfn-paneled" id="term-for-dom-permissionstate">PermissionState</span>
      <li><span class="dfn-paneled" id="term-for-dom-permissionstatus">PermissionStatus</span>
      <li><span class="dfn-paneled" id="term-for-dfn-create-a-permissionstatus">create a permissionstatus</span>
+     <li><span class="dfn-paneled" id="term-for-dfn-default-permission-query-algorithm">default permission query algorithm</span>
      <li><span class="dfn-paneled" id="term-for-dom-permissionstate-granted">granted</span>
      <li><span class="dfn-paneled" id="term-for-dom-permissiondescriptor-name">name</span>
      <li><span class="dfn-paneled" id="term-for-dfn-permission-descriptor-type">permission descriptor type</span>
