@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 63e66730b, updated Tue Oct 25 12:35:05 2022 -0700" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="f47783f6890d9372e8c270f9d07939b7cd3967d3" name="document-revision">
+  <meta content="edcc70ecc789faa4158ab39cab970141b6960b5e" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -842,7 +842,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">File System Access</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-11-14">14 November 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-11-15">15 November 2022</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2373,7 +2373,7 @@ will not show an option to not apply any filters.</p>
 run these steps: 
     <ol>
      <li data-md>
-      <p>Let <var>accepts options</var> be a empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list">list</a> of <a data-link-type="dfn">pairs</a>.</p>
+      <p>Let <var>accepts options</var> be a empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list">list</a> of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#tuple" id="ref-for-tuple">tuples</a> consisting of a description and a filter.</p>
      <li data-md>
       <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate④">For each</a> <var>type</var> of <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-types" id="ref-for-dom-filepickeroptions-types③">types</a></code>:</p>
       <ol>
@@ -2435,7 +2435,7 @@ run these steps:
         <p>If <var>description</var> is an empty string,
 set <var>description</var> to some user understandable string describing <var>filter</var>.</p>
        <li data-md>
-        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-append" id="ref-for-list-append①">Append</a> <var>description</var>/<var>filter</var> to <var>accepts options</var>.</p>
+        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-append" id="ref-for-list-append①">Append</a> (<var>description</var>, <var>filter</var>) to <var>accepts options</var>.</p>
       </ol>
      <li data-md>
       <p>If either <var>accepts options</var> is <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-empty" id="ref-for-list-empty">empty</a>,
@@ -2447,7 +2447,7 @@ or <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filep
          <li data-md>
           <p>Let <var>filter</var> be an algorithm that returns <code>true</code>.</p>
          <li data-md>
-          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-append" id="ref-for-list-append②">Append</a> <var>description</var>/<var>filter</var> to <var>accepts options</var>.</p>
+          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-append" id="ref-for-list-append②">Append</a> (<var>description</var>, <var>filter</var>) to <var>accepts options</var>.</p>
         </ol>
       </ol>
      <li data-md>
@@ -3783,6 +3783,12 @@ use this API to write to disk.</p>
     <li><a href="#ref-for-string③">3.2.2. Starting Directory</a> <a href="#ref-for-string④">(2)</a> <a href="#ref-for-string⑤">(3)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-tuple">
+   <a href="https://infra.spec.whatwg.org/#tuple">https://infra.spec.whatwg.org/#tuple</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-tuple">3.2.1. Accepted file types</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-mime-type-essence">
    <a href="https://mimesniff.spec.whatwg.org/#mime-type-essence">https://mimesniff.spec.whatwg.org/#mime-type-essence</a><b>Referenced in:</b>
    <ul>
@@ -4428,6 +4434,7 @@ use this API to write to disk.</p>
      <li><span class="dfn-paneled" id="term-for-ordered-set">set</span>
      <li><span class="dfn-paneled" id="term-for-string-starts-with">starts with</span>
      <li><span class="dfn-paneled" id="term-for-string">string</span>
+     <li><span class="dfn-paneled" id="term-for-tuple">tuple</span>
     </ul>
    <li>
     <a data-link-type="biblio">[MIMESNIFF]</a> defines the following terms:
