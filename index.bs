@@ -25,12 +25,6 @@ urlPrefix: https://tc39.github.io/ecma262/; spec: ECMA-262
   type: dfn; text: realm; url: realm
 urlPrefix: https://storage.spec.whatwg.org/; spec: storage
   type: dfn; text: storage; url: site-storage
-urlPrefix: https://fs.spec.whatwg.org/; spec: fs
-  type: dfn; text: binary data; url: file-entry-binary-data
-  type: dfn; text: directory entry; url: directory
-  type: dfn; text: entry; url: entry
-  type: dfn; text: file entry; url: file
-  type: dfn; text: origin private file system; url: origin-private-file-system
 </pre>
 
 <style>
@@ -69,22 +63,15 @@ files and directories they've been given access to, allowing the web apps to
 later regain access to the same content without requiring the user to select the
 same file again.
 
-This API extends the API in [[FS]], which specifies an [=origin private file system=]
-which websites can get access to without having to first prompt the user for access.
-This enables use cases where a website wants to save data to disk before a user has
-picked a location to save to, without forcing the website to use a completely
-different storage mechanism with a different API for such files. It also makes it
-easier to write automated tests for code using this API. The entry point for this
-is the {{StorageManager/getDirectory()|navigator.storage.getDirectory()}} method.
-This is similar to the temporary file system as defined in earlier drafts of
-[[file-system-api|File API: Directories and System]].
-
 This API is similar to <a href="https://html.spec.whatwg.org/multipage/input.html#file-upload-state-(type=file)">`<input type=file>`</a>
 and <a href="https://wicg.github.io/entries-api/#html-forms">`<input type=file webkitdirectory>`</a>
 [[entries-api]]
 in that user interaction happens through file and directory picker dialogs.
 Unlike those APIs, this API is currently purely a javascript API, and
 does not integrate with forms and/or input elements.
+
+This API extends the API in [[FS]], which specifies an [=origin private file system=]
+which websites can get access to without having to first prompt the user for access.
 
 # Files and Directories # {#files-and-directories}
 
@@ -123,11 +110,11 @@ permission-related algorithms and types are defined as follows:
   run these steps:
 
   1. Let |entry| be |desc|.{{FileSystemPermissionDescriptor/handle}}'s [=FileSystemHandle/entry=].
-  1. If |entry| represents an [=/entry=] in an [=origin private file system=],
+  1. If |entry| represents a [=/file system entry=] in an [=origin private file system=],
     this descriptor's [=permission state=] must always be {{PermissionState/"granted"}}.
-  1. Otherwise, if |entry|'s [=entry/parent=] is not null, this descriptor's [=permission state=] must be
+  1. Otherwise, if |entry|'s [=file system entry/parent=] is not null, this descriptor's [=permission state=] must be
     equal to the [=permission state=] for a descriptor with the same {{FileSystemPermissionDescriptor/mode}},
-    and a {{FileSystemPermissionDescriptor/handle}} representing |entry|'s [=entry/parent=].
+    and a {{FileSystemPermissionDescriptor/handle}} representing |entry|'s [=file system entry/parent=].
   1. Otherwise, if |desc|.{{FileSystemPermissionDescriptor/mode}} is {{"readwrite"}}:
     1. Let |read state| be the [=permission state=] for a descriptor
       with the same {{FileSystemPermissionDescriptor/handle}},
@@ -607,7 +594,7 @@ run the following steps:
 
 1. If |startIn| is a {{FileSystemHandle}}:
   1. Let |entry| be |startIn|'s [=FileSystemHandle/entry=].
-  1. If |entry| does not represent an [=/entry=] in an [=origin private file system=]:
+  1. If |entry| does not represent a [=/file system entry=] in an [=origin private file system=]:
     1. If |entry| is a [=file entry=], and a path on the local file system
        corresponding to the parent directory of |entry| can be determined,
        then return that path.
@@ -634,7 +621,7 @@ run the following steps:
 
 <div algorithm>
 To <dfn>remember a picked directory</dfn>, given an optional [=string=] |id|,
-an [=/entry=] |entry|, and an [=environment settings object=] |environment|,
+a [=/file system entry=] |entry|, and an [=environment settings object=] |environment|,
 run the following steps:
 
 1. Let |origin| be |environment|'s [=environment settings object/origin=].
@@ -913,7 +900,7 @@ The <dfn method for=DataTransferItem>getAsFileSystemHandle()</dfn> method steps 
 
 1. Run the following steps [=in parallel=]:
 
-  1. Let |entry| be the [=/entry=] representing the dragged file or directory.
+  1. Let |entry| be the [=/file system entry=] representing the dragged file or directory.
 
   1. If |entry| is a [=file entry=]:
 
