@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 63e66730b, updated Tue Oct 25 12:35:05 2022 -0700" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="8427e246da4ca4683c32884fb5c982d8c30011ce" name="document-revision">
+  <meta content="52e5879580851e0b55dc17dee692e3fb8a325e55" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -842,7 +842,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">File System Access</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-11-15">15 November 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-11-19">19 November 2022</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1102,7 +1102,7 @@ run these steps:
        <li data-md>
         <p>Let <var>entry</var> be <var>desc</var>.<code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondescriptor-handle" id="ref-for-dom-filesystempermissiondescriptor-handle">handle</a></code>'s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry①">entry</a>.</p>
        <li data-md>
-        <p>If <var>entry</var> represents an <a data-link-type="dfn" href="#entry" id="ref-for-entry⑨">entry</a> in an <a data-link-type="dfn" href="#wellknowndirectory-origin-private-file-system" id="ref-for-wellknowndirectory-origin-private-file-system">origin private file system</a>,
+        <p>If <var>entry</var> represents an <a data-link-type="dfn" href="#entry" id="ref-for-entry⑨">entry</a> in an <a data-link-type="dfn">origin private file system</a>,
 this descriptor’s <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state" id="ref-for-dfn-permission-state">permission state</a> must always be <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted">"granted"</a></code>.</p>
        <li data-md>
         <p>Otherwise, if <var>entry</var>’s <a data-link-type="dfn" href="#entry-parent" id="ref-for-entry-parent①">parent</a> is not null, this descriptor’s <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-permission-state" id="ref-for-dfn-permission-state①">permission state</a> must be
@@ -2086,7 +2086,7 @@ runs these steps:
           <p>If the operations modifying <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑦">[[buffer]]</a> in the previous steps failed
  due to exceeding the <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota">storage quota</a>, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject②⓪">reject</a> <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#quotaexceedederror" id="ref-for-quotaexceedederror">QuotaExceededError</a></code> and abort,
  leaving <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer⑧">[[buffer]]</a> unmodified.</p>
-          <p class="note" role="note"><span>Note:</span> <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota①">Storage quota</a> only applies to files stored in the <a data-link-type="dfn" href="#wellknowndirectory-origin-private-file-system" id="ref-for-wellknowndirectory-origin-private-file-system①">origin private file system</a>.
+          <p class="note" role="note"><span>Note:</span> <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota①">Storage quota</a> only applies to files stored in the <a data-link-type="dfn">origin private file system</a>.
  However this operation could still fail for other files, for example if the disk being written
  to runs out of disk space.</p>
          <li data-md>
@@ -2121,7 +2121,7 @@ runs these steps:
            <li data-md>
             <p>If the operation in the previous step failed due to exceeding the <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota②">storage quota</a>, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject②③">reject</a> <var>p</var> with a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#quotaexceedederror" id="ref-for-quotaexceedederror①">QuotaExceededError</a></code> and abort,
   leaving <var>stream</var>.<a data-link-type="dfn" href="#filesystemwritablefilestream-buffer" id="ref-for-filesystemwritablefilestream-buffer①②">[[buffer]]</a> unmodified.</p>
-            <p class="note" role="note"><span>Note:</span> <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota③">Storage quota</a> only applies to files stored in the <a data-link-type="dfn" href="#wellknowndirectory-origin-private-file-system" id="ref-for-wellknowndirectory-origin-private-file-system②">origin private file system</a>.
+            <p class="note" role="note"><span>Note:</span> <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota③">Storage quota</a> only applies to files stored in the <a data-link-type="dfn">origin private file system</a>.
   However this operation could still fail for other files, for example if the disk being written
   to runs out of disk space.</p>
           </ol>
@@ -2166,7 +2166,7 @@ runs these steps:
      <dd data-md>
       <p>Resizes the file associated with <var>stream</var> to be <var>size</var> bytes long. If <var>size</var> is larger than
  the current file size this pads the file with null bytes, otherwise it truncates the file.</p>
-      <p>The file cursor is updated when <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate②">truncate</a></code> is called. If the offset is smaller than offset,
+      <p>The file cursor is updated when <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate②">truncate</a></code> is called. If the offset is smaller than <var>size</var>,
  it remains unchanged. If the offset is larger than <var>size</var>, the offset is set to <var>size</var> to
  ensure that subsequent writes do not error.</p>
       <p>No changes are written to the actual file until on disk until the stream has been closed.
@@ -2217,7 +2217,7 @@ steps:
      <dd data-md>
       <p>Resizes the file associated with <var>stream</var> to be <var>size</var> bytes long. If <var>size</var> is larger than
  the current file size this pads the file with null bytes, otherwise it truncates the file.</p>
-      <p>The file cursor is updated when <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate③">truncate</a></code> is called. If the offset is smaller than offset,
+      <p>The file cursor is updated when <code class="idl"><a data-link-type="idl" href="#dom-writecommandtype-truncate" id="ref-for-dom-writecommandtype-truncate③">truncate</a></code> is called. If the offset is smaller than <var>size</var>,
  it remains unchanged. If the offset is larger than <var>size</var>, the offset is set to <var>size</var> to
  ensure that subsequent writes do not error.</p>
       <p>No changes are written to the actual file until on disk until the stream has been closed.
@@ -2575,7 +2575,7 @@ run the following steps:
         <li data-md>
          <p>Let <var>entry</var> be <var>startIn</var>’s <a data-link-type="dfn" href="#filesystemhandle-entry" id="ref-for-filesystemhandle-entry②②">entry</a>.</p>
         <li data-md>
-         <p>If <var>entry</var> does not represent an <a data-link-type="dfn" href="#entry" id="ref-for-entry①④">entry</a> in an <a data-link-type="dfn" href="#wellknowndirectory-origin-private-file-system" id="ref-for-wellknowndirectory-origin-private-file-system③">origin private file system</a>:</p>
+         <p>If <var>entry</var> does not represent an <a data-link-type="dfn" href="#entry" id="ref-for-entry①④">entry</a> in an <a data-link-type="dfn">origin private file system</a>:</p>
          <ol>
           <li data-md>
            <p>If <var>entry</var> is a <a data-link-type="dfn" href="#file" id="ref-for-file⑨">file entry</a>, and a path on the local file system
@@ -3021,13 +3021,13 @@ elem<c- p>.</c->addEventListener<c- p>(</c-><c- t>'drop'</c-><c- p>,</c-> <c- k>
 be consistent with other APIs that give access to dropped files and directories. This is inconsistent
 with the <a data-link-type="dfn" href="#local-file-system-handle-factories" id="ref-for-local-file-system-handle-factories④">local file system handle factories</a> though, so we might want to reconsider this.</p>
     <h2 class="heading settled" data-level="4" id="sandboxed-filesystem"><span class="secno">4. </span><span class="content">Accessing the Origin Private File System</span><a class="self-link" href="#sandboxed-filesystem"></a></h2>
-    <p>The <dfn class="dfn-paneled" data-dfn-for="WellKnownDirectory" data-dfn-type="dfn" data-noexport id="wellknowndirectory-origin-private-file-system">origin private file system</dfn> is a <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint" id="ref-for-storage-endpoint">storage endpoint</a> whose <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint-identifier" id="ref-for-storage-endpoint-identifier">identifier</a> is <code>"fileSystem"</code>, <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint-types" id="ref-for-storage-endpoint-types">types</a> are <code>« "local" »</code>,
+    <p>The <dfn data-dfn-for="WellKnownDirectory" data-dfn-type="dfn" data-noexport id="wellknowndirectory-origin-private-file-system">origin private file system<a class="self-link" href="#wellknowndirectory-origin-private-file-system"></a></dfn> is a <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint" id="ref-for-storage-endpoint">storage endpoint</a> whose <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint-identifier" id="ref-for-storage-endpoint-identifier">identifier</a> is <code>"fileSystem"</code>, <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint-types" id="ref-for-storage-endpoint-types">types</a> are <code>« "local" »</code>,
 and <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-endpoint-quota" id="ref-for-storage-endpoint-quota">quota</a> is null.</p>
     <p class="issue" id="issue-9c98e739"><a class="self-link" href="#issue-9c98e739"></a> Storage endpoints should be defined in <a data-link-type="biblio" href="#biblio-storage">[storage]</a> itself, rather
 than being defined here. So merge this into the table there.</p>
-    <p class="note" role="note"><span>Note:</span> While user agents will typically implement this by persisting the contents of this <a data-link-type="dfn" href="#wellknowndirectory-origin-private-file-system" id="ref-for-wellknowndirectory-origin-private-file-system④">origin private file system</a> to disk, it is not intended that the contents are easily
+    <p class="note" role="note"><span>Note:</span> While user agents will typically implement this by persisting the contents of this <a data-link-type="dfn">origin private file system</a> to disk, it is not intended that the contents are easily
 user accessible. Similarly there is no expectation that files or directories with names
-matching the names of children of the <a data-link-type="dfn" href="#wellknowndirectory-origin-private-file-system" id="ref-for-wellknowndirectory-origin-private-file-system⑤">origin private file system</a> exist.</p>
+matching the names of children of the <a data-link-type="dfn">origin private file system</a> exist.</p>
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext⑤"><c- g>SecureContext</c-></a>]
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://storage.spec.whatwg.org/#storagemanager" id="ref-for-storagemanager"><c- g>StorageManager</c-></a> {
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise" id="ref-for-idl-promise①⑥"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle①⑥"><c- n>FileSystemDirectoryHandle</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-storagemanager-getdirectory" id="ref-for-dom-storagemanager-getdirectory②"><c- g>getDirectory</c-></a>();
@@ -3158,7 +3158,7 @@ blocking access to certain sensitive directories helps limit the damage such an 
 Additionally user agents can grant write access to files at whatever granularity they deem
 appropriate.</p>
     <h3 class="heading settled" data-level="7.3" id="filling-up-disk"><span class="secno">7.3. </span><span class="content">Filling up a users disk</span><a class="self-link" href="#filling-up-disk"></a></h3>
-    <p>Other than files in the <a data-link-type="dfn" href="#wellknowndirectory-origin-private-file-system" id="ref-for-wellknowndirectory-origin-private-file-system⑥">origin private file system</a>, files written by this API are not subject
+    <p>Other than files in the <a data-link-type="dfn">origin private file system</a>, files written by this API are not subject
 to <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota④">storage quota</a>. As such websites can fill up a users disk without being limited by
 quota, which could leave a users device in a bad state (do note that even with storage that is
 subject to <a data-link-type="dfn" href="https://storage.spec.whatwg.org/#storage-quota" id="ref-for-storage-quota⑤">storage quota</a> it is still possible to fill up, or come close to filling up, a users
@@ -5563,16 +5563,6 @@ than being defined here. So merge this into the table there. <a class="issue-ret
    <b><a href="#dom-datatransferitem-getasfilesystemhandle">#dom-datatransferitem-getasfilesystemhandle</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-datatransferitem-getasfilesystemhandle">3.6. Drag and Drop</a> <a href="#ref-for-dom-datatransferitem-getasfilesystemhandle①">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="wellknowndirectory-origin-private-file-system">
-   <b><a href="#wellknowndirectory-origin-private-file-system">#wellknowndirectory-origin-private-file-system</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-wellknowndirectory-origin-private-file-system">2.2. Permissions</a>
-    <li><a href="#ref-for-wellknowndirectory-origin-private-file-system①">2.6. The FileSystemWritableFileStream interface</a> <a href="#ref-for-wellknowndirectory-origin-private-file-system②">(2)</a>
-    <li><a href="#ref-for-wellknowndirectory-origin-private-file-system③">3.2.2. Starting Directory</a>
-    <li><a href="#ref-for-wellknowndirectory-origin-private-file-system④">4. Accessing the Origin Private File System</a> <a href="#ref-for-wellknowndirectory-origin-private-file-system⑤">(2)</a>
-    <li><a href="#ref-for-wellknowndirectory-origin-private-file-system⑥">7.3. Filling up a users disk</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-storagemanager-getdirectory">
