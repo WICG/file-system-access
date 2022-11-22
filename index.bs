@@ -254,7 +254,6 @@ The <dfn method for=FileSystemHandle>requestPermission(|descriptor|)</dfn> metho
 
 </div>
 
-
 # Accessing Local File System # {#local-filesystem}
 
 <xmp class=idl>
