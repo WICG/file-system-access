@@ -9,6 +9,7 @@ Status: CG-DRAFT
 ED: https://wicg.github.io/file-system-access/
 Level: 1
 Editor: Austin Sullivan, Google, asully@chromium.org, w3cid 126126
+Former Editor: Marijn Kruisselbrink, Google, mek@chromium.org, w3cid 72440
 Group: WICG
 Repository: wicg/file-system-access
 Indent: 2
