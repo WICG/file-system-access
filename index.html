@@ -4,9 +4,9 @@
   <title>File System Access</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 63e66730b, updated Tue Oct 25 12:35:05 2022 -0700" name="generator">
+  <meta content="Bikeshed version 26e85e599, updated Thu Dec 8 15:29:31 2022 -0800" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="7c621de254522340743ed24877be9d3ce410556a" name="document-revision">
+  <meta content="2b191402ff0f3c53b8bffcff88272cee4d6d1223" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -842,7 +842,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">File System Access</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-12-07">7 December 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-01-11">11 January 2023</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -851,20 +851,22 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <dd><a href="https://github.com/wicg/file-system-access/issues/">GitHub</a>
      <dd><a href="#issues-index">Inline In Spec</a>
      <dt class="editor">Editor:
+     <dd class="editor p-author h-card vcard" data-editor-id="126126"><a class="p-name fn u-email email" href="mailto:asully@chromium.org">Austin Sullivan</a> (<span class="p-org org">Google</span>)
+     <dt class="editor">Former Editor:
      <dd class="editor p-author h-card vcard" data-editor-id="72440"><a class="p-name fn u-email email" href="mailto:mek@chromium.org">Marijn Kruisselbrink</a> (<span class="p-org org">Google</span>)
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2022 the Contributors to the File System Access Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2023 the Contributors to the File System Access Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
 A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available. </p>
    <hr title="Separator for header">
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>This document extends the API in <a data-link-type="biblio" href="#biblio-fs">[FS]</a> to enables developers to build
+   <p>This document extends the API in <a data-link-type="biblio" href="#biblio-fs" title="File System Standard">[FS]</a> to enables developers to build
 
   powerful web apps that interact with files on the user’s local device.
-  It builds on <a data-link-type="biblio" href="#biblio-file-api">File API</a> for file reading capabilities, and adds new API
+  It builds on <a data-link-type="biblio" href="#biblio-file-api" title="File API">File API</a> for file reading capabilities, and adds new API
   surface to enable modifying files, as well as working with directories.</p>
   </div>
   <div data-fill-with="at-risk"></div>
@@ -961,10 +963,10 @@ its contents. Additionally, web apps can use this API to store references to
 files and directories they’ve been given access to, allowing the web apps to
 later regain access to the same content without requiring the user to select the
 same file again.</p>
-   <p>This API is similar to <a href="https://html.spec.whatwg.org/multipage/input.html#file-upload-state-(type=file)"><code>&lt;input type=file></code></a> and <a href="https://wicg.github.io/entries-api/#html-forms"><code>&lt;input type=file webkitdirectory></code></a> <a data-link-type="biblio" href="#biblio-entries-api">[entries-api]</a> in that user interaction happens through file and directory picker dialogs.
+   <p>This API is similar to <a href="https://html.spec.whatwg.org/multipage/input.html#file-upload-state-(type=file)"><code>&lt;input type=file></code></a> and <a href="https://wicg.github.io/entries-api/#html-forms"><code>&lt;input type=file webkitdirectory></code></a> <a data-link-type="biblio" href="#biblio-entries-api" title="File and Directory Entries API">[entries-api]</a> in that user interaction happens through file and directory picker dialogs.
 Unlike those APIs, this API is currently purely a javascript API, and
 does not integrate with forms and/or input elements.</p>
-   <p>This API extends the API in <a data-link-type="biblio" href="#biblio-fs">[FS]</a>, which specifies an <a data-link-type="dfn" href="https://fs.spec.whatwg.org/#origin-private-file-system" id="ref-for-origin-private-file-system">origin private file system</a> which websites can get access to without having to first prompt the user for access.</p>
+   <p>This API extends the API in <a data-link-type="biblio" href="#biblio-fs" title="File System Standard">[FS]</a>, which specifies an <a data-link-type="dfn" href="https://fs.spec.whatwg.org/#origin-private-file-system" id="ref-for-origin-private-file-system">origin private file system</a> which websites can get access to without having to first prompt the user for access.</p>
    <h2 class="heading settled" data-level="2" id="files-and-directories"><span class="secno">2. </span><span class="content">Files and Directories</span><a class="self-link" href="#files-and-directories"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="concepts"><span class="secno">2.1. </span><span class="content">Concepts</span><a class="self-link" href="#concepts"></a></h3>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="valid-suffix-code-point">valid suffix code point</dfn> is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point" id="ref-for-code-point">code point</a> that is <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-alphanumeric" id="ref-for-ascii-alphanumeric">ASCII alphanumeric</a>,
@@ -2102,7 +2104,7 @@ use this API to write to disk.</p>
     However, for readability,
     these words do not appear in all uppercase letters in this specification. </p>
    <p>All of the text of this specification is normative
-    except sections explicitly marked as non-normative, examples, and notes. <a data-link-type="biblio" href="#biblio-rfc2119">[RFC2119]</a> </p>
+    except sections explicitly marked as non-normative, examples, and notes. <a data-link-type="biblio" href="#biblio-rfc2119" title="Key words for use in RFCs to Indicate Requirement Levels">[RFC2119]</a> </p>
    <p>Examples in this specification are introduced with the words “for example”
     or are set apart from the normative text
     with <code>class="example"</code>,
@@ -3475,12 +3477,13 @@ document.body.addEventListener("click", (e) => {
 });</script>
 <script>/* script-var-click-highlighting */
 
-    document.addEventListener("click", e=>{
-        if(e.target.nodeName == "VAR") {
-            highlightSameAlgoVars(e.target);
-        }
-    });
+    "use strict";
     {
+        document.addEventListener("click", e=>{
+            if(e.target.nodeName == "VAR") {
+                highlightSameAlgoVars(e.target);
+            }
+        });
         const indexCounts = new Map();
         const indexNames = new Map();
         function highlightSameAlgoVars(v) {
