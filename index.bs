@@ -142,28 +142,32 @@ permission-related algorithms and types are defined as follows:
   Issue(WICG/permissions-request#2): Ideally this user activation requirement would be defined upstream.
 
 <div algorithm>
-To <dfn lt="querying file system permission|query file system permission">query file system permission</dfn>
-given a {{FileSystemHandle}} |handle| and a {{FileSystemPermissionMode}} |mode|, run these steps:
-
-1. Let |desc| be a {{FileSystemPermissionDescriptor}}.
-1. Set |desc|.{{PermissionDescriptor/name}} to {{"file-system"}}.
-1. Set |desc|.{{FileSystemPermissionDescriptor/handle}} to |handle|.
-1. Set |desc|.{{FileSystemPermissionDescriptor/mode}} to |mode|.
-1. Return |desc|'s [=permission state=].
+<dfn abstract-op lt=QueryFileSystemPermission>QueryFileSystemPermission(|entry|)</dfn>
+runs these steps:
+  1. Return an algorithm that runs these steps, taking a |mode| argument:
+    1. Let |desc| be a {{FileSystemPermissionDescriptor}}.
+    1. Set |desc|.{{PermissionDescriptor/name}} to {{"file-system"}}.
+    1. Set |desc|.{{FileSystemPermissionDescriptor/handle}} to a
+       {{FileSystemHandle}} associated with |entry|.
+    1. Set |desc|.{{FileSystemPermissionDescriptor/mode}} to |mode|.
+    1. Return |desc|'s [=permission state=].
 
 </div>
 
 <div algorithm>
-To <dfn lt="requesting file system permission|request file system permission">request file system permission</dfn>
-given a {{FileSystemHandle}} |handle| and a {{FileSystemPermissionMode}} |mode|, run these steps:
-
-1. Let |desc| be a {{FileSystemPermissionDescriptor}}.
-1. Set |desc|.{{PermissionDescriptor/name}} to {{"file-system"}}.
-1. Set |desc|.{{FileSystemPermissionDescriptor/handle}} to |handle|.
-1. Set |desc|.{{FileSystemPermissionDescriptor/mode}} to |mode|.
-1. Let |status| be the result of running <a spec=permissions>create a PermissionStatus</a> for |desc|.
-1. Run the [=permission request algorithm=] for the {{"file-system"}} feature, given |desc| and |status|.
-1. Return |desc|'s [=permission state=].
+<dfn abstract-op lt=RequestFileSystemPermission>RequestFileSystemPermission(|entry|)</dfn>
+runs these steps:
+  1. Return an algorithm that runs there steps, taking a |mode| argument:
+    1. Let |desc| be a {{FileSystemPermissionDescriptor}}.
+    1. Set |desc|.{{PermissionDescriptor/name}} to {{"file-system"}}.
+    1. Set |desc|.{{FileSystemPermissionDescriptor/handle}} to a
+       {{FileSystemHandle}} associated with |entry|.
+    1. Set |desc|.{{FileSystemPermissionDescriptor/mode}} to |mode|.
+    1. Let |status| be the result of running
+       <a spec=permissions>create a PermissionStatus</a> for |desc|.
+    1. Run the [=permission request algorithm=] for the {{"file-system"}}
+       feature, given |desc| and |status|.
+    1. Return |desc|'s [=permission state=].
 
 </div>
 
@@ -215,8 +219,9 @@ The <dfn method for=FileSystemHandle>queryPermission(|descriptor|)</dfn> method,
 
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
-  1. Let |state| be the result of [=querying file system permission=]
-     given <b>[=this=]</b> and |descriptor|.{{FileSystemHandlePermissionDescriptor/mode}}.
+  1. Let |state| be the result of running [=this=]'s
+     [=FileSystemHandle/entry=]'s [=file system entry/query access=] algorithm
+     given |descriptor|.{{FileSystemHandlePermissionDescriptor/mode}}.
   1. [=/Resolve=] |result| with |state|.
 1. Return |result|.
 
@@ -247,9 +252,9 @@ The <dfn method for=FileSystemHandle>requestPermission(|descriptor|)</dfn> metho
 
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
-  1. Let |state| be the result of [=requesting file system permission=]
-     given <b>[=this=]</b> and |descriptor|.{{FileSystemHandlePermissionDescriptor/mode}}.
-     If that throws an exception, [=reject=] |result| with that exception and abort.
+  1. Let |state| be the result of running [=this=]'s
+     [=FileSystemHandle/entry=]'s [=file system entry/request access=] algorithm
+     given |descriptor|.{{FileSystemHandlePermissionDescriptor/mode}}.
   1. [=/Resolve=] |result| with |state|.
 1. Return |result|.
 
@@ -692,6 +697,11 @@ these steps:
          either go back to the beginning of these [=in parallel=] steps,
          or [=/reject=] |p| with an {{AbortError}} and abort.
 
+    1. Set |entry|'s [=file system entry/query access=] algorithm to
+       [$QueryFileSystemPermission$](|entry|).
+    1. Set |entry|'s [=file system entry/request access=] algorithm to
+       [$RequestFileSystemPermission$](|entry|).
+
     1. Add a new {{FileSystemFileHandle}} associated with |entry| to |result|.
 
   1. [=Remember a picked directory=] given |options|.{{FilePickerOptions/id}}, |entries|[0] and |environment|.
@@ -776,6 +786,11 @@ these steps:
        either go back to the beginning of these [=in parallel=] steps,
        or [=/reject=] |p| with an {{AbortError}} and abort.
 
+  1. Set |entry|'s [=file system entry/query access=] algorithm to
+     [$QueryFileSystemPermission$](|entry|).
+  1. Set |entry|'s [=file system entry/request access=] algorithm to
+     [$RequestFileSystemPermission$](|entry|).
+
   1. Set |entry|'s [=binary data=] to an empty [=byte sequence=].
 
   1. Set |result| to a new {{FileSystemFileHandle}} associated with |entry|.
@@ -844,6 +859,11 @@ these steps:
     1. At the discretion of the user agent,
        either go back to the beginning of these [=in parallel=] steps,
        or [=/reject=] |p| with an {{AbortError}} and abort.
+
+  1. Set |entry|'s [=file system entry/query access=] algorithm to
+     [$QueryFileSystemPermission$](|entry|).
+  1. Set |entry|'s [=file system entry/request access=] algorithm to
+     [$RequestFileSystemPermission$](|entry|).
 
   1. Set |result| to a new {{FileSystemDirectoryHandle}} associated with |entry|.
 
