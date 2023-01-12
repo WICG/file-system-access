@@ -1,7 +1,7 @@
 <pre class=metadata>
 Title: File System Access
 Shortname: file-system-access
-Abstract: This document extends the API in [[FS]] to enables developers to build
+Abstract: This document extends the API in [[FS]] to enable developers to build
   powerful web apps that interact with files on the user's local device.
   It builds on [[FILE-API|File API]] for file reading capabilities, and adds new API
   surface to enable modifying files, as well as working with directories.
