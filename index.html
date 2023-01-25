@@ -4,9 +4,9 @@
   <title>File System Access</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 26e85e599, updated Thu Dec 8 15:29:31 2022 -0800" name="generator">
+  <meta content="Bikeshed version d6f2d6445, updated Tue Jan 17 11:25:25 2023 -0800" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="0f648f72e2ec37ed8b5fe2f3ff01a9ef6fcc1dc2" name="document-revision">
+  <meta content="5785cc98488d6e34d6bdeb5f2e27c77319374f97" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -842,7 +842,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">File System Access</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-01-12">12 January 2023</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-01-25">25 January 2023</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -971,7 +971,7 @@ does not integrate with forms and/or input elements.</p>
    <h3 class="heading settled" data-level="2.1" id="concepts"><span class="secno">2.1. </span><span class="content">Concepts</span><a class="self-link" href="#concepts"></a></h3>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="valid-suffix-code-point">valid suffix code point</dfn> is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point" id="ref-for-code-point">code point</a> that is <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ascii-alphanumeric" id="ref-for-ascii-alphanumeric">ASCII alphanumeric</a>,
 U+002B (+), or U+002E (.).</p>
-   <p class="note" role="note"><span>Note:</span> These code points were chosen to support most pre-existing file formats. The vast
+   <p class="note" role="note"><span class="marker">Note:</span> These code points were chosen to support most pre-existing file formats. The vast
 majority of file extensions are purely alphanumeric, but compound extensions (such as <code>.tar.gz</code>) and extensions such as <code>.c++</code> for C++ source code are also fairly common,
 hence the inclusion of + and . as allowed code points.</p>
    <h3 class="heading settled" data-level="2.2" id="permissions"><span class="secno">2.2. </span><span class="content">Permissions</span><a class="self-link" href="#permissions"></a></h3>
@@ -1250,7 +1250,7 @@ the future we might want to add a "write" mode as well to support write-only han
 </pre>
    <p>The <code class="idl"><a data-link-type="idl" href="#dom-window-showopenfilepicker" id="ref-for-dom-window-showopenfilepicker①">showOpenFilePicker()</a></code>, <code class="idl"><a data-link-type="idl" href="#dom-window-showsavefilepicker" id="ref-for-dom-window-showsavefilepicker①">showSaveFilePicker()</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-window-showdirectorypicker" id="ref-for-dom-window-showdirectorypicker①">showDirectoryPicker()</a></code> methods
 are together known as the <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="local-file-system-handle-factories">local file system handle factories</dfn>.</p>
-   <p class="note" role="note"><span>Note:</span> What is referred to as the "local file system" in this spec, does not have to
+   <p class="note" role="note"><span class="marker">Note:</span> What is referred to as the "local file system" in this spec, does not have to
 strictly refer to the file system on the local device. What we call the local file system
 could just as well be backed by a cloud provider. For example on Chrome OS these
 file pickers will also let you pick files and directories on Google Drive.</p>
@@ -1689,7 +1689,7 @@ these steps:
          <p><a data-link-type="dfn" href="#wellknowndirectory-remember-a-picked-directory" id="ref-for-wellknowndirectory-remember-a-picked-directory">Remember a picked directory</a> given <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-id" id="ref-for-dom-filepickeroptions-id①③">id</a></code>, <var>entries</var>[0] and <var>environment</var>.</p>
         <li data-md>
          <p>Perform the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#activation-notification" id="ref-for-activation-notification">activation notification</a> steps in <var>global</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc">browsing context</a>.</p>
-         <p class="note" role="note"><span>Note:</span> This lets a website immediately perform operations on the returned handles that
+         <p class="note" role="note"><span class="marker">Note:</span> This lets a website immediately perform operations on the returned handles that
  might require user activation, such as requesting more permissions.</p>
         <li data-md>
          <p><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#resolve" id="ref-for-resolve②">Resolve</a> <var>p</var> with <var>result</var>.</p>
@@ -1763,7 +1763,7 @@ these steps:
  the file picker prompt will be pre-filled with the <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-savefilepickeroptions-suggestedname" id="ref-for-dom-savefilepickeroptions-suggestedname③">suggestedName</a></code> as the default name to save as. The interaction between the <code class="idl"><a data-link-type="idl" href="#dom-savefilepickeroptions-suggestedname" id="ref-for-dom-savefilepickeroptions-suggestedname④">suggestedName</a></code> and <var>accepts options</var> is <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#implementation-defined" id="ref-for-implementation-defined③">implementation-defined</a>.
  If the <code class="idl"><a data-link-type="idl" href="#dom-savefilepickeroptions-suggestedname" id="ref-for-dom-savefilepickeroptions-suggestedname⑤">suggestedName</a></code> is deemed too dangerous, user agents should ignore or sanitize the
  suggested file name, similar to the sanitization done when fetching something <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/links.html#as-a-download" id="ref-for-as-a-download">as a download</a>.</p>
-         <p class="note" role="note"><span>Note:</span> A user agent could for example pick whichever option in <var>accepts options</var> that matches <code class="idl"><a data-link-type="idl" href="#dom-savefilepickeroptions-suggestedname" id="ref-for-dom-savefilepickeroptions-suggestedname⑥">suggestedName</a></code> as the default filter.</p>
+         <p class="note" role="note"><span class="marker">Note:</span> A user agent could for example pick whichever option in <var>accepts options</var> that matches <code class="idl"><a data-link-type="idl" href="#dom-savefilepickeroptions-suggestedname" id="ref-for-dom-savefilepickeroptions-suggestedname⑥">suggestedName</a></code> as the default filter.</p>
         <li data-md>
          <p>Wait for the user to have made their selection.</p>
         <li data-md>
@@ -1788,7 +1788,7 @@ these steps:
          <p><a data-link-type="dfn" href="#wellknowndirectory-remember-a-picked-directory" id="ref-for-wellknowndirectory-remember-a-picked-directory①">Remember a picked directory</a> given <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-id" id="ref-for-dom-filepickeroptions-id①⑤">id</a></code>, <var>entry</var> and <var>environment</var>.</p>
         <li data-md>
          <p>Perform the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#activation-notification" id="ref-for-activation-notification①">activation notification</a> steps in <var>global</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc①">browsing context</a>.</p>
-         <p class="note" role="note"><span>Note:</span> This lets a website immediately perform operations on the returned handles that
+         <p class="note" role="note"><span class="marker">Note:</span> This lets a website immediately perform operations on the returned handles that
  might require user activation, such as requesting more permissions.</p>
         <li data-md>
          <p><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#resolve" id="ref-for-resolve③">Resolve</a> <var>p</var> with <var>result</var>.</p>
