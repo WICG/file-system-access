@@ -598,12 +598,10 @@ run the following steps:
    [=FileSystemHandle/in the origin private file system=]:
   1. Let |entry| be the result of [=locating an entry=] given
      |startIn|'s [=FileSystemHandle/locator=].
-  1. If |entry| is a [=file entry=], and a path on the local file system
-     corresponding to the parent directory of |entry| can be determined,
-     then return that path.
-  1. If |entry| is a [=directory entry=], and a path on the local file system
-     corresponding to |entry| can be determined,
-     then return that path.
+  1. If |entry| is a [=file entry=], return the path of
+     |entry|'s [=file system entry/parent=] in the local file system.
+  1. If |entry| is a [=directory entry=], return
+     |entry|'s path in the local file system.
 
 1. If |id| is non-empty:
   1. If [=recently picked directory map=][|origin|] [=map/exists=]:
