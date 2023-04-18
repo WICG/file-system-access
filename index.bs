@@ -123,6 +123,8 @@ permission-related algorithms and types are defined as follows:
     1. If |read state| is not {{PermissionState/"granted"}}, this descriptor's [=permission state=]
       must be equal to |read state|.
 
+Issue(whatwg/fs#101): Make these checks no longer associated with an entry.
+
 : [=permission request algorithm=]
 :: <div algorithm="permission request algorithm">
   Given a {{FileSystemPermissionDescriptor}} |desc| and a {{PermissionStatus}} |status|,
@@ -592,15 +594,14 @@ run the following steps:
 
 1. Let |origin| be |environment|'s [=environment settings object/origin=].
 
-1. If |startIn| is a {{FileSystemHandle}}:
-  1. Let |entry| be |startIn|'s [=FileSystemHandle/entry=].
-  1. If |entry| does not represent a [=/file system entry=] in an [=origin private file system=]:
-    1. If |entry| is a [=file entry=], and a path on the local file system
-       corresponding to the parent directory of |entry| can be determined,
-       then return that path.
-    1. If |entry| is a [=directory entry=], and a path on the local file system
-       corresponding to |entry| can be determined,
-       then return that path.
+1. If |startIn| is a {{FileSystemHandle}} and is not
+   [=FileSystemHandle/in the origin private file system=]:
+  1. Let |entry| be the result of [=locating an entry=] given
+     |startIn|'s [=FileSystemHandle/locator=].
+  1. If |entry| is a [=file entry=], return the path of
+     |entry|'s [=file system entry/parent=] in the local file system.
+  1. If |entry| is a [=directory entry=], return
+     |entry|'s path in the local file system.
 
 1. If |id| is non-empty:
   1. If [=recently picked directory map=][|origin|] [=map/exists=]:
