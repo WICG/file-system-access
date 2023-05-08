@@ -30,10 +30,10 @@ if(cloudHandles.length === 0) {
   // File is not synced by any CSP
 }
 for(const cloudHandle of cloudHandles) {
-  if(cloudHandle.provider === 'drive.google.com') {
-    // retrieve/modify the file from Google Drive API using cloudHandle.token
-  } else if(cloudHandle.provider === 'onedrive.live.com') {
-    // retrieve/modify the file from Microsoft OneDrive API using cloudHandle.token
+  if(cloudHandle.provider_name === 'drive.google.com') {
+    // retrieve/modify the file from Google Drive API using cloudHandle.id
+  } else if(cloudHandle.provider_name === 'onedrive.live.com') {
+    // retrieve/modify the file from Microsoft OneDrive API using cloudHandle.id
   }
 }
 ```
@@ -115,8 +115,8 @@ This section describes the interface the web app would interact with.
 
 ```idl
 dictionary FileSystemCloudHandle {
-  DOMString provider;
-  DOMString token;
+  DOMString provider_name;
+  DOMString id;
 };
 
 partial interface `FileSystemHandle` {
