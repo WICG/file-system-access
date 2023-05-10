@@ -1,4 +1,4 @@
-# Cloud File Handle
+# Cloud Identifier
 
 ## Authors:
 
@@ -16,7 +16,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Introduction
-The objective of this API is to allow web applications to detect whether a `FileSystemHandle` they have acquired (obtained via file/directory picker or as a parameter of an opening flow as a registered file handler) belongs to a cloud-synced file/directory. If so, the web application receives a “cloud handle” so that it can directly interact with the file/directory using the cloud storage provider’s (CSP) web APIs.
+The objective of this API is to allow web applications to detect whether a `FileSystemHandle` they have acquired (obtained via file/directory picker or as a parameter of an opening flow as a registered file handler) belongs to a cloud-synced file/directory. If so, the web application receives a “cloud identifier” so that it can directly interact with the file/directory using the cloud storage provider’s (CSP) web APIs.
 
 A CSP can register as a local sync client to the browser, which in turn may ask the local sync client to provide a unique identifier for a given file/directory when requested.
 
@@ -24,16 +24,16 @@ A CSP can register as a local sync client to the browser, which in turn may ask 
 
 ```javascript
 const [fileHandle] = await window.showOpenFilePicker(pickerOpts);
-const cloudHandles = await fileHandle.getCloudHandles();
+const cloudIdentifiers = await fileHandle.getCloudIdentifiers();
 
-if(cloudHandles.length === 0) {
+if(cloudIdentifiers.length === 0) {
   // File is not synced by any CSP
 }
-for(const cloudHandle of cloudHandles) {
-  if(cloudHandle.providerName === 'drive.google.com') {
-    // retrieve/modify the file from Google Drive API using cloudHandle.id
-  } else if(cloudHandle.providerName === 'onedrive.live.com') {
-    // retrieve/modify the file from Microsoft OneDrive API using cloudHandle.id
+for(const cloudIdentifier of cloudIdentifiers) {
+  if(cloudIdentifier.providerName === 'drive.google.com') {
+    // retrieve/modify the file from Google Drive API using cloudIdentifier.id
+  } else if(cloudIdentifier.providerName === 'onedrive.live.com') {
+    // retrieve/modify the file from Microsoft OneDrive API using cloudIdentifier.id
   }
 }
 ```
@@ -46,7 +46,7 @@ Web applications offering app streaming or VDI might want to make a locally sync
 
 ##### Before
 
-![image](./images/cloud-file-handling/remote-file-handling-before.png "Before")
+![image](./images/cloud-identifier/remote-file-handling-before.png "Before")
 
 1. VDI web app requests and receives the file via `FileSystemFileHandle::getFile()`
 2. CSP client app downloads the file from CSP server (if not already on disc)
@@ -59,15 +59,15 @@ In this scenario all transfers (arrows in diagram) transfer the entire file and 
 
 ##### After
 
-![image](./images/cloud-file-handling/remote-file-handling-after.png "After")
+![image](./images/cloud-identifier/remote-file-handling-after.png "After")
 
-1. VDI web app requests and receives the file’s cloud handle via FileSystemFileHandle::getCloudHandles()
-2. VDI web app sends the file’s cloud handle to VDI server
-3. VDI server requests and receives the file’s content from CSP server using the cloud handle
+1. VDI web app requests and receives the file’s cloud identifier via FileSystemFileHandle::getCloudIdentifiers()
+2. VDI web app sends the file’s cloud identifier to VDI server
+3. VDI server requests and receives the file’s content from CSP server using the cloud identifier
 4. VDI server sends any changes made to the file back to the CSP server
 5. CSP client synchronizes updated file to local device (might be metadata only)
 
-In this scenario only transfers (3) and (4) would actually transfer the full file, all the other transfers only move the cloud handle. These actual file transfers also don’t move across the device’s network connection, but rather use the VDI server’s network connection to the CSP server, which should likely also have higher bandwidth.
+In this scenario only transfers (3) and (4) would actually transfer the full file, all the other transfers only move the cloud identifier. These actual file transfers also don’t move across the device’s network connection, but rather use the VDI server’s network connection to the CSP server, which should likely also have higher bandwidth.
 
 This reduces network traffic and delays (especially with large files) and prevents version drift (file being modified somewhere else while a local client device is uploading).
 
@@ -75,13 +75,13 @@ This reduces network traffic and delays (especially with large files) and preven
 
 Web-based document editors can already open local files using existing file system APIs. In order to offer full functionality, including cross device support and some advanced editing/sharing features, the documents need to be uploaded to a cloud storage (Google Drive or Microsoft OneDrive or similar) before they can be edited. This leads to duplicate files for documents that were already stored in these locations.
 
-With the proposed changes, the web application could check whether the given file handle is already synced by a cloud storage and generate handles for these without a duplicate upload.
+With the proposed changes, the web application could check whether the given file handle is already synced by a cloud storage and generate identifiers for these without a duplicate upload.
 
 #### Drag & Drop into Mail
 
 Sharing files via mail used to be done using simple file attachments. Especially for large files, it is preferable to instead upload them to a CSP and then share an access link to that file to the recipient. Google Mail’s web application, for example, already does this by prompting the user to upload a file to Google Drive when attaching a large file.
 
-With the proposed changes, the web application could already detect that the file is synced by cloud storage and generate a share link for that file’s cloud handle without requiring the user to manually go through these steps or prompt the user to upload the file to cloud storage again.
+With the proposed changes, the web application could already detect that the file is synced by cloud storage and generate a share link for that file’s cloud identifier without requiring the user to manually go through these steps or prompt the user to upload the file to cloud storage again.
 
 ### Non-Goals
 
@@ -90,15 +90,15 @@ This proposal does not plan to provide a standardized way for CSP’s web APIs t
 * interact (fetch/modify/etc) with these files/directories.
 * provide additional meta-data (e.g. sync status)
 
-Instead, it should only generate an opaque handle/ identifier for a file/directory so that web apps can then interact with these individual CSPs’ web APIs on the same file/directory. Obtaining the required access permissions on that file is delegated to the web app.
+Instead, it should only generate an opaque identifier for a file/directory so that web apps can then interact with these individual CSPs’ web APIs on the same file/directory. Obtaining the required access permissions on that file is delegated to the web app.
 Web apps might only support one specific CSP. When supporting multiple CSPs, each CSP will require their own implementation, although semantically they would likely perform similar steps.
 
 ## Design
 
-![image](./images/cloud-file-handling/design.png "Design")
+![image](./images/cloud-identifier/design.png "Design")
 
 1. Locally installed CSP client registers itself as a provider for certain directories with the browser
-2. Web app receives `FileSystemHandle` for a file/directory (via File Handling opening flow, File System Access file/directory picker or drag & drop) and requests its cloud handle(s) via `getCloudHandles()`.
+2. Web app receives `FileSystemHandle` for a file/directory (via File Handling opening flow, File System Access file/directory picker or drag & drop) and requests its cloud identifier(s) via `getCloudIdentifiers()`.
 3. Browser checks whether this path has been registered as being synced by a provider
    * If no, resolve promise with empty list
 4. For each registered provider for that path, the browser will send a request to the registered provider’s executable with the file’s/directory’s path
@@ -106,7 +106,7 @@ Web apps might only support one specific CSP. When supporting multiple CSPs, eac
    * The token can also be a stable and already cached identifier, in which case step 5 and 6 are skipped
 6.  CSP can choose to generate a one-time token or stable identifier to later be used by the CSP’s web APIs. Either way, the properties of the token are up to the CSP and completely opaque to the browser.
 7. Provider responds to browser with the token
-8. Browser gathers all responses from providers. For all incoming responses, the browser will construct a cloud file handle consisting of the responding provider’s registered identifier and the provided token. Once all registered providers for that path have responded, the promise is resolved with a list of cloud file handles. If the provider fails to respond within a reasonable time frame, the promise is resolved with all received cloud handles until then or empty list if none.
+8. Browser gathers all responses from providers. For all incoming responses, the browser will construct a cloud identifier consisting of the responding provider’s registered identifier and the provided token. Once all registered providers for that path have responded, the promise is resolved with a list of cloud identifiers. If the provider fails to respond within a reasonable time frame, the promise is resolved with all received cloud identifiers until then or empty list if none.
 9. Web app can freely interact with CSP’s web APIs on that file/directory. The web application is responsible for getting the right access permissions for these web APIs.
 
 ### Web IDL
@@ -114,19 +114,19 @@ Web apps might only support one specific CSP. When supporting multiple CSPs, eac
 This section describes the interface the web app would interact with.
 
 ```idl
-dictionary FileSystemCloudHandle {
+dictionary FileSystemCloudIdentifier {
   DOMString providerName;
   DOMString id;
 };
 
 partial interface `FileSystemHandle` {
-  Promise<FileSystemCloudHandle[]> getCloudHandles();
+  Promise<FileSystemCloudIdentifier[]> getCloudIdentifiers();
 }
 ```
 
 The new method
 * extends FileSystemHandle, i.e. is available for files and directories.
-* returns a list of FileSystemCloudHandles since a single file/directory can be synced by multiple CSPs at the same time, although in most cases this list would only contain a single entry.
+* returns a list of FileSystemCloudIdentifiers since a single file/directory can be synced by multiple CSPs at the same time, although in most cases this list would only contain a single entry.
 * returns an empty list if the file/directory is not synced by any CSPs or no CSP client responded in time.
 
 ### Interaction with CSP client
@@ -156,15 +156,15 @@ The provided file would look like this:
 }
 ```
 
-#### Requesting a cloud file handle
+#### Requesting a cloud identifier
 
-Whenever a web app calls `getCloudFileHandles()`, the browser will iterate through all registered CSP clients and filter for ones that cover the file’s/directory’s path as part of their `synced_paths`.
+Whenever a web app calls `getCloudIdentifiers()`, the browser will iterate through all registered CSP clients and filter for ones that cover the file’s/directory’s path as part of their `synced_paths`.
 
 For these, the browser will launch the executable at `path` and transfer the web app’s origin and the requested file/directory path, either via command line argument or via stdin (preceded with a 32-bit message length).
 
 The CSP client will then respond with the token for the given file/directory via stdout (preceded with a 32-bit message length).
 
-Once the browser has received all responses (or some reasonable timeout has expired), the browser will bundle the individual tokens and the CSPs’ names together to return a cloud file handle.
+Once the browser has received all responses (or some reasonable timeout has expired), the browser will bundle the individual tokens and the CSPs’ names together to return a cloud identifier.
 
 It is up to each individual browser’s implementation on how they handle dynamic registrations, i.e. whether they re-read all the CSP registration files for each request and how long or if they cache them.
 
@@ -172,7 +172,7 @@ It is up to each individual browser’s implementation on how they handle dynami
 
 ### Fingerprinting
 
-The browser has no control whether the CSP will provide one-time tokens or stable identifiers as part of their cloud handle. If the CSP provides stable identifiers, the web application could use these as a [fingerprinting](https://www.w3.org/TR/fingerprinting-guidance/#dfn-active-fingerprinting) mechanism for the files/directories it has access to.
+The browser has no control whether the CSP will provide one-time tokens or stable identifiers as part of their cloud identifier. If the CSP provides stable identifiers, the web application could use these as a [fingerprinting](https://www.w3.org/TR/fingerprinting-guidance/#dfn-active-fingerprinting) mechanism for the files/directories it has access to.
 
 In theory, if a web application already has access to a `FileSystemHandle` the web application could already use other mechanisms to generate fingerprinting identifiers, but these are less stable:
 * Hashing the file’s/directory’s contents -> identifier will change if file/directory content changes
