@@ -119,7 +119,7 @@ dictionary FileSystemCloudIdentifier {
   DOMString id;
 };
 
-partial interface `FileSystemHandle` {
+partial interface FileSystemHandle {
   Promise<FileSystemCloudIdentifier[]> getCloudIdentifiers();
 }
 ```
