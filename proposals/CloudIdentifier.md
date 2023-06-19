@@ -16,7 +16,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Introduction
-The objective of this API is to allow web applications to detect whether a `FileSystemHandle` they have acquired (obtained via file/directory picker or as a parameter of an opening flow as a registered file handler) belongs to a cloud-synced file/directory. If so, the web application receives a “cloud identifier” so that it can directly interact with the file/directory using the cloud storage provider’s (CSP) web APIs.
+The objective of this API is to allow web applications to detect whether a `FileSystemHandle` they have acquired (obtained via file/directory picker or as a parameter of an opening flow as a registered file handler) belongs to a cloud-synced file/directory. If so, the web application receives a “cloud identifier” so that it can directly interact with the file/directory using the cloud storage provider’s (CSP) backend APIs.
 
 A CSP can register as a local sync client to the browser, which in turn may ask the local sync client to provide a unique identifier for a given file/directory when requested.
 
@@ -48,11 +48,11 @@ Web applications offering app streaming or VDI might want to make a locally sync
 
 ![image](./images/cloud-identifier/remote-file-handling-before.png "Before")
 
-1. VDI web app requests and receives the file via `FileSystemFileHandle::getFile()`
+1. VDI web app requests and receives the file via `FileSystemFileHandle.getFile()`
 2. CSP client app downloads the file from CSP server (if not already on disc)
 3. VDI web app transfers the file’s content to VDI server, which creates it as local file on the server and opens the application for that file
 4. VDI server sends any changes made to the file back to the VDI web app
-5. VDI web app writes updated file contents via `FileSystemFileHandle::write()`, which is picked up by the CSP client app
+5. VDI web app writes updated file contents via `FileSystemFileHandle.write()`, which is picked up by the CSP client app
 6. CSP client app synchronizes the file by uploading it to the CSP server
 
 In this scenario all transfers (arrows in diagram) transfer the entire file and the file has to be downloaded and uploaded from the local device’s network connection.
@@ -61,7 +61,7 @@ In this scenario all transfers (arrows in diagram) transfer the entire file and 
 
 ![image](./images/cloud-identifier/remote-file-handling-after.png "After")
 
-1. VDI web app requests and receives the file’s cloud identifier via FileSystemFileHandle::getCloudIdentifiers()
+1. VDI web app requests and receives the file’s cloud identifier via `FileSystemFileHandle.getCloudIdentifiers()`
 2. VDI web app sends the file’s cloud identifier to VDI server
 3. VDI server requests and receives the file’s content from CSP server using the cloud identifier
 4. VDI server sends any changes made to the file back to the CSP server
@@ -85,13 +85,14 @@ With the proposed changes, the web application could already detect that the fil
 
 ### Non-Goals
 
-This proposal does not plan to provide a standardized way for CSP’s web APIs to 
-* give access permissions to these files/directories.
+This proposal does **not** plan to provide a way for web apps to
+* provide permission to these files/directories.
 * interact (fetch/modify/etc) with these files/directories.
 * provide additional meta-data (e.g. sync status)
 
-Instead, it should only generate an opaque identifier for a file/directory so that web apps can then interact with these individual CSPs’ web APIs on the same file/directory. Obtaining the required access permissions on that file is delegated to the web app.
-Web apps might only support one specific CSP. When supporting multiple CSPs, each CSP will require their own implementation, although semantically they would likely perform similar steps.
+across various different CSP backend APIs.
+
+This new web API just serves as bridge between the CSP's local sync clients and the web app to retrieve a unique identifier for a file/directory. Obtaining the required permissions on that file/directory or actually reading/writing contents to it via CSP backend API is delegated to the web app's own implementation for each CSP. The `getCloudIdentifiers()` might also return `FileSystemCloudIdentifier`s for CSPs the web app does not support.
 
 ## Design
 
@@ -99,15 +100,14 @@ Web apps might only support one specific CSP. When supporting multiple CSPs, eac
 
 1. Locally installed CSP client registers itself as a provider for certain directories with the browser
 2. Web app receives `FileSystemHandle` for a file/directory (via File Handling opening flow, File System Access file/directory picker or drag & drop) and requests its cloud identifier(s) via `getCloudIdentifiers()`.
-3. Browser checks whether this path has been registered as being synced by a provider
+3. Browser checks whether this path has been registered as being synced by a local sync client
    * If no, resolve promise with empty list
-4. For each registered provider for that path, the browser will send a request to the registered provider’s executable with the file’s/directory’s path
-5. Provider requests a token for that path from the CSP
-   * The token can also be a stable and already cached identifier, in which case step 5 and 6 are skipped
-6.  CSP can choose to generate a one-time token or stable identifier to later be used by the CSP’s web APIs. Either way, the properties of the token are up to the CSP and completely opaque to the browser.
-7. Provider responds to browser with the token
-8. Browser gathers all responses from providers. For all incoming responses, the browser will construct a cloud identifier consisting of the responding provider’s registered identifier and the provided token. Once all registered providers for that path have responded, the promise is resolved with a list of cloud identifiers. If the provider fails to respond within a reasonable time frame, the promise is resolved with all received cloud identifiers until then or empty list if none.
-9. Web app can freely interact with CSP’s web APIs on that file/directory. The web application is responsible for getting the right access permissions for these web APIs.
+4. For each registered local sync client for that path, the browser will send a request to the registered local sync client's executable with the file’s/directory’s path
+5. Local sync client requests a token for that path from the CSP
+6.  CSP can choose to generate a one-time token or stable identifier to later be used by the CSP’s backend APIs. Either way, the properties of the token are up to the CSP and completely opaque to the browser.
+7. Local sync client responds to browser with the token
+8. Browser gathers all responses from registered local sync clients. For all incoming responses, the browser will construct a cloud identifier consisting of the responding local sync client's registered identifier and the provided token. Once all registered local sync clients for that path have responded, the promise is resolved with a list of cloud identifiers. If the local sync client fails to respond within a reasonable time frame, the promise is resolved with all received cloud identifiers until then or empty list if none.
+9. Web app can freely interact with CSP’s backend APIs on that file/directory. The web application is responsible for getting the right access permissions for these web APIs.
 
 ### Web IDL
 
@@ -125,8 +125,8 @@ partial interface `FileSystemHandle` {
 ```
 
 The new method
-* extends FileSystemHandle, i.e. is available for files and directories.
-* returns a list of FileSystemCloudIdentifiers since a single file/directory can be synced by multiple CSPs at the same time, although in most cases this list would only contain a single entry.
+* extends `FileSystemHandle`, i.e. is available for files and directories.
+* returns a list of `FileSystemCloudIdentifier`s since a single file/directory can be synced by multiple CSPs at the same time, although in most cases this list would only contain a single entry.
 * returns an empty list if the file/directory is not synced by any CSPs or no CSP client responded in time.
 
 ### Interaction with CSP client
@@ -176,15 +176,15 @@ The browser has no control whether the CSP will provide one-time tokens or stabl
 
 In theory, if a web application already has access to a `FileSystemHandle` the web application could already use other mechanisms to generate fingerprinting identifiers, but these are less stable:
 * Hashing the file’s/directory’s contents -> identifier will change if file/directory content changes
-* `FileSystemHandle::getUniqueId()` [[explainer](https://github.com/whatwg/fs/pull/46)] -> clearing browsing data will reset unique IDs
+* `FileSystemHandle.getUniqueId()` [[explainer](https://github.com/whatwg/fs/pull/46)] -> clearing browsing data will reset unique IDs
 
-The web application would need repeated access to the same `FileSystemHandle` to perform this fingerprinting though. That means the user must either re-grant access to the same file or the web app stores the file handle in an IndexDB, which can be cleared by the user though by clearing their browsing data.
+The web application would need repeated access to the same `FileSystemHandle` to perform this fingerprinting though. That means the user must either re-grant access to the same file or the web app stores the file handle in an IndexedDB, which can be cleared by the user though by clearing their browsing data.
 
 It would also be up to the CSP whether they actually provide permanent tokens or temporary tokens.
 
 ### Modification via read-only permission
 
-If a web application only has `read` level access to a `FileSystemHandle`, but has `write` level access to that file via CSP web APIs, it could still modify the cloud-stored file, which is then synced to the device and thereby modify the file. 
+If a web application only has `read` [permission](https://wicg.github.io/file-system-access/#enumdef-filesystempermissionmode) to a `FileSystemHandle`, but has `readwrite` permission to that file via CSP backend APIs, it could still modify the cloud-stored file, which is then synced to the device and thereby modify the file. 
 
 In this case, the user has clearly granted write access to the CSP-backed file and by having a sync client, the user also allows the local files to be modified, so the change would actually not be surprising.
 
