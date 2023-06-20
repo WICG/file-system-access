@@ -134,10 +134,13 @@ Issue(whatwg/fs#101): Make these checks no longer associated with an entry.
   1. If |status|.{{PermissionStatus/state}} is not {{PermissionState/"prompt"}}, abort.
   1. Let |settings| be |desc|.{{FileSystemPermissionDescriptor/handle}}'s [=relevant settings object=].
   1. Let |global| be |settings|'s [=environment settings object/global object=].
-  1. If |global| is not a {{Window}}, throw a {{SecurityError}}.
-  1. If |global| does not have [=transient activation=], throw a {{SecurityError}}.
-  1. If |settings|'s [=environment settings object/origin=] is not [=same origin=] with |settings|'s [=top-level origin=],
-     throw a {{SecurityError}}.
+  1. If |global| is not a {{Window}}, then
+     [=throw=] a "{{SecurityError}}" {{DOMException}}.
+  1. If |global| does not have [=transient activation=], then
+     [=throw=] a "{{SecurityError}}" {{DOMException}}.
+  1. If |settings|'s [=environment settings object/origin=]
+     is not [=same origin=] with |settings|'s [=top-level origin=], then
+     [=throw=] a "{{SecurityError}}" {{DOMException}}.
   1. [=Request permission to use=] |desc|.
   1. Run the [=default permission query algorithm=] on |desc| and |status|.
 
@@ -251,7 +254,7 @@ The <dfn method for=FileSystemHandle>requestPermission(|descriptor|)</dfn> metho
 1. Run the following steps [=in parallel=]:
   1. Let |state| be the result of [=requesting file system permission=]
      given <b>[=this=]</b> and |descriptor|.{{FileSystemHandlePermissionDescriptor/mode}}.
-     If that throws an exception, [=reject=] |result| with that exception and abort.
+     If that throws an exception, [=/reject=] |result| with that exception and abort.
   1. [=/Resolve=] |result| with |state|.
 1. Return |result|.
 
@@ -333,15 +336,16 @@ should be {{PermissionState/"granted"}}.
 To verify that an |environment| <dfn>is allowed to show a file picker</dfn>, run these steps:
 
 1. If |environment|'s [=environment settings object/origin=] is an [=opaque origin=],
-   return [=a promise rejected with=] a {{SecurityError}}.
+   return [=a promise rejected with=] a "{{SecurityError}}" {{DOMException}}.
 
 1. If |environment|'s [=environment settings object/origin=] is not [=same origin=] with
    |environment|'s [=top-level origin=],
-   return [=a promise rejected with=] a {{SecurityError}}.
+   return [=a promise rejected with=] a "{{SecurityError}}" {{DOMException}}.
 
 1. Let |global| be |environment|'s [=environment settings object/global object=].
 
-1. If |global| does not have [=transient activation=], throw a {{SecurityError}}.
+1. If |global| does not have [=transient activation=], then
+   [=throw=] a "{{SecurityError}}" {{DOMException}}.
 
 </div>
 
@@ -427,8 +431,9 @@ run these steps:
   1. Let |description| be |type|.{{FilePickerAcceptType/description}}.
   1. [=map/For each=] |typeString| → |suffixes| of |type|.{{FilePickerAcceptType/accept}}:
     1. Let |parsedType| be the result of [=parse a MIME type=] with |typeString|.
-    1. If |parsedType| is failure, throw a {{TypeError}}.
-    1. If |parsedType|'s [=MIME type/parameters=] are not empty, throw a {{TypeError}}.
+    1. If |parsedType| is failure, then [=throw=] a {{TypeError}}.
+    1. If |parsedType|'s [=MIME type/parameters=] are not empty, then
+       [=throw=] a {{TypeError}}.
     1. If |suffixes| is a string:
       1. [=Validate a suffix=] given |suffixes|.
     1. Otherwise, [=list/for each=] |suffix| of |suffixes|:
@@ -457,7 +462,7 @@ run these steps:
     1. Let |filter| be an algorithm that returns `true`.
     1. [=list/Append=] (|description|, |filter|) to |accepts options|.
 
-1. If |accepts options| is empty, throw a {{TypeError}}.
+1. If |accepts options| is empty, then [=throw=] a {{TypeError}}.
 
 1. Return |accepts options|.
 
@@ -466,11 +471,13 @@ run these steps:
 <div algorithm>
 To <dfn>validate a suffix</dfn> |suffix|, run the following steps:
 
-1. If |suffix| does not [=string/starts with|start with=] ".", throw a {{TypeError}}.
-1. If |suffix| contains any [=code points=] that are not [=valid suffix code points=],
-   throw a {{TypeError}}.
-1. If |suffix| ends with ".", throw a {{TypeError}}.
-1. If |suffix|'s [=string/length=] is more than 16, throw a {{TypeError}}.
+1. If |suffix| does not [=string/starts with|start with=] ".", then
+   [=throw=] a {{TypeError}}.
+1. If |suffix| contains any [=code points=] that are not
+   [=valid suffix code points=], then [=throw=] a {{TypeError}}.
+1. If |suffix| ends with ".", then [=throw=] a {{TypeError}}.
+1. If |suffix|'s [=string/length=] is more than 16, then
+   [=throw=] a {{TypeError}}.
 
 </div>
 
@@ -589,8 +596,10 @@ To <dfn>determine the directory the picker will start in</dfn>, given an optiona
 an optional {{StartInDirectory}} |startIn| and an [=environment settings object=] |environment|,
 run the following steps:
 
-1. If |id| given, and is not a [=valid path id=], throw a {{TypeError}}.
-1. If |id|'s [=string/length=] is more than 32, throw a {{TypeError}}.
+1. If |id| given, and is not a [=valid path id=], then
+   [=throw=] a {{TypeError}}.
+1. If |id|'s [=string/length=] is more than 32, then
+   [=throw=] a {{TypeError}}.
 
 1. Let |origin| be |environment|'s [=environment settings object/origin=].
 
@@ -681,7 +690,7 @@ these steps:
   1. Wait for the user to have made their selection.
 
   1. If the user dismissed the prompt without making a selection,
-     [=/reject=] |p| with an {{AbortError}} and abort.
+     [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
 
   1. Let |entries| be a [=/list=] of [=file entries=] representing the selected files or directories.
   1. Let |result| be a empty [=/list=].
@@ -691,7 +700,7 @@ these steps:
       1. Inform the user that the selected files or directories can't be exposed to this website.
       1. At the discretion of the user agent,
          either go back to the beginning of these [=in parallel=] steps,
-         or [=/reject=] |p| with an {{AbortError}} and abort.
+         or [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
 
     1. Add a new {{FileSystemFileHandle}} associated with |entry| to |result|.
 
@@ -767,7 +776,7 @@ these steps:
   1. Wait for the user to have made their selection.
 
   1. If the user dismissed the prompt without making a selection,
-     [=/reject=] |p| with an {{AbortError}} and abort.
+     [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
 
   1. Let |entry| be a [=file entry=] representing the selected file.
 
@@ -775,7 +784,7 @@ these steps:
     1. Inform the user that the selected files or directories can't be exposed to this website.
     1. At the discretion of the user agent,
        either go back to the beginning of these [=in parallel=] steps,
-       or [=/reject=] |p| with an {{AbortError}} and abort.
+       or [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
 
   1. Set |entry|'s [=binary data=] to an empty [=byte sequence=].
 
@@ -836,7 +845,7 @@ these steps:
   1. Wait for the user to have made their selection.
 
   1. If the user dismissed the prompt without making a selection,
-     [=/reject=] |p| with an {{AbortError}} and abort.
+     [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
 
   1. Let |entry| be a [=directory entry=] representing the selected directory.
 
@@ -844,7 +853,7 @@ these steps:
     1. Inform the user that the selected files or directories can't be exposed to this website.
     1. At the discretion of the user agent,
        either go back to the beginning of these [=in parallel=] steps,
-       or [=/reject=] |p| with an {{AbortError}} and abort.
+       or [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
 
   1. Set |result| to a new {{FileSystemDirectoryHandle}} associated with |entry|.
 
@@ -859,7 +868,7 @@ these steps:
   1. [=Request permission to use=] |desc|.
   1. Run the [=default permission query algorithm=] on |desc| and |status|.
   1. If |status| is not {{PermissionState/"granted"}},
-     reject |result| with a {{AbortError}} and abort.
+     [=/reject=] |result| with a "{{AbortError}}" {{DOMException}} and abort.
 
   1. Perform the <a spec=html>activation notification</a> steps in |global|'s [=Window/browsing context=].
 
