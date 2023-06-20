@@ -134,13 +134,13 @@ Issue(whatwg/fs#101): Make these checks no longer associated with an entry.
   1. If |status|.{{PermissionStatus/state}} is not {{PermissionState/"prompt"}}, abort.
   1. Let |settings| be |desc|.{{FileSystemPermissionDescriptor/handle}}'s [=relevant settings object=].
   1. Let |global| be |settings|'s [=environment settings object/global object=].
-  1. If |global| is not a {{Window}},
-     throw a "{{SecurityError}}" {{DOMException}}.
-  1. If |global| does not have [=transient activation=],
-     throw a "{{SecurityError}}" {{DOMException}}.
-  1. If |settings|'s [=environment settings object/origin=]
-     is not [=same origin=] with |settings|'s [=top-level origin=],
-     throw a "{{SecurityError}}" {{DOMException}}.
+  1. If |global| is not a {{Window}}, then
+     [=throw=] a "{{SecurityError}}" {{DOMException}}.
+  1. If |global| does not have [=transient activation=], then
+     [=throw=] a "{{SecurityError}}" {{DOMException}}.
+  1. If |settings|'s [=environment settings object/origin=],
+     is not [=same origin=] with |settings|'s [=top-level origin=], then
+     [=throw=] a "{{SecurityError}}" {{DOMException}}.
   1. [=Request permission to use=] |desc|.
   1. Run the [=default permission query algorithm=] on |desc| and |status|.
 
@@ -325,7 +325,7 @@ should be treated by the user agent as the user intending to grant read access t
 for the returned files. As such, at the time the promise returned by one of the [=local file system handle factories=]
 resolves, [=permission state=] for a descriptor with {{FileSystemPermissionDescriptor/handle}} set to the returned handle,
 and {{FileSystemPermissionDescriptor/mode}} set to {{"read"}}
-should be {{PermissionState/granted}}.
+should be {{PermissionState/"granted"}}.
 
 Additionally for calls to {{showSaveFilePicker}}
 the [=permission state=] for a descriptor with {{FileSystemPermissionDescriptor/handle}} set to the returned handle,
@@ -344,8 +344,8 @@ To verify that an |environment| <dfn>is allowed to show a file picker</dfn>, run
 
 1. Let |global| be |environment|'s [=environment settings object/global object=].
 
-1. If |global| does not have [=transient activation=],
-   throw a "{{SecurityError}}" {{DOMException}}.
+1. If |global| does not have [=transient activation=], then
+   [=throw=] a "{{SecurityError}}" {{DOMException}}.
 
 </div>
 
@@ -431,8 +431,9 @@ run these steps:
   1. Let |description| be |type|.{{FilePickerAcceptType/description}}.
   1. [=map/For each=] |typeString| → |suffixes| of |type|.{{FilePickerAcceptType/accept}}:
     1. Let |parsedType| be the result of [=parse a MIME type=] with |typeString|.
-    1. If |parsedType| is failure, throw a {{TypeError}}.
-    1. If |parsedType|'s [=MIME type/parameters=] are not empty, throw a {{TypeError}}.
+    1. If |parsedType| is failure, then [=throw=] a {{TypeError}}.
+    1. If |parsedType|'s [=MIME type/parameters=] are not empty, then
+       [=throw=] a {{TypeError}}.
     1. If |suffixes| is a string:
       1. [=Validate a suffix=] given |suffixes|.
     1. Otherwise, [=list/for each=] |suffix| of |suffixes|:
@@ -461,7 +462,7 @@ run these steps:
     1. Let |filter| be an algorithm that returns `true`.
     1. [=list/Append=] (|description|, |filter|) to |accepts options|.
 
-1. If |accepts options| is empty, throw a {{TypeError}}.
+1. If |accepts options| is empty, then [=throw=] a {{TypeError}}.
 
 1. Return |accepts options|.
 
@@ -470,11 +471,13 @@ run these steps:
 <div algorithm>
 To <dfn>validate a suffix</dfn> |suffix|, run the following steps:
 
-1. If |suffix| does not [=string/starts with|start with=] ".", throw a {{TypeError}}.
-1. If |suffix| contains any [=code points=] that are not [=valid suffix code points=],
-   throw a {{TypeError}}.
-1. If |suffix| ends with ".", throw a {{TypeError}}.
-1. If |suffix|'s [=string/length=] is more than 16, throw a {{TypeError}}.
+1. If |suffix| does not [=string/starts with|start with=] ".", then
+   [=throw=] a {{TypeError}}.
+1. If |suffix| contains any [=code points=] that are not
+   [=valid suffix code points=], then [=throw=] a {{TypeError}}.
+1. If |suffix| ends with ".", then [=throw=] a {{TypeError}}.
+1. If |suffix|'s [=string/length=] is more than 16, then
+   [=throw=] a {{TypeError}}.
 
 </div>
 
@@ -593,8 +596,10 @@ To <dfn>determine the directory the picker will start in</dfn>, given an optiona
 an optional {{StartInDirectory}} |startIn| and an [=environment settings object=] |environment|,
 run the following steps:
 
-1. If |id| given, and is not a [=valid path id=], throw a {{TypeError}}.
-1. If |id|'s [=string/length=] is more than 32, throw a {{TypeError}}.
+1. If |id| given, and is not a [=valid path id=], then
+   [=throw=] a {{TypeError}}.
+1. If |id|'s [=string/length=] is more than 32, then
+   [=throw=] a {{TypeError}}.
 
 1. Let |origin| be |environment|'s [=environment settings object/origin=].
 
