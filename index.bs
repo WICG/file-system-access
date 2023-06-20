@@ -117,10 +117,12 @@ permission-related algorithms and types are defined as follows:
   1. Otherwise, if |entry|'s [=file system entry/parent=] is not null, this descriptor's [=permission state=] must be
      equal to the [=permission state=] for a descriptor with the same {{FileSystemPermissionDescriptor/mode}},
      and a {{FileSystemPermissionDescriptor/handle}} representing |entry|'s [=file system entry/parent=].
-  1. Otherwise, if |desc|.{{FileSystemPermissionDescriptor/mode}} is "`readwrite`":
+  1. Otherwise, if |desc|.{{FileSystemPermissionDescriptor/mode}} is
+     "{{FileSystemPermissionMode/readwrite}}":
     1. Let |read state| be the [=permission state=] for a descriptor
        with the same {{FileSystemPermissionDescriptor/handle}},
-       but whose {{FileSystemPermissionDescriptor/mode}} is "`read`".
+       but whose {{FileSystemPermissionDescriptor/mode}} is
+       "{{FileSystemPermissionMode/read}}".
     1. If |read state| is not "{{PermissionState/granted}}", this descriptor's [=permission state=]
        must be equal to |read state|.
 
@@ -200,22 +202,29 @@ partial interface FileSystemHandle {
   : |status| = await |handle| . {{FileSystemHandle/queryPermission()|queryPermission}}({ {{FileSystemHandlePermissionDescriptor/mode}} : "{{FileSystemPermissionMode/read}}" })
   : |status| = await |handle| . {{FileSystemHandle/queryPermission()}}
   : |status| = (await navigator.{{Navigator/permissions}}.{{Permissions/query()|query}}({ {{PermissionDescriptor/name}} : "{{PermissionName/file-system}}", {{FileSystemPermissionDescriptor/handle}} : |handle| })).{{PermissionStatus/state}}
-  :: Queries the current state of the read permission of this handle. If this returns `"prompt"`
-     the website will have to call {{FileSystemHandle/requestPermission()}} before any
-     operations on the handle can be done. If this returns `"denied"` any operations will reject.
+  :: Queries the current state of the read permission of this handle.
+     If this returns "{{PermissionState/prompt}}" the website will have to call
+     {{FileSystemHandle/requestPermission()}} before any operations on the
+     handle can be done.
+     If this returns "{{PermissionState/denied}}" any operations will reject.
 
-     Usually handles returned by the [=local file system handle factories=] will initially return `"granted"` for
-     their read permission state, however other than through the user revoking permission, a handle
-     retrieved from IndexedDB is also likely to return `"prompt"`.
+     Usually handles returned by the [=local file system handle factories=] will
+     initially return "{{PermissionState/granted}}" for their read permission
+     state, however other than through the user revoking permission, a handle
+     retrieved from IndexedDB is also likely to return
+     "{{PermissionState/prompt}}".
 
   : |status| = await |handle| . {{FileSystemHandle/queryPermission()|queryPermission}}({ {{FileSystemHandlePermissionDescriptor/mode}} : "{{FileSystemPermissionMode/readwrite}}" })
   : |status| = (await navigator.{{Navigator/permissions}}.{{Permissions/query()|query}}({ {{PermissionDescriptor/name}} : "{{PermissionName/file-system}}", {{FileSystemPermissionDescriptor/handle}} : |handle|, {{FileSystemPermissionDescriptor/mode}} : "{{FileSystemPermissionMode/readwrite}}" }).{{PermissionStatus/state}}
-  :: Queries the current state of the write permission of this handle. If this returns `"prompt"`,
-     attempting to modify the file or directory this handle represents will require user activation
-     and will result in a confirmation prompt being shown to the user. However if the state of the
-     read permission of this handle is also `"prompt"` the website will need to call
-     {{FileSystemHandle/requestPermission()}}. There is no automatic prompting for read access when
-     attempting to read from a file or directory.
+  :: Queries the current state of the write permission of this handle.
+     If this returns "{{PermissionState/prompt}}", attempting to modify the
+     file or directory this handle represents will require user activation
+     and will result in a confirmation prompt being shown to the user.
+     However if the state of the read permission of this handle is also
+     "{{PermissionState/prompt}}" the website will need to call
+     {{FileSystemHandle/requestPermission()}}.
+     There is no automatic prompting for read access when attempting to
+     read from a file or directory.
 </div>
 
 Advisement: The integration with the permissions API's {{Permissions/query()}} method is not yet implemented in Chrome.
@@ -237,19 +246,23 @@ The <dfn method for=FileSystemHandle>queryPermission(|descriptor|)</dfn> method,
 <div class="note domintro">
   : |status| = await |handle| . {{FileSystemHandle/requestPermission()|requestPermission}}({ {{FileSystemHandlePermissionDescriptor/mode}} : "{{FileSystemPermissionMode/read}}" })
   : |status| = await |handle| . {{FileSystemHandle/requestPermission()}}
-  :: If the state of the read permission of this handle is anything other than `"prompt"`, this
-     will return that state directly. If it is `"prompt"` however, user activation is needed and
-     this will show a confirmation prompt to the user. The new read permission state is then
-     returned, depending on the user's response to the prompt.
+  :: If the state of the read permission of this handle is anything other than
+    "{{PermissionState/prompt}}", this will return that state directly.
+    If it is "{{PermissionState/prompt}}" however, user activation is needed and
+     this will show a confirmation prompt to the user.
+     The new read permission state is then returned, depending on
+     the user's response to the prompt.
 
   : |status| = await |handle| . {{FileSystemHandle/requestPermission()|requestPermission}}({ {{FileSystemHandlePermissionDescriptor/mode}} : "{{FileSystemPermissionMode/readwrite}}" })
-  :: If the state of the write permission of this handle is anything other than `"prompt"`, this
-     will return that state directly. If the status of the read permission of this handle is
-     `"denied"` this will return that.
+  :: If the state of the write permission of this handle is anything other than
+     "{{PermissionState/prompt}}", this will return that state directly.
+     If the status of the read permission of this handle is
+     "{{PermissionState/denied}}" this will return that.
 
-     Otherwise the state of the write permission is `"prompt"` and this will show a confirmation
-     prompt to the user. The new write permission state is then returned, depending on what the user
-     selected.
+     Otherwise the state of the write permission is "{{PermissionState/prompt}}"
+     and this will show a confirmation prompt to the user.
+     The new write permission state is then returned, depending on
+     what the user selected.
 </div>
 
 <div algorithm>
