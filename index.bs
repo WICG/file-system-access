@@ -247,8 +247,8 @@ The <dfn method for=FileSystemHandle>queryPermission(|descriptor|)</dfn> method,
   : |status| = await |handle| . {{FileSystemHandle/requestPermission()|requestPermission}}({ {{FileSystemHandlePermissionDescriptor/mode}} : "{{FileSystemPermissionMode/read}}" })
   : |status| = await |handle| . {{FileSystemHandle/requestPermission()}}
   :: If the state of the read permission of this handle is anything other than
-    "{{PermissionState/prompt}}", this will return that state directly.
-    If it is "{{PermissionState/prompt}}" however, user activation is needed and
+     "{{PermissionState/prompt}}", this will return that state directly.
+     If it is "{{PermissionState/prompt}}" however, user activation is needed and
      this will show a confirmation prompt to the user.
      The new read permission state is then returned, depending on
      the user's response to the prompt.
