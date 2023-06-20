@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 5fcd28d6d, updated Tue May 30 13:12:11 2023 -0700" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="3700ab860a79d527905ef0ffef238b2bb6fd87f6" name="document-revision">
+  <meta content="a350a87bc5771df7110a34316c3246d58f678974" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -1100,12 +1100,11 @@ run these steps:
        <li data-md>
         <p>Let <var>global</var> be <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global" id="ref-for-concept-settings-object-global">global object</a>.</p>
        <li data-md>
-        <p>If <var>global</var> is not a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window" id="ref-for-window">Window</a></code>, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror">SecurityError</a></code>.</p>
+        <p>If <var>global</var> is not a <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window" id="ref-for-window">Window</a></code>, then <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-throw" id="ref-for-dfn-throw">throw</a> a "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror">SecurityError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException">DOMException</a></code>.</p>
        <li data-md>
-        <p>If <var>global</var> does not have <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation">transient activation</a>, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror①">SecurityError</a></code>.</p>
+        <p>If <var>global</var> does not have <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation">transient activation</a>, then <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-throw" id="ref-for-dfn-throw①">throw</a> a "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror①">SecurityError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException①">DOMException</a></code>.</p>
        <li data-md>
-        <p>If <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin">origin</a> is not <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#same-origin" id="ref-for-same-origin">same origin</a> with <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin" id="ref-for-concept-environment-top-level-origin">top-level origin</a>,
- throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror②">SecurityError</a></code>.</p>
+        <p>If <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin">origin</a> is not <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#same-origin" id="ref-for-same-origin">same origin</a> with <var>settings</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin" id="ref-for-concept-environment-top-level-origin">top-level origin</a>, then <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-throw" id="ref-for-dfn-throw②">throw</a> a "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror②">SecurityError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException②">DOMException</a></code>.</p>
        <li data-md>
         <p><a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-request-permission-to-use" id="ref-for-dfn-request-permission-to-use">Request permission to use</a> <var>desc</var>.</p>
        <li data-md>
@@ -1302,14 +1301,14 @@ and <code class="idl"><a data-link-type="idl" href="#dom-filesystempermissiondes
     <ol>
      <li data-md>
       <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin①">origin</a> is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-opaque" id="ref-for-concept-origin-opaque">opaque origin</a>,
- return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror③">SecurityError</a></code>.</p>
+ return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with">a promise rejected with</a> a "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror③">SecurityError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException③">DOMException</a></code>.</p>
      <li data-md>
       <p>If <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin②">origin</a> is not <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#same-origin" id="ref-for-same-origin①">same origin</a> with <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-environment-top-level-origin" id="ref-for-concept-environment-top-level-origin①">top-level origin</a>,
- return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with①">a promise rejected with</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror④">SecurityError</a></code>.</p>
+ return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-promise-rejected-with" id="ref-for-a-promise-rejected-with①">a promise rejected with</a> a "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror④">SecurityError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException④">DOMException</a></code>.</p>
      <li data-md>
       <p>Let <var>global</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-global" id="ref-for-concept-settings-object-global①">global object</a>.</p>
      <li data-md>
-      <p>If <var>global</var> does not have <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation①">transient activation</a>, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror⑤">SecurityError</a></code>.</p>
+      <p>If <var>global</var> does not have <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation①">transient activation</a>, then <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-throw" id="ref-for-dfn-throw③">throw</a> a "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#securityerror" id="ref-for-securityerror⑤">SecurityError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException⑤">DOMException</a></code>.</p>
     </ol>
    </div>
    <h3 class="heading settled" data-level="3.2" id="api-filepickeroptions"><span class="secno">3.2. </span><span class="content">File picker options</span><a class="self-link" href="#api-filepickeroptions"></a></h3>
@@ -1384,9 +1383,9 @@ run these steps:
          <li data-md>
           <p>Let <var>parsedType</var> be the result of <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#parse-a-mime-type" id="ref-for-parse-a-mime-type">parse a MIME type</a> with <var>typeString</var>.</p>
          <li data-md>
-          <p>If <var>parsedType</var> is failure, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror">TypeError</a></code>.</p>
+          <p>If <var>parsedType</var> is failure, then <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-throw" id="ref-for-dfn-throw④">throw</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror">TypeError</a></code>.</p>
          <li data-md>
-          <p>If <var>parsedType</var>’s <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#parameters" id="ref-for-parameters">parameters</a> are not empty, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①">TypeError</a></code>.</p>
+          <p>If <var>parsedType</var>’s <a data-link-type="dfn" href="https://mimesniff.spec.whatwg.org/#parameters" id="ref-for-parameters">parameters</a> are not empty, then <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-throw" id="ref-for-dfn-throw⑤">throw</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①">TypeError</a></code>.</p>
          <li data-md>
           <p>If <var>suffixes</var> is a string:</p>
           <ol>
@@ -1450,7 +1449,7 @@ or <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filep
         </ol>
       </ol>
      <li data-md>
-      <p>If <var>accepts options</var> is empty, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror②">TypeError</a></code>.</p>
+      <p>If <var>accepts options</var> is empty, then <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-throw" id="ref-for-dfn-throw⑥">throw</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror②">TypeError</a></code>.</p>
      <li data-md>
       <p>Return <var>accepts options</var>.</p>
     </ol>
@@ -1459,14 +1458,13 @@ or <var>options</var>.<code class="idl"><a data-link-type="idl" href="#dom-filep
      To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="validate-a-suffix">validate a suffix</dfn> <var>suffix</var>, run the following steps: 
     <ol>
      <li data-md>
-      <p>If <var>suffix</var> does not <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-starts-with" id="ref-for-string-starts-with">start with</a> ".", throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror③">TypeError</a></code>.</p>
+      <p>If <var>suffix</var> does not <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-starts-with" id="ref-for-string-starts-with">start with</a> ".", then <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-throw" id="ref-for-dfn-throw⑦">throw</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror③">TypeError</a></code>.</p>
      <li data-md>
-      <p>If <var>suffix</var> contains any <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point" id="ref-for-code-point①">code points</a> that are not <a data-link-type="dfn" href="#valid-suffix-code-point" id="ref-for-valid-suffix-code-point①">valid suffix code points</a>,
- throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror④">TypeError</a></code>.</p>
+      <p>If <var>suffix</var> contains any <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#code-point" id="ref-for-code-point①">code points</a> that are not <a data-link-type="dfn" href="#valid-suffix-code-point" id="ref-for-valid-suffix-code-point①">valid suffix code points</a>, then <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-throw" id="ref-for-dfn-throw⑧">throw</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror④">TypeError</a></code>.</p>
      <li data-md>
-      <p>If <var>suffix</var> ends with ".", throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑤">TypeError</a></code>.</p>
+      <p>If <var>suffix</var> ends with ".", then <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-throw" id="ref-for-dfn-throw⑨">throw</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑤">TypeError</a></code>.</p>
      <li data-md>
-      <p>If <var>suffix</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-length" id="ref-for-string-length">length</a> is more than 16, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑥">TypeError</a></code>.</p>
+      <p>If <var>suffix</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-length" id="ref-for-string-length">length</a> is more than 16, then <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-throw" id="ref-for-dfn-throw①⓪">throw</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑥">TypeError</a></code>.</p>
     </ol>
    </div>
    <h4 class="heading settled" data-level="3.2.2" id="api-filepickeroptions-starting-directory"><span class="secno">3.2.2. </span><span class="content">Starting Directory</span><a class="self-link" href="#api-filepickeroptions-starting-directory"></a></h4>
@@ -1563,9 +1561,9 @@ an optional <code class="idl"><a data-link-type="idl" href="#typedefdef-startind
 run the following steps: 
      <ol>
       <li data-md>
-       <p>If <var>id</var> given, and is not a <a data-link-type="dfn" href="#valid-path-id" id="ref-for-valid-path-id①">valid path id</a>, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑦">TypeError</a></code>.</p>
+       <p>If <var>id</var> given, and is not a <a data-link-type="dfn" href="#valid-path-id" id="ref-for-valid-path-id①">valid path id</a>, then <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-throw" id="ref-for-dfn-throw①①">throw</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑦">TypeError</a></code>.</p>
       <li data-md>
-       <p>If <var>id</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-length" id="ref-for-string-length①">length</a> is more than 32, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑧">TypeError</a></code>.</p>
+       <p>If <var>id</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string-length" id="ref-for-string-length①">length</a> is more than 32, then <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-throw" id="ref-for-dfn-throw①②">throw</a> a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑧">TypeError</a></code>.</p>
       <li data-md>
        <p>Let <var>origin</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin③">origin</a>.</p>
       <li data-md>
@@ -1675,7 +1673,7 @@ these steps:
         <li data-md>
          <p>Wait for the user to have made their selection.</p>
         <li data-md>
-         <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject①">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror">AbortError</a></code> and abort.</p>
+         <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject①">reject</a> <var>p</var> with an "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror">AbortError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException⑥">DOMException</a></code> and abort.</p>
         <li data-md>
          <p>Let <var>entries</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list①">list</a> of <a data-link-type="dfn" href="https://fs.spec.whatwg.org/#file" id="ref-for-file①">file entries</a> representing the selected files or directories.</p>
         <li data-md>
@@ -1691,7 +1689,7 @@ these steps:
             <li data-md>
              <p>At the discretion of the user agent,
  either go back to the beginning of these <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel③">in parallel</a> steps,
- or <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject②">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror①">AbortError</a></code> and abort.</p>
+ or <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject②">reject</a> <var>p</var> with an "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror①">AbortError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException⑦">DOMException</a></code> and abort.</p>
            </ol>
           <li data-md>
            <p>Add a new <code class="idl"><a data-link-type="idl" href="https://fs.spec.whatwg.org/#filesystemfilehandle" id="ref-for-filesystemfilehandle③">FileSystemFileHandle</a></code> associated with <var>entry</var> to <var>result</var>.</p>
@@ -1762,7 +1760,7 @@ these steps:
         <li data-md>
          <p>Wait for the user to have made their selection.</p>
         <li data-md>
-         <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject③">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror②">AbortError</a></code> and abort.</p>
+         <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject③">reject</a> <var>p</var> with an "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror②">AbortError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException⑧">DOMException</a></code> and abort.</p>
         <li data-md>
          <p>Let <var>entry</var> be a <a data-link-type="dfn" href="https://fs.spec.whatwg.org/#file" id="ref-for-file②">file entry</a> representing the selected file.</p>
         <li data-md>
@@ -1773,7 +1771,7 @@ these steps:
           <li data-md>
            <p>At the discretion of the user agent,
  either go back to the beginning of these <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel⑤">in parallel</a> steps,
- or <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject④">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror③">AbortError</a></code> and abort.</p>
+ or <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject④">reject</a> <var>p</var> with an "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror③">AbortError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException⑨">DOMException</a></code> and abort.</p>
          </ol>
         <li data-md>
          <p>Set <var>entry</var>’s <a data-link-type="dfn" href="https://fs.spec.whatwg.org/#file-entry-binary-data" id="ref-for-file-entry-binary-data">binary data</a> to an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence">byte sequence</a>.</p>
@@ -1834,7 +1832,7 @@ these steps:
         <li data-md>
          <p>Wait for the user to have made their selection.</p>
         <li data-md>
-         <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject⑤">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror④">AbortError</a></code> and abort.</p>
+         <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject⑤">reject</a> <var>p</var> with an "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror④">AbortError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException①⓪">DOMException</a></code> and abort.</p>
         <li data-md>
          <p>Let <var>entry</var> be a <a data-link-type="dfn" href="https://fs.spec.whatwg.org/#directory" id="ref-for-directory①">directory entry</a> representing the selected directory.</p>
         <li data-md>
@@ -1845,7 +1843,7 @@ these steps:
           <li data-md>
            <p>At the discretion of the user agent,
  either go back to the beginning of these <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel⑦">in parallel</a> steps,
- or <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject⑥">reject</a> <var>p</var> with an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror⑤">AbortError</a></code> and abort.</p>
+ or <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject⑥">reject</a> <var>p</var> with an "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror⑤">AbortError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException①①">DOMException</a></code> and abort.</p>
          </ol>
         <li data-md>
          <p>Set <var>result</var> to a new <code class="idl"><a data-link-type="idl" href="https://fs.spec.whatwg.org/#filesystemdirectoryhandle" id="ref-for-filesystemdirectoryhandle③">FileSystemDirectoryHandle</a></code> associated with <var>entry</var>.</p>
@@ -1862,8 +1860,7 @@ these steps:
         <li data-md>
          <p>Run the <a data-link-type="dfn" href="https://w3c.github.io/permissions/#dfn-default-permission-query-algorithm" id="ref-for-dfn-default-permission-query-algorithm②">default permission query algorithm</a> on <var>desc</var> and <var>status</var>.</p>
         <li data-md>
-         <p>If <var>status</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted④">"granted"</a></code>,
- reject <var>result</var> with a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror⑥">AbortError</a></code> and abort.</p>
+         <p>If <var>status</var> is not <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/permissions/#dom-permissionstate-granted" id="ref-for-dom-permissionstate-granted④">"granted"</a></code>, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject⑦">reject</a> <var>result</var> with a "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror⑥">AbortError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException①②">DOMException</a></code> and abort.</p>
         <li data-md>
          <p>Perform the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#activation-notification" id="ref-for-activation-notification③">activation notification</a> steps in <var>global</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc③">browsing context</a>.</p>
         <li data-md>
@@ -2265,6 +2262,7 @@ use this API to write to disk.</p>
     <a data-link-type="biblio">[WEBIDL]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="d25dfb2c">AbortError</span>
+     <li><span class="dfn-paneled" id="dca2de17">DOMException</span>
      <li><span class="dfn-paneled" id="8855a9aa">DOMString</span>
      <li><span class="dfn-paneled" id="889e932f">Exposed</span>
      <li><span class="dfn-paneled" id="bdbd19d1">Promise</span>
@@ -2281,6 +2279,7 @@ use this API to write to disk.</p>
      <li><span class="dfn-paneled" id="3b90bdcd">resolve</span>
      <li><span class="dfn-paneled" id="9cce47fd">sequence</span>
      <li><span class="dfn-paneled" id="4013a022">this</span>
+     <li><span class="dfn-paneled" id="b4cfa5ce">throw</span>
     </ul>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
@@ -2870,6 +2869,7 @@ window.dfnpanelData['35725f70'] = {"dfnID": "35725f70", "url": "https://wicg.git
 window.dfnpanelData['91461e7c'] = {"dfnID": "91461e7c", "url": "https://storage.spec.whatwg.org/#site-storage", "dfnText": "storage", "refSections": [{"refs": [{"id": "ref-for-site-storage"}], "title": "5.1. Users giving access to more, or more sensitive files than they intended."}], "external": true};
 window.dfnpanelData['cac8dd86'] = {"dfnID": "cac8dd86", "url": "https://storage.spec.whatwg.org/#storage-quota", "dfnText": "storage quota", "refSections": [{"refs": [{"id": "ref-for-storage-quota"}, {"id": "ref-for-storage-quota\u2460"}, {"id": "ref-for-storage-quota\u2461"}], "title": "6.3. Filling up a users disk"}], "external": true};
 window.dfnpanelData['d25dfb2c'] = {"dfnID": "d25dfb2c", "url": "https://webidl.spec.whatwg.org/#aborterror", "dfnText": "AbortError", "refSections": [{"refs": [{"id": "ref-for-aborterror"}, {"id": "ref-for-aborterror\u2460"}], "title": "3.3. The showOpenFilePicker() method"}, {"refs": [{"id": "ref-for-aborterror\u2461"}, {"id": "ref-for-aborterror\u2462"}], "title": "3.4. The showSaveFilePicker() method"}, {"refs": [{"id": "ref-for-aborterror\u2463"}, {"id": "ref-for-aborterror\u2464"}, {"id": "ref-for-aborterror\u2465"}], "title": "3.5. The showDirectoryPicker() method"}], "external": true};
+window.dfnpanelData['dca2de17'] = {"dfnID": "dca2de17", "url": "https://webidl.spec.whatwg.org/#idl-DOMException", "dfnText": "DOMException", "refSections": [{"refs": [{"id": "ref-for-idl-DOMException"}, {"id": "ref-for-idl-DOMException\u2460"}, {"id": "ref-for-idl-DOMException\u2461"}], "title": "2.2. Permissions"}, {"refs": [{"id": "ref-for-idl-DOMException\u2462"}, {"id": "ref-for-idl-DOMException\u2463"}, {"id": "ref-for-idl-DOMException\u2464"}], "title": "3.1. Local File System Permissions"}, {"refs": [{"id": "ref-for-idl-DOMException\u2465"}, {"id": "ref-for-idl-DOMException\u2466"}], "title": "3.3. The showOpenFilePicker() method"}, {"refs": [{"id": "ref-for-idl-DOMException\u2467"}, {"id": "ref-for-idl-DOMException\u2468"}], "title": "3.4. The showSaveFilePicker() method"}, {"refs": [{"id": "ref-for-idl-DOMException\u2460\u24ea"}, {"id": "ref-for-idl-DOMException\u2460\u2460"}, {"id": "ref-for-idl-DOMException\u2460\u2461"}], "title": "3.5. The showDirectoryPicker() method"}], "external": true};
 window.dfnpanelData['8855a9aa'] = {"dfnID": "8855a9aa", "url": "https://webidl.spec.whatwg.org/#idl-DOMString", "dfnText": "DOMString", "refSections": [{"refs": [{"id": "ref-for-idl-DOMString"}, {"id": "ref-for-idl-DOMString\u2460"}], "title": "3. Accessing Local File System"}], "external": true};
 window.dfnpanelData['889e932f'] = {"dfnID": "889e932f", "url": "https://webidl.spec.whatwg.org/#Exposed", "dfnText": "Exposed", "refSections": [{"refs": [{"id": "ref-for-Exposed"}], "title": "2.3. The FileSystemHandle interface"}], "external": true};
 window.dfnpanelData['bdbd19d1'] = {"dfnID": "bdbd19d1", "url": "https://webidl.spec.whatwg.org/#idl-promise", "dfnText": "Promise", "refSections": [{"refs": [{"id": "ref-for-idl-promise"}, {"id": "ref-for-idl-promise\u2460"}], "title": "2.3. The FileSystemHandle interface"}, {"refs": [{"id": "ref-for-idl-promise\u2461"}, {"id": "ref-for-idl-promise\u2462"}, {"id": "ref-for-idl-promise\u2463"}], "title": "3. Accessing Local File System"}, {"refs": [{"id": "ref-for-idl-promise\u2464"}], "title": "3.6. Drag and Drop"}], "external": true};
@@ -2882,10 +2882,11 @@ window.dfnpanelData['d0b4a948'] = {"dfnID": "d0b4a948", "url": "https://webidl.s
 window.dfnpanelData['8f5c2179'] = {"dfnID": "8f5c2179", "url": "https://webidl.spec.whatwg.org/#a-promise-resolved-with", "dfnText": "a promise resolved with", "refSections": [{"refs": [{"id": "ref-for-a-promise-resolved-with"}, {"id": "ref-for-a-promise-resolved-with\u2460"}], "title": "3.6. Drag and Drop"}], "external": true};
 window.dfnpanelData['5372cca8'] = {"dfnID": "5372cca8", "url": "https://webidl.spec.whatwg.org/#idl-boolean", "dfnText": "boolean", "refSections": [{"refs": [{"id": "ref-for-idl-boolean"}, {"id": "ref-for-idl-boolean\u2460"}], "title": "3. Accessing Local File System"}], "external": true};
 window.dfnpanelData['7787d359'] = {"dfnID": "7787d359", "url": "https://webidl.spec.whatwg.org/#idl-record", "dfnText": "record", "refSections": [{"refs": [{"id": "ref-for-idl-record"}], "title": "3. Accessing Local File System"}], "external": true};
-window.dfnpanelData['b262501e'] = {"dfnID": "b262501e", "url": "https://webidl.spec.whatwg.org/#reject", "dfnText": "reject", "refSections": [{"refs": [{"id": "ref-for-reject"}], "title": "2.3.2. The requestPermission() method"}, {"refs": [{"id": "ref-for-reject\u2460"}, {"id": "ref-for-reject\u2461"}], "title": "3.3. The showOpenFilePicker() method"}, {"refs": [{"id": "ref-for-reject\u2462"}, {"id": "ref-for-reject\u2463"}], "title": "3.4. The showSaveFilePicker() method"}, {"refs": [{"id": "ref-for-reject\u2464"}, {"id": "ref-for-reject\u2465"}], "title": "3.5. The showDirectoryPicker() method"}], "external": true};
+window.dfnpanelData['b262501e'] = {"dfnID": "b262501e", "url": "https://webidl.spec.whatwg.org/#reject", "dfnText": "reject", "refSections": [{"refs": [{"id": "ref-for-reject"}], "title": "2.3.2. The requestPermission() method"}, {"refs": [{"id": "ref-for-reject\u2460"}, {"id": "ref-for-reject\u2461"}], "title": "3.3. The showOpenFilePicker() method"}, {"refs": [{"id": "ref-for-reject\u2462"}, {"id": "ref-for-reject\u2463"}], "title": "3.4. The showSaveFilePicker() method"}, {"refs": [{"id": "ref-for-reject\u2464"}, {"id": "ref-for-reject\u2465"}, {"id": "ref-for-reject\u2466"}], "title": "3.5. The showDirectoryPicker() method"}], "external": true};
 window.dfnpanelData['3b90bdcd'] = {"dfnID": "3b90bdcd", "url": "https://webidl.spec.whatwg.org/#resolve", "dfnText": "resolve", "refSections": [{"refs": [{"id": "ref-for-resolve"}], "title": "2.3.1. The queryPermission() method"}, {"refs": [{"id": "ref-for-resolve\u2460"}], "title": "2.3.2. The requestPermission() method"}, {"refs": [{"id": "ref-for-resolve\u2461"}], "title": "3.3. The showOpenFilePicker() method"}, {"refs": [{"id": "ref-for-resolve\u2462"}], "title": "3.4. The showSaveFilePicker() method"}, {"refs": [{"id": "ref-for-resolve\u2463"}], "title": "3.5. The showDirectoryPicker() method"}, {"refs": [{"id": "ref-for-resolve\u2464"}], "title": "3.6. Drag and Drop"}], "external": true};
 window.dfnpanelData['9cce47fd'] = {"dfnID": "9cce47fd", "url": "https://webidl.spec.whatwg.org/#idl-sequence", "dfnText": "sequence", "refSections": [{"refs": [{"id": "ref-for-idl-sequence"}, {"id": "ref-for-idl-sequence\u2460"}, {"id": "ref-for-idl-sequence\u2461"}], "title": "3. Accessing Local File System"}], "external": true};
 window.dfnpanelData['4013a022'] = {"dfnID": "4013a022", "url": "https://webidl.spec.whatwg.org/#this", "dfnText": "this", "refSections": [{"refs": [{"id": "ref-for-this"}], "title": "2.3.1. The queryPermission() method"}, {"refs": [{"id": "ref-for-this\u2460"}], "title": "2.3.2. The requestPermission() method"}, {"refs": [{"id": "ref-for-this\u2461"}], "title": "3.3. The showOpenFilePicker() method"}, {"refs": [{"id": "ref-for-this\u2462"}], "title": "3.4. The showSaveFilePicker() method"}, {"refs": [{"id": "ref-for-this\u2463"}], "title": "3.5. The showDirectoryPicker() method"}], "external": true};
+window.dfnpanelData['b4cfa5ce'] = {"dfnID": "b4cfa5ce", "url": "https://webidl.spec.whatwg.org/#dfn-throw", "dfnText": "throw", "refSections": [{"refs": [{"id": "ref-for-dfn-throw"}, {"id": "ref-for-dfn-throw\u2460"}, {"id": "ref-for-dfn-throw\u2461"}], "title": "2.2. Permissions"}, {"refs": [{"id": "ref-for-dfn-throw\u2462"}], "title": "3.1. Local File System Permissions"}, {"refs": [{"id": "ref-for-dfn-throw\u2463"}, {"id": "ref-for-dfn-throw\u2464"}, {"id": "ref-for-dfn-throw\u2465"}, {"id": "ref-for-dfn-throw\u2466"}, {"id": "ref-for-dfn-throw\u2467"}, {"id": "ref-for-dfn-throw\u2468"}, {"id": "ref-for-dfn-throw\u2460\u24ea"}], "title": "3.2.1. Accepted file types"}, {"refs": [{"id": "ref-for-dfn-throw\u2460\u2460"}, {"id": "ref-for-dfn-throw\u2460\u2461"}], "title": "3.2.2. Starting Directory"}], "external": true};
 window.dfnpanelData['valid-suffix-code-point'] = {"dfnID": "valid-suffix-code-point", "url": "#valid-suffix-code-point", "dfnText": "valid suffix code point", "refSections": [{"refs": [{"id": "ref-for-valid-suffix-code-point"}, {"id": "ref-for-valid-suffix-code-point\u2460"}], "title": "3.2.1. Accepted file types"}], "external": false};
 window.dfnpanelData['dom-permissionname-file-system'] = {"dfnID": "dom-permissionname-file-system", "url": "#dom-permissionname-file-system", "dfnText": "\"file-system\"", "refSections": [{"refs": [{"id": "ref-for-dom-permissionname-file-system"}, {"id": "ref-for-dom-permissionname-file-system\u2460"}, {"id": "ref-for-dom-permissionname-file-system\u2461"}], "title": "2.2. Permissions"}], "external": false};
 window.dfnpanelData['enumdef-filesystempermissionmode'] = {"dfnID": "enumdef-filesystempermissionmode", "url": "#enumdef-filesystempermissionmode", "dfnText": "FileSystemPermissionMode", "refSections": [{"refs": [{"id": "ref-for-enumdef-filesystempermissionmode"}, {"id": "ref-for-enumdef-filesystempermissionmode\u2460"}, {"id": "ref-for-enumdef-filesystempermissionmode\u2461"}, {"id": "ref-for-enumdef-filesystempermissionmode\u2462"}], "title": "2.2. Permissions"}, {"refs": [{"id": "ref-for-enumdef-filesystempermissionmode\u2463"}], "title": "2.3. The FileSystemHandle interface"}, {"refs": [{"id": "ref-for-enumdef-filesystempermissionmode\u2464"}], "title": "3. Accessing Local File System"}], "external": false};
