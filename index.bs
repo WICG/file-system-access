@@ -542,7 +542,7 @@ via the {{WellKnownDirectory}} is used.
 // The file picker will fall back to opening to the Downloads directory. TODO: link this.
 const options = {
   <l>{{FilePickerOptions/id}}</l>: 'foo',  // Unmapped.
-  <l>{{FilePickerOptions/startIn}}</l>: <l>"{{WellKnownDirectory/downloads}}"</l>,  // Start here.
+  <l>{{FilePickerOptions/startIn}}</l>: "<l>{{WellKnownDirectory/downloads}}</l>",  // Start here.
 };
 
 // Later...
@@ -551,7 +551,7 @@ const options = {
 // might have been evicted.
 const options = {
   <l>{{FilePickerOptions/id}}</l>: 'foo',  // Maybe mapped. If so, start here.
-  <l>{{FilePickerOptions/startIn}}</l>: <l>"{{WellKnownDirectory/downloads}}"</l>,  // Otherwise, start here.
+  <l>{{FilePickerOptions/startIn}}</l>: "<l>{{WellKnownDirectory/downloads}}</l>",  // Otherwise, start here.
 };
 </pre>
 
