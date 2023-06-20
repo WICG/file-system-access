@@ -138,7 +138,7 @@ Issue(whatwg/fs#101): Make these checks no longer associated with an entry.
      [=throw=] a "{{SecurityError}}" {{DOMException}}.
   1. If |global| does not have [=transient activation=], then
      [=throw=] a "{{SecurityError}}" {{DOMException}}.
-  1. If |settings|'s [=environment settings object/origin=],
+  1. If |settings|'s [=environment settings object/origin=]
      is not [=same origin=] with |settings|'s [=top-level origin=], then
      [=throw=] a "{{SecurityError}}" {{DOMException}}.
   1. [=Request permission to use=] |desc|.
