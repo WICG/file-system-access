@@ -71,7 +71,7 @@ in that user interaction happens through file and directory picker dialogs.
 Unlike those APIs, this API is currently purely a javascript API, and
 does not integrate with forms and/or input elements.
 
-This API extends the API in [[FS]], which specifies an [=origin private file system=]
+This API extends the API in [[FS]], which specifies a [=/bucket file system=]
 which websites can get access to without having to first prompt the user for access.
 
 # Files and Directories # {#files-and-directories}
@@ -111,7 +111,7 @@ permission-related algorithms and types are defined as follows:
   run these steps:
 
   1. Let |entry| be |desc|.{{FileSystemPermissionDescriptor/handle}}'s [=FileSystemHandle/entry=].
-  1. If |entry| represents a [=/file system entry=] in an [=origin private file system=],
+  1. If |entry| represents a [=/file system entry=] in a [=/bucket file system=],
     this descriptor's [=permission state=] must always be {{PermissionState/"granted"}}.
   1. Otherwise, if |entry|'s [=file system entry/parent=] is not null, this descriptor's [=permission state=] must be
     equal to the [=permission state=] for a descriptor with the same {{FileSystemPermissionDescriptor/mode}},
@@ -594,8 +594,8 @@ run the following steps:
 
 1. Let |origin| be |environment|'s [=environment settings object/origin=].
 
-1. If |startIn| is a {{FileSystemHandle}} and is not
-   [=FileSystemHandle/in the origin private file system=]:
+1. If |startIn| is a {{FileSystemHandle}} and |startIn| is not
+   [=FileSystemHandle/is in a bucket file system|in a bucket file system=]:
   1. Let |entry| be the result of [=locating an entry=] given
      |startIn|'s [=FileSystemHandle/locator=].
   1. If |entry| is a [=file entry=], return the path of
@@ -1058,7 +1058,7 @@ appropriate.
 
 ## Filling up a users disk ## {#filling-up-disk}
 
-Other than files in the [=origin private file system=], files written by this API are not subject
+Other than files in a [=/bucket file system=], files written by this API are not subject
 to [=storage quota=]. As such websites can fill up a users disk without being limited by
 quota, which could leave a users device in a bad state (do note that even with storage that is
 subject to [=storage quota=] it is still possible to fill up, or come close to filling up, a users
