@@ -184,7 +184,7 @@ It would also be up to the CSP whether they actually provide permanent tokens or
 
 ### Modification via read-only permission
 
-If a web application only has `read` [permission](https://wicg.github.io/file-system-access/#enumdef-filesystempermissionmode) to a `FileSystemHandle`, but has `readwrite` permission to that file via CSP backend APIs, it could still modify the cloud-stored file, which is then synced to the device and thereby modify the file. 
+If a web application only has `read` [permission](https://wicg.github.io/file-system-access/#enumdef-filesystempermissionmode) to a `FileSystemHandle`, but has edit/write permission to that file via CSP backend APIs, it could still modify the cloud-stored file, which is then synced to the device and thereby modify the file. 
 
 In this case, the user has clearly granted write access to the CSP-backed file and by having a sync client, the user also allows the local files to be modified, so the change would actually not be surprising.
 
