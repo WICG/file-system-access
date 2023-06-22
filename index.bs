@@ -453,7 +453,7 @@ run these steps:
    consisting of a description and a filter.
 1. [=list/For each=] |type| of |options|["{{FilePickerOptions/types}}"]:
   1. Let |description| be |type|["{{FilePickerAcceptType/description}}"] if
-     |type|["{{FilePickerAcceptType/description}}"] exists;
+     |type|["{{FilePickerAcceptType/description}}"] [=map/exists=];
      otherwise the empty string.
   1. [=map/For each=] |typeString| → |suffixes| of
      |type|["{{FilePickerAcceptType/accept}}"]:
