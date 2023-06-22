@@ -110,14 +110,15 @@ permission-related algorithms and types are defined as follows:
   To determine [=permission state constraints=] for a {{FileSystemPermissionDescriptor}} |desc|,
   run these steps:
 
-  1. Let |entry| be |desc|.{{FileSystemPermissionDescriptor/handle}}'s [=FileSystemHandle/entry=].
+  1. Let |entry| be |desc|["{{FileSystemPermissionDescriptor/handle}}"]'s
+     [=FileSystemHandle/entry=].
   1. If |entry| represents a [=/file system entry=] in a [=/bucket file system=],
      this descriptor's [=permission state=] must always be
      "{{PermissionState/granted}}".
   1. Otherwise, if |entry|'s [=file system entry/parent=] is not null, this descriptor's [=permission state=] must be
      equal to the [=permission state=] for a descriptor with the same {{FileSystemPermissionDescriptor/mode}},
      and a {{FileSystemPermissionDescriptor/handle}} representing |entry|'s [=file system entry/parent=].
-  1. Otherwise, if |desc|.{{FileSystemPermissionDescriptor/mode}} is
+  1. Otherwise, if |desc|["{{FileSystemPermissionDescriptor/mode}}"] is
      "{{FileSystemPermissionMode/readwrite}}":
     1. Let |read state| be the [=permission state=] for a descriptor
        with the same {{FileSystemPermissionDescriptor/handle}},
@@ -134,9 +135,10 @@ Issue(whatwg/fs#101): Make these checks no longer associated with an entry.
   run these steps:
 
   1. Run the [=default permission query algorithm=] on |desc| and |status|.
-  1. If |status|.{{PermissionStatus/state}} is not "{{PermissionState/prompt}}",
-     then abort these steps.
-  1. Let |settings| be |desc|.{{FileSystemPermissionDescriptor/handle}}'s [=relevant settings object=].
+  1. If |status|'s {{PermissionStatus/state}} is not
+     "{{PermissionState/prompt}}", then abort these steps.
+  1. Let |settings| be |desc|["{{FileSystemPermissionDescriptor/handle}}"]'s
+     [=relevant settings object=].
   1. Let |global| be |settings|'s [=environment settings object/global object=].
   1. If |global| is not a {{Window}}, then
      [=throw=] a "{{SecurityError}}" {{DOMException}}.
@@ -155,9 +157,10 @@ To <dfn lt="querying file system permission|query file system permission">query 
 given a {{FileSystemHandle}} |handle| and a {{FileSystemPermissionMode}} |mode|, run these steps:
 
 1. Let |desc| be a {{FileSystemPermissionDescriptor}}.
-1. Set |desc|.{{PermissionDescriptor/name}} to "{{PermissionName/file-system}}".
-1. Set |desc|.{{FileSystemPermissionDescriptor/handle}} to |handle|.
-1. Set |desc|.{{FileSystemPermissionDescriptor/mode}} to |mode|.
+1. Set |desc|["{{PermissionDescriptor/name}}"] to
+   "{{PermissionName/file-system}}".
+1. Set |desc|["{{FileSystemPermissionDescriptor/handle}}"] to |handle|.
+1. Set |desc|["{{FileSystemPermissionDescriptor/mode}}"] to |mode|.
 1. Return |desc|'s [=permission state=].
 
 </div>
@@ -167,9 +170,10 @@ To <dfn lt="requesting file system permission|request file system permission">re
 given a {{FileSystemHandle}} |handle| and a {{FileSystemPermissionMode}} |mode|, run these steps:
 
 1. Let |desc| be a {{FileSystemPermissionDescriptor}}.
-1. Set |desc|.{{PermissionDescriptor/name}} to "{{PermissionName/file-system}}".
-1. Set |desc|.{{FileSystemPermissionDescriptor/handle}} to |handle|.
-1. Set |desc|.{{FileSystemPermissionDescriptor/mode}} to |mode|.
+1. Set |desc|["{{PermissionDescriptor/name}}"] to
+   "{{PermissionName/file-system}}".
+1. Set |desc|["{{FileSystemPermissionDescriptor/handle}}"] to |handle|.
+1. Set |desc|["{{FileSystemPermissionDescriptor/mode}}"] to |mode|.
 1. Let |status| be the result of running <a spec=permissions>create a PermissionStatus</a> for |desc|.
 1. Run the [=permission request algorithm=] for the
    "{{PermissionName/file-system}}" feature, given |desc| and |status|.
@@ -235,7 +239,8 @@ The <dfn method for=FileSystemHandle>queryPermission(|descriptor|)</dfn> method,
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
   1. Let |state| be the result of [=querying file system permission=]
-     given <b>[=this=]</b> and |descriptor|.{{FileSystemHandlePermissionDescriptor/mode}}.
+     given <b>[=this=]</b> and
+     |descriptor|["{{FileSystemHandlePermissionDescriptor/mode}}"].
   1. [=/Resolve=] |result| with |state|.
 1. Return |result|.
 
@@ -271,7 +276,8 @@ The <dfn method for=FileSystemHandle>requestPermission(|descriptor|)</dfn> metho
 1. Let |result| be [=a new promise=].
 1. Run the following steps [=in parallel=]:
   1. Let |state| be the result of [=requesting file system permission=]
-     given <b>[=this=]</b> and |descriptor|.{{FileSystemHandlePermissionDescriptor/mode}}.
+     given <b>[=this=]</b> and
+     |descriptor|["{{FileSystemHandlePermissionDescriptor/mode}}"].
      If that throws an exception, [=/reject=] |result| with that exception and abort.
   1. [=/Resolve=] |result| with |state|.
 1. Return |result|.
@@ -445,9 +451,12 @@ run these steps:
 
 1. Let |accepts options| be a empty [=/list=] of [=tuples=]
    consisting of a description and a filter.
-1. [=list/For each=] |type| of |options|.{{FilePickerOptions/types}}:
-  1. Let |description| be |type|.{{FilePickerAcceptType/description}}.
-  1. [=map/For each=] |typeString| → |suffixes| of |type|.{{FilePickerAcceptType/accept}}:
+1. [=list/For each=] |type| of |options|["{{FilePickerOptions/types}}"]:
+  1. Let |description| be |type|["{{FilePickerAcceptType/description}}"] if
+     |type|["{{FilePickerAcceptType/description}}"] [=map/exists=];
+     otherwise the empty string.
+  1. [=map/For each=] |typeString| → |suffixes| of
+     |type|["{{FilePickerAcceptType/accept}}"]:
     1. Let |parsedType| be the result of [=parse a MIME type=] with |typeString|.
     1. If |parsedType| is failure, then [=throw=] a {{TypeError}}.
     1. If |parsedType|'s [=MIME type/parameters=] are not empty, then
@@ -457,8 +466,9 @@ run these steps:
     1. Otherwise, [=list/for each=] |suffix| of |suffixes|:
       1. [=Validate a suffix=] given |suffix|.
 
-  1. Let |filter| be the following steps, given a |filename| (a [=string=]), and a |type| (a [=MIME type=]):
-    1. [=map/For each=] |typeString| → |suffixes| of |type|.{{FilePickerAcceptType/accept}}:
+  1. Let |filter| be these steps, given a |filename| (a [=string=]) and a |type| (a [=MIME type=]):
+    1. [=map/For each=] |typeString| → |suffixes| of
+       |type|["{{FilePickerAcceptType/accept}}"]:
     1. Let |parsedType| be the result of [=parse a MIME type=] with |typeString|.
       1. If |parsedType|'s [=MIME type/subtype=] is "*":
         1. If |parsedType|'s [=MIME type/type=] is "*", return `true`.
@@ -475,7 +485,7 @@ run these steps:
   1. [=list/Append=] (|description|, |filter|) to |accepts options|.
 
 1. If either |accepts options| is [=list/empty=],
-  or |options|.{{FilePickerOptions/excludeAcceptAllOption}} is `false`:
+  or |options|["{{FilePickerOptions/excludeAcceptAllOption}}"] is `false`:
   1. Let |description| be a user understandable string describing "all files".
     1. Let |filter| be an algorithm that returns `true`.
     1. [=list/Append=] (|description|, |filter|) to |accepts options|.
@@ -685,8 +695,10 @@ these steps:
 1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
 
 1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
-1. Let |starting directory| be the result of [=determine the directory the picker will start in|determining the directory the picker will start in=]
-   given |options|.{{FilePickerOptions/id}}, |options|.{{FilePickerOptions/startIn}} and |environment|.
+1. Let |starting directory| be the result of
+   [=determine the directory the picker will start in|determining the directory the picker will start in=]
+   given |options|["{{FilePickerOptions/id}}"],
+   |options|["{{FilePickerOptions/startIn}}"], and |environment|.
 
 1. Let |global| be |environment|'s [=environment settings object/global object=].
 1. Verify that |environment| [=is allowed to show a file picker=].
@@ -697,7 +709,8 @@ these steps:
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
   1. Display a prompt to the user requesting that the user pick some files.
-     If |options|.{{OpenFilePickerOptions/multiple}} is false, there must be no more than one file selected;
+     If |options|["{{OpenFilePickerOptions/multiple}}"] is false,
+     there must be no more than one file selected;
      otherwise any number may be selected.
 
      The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
@@ -722,7 +735,8 @@ these steps:
 
     1. Add a new {{FileSystemFileHandle}} associated with |entry| to |result|.
 
-  1. [=Remember a picked directory=] given |options|.{{FilePickerOptions/id}}, |entries|[0] and |environment|.
+  1. [=Remember a picked directory=] given
+     |options|["{{FilePickerOptions/id}}"], |entries|[0] and |environment|.
 
   1. Perform the <a spec=html>activation notification</a> steps in |global|'s [=Window/browsing context=].
 
@@ -761,8 +775,10 @@ these steps:
 1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
 
 1. Let |accepts options| be the result of [=process accept types|processing accept types=] given |options|.
-1. Let |starting directory| be the result of [=determine the directory the picker will start in|determining the directory the picker will start in=]
-   given |options|.{{FilePickerOptions/id}}, |options|.{{FilePickerOptions/startIn}} and |environment|.
+1. Let |starting directory| be the result of
+   [=determine the directory the picker will start in|determining the directory the picker will start in=]
+   given |options|["{{FilePickerOptions/id}}"],
+   |options|["{{FilePickerOptions/startIn}}"] and |environment|.
 
 1. Let |global| be |environment|'s [=environment settings object/global object=].
 1. Verify that |environment| [=is allowed to show a file picker=].
@@ -781,9 +797,10 @@ these steps:
 
      When possible, this prompt should start out showing |starting directory|.
 
-     If |options|.{{SaveFilePickerOptions/suggestedName}} is specified and not null,
-     the file picker prompt will be pre-filled with the
-     |options|.{{SaveFilePickerOptions/suggestedName}} as the default name to save as. The interaction between the
+     If |options|["{{SaveFilePickerOptions/suggestedName}}"] [=map/exists=] and
+     is not null, the file picker prompt will be pre-filled with the
+     |options|["{{SaveFilePickerOptions/suggestedName}}"] as the default name
+     to save as. The interaction between the
      {{SaveFilePickerOptions/suggestedName}} and |accepts options| is [=implementation-defined=].
      If the {{SaveFilePickerOptions/suggestedName}} is deemed too dangerous, user agents should ignore or sanitize the
      suggested file name, similar to the sanitization done when fetching something <a spec=html>as a download</a>.
@@ -808,7 +825,8 @@ these steps:
 
   1. Set |result| to a new {{FileSystemFileHandle}} associated with |entry|.
 
-  1. [=Remember a picked directory=] given |options|.{{FilePickerOptions/id}}, |entry| and |environment|.
+  1. [=Remember a picked directory=] given
+     |options|["{{FilePickerOptions/id}}"], |entry| and |environment|.
 
   1. Perform the <a spec=html>activation notification</a> steps in |global|'s [=Window/browsing context=].
 
@@ -846,7 +864,8 @@ these steps:
 1. Let |environment| be <b>[=this=]</b>'s [=relevant settings object=].
 
 1. Let |starting directory| be the result of [=determine the directory the picker will start in|determining the directory the picker will start in=]
-   given |options|.{{DirectoryPickerOptions/id}}, |options|.{{DirectoryPickerOptions/startIn}} and |environment|.
+   given |options|["{{DirectoryPickerOptions/id}}"],
+   |options|["{{DirectoryPickerOptions/startIn}}"] and |environment|.
 
 1. Let |global| be |environment|'s [=environment settings object/global object=].
 1. Verify that |environment| [=is allowed to show a file picker=].
@@ -875,10 +894,15 @@ these steps:
 
   1. Set |result| to a new {{FileSystemDirectoryHandle}} associated with |entry|.
 
-  1. [=Remember a picked directory=] given |options|.{{DirectoryPickerOptions/id}}, |entry| and |environment|.
+  1. [=Remember a picked directory=] given
+     |options|["{{DirectoryPickerOptions/id}}"], |entry| and |environment|.
 
-  1. Let |desc| be a {{FileSystemPermissionDescriptor}} with |entry| as {{FileSystemPermissionDescriptor/handle}}
-     and |options|.{{DirectoryPickerOptions/mode}} as {{FileSystemPermissionDescriptor/mode}}.
+  1. Let |desc| be a {{FileSystemPermissionDescriptor}}.
+  1. Set |desc|["{{PermissionDescriptor/name}}"] to
+     "{{PermissionName/file-system}}".
+  1. Set |desc|["{{FileSystemPermissionDescriptor/handle}}"] to |result|.
+  1. Set |desc|["{{FileSystemPermissionDescriptor/mode}}"] to
+     |options|["{{DirectoryPickerOptions/mode}}"].
   1. Let |status| be the result of running <a spec=permissions>create a PermissionStatus</a> for |desc|.
 
   1. Perform the <a spec=html>activation notification</a> steps in |global|'s [=Window/browsing context=].
