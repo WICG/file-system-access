@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 5edf5e459, updated Thu Jun 22 11:28:01 2023 -0700" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="739b0c4a530a58849ecef43a6378a3d158b2b1c9" name="document-revision">
+  <meta content="d8f5556db5125a91a48273b809f0b2acaf77a0a2" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -907,7 +907,7 @@ var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">File System Access</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-06-22">22 June 2023</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-06-23">23 June 2023</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1271,7 +1271,7 @@ handles. <a href="https://github.com/wicg/file-system-access/issues/119">[Issue 
 <c- b>typedef</c-> (<a data-link-type="idl-name" href="#enumdef-wellknowndirectory" id="ref-for-enumdef-wellknowndirectory①"><c- n>WellKnownDirectory</c-></a> <c- b>or</c-> <a data-link-type="idl-name" href="https://fs.spec.whatwg.org/#filesystemhandle" id="ref-for-filesystemhandle⑤"><c- n>FileSystemHandle</c-></a>) <dfn class="dfn-paneled idl-code" data-dfn-type="typedef" data-export id="typedefdef-startindirectory"><code><c- g>StartInDirectory</c-></code></dfn>;
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-filepickeraccepttype"><code><c- g>FilePickerAcceptType</c-></code></dfn> {
-    <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-USVString" id="ref-for-idl-USVString"><c- b>USVString</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FilePickerAcceptType" data-dfn-type="dict-member" data-export data-type="USVString " id="dom-filepickeraccepttype-description"><code><c- g>description</c-></code></dfn>;
+    <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-USVString" id="ref-for-idl-USVString"><c- b>USVString</c-></a> <dfn class="dfn-paneled idl-code" data-default="&quot;&quot;" data-dfn-for="FilePickerAcceptType" data-dfn-type="dict-member" data-export data-type="USVString " id="dom-filepickeraccepttype-description"><code><c- g>description</c-></code></dfn> = "";
     <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#idl-record" id="ref-for-idl-record"><c- b>record</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-USVString" id="ref-for-idl-USVString①"><c- b>USVString</c-></a>, (<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-USVString" id="ref-for-idl-USVString②"><c- b>USVString</c-></a> <c- b>or</c-> <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#idl-sequence" id="ref-for-idl-sequence"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-USVString" id="ref-for-idl-USVString③"><c- b>USVString</c-></a>>)> <dfn class="dfn-paneled idl-code" data-dfn-for="FilePickerAcceptType" data-dfn-type="dict-member" data-export data-type="record<USVString, (USVString or sequence<USVString>)> " id="dom-filepickeraccepttype-accept"><code><c- g>accept</c-></code></dfn>;
 };
 
@@ -1399,9 +1399,6 @@ run these steps:
       <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate">For each</a> <var>type</var> of <var>options</var>["<code class="idl"><a data-link-type="idl" href="#dom-filepickeroptions-types" id="ref-for-dom-filepickeroptions-types③">types</a></code>"]:</p>
       <ol>
        <li data-md>
-        <p>Let <var>description</var> be <var>type</var>["<code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-description" id="ref-for-dom-filepickeraccepttype-description③">description</a></code>"] if <var>type</var>["<code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-description" id="ref-for-dom-filepickeraccepttype-description④">description</a></code>"] <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists">exists</a>;
- otherwise the empty string.</p>
-       <li data-md>
         <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-iterate" id="ref-for-map-iterate">For each</a> <var>typeString</var> → <var>suffixes</var> of <var>type</var>["<code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-accept" id="ref-for-dom-filepickeraccepttype-accept③">accept</a></code>"]:</p>
         <ol>
          <li data-md>
@@ -1453,6 +1450,8 @@ run these steps:
          <li data-md>
           <p>Return <code>false</code>.</p>
         </ol>
+       <li data-md>
+        <p>Let <var>description</var> be <var>type</var>["<code class="idl"><a data-link-type="idl" href="#dom-filepickeraccepttype-description" id="ref-for-dom-filepickeraccepttype-description③">description</a></code>"].</p>
        <li data-md>
         <p>If <var>description</var> is an empty string,
 set <var>description</var> to some user understandable string describing <var>filter</var>.</p>
@@ -1604,12 +1603,12 @@ run the following steps:
        <p>If <var>id</var> is non-empty:</p>
        <ol>
         <li data-md>
-         <p>If <a data-link-type="dfn" href="#recently-picked-directory-map" id="ref-for-recently-picked-directory-map">recently picked directory map</a>[<var>origin</var>] <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists①">exists</a>:</p>
+         <p>If <a data-link-type="dfn" href="#recently-picked-directory-map" id="ref-for-recently-picked-directory-map">recently picked directory map</a>[<var>origin</var>] <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists">exists</a>:</p>
          <ol>
           <li data-md>
            <p>Let <var>path map</var> be <a data-link-type="dfn" href="#recently-picked-directory-map" id="ref-for-recently-picked-directory-map①">recently picked directory map</a>[<var>origin</var>].</p>
           <li data-md>
-           <p>If <var>path map</var>[<var>id</var>] <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists②">exists</a>, then return <var>path map</var>[<var>id</var>].</p>
+           <p>If <var>path map</var>[<var>id</var>] <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists①">exists</a>, then return <var>path map</var>[<var>id</var>].</p>
          </ol>
        </ol>
       <li data-md>
@@ -1622,12 +1621,12 @@ run the following steps:
        <p>If <var>id</var> is not specified, or is an empty string:</p>
        <ol>
         <li data-md>
-         <p>If <a data-link-type="dfn" href="#recently-picked-directory-map" id="ref-for-recently-picked-directory-map②">recently picked directory map</a>[<var>origin</var>] <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists③">exists</a>:</p>
+         <p>If <a data-link-type="dfn" href="#recently-picked-directory-map" id="ref-for-recently-picked-directory-map②">recently picked directory map</a>[<var>origin</var>] <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists②">exists</a>:</p>
          <ol>
           <li data-md>
            <p>Let <var>path map</var> be <a data-link-type="dfn" href="#recently-picked-directory-map" id="ref-for-recently-picked-directory-map③">recently picked directory map</a>[<var>origin</var>].</p>
           <li data-md>
-           <p>If <var>path map</var>[""] <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists④">exists</a>, then return <var>path map</var>[""].</p>
+           <p>If <var>path map</var>[""] <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists③">exists</a>, then return <var>path map</var>[""].</p>
          </ol>
        </ol>
       <li data-md>
@@ -1642,7 +1641,7 @@ run the following steps:
       <li data-md>
        <p>Let <var>origin</var> be <var>environment</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin" id="ref-for-concept-settings-object-origin④">origin</a>.</p>
       <li data-md>
-       <p>If <a data-link-type="dfn" href="#recently-picked-directory-map" id="ref-for-recently-picked-directory-map④">recently picked directory map</a>[<var>origin</var>] does not <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists⑤">exist</a>,
+       <p>If <a data-link-type="dfn" href="#recently-picked-directory-map" id="ref-for-recently-picked-directory-map④">recently picked directory map</a>[<var>origin</var>] does not <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists④">exist</a>,
  then set <a data-link-type="dfn" href="#recently-picked-directory-map" id="ref-for-recently-picked-directory-map⑤">recently picked directory map</a>[<var>origin</var>] to an empty <a data-link-type="dfn" href="#path-id-map" id="ref-for-path-id-map③">path id map</a>.</p>
       <li data-md>
        <p>If <var>id</var> is not specified, let <var>id</var> be an empty string.</p>
@@ -1777,7 +1776,7 @@ these steps:
  to append to a user provided file name, but this is not required. In particular user agents are free to ignore
  potentially dangerous suffixes such as those ending in <code>".lnk"</code> or <code>".local"</code>.</p>
          <p>When possible, this prompt should start out showing <var>starting directory</var>.</p>
-         <p>If <var>options</var>["<code class="idl"><a data-link-type="idl" href="#dom-savefilepickeroptions-suggestedname" id="ref-for-dom-savefilepickeroptions-suggestedname②">suggestedName</a></code>"] <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists⑥">exists</a> and
+         <p>If <var>options</var>["<code class="idl"><a data-link-type="idl" href="#dom-savefilepickeroptions-suggestedname" id="ref-for-dom-savefilepickeroptions-suggestedname②">suggestedName</a></code>"] <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists" id="ref-for-map-exists⑤">exists</a> and
  is not null, the file picker prompt will be pre-filled with the <var>options</var>["<code class="idl"><a data-link-type="idl" href="#dom-savefilepickeroptions-suggestedname" id="ref-for-dom-savefilepickeroptions-suggestedname③">suggestedName</a></code>"] as the default name
  to save as. The interaction between the <code class="idl"><a data-link-type="idl" href="#dom-savefilepickeroptions-suggestedname" id="ref-for-dom-savefilepickeroptions-suggestedname④">suggestedName</a></code> and <var>accepts options</var> is <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#implementation-defined" id="ref-for-implementation-defined③">implementation-defined</a>.
  If the <code class="idl"><a data-link-type="idl" href="#dom-savefilepickeroptions-suggestedname" id="ref-for-dom-savefilepickeroptions-suggestedname⑤">suggestedName</a></code> is deemed too dangerous, user agents should ignore or sanitize the
@@ -2378,7 +2377,7 @@ use this API to write to disk.</p>
 <c- b>typedef</c-> (<a data-link-type="idl-name" href="#enumdef-wellknowndirectory"><c- n>WellKnownDirectory</c-></a> <c- b>or</c-> <a data-link-type="idl-name" href="https://fs.spec.whatwg.org/#filesystemhandle"><c- n>FileSystemHandle</c-></a>) <a href="#typedefdef-startindirectory"><code><c- g>StartInDirectory</c-></code></a>;
 
 <c- b>dictionary</c-> <a href="#dictdef-filepickeraccepttype"><code><c- g>FilePickerAcceptType</c-></code></a> {
-    <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-USVString"><c- b>USVString</c-></a> <a data-type="USVString " href="#dom-filepickeraccepttype-description"><code><c- g>description</c-></code></a>;
+    <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-USVString"><c- b>USVString</c-></a> <a data-default="&quot;&quot;" data-type="USVString " href="#dom-filepickeraccepttype-description"><code><c- g>description</c-></code></a> = "";
     <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#idl-record"><c- b>record</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-USVString"><c- b>USVString</c-></a>, (<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-USVString"><c- b>USVString</c-></a> <c- b>or</c-> <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#idl-sequence"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-USVString"><c- b>USVString</c-></a>>)> <a data-type="record<USVString, (USVString or sequence<USVString>)> " href="#dom-filepickeraccepttype-accept"><code><c- g>accept</c-></code></a>;
 };
 
@@ -2869,7 +2868,7 @@ window.dfnpanelData['f43d6978'] = {"dfnID": "f43d6978", "url": "https://infra.sp
 window.dfnpanelData['3de9e659'] = {"dfnID": "3de9e659", "url": "https://infra.spec.whatwg.org/#byte-sequence", "dfnText": "byte sequence", "refSections": [{"refs": [{"id": "ref-for-byte-sequence"}], "title": "3.4. The showSaveFilePicker() method"}], "external": true};
 window.dfnpanelData['915aff5e'] = {"dfnID": "915aff5e", "url": "https://infra.spec.whatwg.org/#code-point", "dfnText": "code point", "refSections": [{"refs": [{"id": "ref-for-code-point"}], "title": "2.1. Concepts"}, {"refs": [{"id": "ref-for-code-point\u2460"}], "title": "3.2.1. Accepted file types"}], "external": true};
 window.dfnpanelData['03afaf9c'] = {"dfnID": "03afaf9c", "url": "https://infra.spec.whatwg.org/#list-empty", "dfnText": "empty", "refSections": [{"refs": [{"id": "ref-for-list-empty"}], "title": "3.2.1. Accepted file types"}], "external": true};
-window.dfnpanelData['1243a891'] = {"dfnID": "1243a891", "url": "https://infra.spec.whatwg.org/#map-exists", "dfnText": "exist", "refSections": [{"refs": [{"id": "ref-for-map-exists"}], "title": "3.2.1. Accepted file types"}, {"refs": [{"id": "ref-for-map-exists\u2460"}, {"id": "ref-for-map-exists\u2461"}, {"id": "ref-for-map-exists\u2462"}, {"id": "ref-for-map-exists\u2463"}, {"id": "ref-for-map-exists\u2464"}], "title": "3.2.2. Starting Directory"}, {"refs": [{"id": "ref-for-map-exists\u2465"}], "title": "3.4. The showSaveFilePicker() method"}], "external": true};
+window.dfnpanelData['1243a891'] = {"dfnID": "1243a891", "url": "https://infra.spec.whatwg.org/#map-exists", "dfnText": "exist", "refSections": [{"refs": [{"id": "ref-for-map-exists"}, {"id": "ref-for-map-exists\u2460"}, {"id": "ref-for-map-exists\u2461"}, {"id": "ref-for-map-exists\u2462"}, {"id": "ref-for-map-exists\u2463"}], "title": "3.2.2. Starting Directory"}, {"refs": [{"id": "ref-for-map-exists\u2464"}], "title": "3.4. The showSaveFilePicker() method"}], "external": true};
 window.dfnpanelData['16d07e10'] = {"dfnID": "16d07e10", "url": "https://infra.spec.whatwg.org/#list-iterate", "dfnText": "for each (for list)", "refSections": [{"refs": [{"id": "ref-for-list-iterate"}, {"id": "ref-for-list-iterate\u2460"}, {"id": "ref-for-list-iterate\u2461"}], "title": "3.2.1. Accepted file types"}, {"refs": [{"id": "ref-for-list-iterate\u2462"}], "title": "3.3. The showOpenFilePicker() method"}], "external": true};
 window.dfnpanelData['45209803'] = {"dfnID": "45209803", "url": "https://infra.spec.whatwg.org/#map-iterate", "dfnText": "for each (for map)", "refSections": [{"refs": [{"id": "ref-for-map-iterate"}, {"id": "ref-for-map-iterate\u2460"}], "title": "3.2.1. Accepted file types"}], "external": true};
 window.dfnpanelData['860300d4'] = {"dfnID": "860300d4", "url": "https://infra.spec.whatwg.org/#implementation-defined", "dfnText": "implementation-defined", "refSections": [{"refs": [{"id": "ref-for-implementation-defined"}], "title": "3.2.2. Starting Directory"}, {"refs": [{"id": "ref-for-implementation-defined\u2460"}], "title": "3.3. The showOpenFilePicker() method"}, {"refs": [{"id": "ref-for-implementation-defined\u2461"}, {"id": "ref-for-implementation-defined\u2462"}], "title": "3.4. The showSaveFilePicker() method"}], "external": true};
@@ -2940,7 +2939,7 @@ window.dfnpanelData['dom-filesystemhandle-querypermission'] = {"dfnID": "dom-fil
 window.dfnpanelData['dom-filesystemhandle-requestpermission'] = {"dfnID": "dom-filesystemhandle-requestpermission", "url": "#dom-filesystemhandle-requestpermission", "dfnText": "requestPermission(descriptor)", "refSections": [{"refs": [{"id": "ref-for-dom-filesystemhandle-requestpermission"}], "title": "2.3. The FileSystemHandle interface"}, {"refs": [{"id": "ref-for-dom-filesystemhandle-requestpermission\u2460"}, {"id": "ref-for-dom-filesystemhandle-requestpermission\u2461"}], "title": "2.3.1. The queryPermission() method"}, {"refs": [{"id": "ref-for-dom-filesystemhandle-requestpermission\u2462"}, {"id": "ref-for-dom-filesystemhandle-requestpermission\u2463"}, {"id": "ref-for-dom-filesystemhandle-requestpermission\u2464"}, {"id": "ref-for-dom-filesystemhandle-requestpermission\u2465"}], "title": "2.3.2. The requestPermission() method"}, {"refs": [{"id": "ref-for-dom-filesystemhandle-requestpermission\u2466"}], "title": "5.3. First-party vs third-party contexts."}], "external": false};
 window.dfnpanelData['typedefdef-startindirectory'] = {"dfnID": "typedefdef-startindirectory", "url": "#typedefdef-startindirectory", "dfnText": "StartInDirectory", "refSections": [{"refs": [{"id": "ref-for-typedefdef-startindirectory"}, {"id": "ref-for-typedefdef-startindirectory\u2460"}], "title": "3. Accessing Local File System"}, {"refs": [{"id": "ref-for-typedefdef-startindirectory\u2461"}], "title": "3.2.2. Starting Directory"}], "external": false};
 window.dfnpanelData['dictdef-filepickeraccepttype'] = {"dfnID": "dictdef-filepickeraccepttype", "url": "#dictdef-filepickeraccepttype", "dfnText": "FilePickerAcceptType", "refSections": [{"refs": [{"id": "ref-for-dictdef-filepickeraccepttype"}], "title": "3. Accessing Local File System"}], "external": false};
-window.dfnpanelData['dom-filepickeraccepttype-description'] = {"dfnID": "dom-filepickeraccepttype-description", "url": "#dom-filepickeraccepttype-description", "dfnText": "description", "refSections": [{"refs": [{"id": "ref-for-dom-filepickeraccepttype-description"}, {"id": "ref-for-dom-filepickeraccepttype-description\u2460"}, {"id": "ref-for-dom-filepickeraccepttype-description\u2461"}, {"id": "ref-for-dom-filepickeraccepttype-description\u2462"}, {"id": "ref-for-dom-filepickeraccepttype-description\u2463"}], "title": "3.2.1. Accepted file types"}], "external": false};
+window.dfnpanelData['dom-filepickeraccepttype-description'] = {"dfnID": "dom-filepickeraccepttype-description", "url": "#dom-filepickeraccepttype-description", "dfnText": "description", "refSections": [{"refs": [{"id": "ref-for-dom-filepickeraccepttype-description"}, {"id": "ref-for-dom-filepickeraccepttype-description\u2460"}, {"id": "ref-for-dom-filepickeraccepttype-description\u2461"}, {"id": "ref-for-dom-filepickeraccepttype-description\u2462"}], "title": "3.2.1. Accepted file types"}], "external": false};
 window.dfnpanelData['dom-filepickeraccepttype-accept'] = {"dfnID": "dom-filepickeraccepttype-accept", "url": "#dom-filepickeraccepttype-accept", "dfnText": "accept", "refSections": [{"refs": [{"id": "ref-for-dom-filepickeraccepttype-accept"}, {"id": "ref-for-dom-filepickeraccepttype-accept\u2460"}, {"id": "ref-for-dom-filepickeraccepttype-accept\u2461"}, {"id": "ref-for-dom-filepickeraccepttype-accept\u2462"}, {"id": "ref-for-dom-filepickeraccepttype-accept\u2463"}], "title": "3.2.1. Accepted file types"}], "external": false};
 window.dfnpanelData['dictdef-filepickeroptions'] = {"dfnID": "dictdef-filepickeroptions", "url": "#dictdef-filepickeroptions", "dfnText": "FilePickerOptions", "refSections": [{"refs": [{"id": "ref-for-dictdef-filepickeroptions"}, {"id": "ref-for-dictdef-filepickeroptions\u2460"}], "title": "3. Accessing Local File System"}, {"refs": [{"id": "ref-for-dictdef-filepickeroptions\u2461"}, {"id": "ref-for-dictdef-filepickeroptions\u2462"}], "title": "3.2.1. Accepted file types"}], "external": false};
 window.dfnpanelData['dom-filepickeroptions-types'] = {"dfnID": "dom-filepickeroptions-types", "url": "#dom-filepickeroptions-types", "dfnText": "types", "refSections": [{"refs": [{"id": "ref-for-dom-filepickeroptions-types"}, {"id": "ref-for-dom-filepickeroptions-types\u2460"}, {"id": "ref-for-dom-filepickeroptions-types\u2461"}, {"id": "ref-for-dom-filepickeroptions-types\u2462"}], "title": "3.2.1. Accepted file types"}], "external": false};
