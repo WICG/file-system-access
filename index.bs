@@ -299,7 +299,7 @@ enum WellKnownDirectory {
 typedef (WellKnownDirectory or FileSystemHandle) StartInDirectory;
 
 dictionary FilePickerAcceptType {
-    USVString description;
+    USVString description = "";
     record<USVString, (USVString or sequence<USVString>)> accept;
 };
 
@@ -452,9 +452,6 @@ run these steps:
 1. Let |accepts options| be a empty [=/list=] of [=tuples=]
    consisting of a description and a filter.
 1. [=list/For each=] |type| of |options|["{{FilePickerOptions/types}}"]:
-  1. Let |description| be |type|["{{FilePickerAcceptType/description}}"] if
-     |type|["{{FilePickerAcceptType/description}}"] [=map/exists=];
-     otherwise the empty string.
   1. [=map/For each=] |typeString| → |suffixes| of
      |type|["{{FilePickerAcceptType/accept}}"]:
     1. Let |parsedType| be the result of [=parse a MIME type=] with |typeString|.
@@ -479,6 +476,7 @@ run these steps:
         1. If |filename| ends with |suffix|, return `true`.
     1. Return `false`.
 
+  1. Let |description| be |type|["{{FilePickerAcceptType/description}}"].
   1. If |description| is an empty string,
     set |description| to some user understandable string describing |filter|.
 
