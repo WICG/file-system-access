@@ -983,9 +983,9 @@ elem.addEventListener('drop', async (e) => {
 
   for await (const handle of fileHandlesPromises) {
     if (handle.kind === 'directory') {
-      console.log(`Directory: ${handle.name}`);
+      console.log('Directory: ${handle.name}');
     } else {
-      console.log(`File: ${handle.name}`);
+      console.log('File: ${handle.name}');
     }
   }
 });
