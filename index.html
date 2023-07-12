@@ -4,7 +4,7 @@
   <title>File System Access</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 5edf5e459, updated Thu Jun 22 11:28:01 2023 -0700" name="generator">
+  <meta content="Bikeshed version b06c00b8e, updated Tue Jul 11 13:41:16 2023 -0700" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
   <meta content="d8f5556db5125a91a48273b809f0b2acaf77a0a2" name="document-revision">
 <style>
@@ -907,7 +907,7 @@ var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">File System Access</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-06-23">23 June 2023</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-07-12">12 July 2023</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1965,9 +1965,9 @@ elem<c- p>.</c->addEventListener<c- p>(</c-><c- t>'drop'</c-><c- p>,</c-> <c- k>
 
   <c- k>for</c-> <c- k>await</c-> <c- p>(</c-><c- a>const</c-> handle <c- k>of</c-> fileHandlesPromises<c- p>)</c-> <c- p>{</c->
     <c- k>if</c-> <c- p>(</c->handle<c- p>.</c->kind <c- o>===</c-> <c- t>'directory'</c-><c- p>)</c-> <c- p>{</c->
-      console<c- p>.</c->log<c- p>(</c-><c- o>&lt;</c->code data<c- o>-</c->opaque bs<c- o>-</c->autolink<c- o>-</c->syntax<c- o>=</c-><c- t>'`Directory: ${handle.name}`'</c-><c- o>></c->Directory<c- o>:</c-> $<c- p>{</c->handle<c- p>.</c->name<c- p>}</c-><c- o>&lt;</c->/code>);
+      console<c- p>.</c->log<c- p>(</c-><c- sb>`Directory: </c-><c- si>${</c->handle<c- p>.</c->name<c- si>}</c-><c- sb>`</c-><c- p>);</c->
     <c- p>}</c-> <c- k>else</c-> <c- p>{</c->
-      console<c- p>.</c->log<c- p>(</c-><c- o>&lt;</c->code data<c- o>-</c->opaque bs<c- o>-</c->autolink<c- o>-</c->syntax<c- o>=</c-><c- t>'`File: ${handle.name}`'</c-><c- o>></c->File<c- o>:</c-> $<c- p>{</c->handle<c- p>.</c->name<c- p>}</c-><c- o>&lt;</c->/code>);
+      console<c- p>.</c->log<c- p>(</c-><c- sb>`File: </c-><c- si>${</c->handle<c- p>.</c->name<c- si>}</c-><c- sb>`</c-><c- p>);</c->
     <c- p>}</c->
   <c- p>}</c->
 <c- p>});</c->
