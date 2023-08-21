@@ -8,6 +8,38 @@
 
 * [Issue tracker](https://github.com/WICG/file-system-access/issues)
 
+## Table of Contents
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Cloud Identifier](#cloud-identifier)
+  - [Authors:](#authors)
+  - [Participate](#participate)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+    - [Sample usage](#sample-usage)
+      - [Demo page](#demo-page)
+    - [Use Cases](#use-cases)
+      - [Remote file handling](#remote-file-handling)
+        - [Before](#before)
+        - [After](#after)
+      - [De-duplication for online document editors](#de-duplication-for-online-document-editors)
+      - [Drag \& Drop into Mail](#drag--drop-into-mail)
+    - [Non-Goals](#non-goals)
+  - [Design](#design)
+    - [Web IDL](#web-idl)
+    - [Interaction with CSP client](#interaction-with-csp-client)
+      - [Registration](#registration)
+      - [Requesting a cloud identifier](#requesting-a-cloud-identifier)
+  - [Security and Privacy Considerations](#security-and-privacy-considerations)
+    - [Fingerprinting](#fingerprinting)
+    - [Modification via read-only permission](#modification-via-read-only-permission)
+  - [Contributors](#contributors)
+  - [Stakeholder Feedback / Opposition](#stakeholder-feedback--opposition)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Introduction
 The objective of this API is to allow web applications to detect whether a `FileSystemHandle` they have acquired (obtained via file/directory picker or as a parameter of an opening flow as a registered file handler) belongs to a cloud-synced file/directory. If so, the web application receives a “cloud identifier” so that it can directly interact with the file/directory using the cloud storage provider’s (CSP) backend APIs.
 
