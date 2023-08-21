@@ -8,13 +8,6 @@
 
 * [Issue tracker](https://github.com/WICG/file-system-access/issues)
 
-## Table of Contents
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 ## Introduction
 The objective of this API is to allow web applications to detect whether a `FileSystemHandle` they have acquired (obtained via file/directory picker or as a parameter of an opening flow as a registered file handler) belongs to a cloud-synced file/directory. If so, the web application receives a “cloud identifier” so that it can directly interact with the file/directory using the cloud storage provider’s (CSP) backend APIs.
 
@@ -37,6 +30,9 @@ for(const cloudIdentifier of cloudIdentifiers) {
   }
 }
 ```
+
+#### Demo page
+There is a [demo page](https://cloud-file-handling.glitch.me/) where this API can be tested behind a flag on ChromeOS. Sample usage of that demo page can also be seen with [this recording](./videos/CloudIdentifierDemo.webm).
 
 ### Use Cases
 
@@ -194,4 +190,5 @@ In this case, the user has clearly granted write access to the CSP-backed file a
 * Rob Beard (rbeard@google.com)
 
 ## Stakeholder Feedback / Opposition
-TBD
+
+* Web developer: [positive](https://github.com/WICG/file-system-access/pull/411#issuecomment-1609676416)
