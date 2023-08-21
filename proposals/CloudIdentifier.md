@@ -32,7 +32,7 @@ for(const cloudIdentifier of cloudIdentifiers) {
 ```
 
 #### Demo page
-There is a [demo page](https://cloud-file-handling.glitch.me/) where this API can be tested behind a flag on ChromeOS. Sample usage of that demo page can also be seen with the recording below. ![](./videos/cloud-identifier/demo.webm)
+There is a [demo page](https://cloud-file-handling.glitch.me/) where this API can be tested behind a flag on ChromeOS. Sample usage of that demo page can also be seen with [this recording](https://drive.google.com/file/d/1nrAYOwp9w6JtsKx8XxHkHAVjHyvQG53o/view?usp=sharing).
 
 ### Use Cases
 
