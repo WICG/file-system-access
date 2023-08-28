@@ -13,6 +13,27 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [Introduction](#introduction)
+  - [Sample usage](#sample-usage)
+    - [Demo page](#demo-page)
+  - [Use Cases](#use-cases)
+    - [Remote file handling](#remote-file-handling)
+      - [Before](#before)
+      - [After](#after)
+    - [De-duplication for online document editors](#de-duplication-for-online-document-editors)
+    - [Drag \& Drop into Mail](#drag--drop-into-mail)
+  - [Non-Goals](#non-goals)
+- [Design](#design)
+  - [Web IDL](#web-idl)
+  - [Interaction with CSP client](#interaction-with-csp-client)
+    - [Registration](#registration)
+    - [Requesting a cloud identifier](#requesting-a-cloud-identifier)
+- [Security and Privacy Considerations](#security-and-privacy-considerations)
+  - [Fingerprinting](#fingerprinting)
+  - [Modification via read-only permission](#modification-via-read-only-permission)
+- [Contributors](#contributors)
+- [Stakeholder Feedback / Opposition](#stakeholder-feedback--opposition)
+
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Introduction
@@ -37,6 +58,9 @@ for(const cloudIdentifier of cloudIdentifiers) {
   }
 }
 ```
+
+#### Demo page
+There is a [demo page](https://cloud-file-handling.glitch.me/) where this API can be tested behind a flag on ChromeOS. Sample usage of that demo page can also be seen with [this recording](https://drive.google.com/file/d/1nrAYOwp9w6JtsKx8XxHkHAVjHyvQG53o/view?usp=sharing).
 
 ### Use Cases
 
@@ -194,4 +218,5 @@ In this case, the user has clearly granted write access to the CSP-backed file a
 * Rob Beard (rbeard@google.com)
 
 ## Stakeholder Feedback / Opposition
-TBD
+
+* Web developer: [positive](https://github.com/WICG/file-system-access/pull/411#issuecomment-1609676416)
