@@ -30,9 +30,14 @@ Additionally, user agents could also choose to persist the last directory a file
 
 The `getUniqueId()` method will require a user agent to persist information (e.g. a salt) to provide unique identifiers for handles which are stable across browsing sessions, but which are invalidated once the user clears storage for the site. This state will not be exposed to the website.
 
+The `getCloudIdentifiers()` method will request identifiers for a given file/directory handle from a cloud storage provider's sync client (usually an external service/application) and forward these to the requesting website. These identifiers may be stable and cannot be invalidated as part of this API.
+
 ### 2.6. What information from the underlying platform, e.g. configuration data, is exposed by this specification to an origin?
 
 Anything that exists on disk in files could be exposed by the user to the web. However, user agents are encouraged to maintain a block list of certain directories with particularly sensitive files, and thus somewhat restrict which files and directories the user is allowed to select. For example, things like Chrome's "Profile" directory, and other platform configuration data directories are likely going to be on this block list.
+
+The `getCloudIdentifiers()` method will request identifiers for a given file/directory handle from a cloud storage provider's sync client (usually an external service/application) and forward these to the requesting website. 
+Therefore, the requesting website can enumerate all those sync clients present on the user's machine that sync a file/directory the website has a handle to.
 
 ### 2.7. Does this specification allow an origin access to sensors on a user’s device
 
