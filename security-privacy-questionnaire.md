@@ -37,7 +37,7 @@ The `getCloudIdentifiers()` method will request identifiers for a given file/dir
 Anything that exists on disk in files could be exposed by the user to the web. However, user agents are encouraged to maintain a block list of certain directories with particularly sensitive files, and thus somewhat restrict which files and directories the user is allowed to select. For example, things like Chrome's "Profile" directory, and other platform configuration data directories are likely going to be on this block list.
 
 The `getCloudIdentifiers()` method will request identifiers for a given file/directory handle from a cloud storage provider's sync client (usually an external service/application) and forward these to the requesting website. 
-Therefore, the requesting website is able to enumerate those sync clients that are present on the user's machine, if they sync items the website has a file/directory handle to.
+Therefore, the requesting website can enumerate all those sync clients present on the user's machine that sync a file/directory the website has a handle to.
 
 ### 2.7. Does this specification allow an origin access to sensors on a user’s device
 
