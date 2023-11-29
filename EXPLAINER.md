@@ -105,7 +105,7 @@ if (!file_ref) {
 
 // Read the contents of the file.
 const file_reader = new FileReader();
-file_reader.onload = (event) => {
+file_reader.onload = async (event) => {
     // File contents will appear in event.target.result.  See
     // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/onload for
     // more info.
@@ -170,7 +170,7 @@ if (file_ref) {
 let file_id = "123"; // Some logic to determine which file you'd like to open
 let transaction = db.transaction(["filerefs"], "readonly");
 let request = transaction.objectStore("filerefs").get(file_id);
-request.onsuccess = function(e) {
+request.onsuccess = async function(e) {
     let ref = e.result;
 
     // Permissions for the handle may have expired while the handle was stored
@@ -197,7 +197,7 @@ The fact that handles are serializable also means you can `postMessage` them aro
 
 ```javascript
 // In a service worker:
-self.addEventListener('some-hypothetical-launch-event', e => {
+self.addEventListener('some-hypothetical-launch-event', async (e) => {
   // e.file is a FileSystemFileHandle representing the file this SW was launched with.
   let win = await clients.openWindow('bla.html');
   if (win)
