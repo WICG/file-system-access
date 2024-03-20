@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 82ce88815, updated Thu Sep 7 16:33:55 2023 -0700" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="d217064427b1042712460820d1adfbb3d87f41fa" name="document-revision">
+  <meta content="f443f21571e13d9f4c078af8bfe862d1e61bd0a0" name="document-revision">
 <style>
 .domintro dt {
     font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
@@ -907,7 +907,7 @@ var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">File System Access</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-11-29">29 November 2023</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2024-03-20">20 March 2024</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -922,7 +922,7 @@ var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="https://www.w3.org/policies/#copyright">Copyright</a> © 2023 the Contributors to the File System Access Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+   <p class="copyright" data-fill-with="copyright"><a href="https://www.w3.org/policies/#copyright">Copyright</a> © 2024 the Contributors to the File System Access Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
 A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available. </p>
    <hr title="Separator for header">
   </div>
@@ -1822,7 +1822,7 @@ these steps:
      <dd data-md>
       <p>Shows a directory picker that lets the user select a single directory, returning a handle for
 the selected directory if the user grants read permission.</p>
-     <dt data-md>handles = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showdirectorypicker" id="ref-for-dom-window-showdirectorypicker⑤">showDirectoryPicker()</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-directorypickeroptions-mode" id="ref-for-dom-directorypickeroptions-mode①">mode</a></code>: 'readwrite' })
+     <dt data-md><var>handle</var> = await window . <code class="idl"><a data-link-type="idl" href="#dom-window-showdirectorypicker" id="ref-for-dom-window-showdirectorypicker⑤">showDirectoryPicker()</a></code>({ <code class="idl"><a data-link-type="idl" href="#dom-directorypickeroptions-mode" id="ref-for-dom-directorypickeroptions-mode①">mode</a></code>: 'readwrite' })
      <dd data-md>
       <p>Shows a directory picker that lets the user select a single directory, returning a handle for
 the selected directory. The user agent can combine read and write permission requests on this handle into
