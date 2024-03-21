@@ -802,6 +802,7 @@ these steps:
      {{SaveFilePickerOptions/suggestedName}} and |accepts options| is [=implementation-defined=].
      If the {{SaveFilePickerOptions/suggestedName}} is deemed too dangerous, user agents should ignore or sanitize the
      suggested file name, similar to the sanitization done when fetching something <a spec=html>as a download</a>.
+     Restricted extensions for the suggested file name should match the restrictions for {{FilePickerOptions/types}}.
 
      Note: A user agent could for example pick whichever option in |accepts options| that matches
      {{SaveFilePickerOptions/suggestedName}} as the default filter.
