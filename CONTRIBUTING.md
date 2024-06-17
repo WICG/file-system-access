@@ -10,13 +10,13 @@ contributors in the pull request comment.
 To add a contributor (other than yourself, that's automatic), mark them one per line as follows:
 
 ```
-+@github_**createbypiglet**
++@github_createbypiglet
 ```
 
 If you added a contributor by mistake, you can remove them in a comment with:
 
 ```
--@github_**createbypigle**
+-@github_createbypigle
 ```
 
 If you are making a pull request on behalf of someone else but you had no part in designing the
