@@ -26,6 +26,8 @@ urlPrefix: https://tc39.github.io/ecma262/; spec: ECMA-262
   type: dfn; text: realm; url: realm
 urlPrefix: https://storage.spec.whatwg.org/; spec: storage
   type: dfn; text: storage; url: site-storage
+urlPrefix: https://www.w3.org/TR/webdriver-bidi/; spec: webdriver-bidi
+  type: dfn; text: WebDriver BiDi; url: webdriver-bidi
 </pre>
 
 <style>
@@ -706,19 +708,23 @@ these steps:
 
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
-  1. Display a prompt to the user requesting that the user pick some files.
-     If |options|["{{OpenFilePickerOptions/multiple}}"] is false,
-     there must be no more than one file selected;
-     otherwise any number may be selected.
+  1. Let |dismissed| be the result of [=WebDriver BiDi file dialog opened=] with null and |options|.
 
-     The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
-     Exactly how this is implemented, and what this prompt looks like is [=implementation-defined=].
+  1. If |dismissed| is false:
 
-     When possible, this prompt should start out showing |starting directory|.
+    1. Display a prompt to the user requesting that the user pick some files.
+       If |options|["{{OpenFilePickerOptions/multiple}}"] is false,
+       there must be no more than one file selected;
+       otherwise any number may be selected.
 
-  1. Wait for the user to have made their selection.
+       The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
+       Exactly how this is implemented, and what this prompt looks like is [=implementation-defined=].
 
-  1. If the user dismissed the prompt without making a selection,
+       When possible, this prompt should start out showing |starting directory|.
+
+    1. Wait for the user to have made their selection.
+
+  1. If |dismissed| is true or if the user dismissed the prompt without making a selection,
      [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
 
   1. Let |entries| be a [=/list=] of [=file entries=] representing the selected files or directories.
