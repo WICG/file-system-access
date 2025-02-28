@@ -879,13 +879,17 @@ these steps:
 
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
-  1. Display a prompt to the user requesting that the user pick a directory.
+  1. Let |dismissed| be the result of [=WebDriver BiDi file dialog opened=] with null and |options|.
 
-     When possible, this prompt should start out showing |starting directory|.
+  1. If |dismissed| is false:
 
-  1. Wait for the user to have made their selection.
+    1. Display a prompt to the user requesting that the user pick a directory.
 
-  1. If the user dismissed the prompt without making a selection,
+       When possible, this prompt should start out showing |starting directory|.
+
+    1. Wait for the user to have made their selection.
+
+  1. If |dismissed| is true or if the user dismissed the prompt without making a selection,
      [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
 
   1. Let |entry| be a [=directory entry=] representing the selected directory.
