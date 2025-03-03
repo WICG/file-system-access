@@ -887,8 +887,6 @@ these steps:
 
   1. Set |File Picker Options|["multiple"] to false.
 
-  1. Set |File Picker Options|["directory"] to true.
-
   1. Let |dismissed| be the result of [=WebDriver BiDi file dialog opened=] with null and |File Picker Options|.
 
   1. If |dismissed| is false:
