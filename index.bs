@@ -27,7 +27,7 @@ urlPrefix: https://tc39.github.io/ecma262/; spec: ECMA-262
 urlPrefix: https://storage.spec.whatwg.org/; spec: storage
   type: dfn; text: storage; url: site-storage
 urlPrefix: https://www.w3.org/TR/webdriver-bidi/; spec: webdriver-bidi
-  type: dfn; text: WebDriver BiDi; url: webdriver-bidi
+  type: dfn; text: WebDriver BiDi file dialog opened; url: webdriver-bidi-file-dialog-opened
 </pre>
 
 <style>
