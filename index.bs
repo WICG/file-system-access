@@ -710,8 +710,7 @@ these steps:
 
   1. Let |filePickerOptions| be an empty [=/map=].
 
-  1. If |options|["{{OpenFilePickerOptions/multiple}}"] is true, set
-     |File Picker Options|["multiple"] to true, otherwise set |File Picker Options|["multiple"] to false.
+  1. Set |filePickerOptions|["multiple"] to |options|["{{OpenFilePickerOptions/multiple}}"].
 
   1. Let |dismissed| be the result of [=WebDriver BiDi file dialog opened=] with null and |File Picker Options|.
 
