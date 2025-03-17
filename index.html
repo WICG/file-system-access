@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version b25686b9f, updated Fri Mar 14 14:15:20 2025 -0700" name="generator">
   <link href="https://wicg.github.io/file-system-access/" rel="canonical">
-  <meta content="8764848d1a436f346032107b789e775c449e40f7" name="revision">
+  <meta content="f57532dbf8e1e7105e83c37fea449fd105d1acc0" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>
@@ -1759,17 +1759,26 @@ these steps:
         <li data-md>
          <p>Optionally, wait until any prior execution of this algorithm has terminated.</p>
         <li data-md>
-         <p>Display a prompt to the user requesting that the user pick some files.
- If <var>options</var>["<code class="idl"><a data-link-type="idl" href="#dom-openfilepickeroptions-multiple" id="ref-for-dom-openfilepickeroptions-multiple②">multiple</a></code>"] is false,
- there must be no more than one file selected;
+         <p>Let <var>filePickerOptions</var> be an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-map" id="ref-for-ordered-map②">map</a>.</p>
+        <li data-md>
+         <p>Set <var>filePickerOptions</var>["multiple"] to <var>options</var>["<code class="idl"><a data-link-type="idl" href="#dom-openfilepickeroptions-multiple" id="ref-for-dom-openfilepickeroptions-multiple②">multiple</a></code>"].</p>
+        <li data-md>
+         <p>Let <var>dismissed</var> be the result of <a data-link-type="dfn" href="https://www.w3.org/TR/webdriver-bidi/#webdriver-bidi-file-dialog-opened" id="ref-for-webdriver-bidi-file-dialog-opened">WebDriver BiDi file dialog opened</a> with null and <var>filePickerOptions</var>.</p>
+        <li data-md>
+         <p>If <var>dismissed</var> is false:</p>
+         <ol>
+          <li data-md>
+           <p>Display a prompt to the user requesting that the user pick some files.
+ If <var>filePickerOptions</var>["multiple"] is false, there must be no more than one file selected;
  otherwise any number may be selected.</p>
-         <p>The displayed prompt should let the user pick one of the <var>accepts options</var> to filter the list of displayed files.
+           <p>The displayed prompt should let the user pick one of the <var>accepts options</var> to filter the list of displayed files.
  Exactly how this is implemented, and what this prompt looks like is <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#implementation-defined" id="ref-for-implementation-defined①">implementation-defined</a>.</p>
-         <p>When possible, this prompt should start out showing <var>starting directory</var>.</p>
+           <p>When possible, this prompt should start out showing <var>starting directory</var>.</p>
+          <li data-md>
+           <p>Wait for the user to have made their selection.</p>
+         </ol>
         <li data-md>
-         <p>Wait for the user to have made their selection.</p>
-        <li data-md>
-         <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject①">reject</a> <var>p</var> with an "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror">AbortError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException⑥">DOMException</a></code> and abort.</p>
+         <p>If <var>dismissed</var> is true or if the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject①">reject</a> <var>p</var> with an "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror">AbortError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException⑥">DOMException</a></code> and abort.</p>
         <li data-md>
          <p>Let <var>entries</var> be a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list①">list</a> of <a data-link-type="dfn" href="https://fs.spec.whatwg.org/#file" id="ref-for-file①">file entries</a> representing the selected files or directories.</p>
         <li data-md>
@@ -1924,12 +1933,22 @@ these steps:
         <li data-md>
          <p>Optionally, wait until any prior execution of this algorithm has terminated.</p>
         <li data-md>
-         <p>Display a prompt to the user requesting that the user pick a directory.</p>
-         <p>When possible, this prompt should start out showing <var>starting directory</var>.</p>
+         <p>Let <var>filePickerOptions</var> be an empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-map" id="ref-for-ordered-map③">map</a>.</p>
         <li data-md>
-         <p>Wait for the user to have made their selection.</p>
+         <p>Set <var>filePickerOptions</var>["multiple"] to false.</p>
         <li data-md>
-         <p>If the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject⑤">reject</a> <var>p</var> with an "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror④">AbortError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException①⓪">DOMException</a></code> and abort.</p>
+         <p>Let <var>dismissed</var> be the result of <a data-link-type="dfn" href="https://www.w3.org/TR/webdriver-bidi/#webdriver-bidi-file-dialog-opened" id="ref-for-webdriver-bidi-file-dialog-opened①">WebDriver BiDi file dialog opened</a> with null and <var>filePickerOptions</var>.</p>
+        <li data-md>
+         <p>If <var>dismissed</var> is false:</p>
+         <ol>
+          <li data-md>
+           <p>Display a prompt to the user requesting that the user pick a directory.</p>
+           <p>When possible, this prompt should start out showing <var>starting directory</var>.</p>
+          <li data-md>
+           <p>Wait for the user to have made their selection.</p>
+         </ol>
+        <li data-md>
+         <p>If <var>dismissed</var> is true or if the user dismissed the prompt without making a selection, <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject⑤">reject</a> <var>p</var> with an "<code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#aborterror" id="ref-for-aborterror④">AbortError</a></code>" <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException①⓪">DOMException</a></code> and abort.</p>
         <li data-md>
          <p>Let <var>entry</var> be a <a data-link-type="dfn" href="https://fs.spec.whatwg.org/#directory" id="ref-for-directory①">directory entry</a> representing the selected directory.</p>
         <li data-md>
@@ -2364,6 +2383,11 @@ use this API to write to disk.</p>
      <li><span class="dfn-paneled" id="cac8dd86">storage quota</span>
     </ul>
    <li>
+    <a data-link-type="biblio">[WEBDRIVER-BIDI]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="108d06a8">WebDriver BiDi file dialog opened</span>
+    </ul>
+   <li>
     <a data-link-type="biblio">[WEBIDL]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="d25dfb2c">AbortError</span>
@@ -2406,6 +2430,8 @@ use this API to write to disk.</p>
    <dd>S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. March 1997. Best Current Practice. URL: <a href="https://datatracker.ietf.org/doc/html/rfc2119">https://datatracker.ietf.org/doc/html/rfc2119</a>
    <dt id="biblio-storage">[STORAGE]
    <dd>Anne van Kesteren. <a href="https://storage.spec.whatwg.org/"><cite>Storage Standard</cite></a>. Living Standard. URL: <a href="https://storage.spec.whatwg.org/">https://storage.spec.whatwg.org/</a>
+   <dt id="biblio-webdriver-bidi">[WEBDRIVER-BIDI]
+   <dd>James Graham; Alex Rudenko; Maksim Sadym. <a href="https://w3c.github.io/webdriver-bidi/"><cite>WebDriver BiDi</cite></a>. URL: <a href="https://w3c.github.io/webdriver-bidi/">https://w3c.github.io/webdriver-bidi/</a>
    <dt id="biblio-webidl">[WEBIDL]
    <dd>Edgar Chen; Timothy Gu. <a href="https://webidl.spec.whatwg.org/"><cite>Web IDL Standard</cite></a>. Living Standard. URL: <a href="https://webidl.spec.whatwg.org/">https://webidl.spec.whatwg.org/</a>
   </dl>
@@ -2800,6 +2826,7 @@ let dfnPanelData = {
 "086e3aff": {"dfnID":"086e3aff","dfnText":"origin","external":true,"refSections":[{"refs":[{"id":"ref-for-concept-origin"}],"title":"3.2.2. Starting Directory"}],"url":"https://html.spec.whatwg.org/multipage/browsers.html#concept-origin"},
 "0e8de730": {"dfnID":"0e8de730","dfnText":"tuple","external":true,"refSections":[{"refs":[{"id":"ref-for-tuple"}],"title":"3.2.1. Accepted file types"}],"url":"https://infra.spec.whatwg.org/#tuple"},
 "0fa357c3": {"dfnID":"0fa357c3","dfnText":"length","external":true,"refSections":[{"refs":[{"id":"ref-for-string-length"}],"title":"3.2.1. Accepted file types"},{"refs":[{"id":"ref-for-string-length\u2460"}],"title":"3.2.2. Starting Directory"}],"url":"https://infra.spec.whatwg.org/#string-length"},
+"108d06a8": {"dfnID":"108d06a8","dfnText":"WebDriver BiDi file dialog opened","external":true,"refSections":[{"refs":[{"id":"ref-for-webdriver-bidi-file-dialog-opened"}],"title":"3.3. The showOpenFilePicker() method"},{"refs":[{"id":"ref-for-webdriver-bidi-file-dialog-opened\u2460"}],"title":"3.5. The showDirectoryPicker() method"}],"url":"https://www.w3.org/TR/webdriver-bidi/#webdriver-bidi-file-dialog-opened"},
 "113dd5ca": {"dfnID":"113dd5ca","dfnText":"create a PermissionStatus","external":true,"refSections":[{"refs":[{"id":"ref-for-dfn-create-a-permissionstatus"}],"title":"2.2. Permissions"},{"refs":[{"id":"ref-for-dfn-create-a-permissionstatus\u2460"}],"title":"3.5. The showDirectoryPicker() method"}],"url":"https://w3c.github.io/permissions/#dfn-create-a-permissionstatus"},
 "1191fb01": {"dfnID":"1191fb01","dfnText":"default permission query algorithm","external":true,"refSections":[{"refs":[{"id":"ref-for-dfn-default-permission-query-algorithm"},{"id":"ref-for-dfn-default-permission-query-algorithm\u2460"}],"title":"2.2. Permissions"},{"refs":[{"id":"ref-for-dfn-default-permission-query-algorithm\u2461"}],"title":"3.5. The showDirectoryPicker() method"}],"url":"https://w3c.github.io/permissions/#dfn-default-permission-query-algorithm"},
 "1243a891": {"dfnID":"1243a891","dfnText":"exist","external":true,"refSections":[{"refs":[{"id":"ref-for-map-exists"},{"id":"ref-for-map-exists\u2460"},{"id":"ref-for-map-exists\u2461"},{"id":"ref-for-map-exists\u2462"},{"id":"ref-for-map-exists\u2463"}],"title":"3.2.2. Starting Directory"},{"refs":[{"id":"ref-for-map-exists\u2464"}],"title":"3.4. The showSaveFilePicker() method"}],"url":"https://infra.spec.whatwg.org/#map-exists"},
@@ -2818,7 +2845,7 @@ let dfnPanelData = {
 "3de9e659": {"dfnID":"3de9e659","dfnText":"byte sequence","external":true,"refSections":[{"refs":[{"id":"ref-for-byte-sequence"}],"title":"3.4. The showSaveFilePicker() method"}],"url":"https://infra.spec.whatwg.org/#byte-sequence"},
 "3e12e042": {"dfnID":"3e12e042","dfnText":"environment settings object","external":true,"refSections":[{"refs":[{"id":"ref-for-environment-settings-object"},{"id":"ref-for-environment-settings-object\u2460"}],"title":"3.2.2. Starting Directory"}],"url":"https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object"},
 "3e7aa5da": {"dfnID":"3e7aa5da","dfnText":"permission state constraints","external":true,"refSections":[{"refs":[{"id":"ref-for-dfn-permission-state-constraints"},{"id":"ref-for-dfn-permission-state-constraints\u2460"}],"title":"2.2. Permissions"}],"url":"https://w3c.github.io/permissions/#dfn-permission-state-constraints"},
-"3fca5a9e": {"dfnID":"3fca5a9e","dfnText":"map","external":true,"refSections":[{"refs":[{"id":"ref-for-ordered-map"},{"id":"ref-for-ordered-map\u2460"}],"title":"3.2.2. Starting Directory"}],"url":"https://infra.spec.whatwg.org/#ordered-map"},
+"3fca5a9e": {"dfnID":"3fca5a9e","dfnText":"map","external":true,"refSections":[{"refs":[{"id":"ref-for-ordered-map"},{"id":"ref-for-ordered-map\u2460"}],"title":"3.2.2. Starting Directory"},{"refs":[{"id":"ref-for-ordered-map\u2461"}],"title":"3.3. The showOpenFilePicker() method"},{"refs":[{"id":"ref-for-ordered-map\u2462"}],"title":"3.5. The showDirectoryPicker() method"}],"url":"https://infra.spec.whatwg.org/#ordered-map"},
 "4013a022": {"dfnID":"4013a022","dfnText":"this","external":true,"refSections":[{"refs":[{"id":"ref-for-this"}],"title":"2.3.1. The queryPermission() method"},{"refs":[{"id":"ref-for-this\u2460"}],"title":"2.3.2. The requestPermission() method"},{"refs":[{"id":"ref-for-this\u2461"}],"title":"3.3. The showOpenFilePicker() method"},{"refs":[{"id":"ref-for-this\u2462"}],"title":"3.4. The showSaveFilePicker() method"},{"refs":[{"id":"ref-for-this\u2463"}],"title":"3.5. The showDirectoryPicker() method"}],"url":"https://webidl.spec.whatwg.org/#this"},
 "43ac8374": {"dfnID":"43ac8374","dfnText":"origin (for environment settings object)","external":true,"refSections":[{"refs":[{"id":"ref-for-concept-settings-object-origin"}],"title":"2.2. Permissions"},{"refs":[{"id":"ref-for-concept-settings-object-origin\u2460"},{"id":"ref-for-concept-settings-object-origin\u2461"}],"title":"3.1. Local File System Permissions"},{"refs":[{"id":"ref-for-concept-settings-object-origin\u2462"},{"id":"ref-for-concept-settings-object-origin\u2463"}],"title":"3.2.2. Starting Directory"}],"url":"https://html.spec.whatwg.org/multipage/webappapis.html#concept-settings-object-origin"},
 "44262c3b": {"dfnID":"44262c3b","dfnText":"parent","external":true,"refSections":[{"refs":[{"id":"ref-for-entry-parent"},{"id":"ref-for-entry-parent\u2460"}],"title":"2.2. Permissions"},{"refs":[{"id":"ref-for-entry-parent\u2461"}],"title":"3.2.2. Starting Directory"}],"url":"https://fs.spec.whatwg.org/#entry-parent"},
@@ -3534,6 +3561,7 @@ let refsData = {
 "https://webidl.spec.whatwg.org/#securityerror": {"displayText":"SecurityError","export":true,"for_":[],"level":"1","normative":true,"shortname":"webidl","spec":"webidl","status":"current","text":"SecurityError","type":"exception","url":"https://webidl.spec.whatwg.org/#securityerror"},
 "https://webidl.spec.whatwg.org/#this": {"displayText":"this","export":true,"for_":[],"level":"1","normative":true,"shortname":"webidl","spec":"webidl","status":"current","text":"this","type":"dfn","url":"https://webidl.spec.whatwg.org/#this"},
 "https://wicg.github.io/permissions-request/#permission-request-algorithm": {"displayText":"permission request algorithm","export":true,"for_":[],"level":"1","normative":true,"shortname":"permissions-request","spec":"permissions-request","status":"current","text":"permission request algorithm","type":"dfn","url":"https://wicg.github.io/permissions-request/#permission-request-algorithm"},
+"https://www.w3.org/TR/webdriver-bidi/#webdriver-bidi-file-dialog-opened": {"displayText":"WebDriver BiDi file dialog opened","export":true,"for_":[],"level":"","normative":true,"shortname":"webdriver-bidi","spec":"webdriver-bidi","status":"anchor-block","text":"webdriver bidi file dialog opened","type":"dfn","url":"https://www.w3.org/TR/webdriver-bidi/#webdriver-bidi-file-dialog-opened"},
 };
 
 function mkRefHint(link, ref) {
