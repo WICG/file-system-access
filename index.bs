@@ -712,12 +712,12 @@ these steps:
 
   1. Set |filePickerOptions|["multiple"] to |options|["{{OpenFilePickerOptions/multiple}}"].
 
-  1. Let |dismissed| be the result of [=WebDriver BiDi file dialog opened=] with null and |File Picker Options|.
+  1. Let |dismissed| be the result of [=WebDriver BiDi file dialog opened=] with null and |filePickerOptions|.
 
   1. If |dismissed| is false:
 
     1. Display a prompt to the user requesting that the user pick some files.
-       If |File Picker Options|["multiple"] is false, there must be no more than one file selected;
+       If |filePickerOptions|["multiple"] is false, there must be no more than one file selected;
        otherwise any number may be selected.
 
        The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
@@ -884,9 +884,9 @@ these steps:
 
   1. Let |filePickerOptions| be an empty [=/map=].
 
-  1. Set |File Picker Options|["multiple"] to false.
+  1. Set |filePickerOptions|["multiple"] to false.
 
-  1. Let |dismissed| be the result of [=WebDriver BiDi file dialog opened=] with null and |File Picker Options|.
+  1. Let |dismissed| be the result of [=WebDriver BiDi file dialog opened=] with null and |filePickerOptions|.
 
   1. If |dismissed| is false:
 
