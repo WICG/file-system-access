@@ -883,7 +883,7 @@ these steps:
 
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
-  1. Let |File Picker Options| be an empty [=/map=].
+  1. Let |filePickerOptions| be an empty [=/map=].
 
   1. Set |File Picker Options|["multiple"] to false.
 
