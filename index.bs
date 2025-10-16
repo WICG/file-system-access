@@ -99,7 +99,8 @@ permission-related algorithms and types are defined as follows:
   <xmp class=idl>
   enum FileSystemPermissionMode {
     "read",
-    "readwrite"
+    "readwrite",
+    "write"
   };
 
   dictionary FileSystemPermissionDescriptor : PermissionDescriptor {
@@ -127,8 +128,14 @@ permission-related algorithms and types are defined as follows:
        with the same {{FileSystemPermissionDescriptor/handle}},
        but whose {{FileSystemPermissionDescriptor/mode}} is
        "{{FileSystemPermissionMode/read}}".
-    1. If |read state| is not "{{PermissionState/granted}}", this descriptor's [=permission state=]
-       must be equal to |read state|.
+    1. Let |write state| be the [=permission state=] for a descriptor
+       with the same {{FileSystemPermissionDescriptor/handle}},
+       but whose {{FileSystemPermissionDescriptor/mode}} is
+       "{{FileSystemPermissionMode/write}}".
+    1. If |read state| is "{{PermissionState/denied}}" or |write state| is "{{PermissionState/denied}}",
+       this descriptor's [=permission state=] must be "{{PermissionState/denied}}".
+    1. Otherwise, if |read state| is "{{PermissionState/prompt}}" or |write state| is "{{PermissionState/prompt}}",
+       this descriptor's [=permission state=] must be "{{PermissionState/prompt}}".
 
 Issue(whatwg/fs#101): Make these checks no longer associated with an entry.
 
@@ -184,10 +191,7 @@ given a {{FileSystemHandle}} |handle| and a {{FileSystemPermissionMode}} |mode|,
 
 </div>
 
-Issue(119): Currently {{FileSystemPermissionMode}} can only be
-"{{FileSystemPermissionMode/read}}" or "{{FileSystemPermissionMode/readwrite}}".
-In the future we might want to add a "write" mode as well to support write-only
-handles.
+
 
 ## The {{FileSystemHandle}} interface ## {#api-filesystemhandle}
 
@@ -232,6 +236,13 @@ partial interface FileSystemHandle {
      {{FileSystemHandle/requestPermission()}}.
      There is no automatic prompting for read access when attempting to
      read from a file or directory.
+
+  : |status| = await |handle| . {{FileSystemHandle/queryPermission()|queryPermission}}({ {{FileSystemHandlePermissionDescriptor/mode}} : "{{FileSystemPermissionMode/write}}" })
+  : |status| = (await navigator.{{Navigator/permissions}}.{{Permissions/query()|query}}({ {{PermissionDescriptor/name}} : "{{PermissionName/file-system}}", {{FileSystemPermissionDescriptor/handle}} : |handle|, {{FileSystemPermissionDescriptor/mode}} : "{{FileSystemPermissionMode/write}}" }).{{PermissionStatus/state}}
+  :: Queries the current state of the write permission of this handle.
+     If this returns "{{PermissionState/prompt}}", attempting to modify the
+     file or directory this handle represents will require user activation
+     and will result in a confirmation prompt being shown to the user.
 </div>
 
 Advisement: The integration with the permissions API's {{Permissions/query()}} method is not yet implemented in Chrome.
@@ -269,6 +280,14 @@ The <dfn method for=FileSystemHandle>queryPermission(|descriptor|)</dfn> method,
 
      Otherwise the state of the write permission is "{{PermissionState/prompt}}"
      and this will show a confirmation prompt to the user.
+     The new write permission state is then returned, depending on
+     what the user selected.
+
+  : |status| = await |handle| . {{FileSystemHandle/requestPermission()|requestPermission}}({ {{FileSystemHandlePermissionDescriptor/mode}} : "{{FileSystemPermissionMode/write}}" })
+  :: If the state of the write permission of this handle is anything other than
+     "{{PermissionState/prompt}}", this will return that state directly.
+     If it is "{{PermissionState/prompt}}" however, user activation is needed and
+     this will show a confirmation prompt to the user.
      The new write permission state is then returned, depending on
      what the user selected.
 </div>
@@ -859,6 +878,10 @@ these steps:
   :: Shows a directory picker that lets the user select a single directory, returning a handle for
     the selected directory. The user agent can combine read and write permission requests on this handle into
     one subsequent prompt.
+
+  : |handle| = await window . {{Window/showDirectoryPicker()}}({ {{DirectoryPickerOptions/mode}}: 'write' })
+  :: Shows a directory picker that lets the user select a single directory, returning a handle for
+    the selected directory if the user grants write permission.
 
   The {{DirectoryPickerOptions/id}} and {{DirectoryPickerOptions/startIn}} fields behave
   identically to the {{FilePickerOptions/id}} and {{FilePickerOptions/startIn}} fields, respectively.
