@@ -134,6 +134,8 @@ permission-related algorithms and types are defined as follows:
     1. If |read state| is not "{{PermissionState/granted}}", this descriptor's [=permission state=]
        must be equal to |read state|.
 
+  </div>
+
 Issue(whatwg/fs#101): Make these checks no longer associated with an entry.
 
 : [=permission request algorithm=]
@@ -156,6 +158,8 @@ Issue(whatwg/fs#101): Make these checks no longer associated with an entry.
      [=throw=] a "{{SecurityError}}" {{DOMException}}.
   1. [=Request permission to use=] |desc|.
   1. Run the [=default permission query algorithm=] on |desc| and |status|.
+
+  </div>
 
   Issue(WICG/permissions-request#2): Ideally this user activation requirement would be defined upstream.
 
@@ -623,6 +627,8 @@ The following list describes the meaning of each of the values, and gives possib
 : <dfn enum-value>"videos"</dfn>
 :: Directory where videos/movies would typically be stored.
    For example `C:\Documents and Settings\username\My Documents\My Videos`, `/Users/username/Movies`, or `/home/username/Videos`.
+
+</dl>
 
 <div algorithm>
 To <dfn>determine the directory the picker will start in</dfn>, given an optional [=string=] |id|,
