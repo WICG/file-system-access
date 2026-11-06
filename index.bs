@@ -29,6 +29,14 @@ urlPrefix: https://storage.spec.whatwg.org/; spec: storage
   type: dfn; text: storage; url: site-storage
 urlPrefix: https://www.w3.org/TR/webdriver-bidi/; spec: webdriver-bidi
   type: dfn; text: WebDriver BiDi file dialog opened; url: webdriver-bidi-file-dialog-opened
+  type: dfn; text: WebDriver BiDi file picker options; url: webdriver-bidi-file-picker-options
+  type: dfn; for: WebDriver BiDi file picker options
+    text: type; url: webdriver-bidi-file-picker-options-type
+    text: multiple; url: webdriver-bidi-file-picker-options-multiple
+  type: dfn; text: file dialog behavior struct; url: file-dialog-behavior-struct
+  type: dfn; for: file dialog behavior struct
+    text: accepted; url: file-dialog-behavior-struct-accepted
+    text: paths; url: file-dialog-behavior-struct-paths
 </pre>
 
 <style>
@@ -130,6 +138,8 @@ permission-related algorithms and types are defined as follows:
     1. If |read state| is not "{{PermissionState/granted}}", this descriptor's [=permission state=]
        must be equal to |read state|.
 
+  </div>
+
 Issue(whatwg/fs#101): Make these checks no longer associated with an entry.
 
 : [=permission request algorithm=]
@@ -152,6 +162,8 @@ Issue(whatwg/fs#101): Make these checks no longer associated with an entry.
      [=throw=] a "{{SecurityError}}" {{DOMException}}.
   1. [=Request permission to use=] |desc|.
   1. Run the [=default permission query algorithm=] on |desc| and |status|.
+
+  </div>
 
   Issue(WICG/permissions-request#2): Ideally this user activation requirement would be defined upstream.
 
@@ -620,6 +632,8 @@ The following list describes the meaning of each of the values, and gives possib
 :: Directory where videos/movies would typically be stored.
    For example `C:\Documents and Settings\username\My Documents\My Videos`, `/Users/username/Movies`, or `/home/username/Videos`.
 
+</dl>
+
 <div algorithm>
 To <dfn>determine the directory the picker will start in</dfn>, given an optional [=string=] |id|,
 an optional {{StartInDirectory}} |startIn| and an [=environment settings object=] |environment|,
@@ -709,16 +723,16 @@ these steps:
 
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
-  1. Let |filePickerOptions| be an empty [=/map=].
+  1. Let |filePickerOptions| be a [=WebDriver BiDi file picker options=] with [=WebDriver BiDi file picker options/type=] set to "`open-file`" and [=WebDriver BiDi file picker options/multiple=] set to |options|["{{OpenFilePickerOptions/multiple}}"].
 
-  1. Set |filePickerOptions|["multiple"] to |options|["{{OpenFilePickerOptions/multiple}}"].
+  1. Let |fileDialogBehavior| be the result of [=WebDriver BiDi file dialog opened=] with |global|'s [=Window/navigable=], null, and |filePickerOptions|.
 
-  1. Let |dismissed| be the result of [=WebDriver BiDi file dialog opened=] with null and |filePickerOptions|.
+  1. Let |entries| be an empty [=/list=].
 
-  1. If |dismissed| is false:
+  1. If |fileDialogBehavior| is null:
 
     1. Display a prompt to the user requesting that the user pick some files.
-       If |filePickerOptions|["multiple"] is false, there must be no more than one file selected;
+       If |filePickerOptions|'s [=WebDriver BiDi file picker options/multiple=] is false, there must be no more than one file selected;
        otherwise any number may be selected.
 
        The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
@@ -728,14 +742,23 @@ these steps:
 
     1. Wait for the user to have made their selection.
 
-  1. If |dismissed| is true or if the user dismissed the prompt without making a selection,
-     [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
+    1. If the user dismissed the prompt without making a selection,
+       [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
 
-  1. Let |entries| be a [=/list=] of [=file entries=] representing the selected files or directories.
+    1. Set |entries| to a [=/list=] of [=file entries=] representing the selected files or directories.
+
+  1. Otherwise:
+
+    1. If |fileDialogBehavior|'s [=file dialog behavior struct/accepted=] is false,
+       [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
+
+    1. Set |entries| to a [=/list=] of [=file entries=] representing the files at the paths in |fileDialogBehavior|'s [=file dialog behavior struct/paths=].
+
   1. Let |result| be a empty [=/list=].
 
   1. [=list/For each=] |entry| of |entries|:
     1. If |entry| is deemed [=too sensitive or dangerous=] to be exposed to this website by the user agent:
+      1. If |fileDialogBehavior| is not null, [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
       1. Inform the user that the selected files or directories can't be exposed to this website.
       1. At the discretion of the user agent,
          either go back to the beginning of these [=in parallel=] steps,
@@ -796,34 +819,50 @@ these steps:
 
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
-  1. Display a prompt to the user requesting that the user pick exactly one file.
-     The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
-     Exactly how this is implemented, and what this prompt looks like is [=implementation-defined=].
-     If |accepts options| are displayed in the UI, the selected option should also be used to suggest an extension
-     to append to a user provided file name, but this is not required. In particular user agents are free to ignore
-     potentially dangerous suffixes such as those ending in `".lnk"` or `".local"`.
+  1. Let |filePickerOptions| be a [=WebDriver BiDi file picker options=] with [=WebDriver BiDi file picker options/type=] set to "`save-file`" and [=WebDriver BiDi file picker options/multiple=] set to false.
 
-     When possible, this prompt should start out showing |starting directory|.
+  1. Let |fileDialogBehavior| be the result of [=WebDriver BiDi file dialog opened=] with |global|'s [=Window/navigable=], null, and |filePickerOptions|.
 
-     If |options|["{{SaveFilePickerOptions/suggestedName}}"] [=map/exists=] and
-     is not null, the file picker prompt will be pre-filled with the
-     |options|["{{SaveFilePickerOptions/suggestedName}}"] as the default name
-     to save as. The interaction between the
-     {{SaveFilePickerOptions/suggestedName}} and |accepts options| is [=implementation-defined=].
-     If the {{SaveFilePickerOptions/suggestedName}} is deemed too dangerous, user agents should ignore or sanitize the
-     suggested file name, similar to the sanitization done when fetching something <a spec=html>as a download</a>.
+  1. Let |entry| be null.
 
-     Note: A user agent could for example pick whichever option in |accepts options| that matches
-     {{SaveFilePickerOptions/suggestedName}} as the default filter.
+  1. If |fileDialogBehavior| is null:
 
-  1. Wait for the user to have made their selection.
+    1. Display a prompt to the user requesting that the user pick exactly one file.
+       The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
+       Exactly how this is implemented, and what this prompt looks like is [=implementation-defined=].
+       If |accepts options| are displayed in the UI, the selected option should also be used to suggest an extension
+       to append to a user provided file name, but this is not required. In particular user agents are free to ignore
+       potentially dangerous suffixes such as those ending in `".lnk"` or `".local"`.
 
-  1. If the user dismissed the prompt without making a selection,
-     [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
+       When possible, this prompt should start out showing |starting directory|.
 
-  1. Let |entry| be a [=file entry=] representing the selected file.
+       If |options|["{{SaveFilePickerOptions/suggestedName}}"] [=map/exists=] and
+       is not null, the file picker prompt will be pre-filled with the
+       |options|["{{SaveFilePickerOptions/suggestedName}}"] as the default name
+       to save as. The interaction between the
+       {{SaveFilePickerOptions/suggestedName}} and |accepts options| is [=implementation-defined=].
+       If the {{SaveFilePickerOptions/suggestedName}} is deemed too dangerous, user agents should ignore or sanitize the
+       suggested file name, similar to the sanitization done when fetching something <a spec=html>as a download</a>.
+
+       Note: A user agent could for example pick whichever option in |accepts options| that matches
+       {{SaveFilePickerOptions/suggestedName}} as the default filter.
+
+    1. Wait for the user to have made their selection.
+
+    1. If the user dismissed the prompt without making a selection,
+       [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
+
+    1. Set |entry| to a [=file entry=] representing the selected file.
+
+  1. Otherwise:
+
+    1. If |fileDialogBehavior|'s [=file dialog behavior struct/accepted=] is false,
+       [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
+
+    1. Set |entry| to a [=file entry=] representing the file at |fileDialogBehavior|'s [=file dialog behavior struct/paths=][0].
 
   1. If |entry| is deemed [=too sensitive or dangerous=] to be exposed to this website by the user agent:
+    1. If |fileDialogBehavior| is not null, [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
     1. Inform the user that the selected files or directories can't be exposed to this website.
     1. At the discretion of the user agent,
        either go back to the beginning of these [=in parallel=] steps,
@@ -883,13 +922,13 @@ these steps:
 
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
-  1. Let |filePickerOptions| be an empty [=/map=].
+  1. Let |filePickerOptions| be a [=WebDriver BiDi file picker options=] with [=WebDriver BiDi file picker options/type=] set to "`directory`" and [=WebDriver BiDi file picker options/multiple=] set to false.
 
-  1. Set |filePickerOptions|["multiple"] to false.
+  1. Let |fileDialogBehavior| be the result of [=WebDriver BiDi file dialog opened=] with |global|'s [=Window/navigable=], null, and |filePickerOptions|.
 
-  1. Let |dismissed| be the result of [=WebDriver BiDi file dialog opened=] with null and |filePickerOptions|.
+  1. Let |entry| be null.
 
-  1. If |dismissed| is false:
+  1. If |fileDialogBehavior| is null:
 
     1. Display a prompt to the user requesting that the user pick a directory.
 
@@ -897,12 +936,20 @@ these steps:
 
     1. Wait for the user to have made their selection.
 
-  1. If |dismissed| is true or if the user dismissed the prompt without making a selection,
-     [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
+    1. If the user dismissed the prompt without making a selection,
+       [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
 
-  1. Let |entry| be a [=directory entry=] representing the selected directory.
+    1. Set |entry| to a [=directory entry=] representing the selected directory.
+
+  1. Otherwise:
+
+    1. If |fileDialogBehavior|'s [=file dialog behavior struct/accepted=] is false,
+       [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
+
+    1. Set |entry| to a [=directory entry=] representing the directory at |fileDialogBehavior|'s [=file dialog behavior struct/paths=][0].
 
   1. If |entry| is deemed [=too sensitive or dangerous=] to be exposed to this website by the user agent:
+    1. If |fileDialogBehavior| is not null, [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
     1. Inform the user that the selected files or directories can't be exposed to this website.
     1. At the discretion of the user agent,
        either go back to the beginning of these [=in parallel=] steps,
