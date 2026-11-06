@@ -29,6 +29,9 @@ urlPrefix: https://storage.spec.whatwg.org/; spec: storage
   type: dfn; text: storage; url: site-storage
 urlPrefix: https://www.w3.org/TR/webdriver-bidi/; spec: webdriver-bidi
   type: dfn; text: WebDriver BiDi file dialog opened; url: webdriver-bidi-file-dialog-opened
+  type: dfn; text: WebDriver BiDi file picker options; url: webdriver-bidi-file-picker-options
+  type: dfn; for: WebDriver BiDi file picker options
+    text: multiple; url: webdriver-bidi-file-picker-options-multiple
   type: dfn; text: file dialog behavior struct; url: file-dialog-behavior-struct
   type: dfn; for: file dialog behavior struct
     text: accepted; url: file-dialog-behavior-struct-accepted
@@ -719,9 +722,7 @@ these steps:
 
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
-  1. Let |filePickerOptions| be an empty [=/map=].
-
-  1. Set |filePickerOptions|["multiple"] to |options|["{{OpenFilePickerOptions/multiple}}"].
+  1. Let |filePickerOptions| be a [=WebDriver BiDi file picker options=] with [=WebDriver BiDi file picker options/multiple=] set to |options|["{{OpenFilePickerOptions/multiple}}"].
 
   1. Let |fileDialogBehavior| be the result of [=WebDriver BiDi file dialog opened=] with |global|'s [=Window/navigable=], null, and |filePickerOptions|.
 
@@ -730,7 +731,7 @@ these steps:
   1. If |fileDialogBehavior| is null:
 
     1. Display a prompt to the user requesting that the user pick some files.
-       If |filePickerOptions|["multiple"] is false, there must be no more than one file selected;
+       If |filePickerOptions|'s [=WebDriver BiDi file picker options/multiple=] is false, there must be no more than one file selected;
        otherwise any number may be selected.
 
        The displayed prompt should let the user pick one of the |accepts options| to filter the list of displayed files.
@@ -747,14 +748,16 @@ these steps:
 
   1. Otherwise:
 
-    1. If |fileDialogBehavior|'s [=file dialog behavior struct/accepted=] is false or |fileDialogBehavior|'s [=file dialog behavior struct/paths=] is [=list/empty=],
+    1. If |fileDialogBehavior|'s [=file dialog behavior struct/accepted=] is false,
        [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
 
     1. Set |entries| to a [=/list=] of [=file entries=] representing the files at the paths in |fileDialogBehavior|'s [=file dialog behavior struct/paths=].
+
   1. Let |result| be a empty [=/list=].
 
   1. [=list/For each=] |entry| of |entries|:
     1. If |entry| is deemed [=too sensitive or dangerous=] to be exposed to this website by the user agent:
+      1. If |fileDialogBehavior| is not null, [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
       1. Inform the user that the selected files or directories can't be exposed to this website.
       1. At the discretion of the user agent,
          either go back to the beginning of these [=in parallel=] steps,
@@ -815,9 +818,7 @@ these steps:
 
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
-  1. Let |filePickerOptions| be an empty [=/map=].
-
-  1. Set |filePickerOptions|["multiple"] to false.
+  1. Let |filePickerOptions| be a [=WebDriver BiDi file picker options=] with [=WebDriver BiDi file picker options/multiple=] set to false.
 
   1. Let |fileDialogBehavior| be the result of [=WebDriver BiDi file dialog opened=] with |global|'s [=Window/navigable=], null, and |filePickerOptions|.
 
@@ -854,12 +855,13 @@ these steps:
 
   1. Otherwise:
 
-    1. If |fileDialogBehavior|'s [=file dialog behavior struct/accepted=] is false or |fileDialogBehavior|'s [=file dialog behavior struct/paths=] is [=list/empty=],
+    1. If |fileDialogBehavior|'s [=file dialog behavior struct/accepted=] is false,
        [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
 
-    1. Set |entry| to a [=file entry=] representing the file at |fileDialogBehavior|'s [=file dialog behavior struct/paths=][0], creating the file if it does not exist.
+    1. Set |entry| to a [=file entry=] representing the file at |fileDialogBehavior|'s [=file dialog behavior struct/paths=][0].
 
   1. If |entry| is deemed [=too sensitive or dangerous=] to be exposed to this website by the user agent:
+    1. If |fileDialogBehavior| is not null, [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
     1. Inform the user that the selected files or directories can't be exposed to this website.
     1. At the discretion of the user agent,
        either go back to the beginning of these [=in parallel=] steps,
@@ -919,9 +921,7 @@ these steps:
 
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
-  1. Let |filePickerOptions| be an empty [=/map=].
-
-  1. Set |filePickerOptions|["multiple"] to false.
+  1. Let |filePickerOptions| be a [=WebDriver BiDi file picker options=] with [=WebDriver BiDi file picker options/multiple=] set to false.
 
   1. Let |fileDialogBehavior| be the result of [=WebDriver BiDi file dialog opened=] with |global|'s [=Window/navigable=], null, and |filePickerOptions|.
 
@@ -942,12 +942,13 @@ these steps:
 
   1. Otherwise:
 
-    1. If |fileDialogBehavior|'s [=file dialog behavior struct/accepted=] is false or |fileDialogBehavior|'s [=file dialog behavior struct/paths=] is [=list/empty=],
+    1. If |fileDialogBehavior|'s [=file dialog behavior struct/accepted=] is false,
        [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
 
     1. Set |entry| to a [=directory entry=] representing the directory at |fileDialogBehavior|'s [=file dialog behavior struct/paths=][0].
 
   1. If |entry| is deemed [=too sensitive or dangerous=] to be exposed to this website by the user agent:
+    1. If |fileDialogBehavior| is not null, [=/reject=] |p| with an "{{AbortError}}" {{DOMException}} and abort.
     1. Inform the user that the selected files or directories can't be exposed to this website.
     1. At the discretion of the user agent,
        either go back to the beginning of these [=in parallel=] steps,
