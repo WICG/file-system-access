@@ -31,6 +31,7 @@ urlPrefix: https://www.w3.org/TR/webdriver-bidi/; spec: webdriver-bidi
   type: dfn; text: WebDriver BiDi file dialog opened; url: webdriver-bidi-file-dialog-opened
   type: dfn; text: WebDriver BiDi file picker options; url: webdriver-bidi-file-picker-options
   type: dfn; for: WebDriver BiDi file picker options
+    text: type; url: webdriver-bidi-file-picker-options-type
     text: multiple; url: webdriver-bidi-file-picker-options-multiple
   type: dfn; text: file dialog behavior struct; url: file-dialog-behavior-struct
   type: dfn; for: file dialog behavior struct
@@ -722,7 +723,7 @@ these steps:
 
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
-  1. Let |filePickerOptions| be a [=WebDriver BiDi file picker options=] with [=WebDriver BiDi file picker options/multiple=] set to |options|["{{OpenFilePickerOptions/multiple}}"].
+  1. Let |filePickerOptions| be a [=WebDriver BiDi file picker options=] with [=WebDriver BiDi file picker options/type=] set to "`open-file`" and [=WebDriver BiDi file picker options/multiple=] set to |options|["{{OpenFilePickerOptions/multiple}}"].
 
   1. Let |fileDialogBehavior| be the result of [=WebDriver BiDi file dialog opened=] with |global|'s [=Window/navigable=], null, and |filePickerOptions|.
 
@@ -818,7 +819,7 @@ these steps:
 
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
-  1. Let |filePickerOptions| be a [=WebDriver BiDi file picker options=] with [=WebDriver BiDi file picker options/multiple=] set to false.
+  1. Let |filePickerOptions| be a [=WebDriver BiDi file picker options=] with [=WebDriver BiDi file picker options/type=] set to "`save-file`" and [=WebDriver BiDi file picker options/multiple=] set to false.
 
   1. Let |fileDialogBehavior| be the result of [=WebDriver BiDi file dialog opened=] with |global|'s [=Window/navigable=], null, and |filePickerOptions|.
 
@@ -921,7 +922,7 @@ these steps:
 
   1. Optionally, wait until any prior execution of this algorithm has terminated.
 
-  1. Let |filePickerOptions| be a [=WebDriver BiDi file picker options=] with [=WebDriver BiDi file picker options/multiple=] set to false.
+  1. Let |filePickerOptions| be a [=WebDriver BiDi file picker options=] with [=WebDriver BiDi file picker options/type=] set to "`directory`" and [=WebDriver BiDi file picker options/multiple=] set to false.
 
   1. Let |fileDialogBehavior| be the result of [=WebDriver BiDi file dialog opened=] with |global|'s [=Window/navigable=], null, and |filePickerOptions|.
 
